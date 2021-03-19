@@ -23,7 +23,7 @@ client.on('message', msg => {
     }else{
 
     } */
-    print(streets.find(street => street.radius.find(name => name == message.channel.name)));
+    console.log(streets.find(street => street.radius.find(name => name == message.channel.name)));
 });
 
 client.login(process.env.BOT_TOKEN);
