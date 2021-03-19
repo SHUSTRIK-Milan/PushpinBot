@@ -24,6 +24,7 @@ client.on('message', message => {
 
     } */
     console.log(streets.find(st => st.radius.street == message.channel.name));
+    console.log(streets.radius.street);
 });
 
 client.login(process.env.BOT_TOKEN);
