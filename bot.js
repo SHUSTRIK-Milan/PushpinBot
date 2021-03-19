@@ -5,11 +5,11 @@ const prefix = '!';
 let streets = [
     {
         name: 'Йорк',
-        radius: ['Ирвин','Рурк']
+        radius: {street: 'Ирвин', street: 'Рурк'}
     },
     {
         name: 'Рурк',
-        radius: ['Йорк','Ирвин']
+        radius: {street: 'Йорк', street: 'Ирвин'}
     }
 ];
 
@@ -23,7 +23,7 @@ client.on('message', message => {
     }else{
 
     } */
-    console.log(streets.find(street => street.radius == message.channel.name));
+    console.log(streets.find(st => st.radius.street == message.channel.name));
 });
 
 client.login(process.env.BOT_TOKEN);
