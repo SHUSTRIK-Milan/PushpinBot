@@ -17,7 +17,7 @@ client.on('ready', () => {
   console.log(`${client.user.tag} ready!`);
 });
 
-client.on('message', msg => {
+client.on('message', message => {
     /* if ( != undefined){
         print("Вы перешли на улицу Рурк")
     }else{
