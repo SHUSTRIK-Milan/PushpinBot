@@ -1,0 +1,25 @@
+{
+  "name": "pushpinbot",
+  "version": "1.0.0",
+  "description": "Bot for Discord server Pushpin",
+  "main": "node.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SHUSTRIK-Milan/PushpinBot.git"
+  },
+  "keywords": [
+    "SHUSTRIK"
+  ],
+  "author": "SHUSTRIK",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SHUSTRIK-Milan/PushpinBot/issues"
+  },
+  "homepage": "https://github.com/SHUSTRIK-Milan/PushpinBot#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1"
+  }
+}
