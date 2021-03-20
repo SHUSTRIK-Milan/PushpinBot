@@ -25,12 +25,10 @@ client.on('message', message => {
 
     } */
 
-    let out = streets.find(st => st.radius.find(st => st == 'Йорк'))
+    let out = streets.find(st => st.radius.find(st => st == message.channel.parent.name))
 
-    //message.channel.send(`Соседняя улица: ${out.name}`);
-    console.log(message.channel.parent.name)
+    message.channel.send(`Соседняя улица: ${out.name}`);
     console.log(out);
-    console.log(streets[1]);
 });
 
 client.login(process.env.BOT_TOKEN);
