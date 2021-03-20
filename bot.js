@@ -41,11 +41,7 @@ client.on('message', message => {
     if (message.content.slice(0,5).toLowerCase() == `${prefix}идти` && mb == false){
 
         let homestreet = streets.find(st => st.name == message.channel.parent.name);
-        let walkway = homestreet.radius.find(st => st == message.content.slice(0,5).toLowerCase());
-        
-        console.log(message.content.slice(0,5).toLowerCase());
-        console.log(homestreet);
-        console.log(walkway);
+        let walkway = homestreet.radius.find(st => st.toLowerCase() == message.content.slice(0,5).toLowerCase());
 
         /* if (walkway != null)
             client.channels.fetch(botChannelID)
