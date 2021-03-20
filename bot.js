@@ -29,10 +29,10 @@ client.on('message', message => {
     let mb = message.author.bot;
 
     if (mb != true){
-        let out = streets.find(st => st.radius.find(st => st == message.channel.parent.name))
+        let out = streets.find(st => st.name == test);
 
         if (out != null){
-            message.channel.send(`Соседняя улица: ${out.name}`);
+            message.channel.send(`Соседняя улица: ${out.radius.join(', ')}`);
             console.log(out);
         };
     };
