@@ -54,7 +54,7 @@ client.on('message', message => {
                 channel.updateOverwrite(member, { VIEW_CHANNEL: true }
                 )}); */
 
-        if (walkway != null){
+        if (walkway != null && message.channel.permissionOverwrites.get(message.author.id) != null){
             client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
             message.channel.permissionOverwrites.get(message.author.id).delete();
         }else{
