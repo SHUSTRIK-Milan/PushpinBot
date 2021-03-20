@@ -36,7 +36,6 @@ client.on('message', message => {
 
             if (out != null){
                 message.author.send(`Соседние улицы: ${out.radius.join(', ')}.`);
-                console.log(out);
             };
         };
     };
@@ -45,17 +44,7 @@ client.on('message', message => {
 
         let homestreet = streets.find(st => st.name == message.channel.parent.name);
         let walkway = homestreet.radius.find(st => st.toLowerCase() == message.content.slice(6).toLowerCase());
-        
-        console.log(message.content.slice(0,5).toLowerCase());
-        console.log(homestreet);
-        console.log(homestreet.radius);
-        console.log(walkway);
-
-        /* if (walkway != null)
-            client.channels.fetch(botChannelID)
-                .then(channel => {
-                channel.updateOverwrite(member, { VIEW_CHANNEL: true }
-                )}); */
+        message.delete();
 
         if (walkway != null && message.channel.permissionOverwrites.get(message.author.id) != null){
             client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
