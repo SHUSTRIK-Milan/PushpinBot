@@ -59,10 +59,9 @@ client.on('message', message => {
 
         if (walkway != null && message.channel.permissionOverwrites.get(message.author.id) != null){
             client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
-            //client.channels.cache.find(cat => cat.name == walkway).permissionOverwrites.get(message.author.id).delete();
-            console.log(client.channels.cache.find(cat => cat.name == walkway).permissionOverwrites);
+            message.channel.parent.permissionOverwrites.get(message.author.id).delete();
         }else{
-            message.author.send(`Вероятнее всего улицы ${message.content.slice(6).toLowerCase()} нет, либо вы ввели ее неправильно.`);
+            message.author.send(`Вероятнее всего улицы ${message.content.slice(6)} нет, либо вы ввели ее неправильно.`);
         };
     };
 
