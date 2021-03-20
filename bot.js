@@ -28,7 +28,7 @@ client.on('ready', () => {
 client.on('message', message => {
     let mb = message.author.bot;
 
-    if (message.content.slice(0,12).toLowerCase() == `${prefix}осмотреться` && message.channel.name == "Улица" && mb == false){
+    if (message.content.slice(0,12).toLowerCase() == `${prefix}осмотреться` && message.channel.name == "улица" && mb == false){
         let out = streets.find(st => st.name == message.channel.parent.name);
         message.delete();
 
