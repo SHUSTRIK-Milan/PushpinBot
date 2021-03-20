@@ -28,13 +28,16 @@ client.on('ready', () => {
 client.on('message', message => {
     let mb = message.author.bot;
 
-    if (message.content.slice(0,12).toLowerCase() == `${prefix}осмотреться` && message.channel.name == "улица" && mb == false){
-        let out = streets.find(st => st.name == message.channel.parent.name);
+    if (message.content.slice(0,12).toLowerCase() == `${prefix}осмотреться` && mb == false){
         message.delete();
 
-        if (out != null){
-            message.author.send(`Соседние улицы: ${out.radius.join(', ')}.`);
-            console.log(out);
+        if(message.channel.name == "улица"){
+            let out = streets.find(st => st.name == message.channel.parent.name);
+
+            if (out != null){
+                message.author.send(`Соседние улицы: ${out.radius.join(', ')}.`);
+                console.log(out);
+            };
         };
     };
 
@@ -56,7 +59,8 @@ client.on('message', message => {
 
         if (walkway != null && message.channel.permissionOverwrites.get(message.author.id) != null){
             client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
-            client.channels.cache.find(cat => cat.name == walkway).permissionOverwrites.get(message.author.id).delete();
+            //client.channels.cache.find(cat => cat.name == walkway).permissionOverwrites.get(message.author.id).delete();
+            console.log(client.channels.cache.find(cat => cat.name == walkway).permissionOverwrites);
         }else{
             message.author.send(`Вероятнее всего улицы ${message.content.slice(6).toLowerCase()} нет, либо вы ввели ее неправильно.`);
         };
