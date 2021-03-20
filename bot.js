@@ -42,6 +42,11 @@ client.on('message', message => {
 
         let homestreet = streets.find(st => st.name == message.channel.parent.name);
         let walkway = homestreet.radius.find(st => st.toLowerCase() == message.content.slice(0,5).toLowerCase());
+        
+        console.log(message.content.slice(0,5).toLowerCase());
+        console.log(homestreet);
+        console.log(homestreet.radius);
+        console.log(walkway);
 
         /* if (walkway != null)
             client.channels.fetch(botChannelID)
