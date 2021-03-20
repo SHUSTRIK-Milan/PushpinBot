@@ -39,7 +39,7 @@ client.on('message', message => {
 
     console.log(message.content.slice(6).toLowerCase());
 
-    if(message.content.slice(6).toLowerCase() == `${prefix}send` && message.author.id == `621917381681479693`){	
+    if(message.content.slice(0,5).toLowerCase() == `${prefix}send` && message.author.id == `621917381681479693`){	
         let argsTx = message.content.slice(6, message.content.length);
     
         if(mb) return;	
