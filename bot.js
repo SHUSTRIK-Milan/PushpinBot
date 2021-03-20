@@ -31,7 +31,7 @@ client.on('message', message => {
     } */
     let out = streets.find(st => st.radius.find(st => st == message.channel.name))
 
-    message.channel.send(`Соседняя улица: ${out.name}`);
+    //message.channel.send(`Соседняя улица: ${out.name}`);
     console.log(out);
 });
 
