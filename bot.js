@@ -29,7 +29,7 @@ client.on('message', message => {
     let mb = message.author.bot;
 
     if (mb != true){
-        let out = streets.find(st => st.name == test);
+        let out = streets.find(st => st.name == message.channel.parent.name);
 
         if (out != null){
             message.channel.send(`Соседняя улица: ${out.radius.join(', ')}`);
