@@ -29,8 +29,10 @@ client.on('message', message => {
     }else{
 
     } */
-    message.channel.send(`Соседняя улица: ${streets.find(st => st.radius.find(st => st == message.channel)).name}`);
-    console.log(streets.find(st => st.radius.find(st => st == message.channel)).name);
+    let out = streets.find(st => st.radius.find(st => st == message.channel))
+
+    message.channel.send(`Соседняя улица: ${out.name}`);
+    console.log(out);
 });
 
 client.login(process.env.BOT_TOKEN);
