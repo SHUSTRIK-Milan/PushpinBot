@@ -51,7 +51,7 @@ client.on('message', message => {
                 channel.updateOverwrite(member, { VIEW_CHANNEL: true }
                 )}); */
 
-        if (walkway != null)
+        if (walkway != null){
             client.channels.fetch('822542216555659275')
                 .then(channel => console.log(channel));
         };
