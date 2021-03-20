@@ -28,7 +28,7 @@ client.on('ready', () => {
 client.on('message', message => {
     let mb = message.author.bot;
 
-    if (message.content.slice(0,5).toLowerCase() == `${prefix}осмотреться` && message.channel.name == "Улица" && mb == false){
+    if (message.content.slice(0,12).toLowerCase() == `${prefix}осмотреться` && message.channel.name == "Улица" && mb == false){
         let out = streets.find(st => st.name == message.channel.parent.name);
         message.delete();
 
@@ -43,6 +43,8 @@ client.on('message', message => {
         let homestreet = streets.find(st => st.name == message.channel.parent.name);
         let walkway = homestreet.radius.find(st => st == message.content.slice(0,5).toLowerCase());
         
+        console.log(message.content.slice(0,5).toLowerCase());
+        console.log(homestreet);
         console.log(walkway);
 
         /* if (walkway != null)
