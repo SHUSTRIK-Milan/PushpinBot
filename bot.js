@@ -55,7 +55,8 @@ client.on('message', message => {
                 )}); */
 
         if (walkway != null){
-            console.log(client.channels.cache.find(cat => cat.name == walkway));
+            client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
+            message.channel.parent.updateOverwrite(message.author, { VIEW_CHANNEL: false });
         };
     };
 
