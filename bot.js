@@ -6,7 +6,7 @@ let streets = [
     {
         name: 'Белт-Паркуэй',
         id: '001',
-        radius: ['Парк-авеню', 'Бродвей']
+        radius: ['Бродвей']
     },
     {
         name: 'Бродвей',
@@ -16,7 +16,7 @@ let streets = [
     {
         name: 'Парк-авеню',
         id: '003',
-        radius: ['Бродвей', 'Белт-Паркуэй']
+        radius: ['Бродвей']
     }
 ];
 
@@ -57,6 +57,8 @@ client.on('message', message => {
         if (walkway != null){
             client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
             message.channel.parent.updateOverwrite(message.author, { VIEW_CHANNEL: false });
+        }else{
+            message.author.send(`Вероятнее всего улицы ${message.content.slice(6).toLowerCase()} нет, либо вы ввели ее неправильно.`);
         };
     };
 
