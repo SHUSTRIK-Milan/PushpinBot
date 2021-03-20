@@ -13,11 +13,6 @@ let streets = [
     }
 ];
 
-let test = [
-
-    
-
-]
 
 client.on('ready', () => {
   console.log(`${client.user.tag} ready!`);
