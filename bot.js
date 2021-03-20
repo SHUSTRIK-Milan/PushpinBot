@@ -5,11 +5,18 @@ const prefix = '!';
 let streets = [
     {
         name: 'Йорк',
+        id: '001',
         radius: ['Ирвин', 'Рурк']
     },
     {
         name: 'Рурк',
+        id: '002',
         radius: ['Йорк', 'Ирвин']
+    },
+    {
+        name: 'Ирвин',
+        id: '003',
+        radius: ['Рурк', 'Йорк']
     }
 ];
 
@@ -19,16 +26,14 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-    /* if ( != undefined){
-        print("Вы перешли на улицу Рурк")
-    }else{
+    let mb = message.author.bot;
 
-    } */
+    if (mb != true){
+        let out = streets.find(st => st.radius.find(st => st == message.channel.parent.name))
 
-    let out = streets.find(st => st.radius.find(st => st == message.channel.parent.name))
-
-    message.channel.send(`Соседняя улица: ${out.name}`);
-    console.log(out);
+        message.channel.send(`Соседняя улица: ${out.name}`);
+        console.log(out);
+    };
 });
 
 client.login(process.env.BOT_TOKEN);
