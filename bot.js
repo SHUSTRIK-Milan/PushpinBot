@@ -28,14 +28,23 @@ client.on('ready', () => {
 client.on('message', message => {
     let mb = message.author.bot;
 
-    if (mb != true){
+    /* if (mb != true){
         let out = streets.find(st => st.name == message.channel.parent.name);
 
         if (out != null){
             message.channel.send(`Соседние улицы: ${out.radius.join(', ')}.`);
             console.log(out);
         };
+    }; */
+
+    if(command.toLowerCase() == "send" && message.author.id == `621917381681479693`){	
+        let argsTx = message.content.slice(6, message.content.length);
+    
+        if(mb) return;	
+        message.delete();	
+        message.channel.send(`${argsTx}`);	
     };
+
 });
 
 client.login(process.env.BOT_TOKEN);
