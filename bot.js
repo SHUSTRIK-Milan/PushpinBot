@@ -29,7 +29,7 @@ client.on('message', message => {
     }else{
 
     } */
-    message.channel.send(`Соседняя улица: ${streets.find(st => st.radius.find(st => st == message.channel.name)).name}`);
+    //message.channel.send(`Соседняя улица: ${streets.find(st => st.radius.find(st => st == message.channel.name)).name}`);
     console.log(streets.find(st => st.radius.find(st => st == message.channel.name)));
 });
 
