@@ -4,19 +4,19 @@ const prefix = '!';
 
 let streets = [
     {
-        name: 'Йорк',
+        name: 'Белт-Паркуэй',
         id: '001',
-        radius: ['Ирвин', 'Рурк']
+        radius: ['Парк-авеню', 'Бродвей']
     },
     {
-        name: 'Рурк',
+        name: 'Бродвей',
         id: '002',
-        radius: ['Йорк', 'Ирвин']
+        radius: ['Белт-Паркуэй', 'Парк-авеню']
     },
     {
-        name: 'Ирвин',
+        name: 'Парк-авеню',
         id: '003',
-        radius: ['Рурк', 'Йорк']
+        radius: ['Бродвей', 'Белт-Паркуэй']
     }
 ];
 
@@ -32,7 +32,7 @@ client.on('message', message => {
         let out = streets.find(st => st.name == message.channel.parent.name);
 
         if (out != null){
-            message.channel.send(`Соседняя улица: ${out.radius.join(', ')}`);
+            message.channel.send(`Соседние улицы: ${out.radius.join(', ')}.`);
             console.log(out);
         };
     };
