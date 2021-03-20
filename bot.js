@@ -55,8 +55,7 @@ client.on('message', message => {
                 )}); */
 
         if (walkway != null){
-            client.channels.fetch('822542216555659275')
-                .then(channel => console.log(channel));
+            console.log(client.channels.cache.find(cat => cat.name == walkway));
         };
     };
 
