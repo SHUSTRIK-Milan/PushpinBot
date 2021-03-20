@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const prefix = '!';
+const prefix = '#';
 
 let streets = [
     {
@@ -28,16 +28,34 @@ client.on('ready', () => {
 client.on('message', message => {
     let mb = message.author.bot;
 
-    /* if (mb != true){
+    if (message.content.slice(0,5).toLowerCase() == `${prefix}осмотреться` && message.channel.name == "Улица" && mb == false){
         let out = streets.find(st => st.name == message.channel.parent.name);
+        message.delete();
 
         if (out != null){
-            message.channel.send(`Соседние улицы: ${out.radius.join(', ')}.`);
+            message.author.send(`Соседние улицы: ${out.radius.join(', ')}.`);
             console.log(out);
         };
-    }; */
+    };
 
-    console.log(message.content.slice(6).toLowerCase());
+    if (message.content.slice(0,5).toLowerCase() == `${prefix}идти` && mb == false){
+
+        let homestreet = streets.find(st => st.name == message.channel.parent.name);
+        let walkway = homestreet.radius.find(st => st == message.content.slice(0,5).toLowerCase());
+        
+        console.log(walkway);
+
+        /* if (walkway != null)
+            client.channels.fetch(botChannelID)
+                .then(channel => {
+                channel.updateOverwrite(member, { VIEW_CHANNEL: true }
+                )}); */
+
+        if (walkway != null)
+            client.channels.fetch('822542216555659275')
+                .then(channel => console.log(channel));
+        };
+    };
 
     if(message.content.slice(0,5).toLowerCase() == `${prefix}send` && message.author.id == `621917381681479693`){	
         let argsTx = message.content.slice(6, message.content.length);
