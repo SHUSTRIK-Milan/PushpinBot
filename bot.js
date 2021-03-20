@@ -33,6 +33,7 @@ client.on('message', message => {
 
     //message.channel.send(`Соседняя улица: ${out.name}`);
     console.log(out);
+    console.log(out[1]);
 });
 
 client.login(process.env.BOT_TOKEN);
