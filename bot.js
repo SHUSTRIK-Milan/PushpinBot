@@ -37,7 +37,7 @@ client.on('message', message => {
         };
     }; */
 
-    if(command.toLowerCase() == "send" && message.author.id == `621917381681479693`){	
+    if(message.content.slice(6).toLowerCase() == "send" && message.author.id == `621917381681479693`){	
         let argsTx = message.content.slice(6, message.content.length);
     
         if(mb) return;	
