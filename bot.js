@@ -24,9 +24,11 @@ client.on('message', message => {
     }else{
 
     } */
+
     let out = streets.find(st => st.radius.find(st => st == 'Йорк'))
 
     //message.channel.send(`Соседняя улица: ${out.name}`);
+    console.log(message.channel.name)
     console.log(out);
     console.log(streets[1]);
 });
