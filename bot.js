@@ -56,7 +56,7 @@ client.on('message', message => {
 
         if (walkway != null && message.channel.permissionOverwrites.get(message.author.id) != null){
             client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
-            message.channel.permissionOverwrites.get(message.author.id).delete();
+            client.channels.cache.find(cat => cat.name == walkway).permissionOverwrites.get(message.author.id).delete();
         }else{
             message.author.send(`Вероятнее всего улицы ${message.content.slice(6).toLowerCase()} нет, либо вы ввели ее неправильно.`);
         };
