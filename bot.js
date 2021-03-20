@@ -2,16 +2,16 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const prefix = '!';
 
-let streets = [
+let streets = {Street:[
     {
         name: 'Йорк',
-        radius: {street: 'Ирвин', street: 'Рурк'}
+        radius: ['Ирвин', 'Рурк']
     },
     {
         name: 'Рурк',
-        radius: {street: 'Йорк', street: 'Ирвин'}
+        radius: ['Йорк', 'Ирвин']
     }
-];
+]};
 
 client.on('ready', () => {
   console.log(`${client.user.tag} ready!`);
@@ -23,8 +23,9 @@ client.on('message', message => {
     }else{
 
     } */
-    console.log(streets.find(st => st.radius.street == message.channel.name));
-    console.log(streets.radius.street);
+    console.log(streets.Street.find(st => st.name == "Рурк"));
+    console.log(streets);
+    console.log(streets.Street);
 });
 
 client.login(process.env.BOT_TOKEN);
