@@ -60,9 +60,6 @@ client.on('message', message => {
         };
     };
 
-
-    };
-
     if(command[1] == `${prefix}send` && message.author.id == `621917381681479693`){	
         if(mb) return;	
         message.delete();	
