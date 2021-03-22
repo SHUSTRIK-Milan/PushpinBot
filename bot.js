@@ -74,7 +74,9 @@ client.on('message', message => {
         }else if(homestreet.parentObject.find(pob => pob.name.toLowerCase() == message.channel.name.toLowerCase()) != null){
             let objects = [];
 
-            for (let pobj of homestreet.parentObject) for (let obj of pobj) objects.push(obj.name);
+            for (let pobj of homestreet.parentObject){
+                for (let obj of pobj) objects.push(obj.name);
+            };
 
             if (homestreet != null && objects != null){
                 message.author.send(`Ближайшие помещения: ${objects.join(', ')}.`);
