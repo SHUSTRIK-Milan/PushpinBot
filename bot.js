@@ -7,26 +7,33 @@ const street = [
         name: 'Белт-Паркуэй',
         id: '001',
         radius: ['Бродвей'],
-        desc: 'Прекрасный город. Отличное начало жизни в этом городе.'
+        desc: 'Прекрасный город. Отличное начало жизни в этом городе.',
+        parentObject: [
+            {
+                name: 'Полицейский Департамент',
+                id: '001',
+                objects: []
+            },
+            {
+                name: 'Дом',
+                id: '002',
+                objects: []
+            }
+        ]
     },
     {
         name: 'Бродвей',
         id: '002',
         radius: ['Белт-Паркуэй', 'Парк-авеню'],
-        desc: 'Центр города.'
+        desc: 'Центр города.',
+        parentObject: []
     },
     {
         name: 'Парк-авеню',
         id: '003',
         radius: ['Бродвей'],
-        desc: 'Самая зеленая улица города.'
-    }
-];
-
-const parentObject = [
-    {
-        name: 'Полицейский Департамент',
-        parent: 
+        desc: 'Самая зеленая улица города.',
+        parentObject: []
     }
 ];
 
@@ -45,10 +52,13 @@ client.on('message', message => {
         message.delete();
 
         if(message.channel.name == "улица"){
-            let out = street.find(st => st.name == message.channel.parent.name);
+            let homestreet = street.find(st => st.name == message.channel.parent.name);
+            let objects = [];
 
-            if (out != null){
-                message.author.send(`Соседние улицы: ${out.radius.join(', ')}.`);
+            for (let obj of homestreet.parentObject) objects.push(obj.name);
+
+            if (homestreet != null){
+                message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(',')}`);
             };
         };
     };
