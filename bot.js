@@ -27,7 +27,7 @@ client.on('ready', () => {
 
 client.on('message', message => {
     const command = message.content.split(' ',2);
-    const args = message.content.slice(separator.join(' ').length+1);
+    const args = message.content.slice(command.join(' ').length+1);
 
     let mb = message.author.bot;
 
