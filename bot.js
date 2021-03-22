@@ -12,7 +12,7 @@ const street = [
             {
                 name: 'Магазин',
                 id: '001',
-                addCondition: null
+                addCondition: ''
             },
             {
                 name: 'Туалет',
@@ -22,7 +22,7 @@ const street = [
             {
                 name: 'Дом-1',
                 id: '002',
-                addCondition: null
+                addCondition: ''
             }
         ]
     },
@@ -35,7 +35,7 @@ const street = [
             {
                 name: 'Полицейский Департамент',
                 id: '001',
-                addCondition: null
+                addCondition: ''
             }
         ]
     },
@@ -48,7 +48,7 @@ const street = [
             {
                 name: 'Завод',
                 id: '001',
-                addCondition: null
+                addCondition: ''
             }
         ]
     }
