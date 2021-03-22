@@ -29,13 +29,9 @@ client.on('message', message => {
     const command = message.content.split(' ',2);
     const args = message.content.slice(command.join(' ').length+1);
 
-    console.log(command[1]);
-    console.log(command[2]);
-    console.log(args);
-
     let mb = message.author.bot;
 
-    if (command[1] == `${prefix}осмотреться` && mb == false){
+    if (command[0] == `${prefix}осмотреться` && mb == false){
         message.delete();
 
         if(message.channel.name == "улица"){
@@ -47,8 +43,8 @@ client.on('message', message => {
         };
     };
 
-    if (command[1] == `${prefix}идти` && mb == false && message.channel.name == 'улица'){
-        if (command[2] == "на"){
+    if (command[0] == `${prefix}идти` && mb == false && message.channel.name == 'улица'){
+        if (command[1] == "на"){
             let homestreet = streets.find(st => st.name == message.channel.parent.name);
             let walkway = homestreet.radius.find(st => st.toLowerCase() == args.toLowerCase());
             message.delete();
@@ -64,7 +60,7 @@ client.on('message', message => {
         };
     };
 
-    if(command[1] == `${prefix}send` && message.author.id == `621917381681479693`){	
+    if(command[0] == `${prefix}send` && message.author.id == `621917381681479693`){	
         if(mb) return;	
         message.delete();	
         message.channel.send(`${args}`);	
