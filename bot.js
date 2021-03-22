@@ -2,24 +2,31 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const prefix = '!';
 
-let streets = [
+const street = [
     {
         name: 'Белт-Паркуэй',
         id: '001',
         radius: ['Бродвей'],
-        desc: "Прекрасный город. Отличное начало жизни в этом городе."
+        desc: 'Прекрасный город. Отличное начало жизни в этом городе.'
     },
     {
         name: 'Бродвей',
         id: '002',
         radius: ['Белт-Паркуэй', 'Парк-авеню'],
-        desc: "Центр города."
+        desc: 'Центр города.'
     },
     {
         name: 'Парк-авеню',
         id: '003',
         radius: ['Бродвей'],
-        desc: "Самая зеленая улица города."
+        desc: 'Самая зеленая улица города.'
+    }
+];
+
+const parentObject = [
+    {
+        name: 'Полицейский Департамент',
+        parent: 
     }
 ];
 
@@ -38,7 +45,7 @@ client.on('message', message => {
         message.delete();
 
         if(message.channel.name == "улица"){
-            let out = streets.find(st => st.name == message.channel.parent.name);
+            let out = street.find(st => st.name == message.channel.parent.name);
 
             if (out != null){
                 message.author.send(`Соседние улицы: ${out.radius.join(', ')}.`);
@@ -48,14 +55,14 @@ client.on('message', message => {
 
     if (command[0] == `${prefix}идти` && mb == false && message.channel.name == 'улица'){
         if (command[1] == "на"){
-            let homestreet = streets.find(st => st.name == message.channel.parent.name);
+            let homestreet = street.find(st => st.name == message.channel.parent.name);
             let walkway = homestreet.radius.find(st => st.toLowerCase() == args.toLowerCase());
             message.delete();
 
             if (walkway != null && message.channel.permissionOverwrites.get(message.author.id) != null){
                 client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
                 message.channel.parent.permissionOverwrites.get(message.author.id).delete();
-            }else if (walkway == null && streets.find(st => st.name.toLowerCase() == args.toLowerCase())){
+            }else if (walkway == null && street.find(st => st.name.toLowerCase() == args.toLowerCase())){
                 message.author.send(`${args} не является соседней улицей с ${homestreet.name}.`);
             }else{
                 message.author.send(`Вероятнее всего улицы ${args} нет, либо вы ввели ее неправильно.`);
