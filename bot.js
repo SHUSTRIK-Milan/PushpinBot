@@ -8,11 +8,16 @@ const street = [
         id: '001',
         radius: ['Бродвей'],
         desc: 'Прекрасный город. Отличное начало жизни в этом городе.',
-        object: [
+        objects: [
             {
                 name: 'Магазин',
                 id: '001',
                 addCondition: null
+            },
+            {
+                name: 'Туалет',
+                id: '0011',
+                addCondition: 'Магазин'
             },
             {
                 name: 'Дом-1',
@@ -26,7 +31,7 @@ const street = [
         id: '002',
         radius: ['Белт-Паркуэй', 'Парк-авеню'],
         desc: 'Центр города.',
-        object: [
+        objects: [
             {
                 name: 'Полицейский Департамент',
                 id: '001',
@@ -39,7 +44,7 @@ const street = [
         id: '003',
         radius: ['Бродвей'],
         desc: 'Самая зеленая улица города.',
-        object: [
+        objects: [
             {
                 name: 'Завод',
                 id: '001',
@@ -67,17 +72,16 @@ client.on('message', message => {
         if(message.channel.name == "улица"){
             let objects = [];
 
-            for (let pobj of homestreet.object) objects.push(pobj.name);
+            for (let pobj of homestreet.objects) if (pobj.addCondition == null) objects.push(pobj.name);
 
             if (homestreet != null){
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
             };
-        }else if(homestreet.object.find(pob => pob.name.toLowerCase() == message.channel.name.toLowerCase()) != null){
+        }else if(homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == message.channel.name.toLowerCase()) != null){
             let objects = [];
+            let ofObj = homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == message.channel.name.toLowerCase());
 
-            for (let pobj of homestreet.object){
-                for (let obj of pobj.objects) objects.push(obj.name);
-            };
+            for(let obj of ofObj) objects.push(obj.name);
 
             if (homestreet != null && objects != null){
                 message.author.send(`Ближайшие помещения: ${objects.join(', ')}.`);
