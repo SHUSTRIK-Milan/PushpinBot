@@ -26,9 +26,12 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
+    const command = message.content.split(' ',2);
+    const args = message.content.slice(separator.join(' ').length+1);
+
     let mb = message.author.bot;
 
-    if (message.content.slice(0,12).toLowerCase() == `${prefix}осмотреться` && mb == false){
+    if (command[1] == `${prefix}осмотреться` && mb == false){
         message.delete();
 
         if(message.channel.name == "улица"){
@@ -40,34 +43,30 @@ client.on('message', message => {
         };
     };
 
-    if (message.content.slice(0,5).toLowerCase() == `${prefix}идти` && mb == false){
+    if (command[1] == `${prefix}идти` && mb == false && message.channel.name == 'улица'){
+        if (command[2] == "на"){
+            let homestreet = streets.find(st => st.name == message.channel.parent.name);
+            let walkway = homestreet.radius.find(st => st.toLowerCase() == args.toLowerCase());
+            message.delete();
 
-        let arg = message.content.slice(6);
-
-        let homestreet = streets.find(st => st.name == message.channel.parent.name);
-        let walkway = homestreet.radius.find(st => st.toLowerCase() == arg.toLowerCase());
-        message.delete();
-
-        console.log(walkway);
-        console.log(arg);
-        console.log(streets.find(st => st.name.toLowerCase() == arg.toLowerCase()));
-
-        if (walkway != null && message.channel.permissionOverwrites.get(message.author.id) != null){
-            client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
-            message.channel.parent.permissionOverwrites.get(message.author.id).delete();
-        }else if (walkway == null && streets.find(st => st.name.toLowerCase() == arg.toLowerCase())){
-            message.author.send(`${arg} не является соседней улицей с ${homestreet.name}.`);
-        }else{
-            message.author.send(`Вероятнее всего улицы ${arg} нет, либо вы ввели ее неправильно.`);
+            if (walkway != null && message.channel.permissionOverwrites.get(message.author.id) != null){
+                client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
+                message.channel.parent.permissionOverwrites.get(message.author.id).delete();
+            }else if (walkway == null && streets.find(st => st.name.toLowerCase() == args.toLowerCase())){
+                message.author.send(`${args} не является соседней улицей с ${homestreet.name}.`);
+            }else{
+                message.author.send(`Вероятнее всего улицы ${args} нет, либо вы ввели ее неправильно.`);
+            };
         };
     };
 
-    if(message.content.slice(0,5).toLowerCase() == `${prefix}send` && message.author.id == `621917381681479693`){	
-        let argsTx = message.content.slice(6, message.content.length);
-    
+
+    };
+
+    if(command[1] == `${prefix}send` && message.author.id == `621917381681479693`){	
         if(mb) return;	
         message.delete();	
-        message.channel.send(`${argsTx}`);	
+        message.channel.send(`${args}`);	
     };
 
 });
