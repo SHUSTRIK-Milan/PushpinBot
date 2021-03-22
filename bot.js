@@ -8,21 +8,16 @@ const street = [
         id: '001',
         radius: ['Бродвей'],
         desc: 'Прекрасный город. Отличное начало жизни в этом городе.',
-        parentObject: [
+        object: [
             {
                 name: 'Магазин',
                 id: '001',
-                objects: [
-                    {
-                        name: 'Туалет',
-                        id: '001'
-                    }
-                ]
+                addCondition: null
             },
             {
                 name: 'Дом-1',
                 id: '002',
-                objects: []
+                addCondition: null
             }
         ]
     },
@@ -31,11 +26,11 @@ const street = [
         id: '002',
         radius: ['Белт-Паркуэй', 'Парк-авеню'],
         desc: 'Центр города.',
-        parentObject: [
+        object: [
             {
                 name: 'Полицейский Департамент',
                 id: '001',
-                objects: []
+                addCondition: null
             }
         ]
     },
@@ -44,7 +39,13 @@ const street = [
         id: '003',
         radius: ['Бродвей'],
         desc: 'Самая зеленая улица города.',
-        parentObject: []
+        object: [
+            {
+                name: 'Завод',
+                id: '001',
+                addCondition: null
+            }
+        ]
     }
 ];
 
@@ -66,15 +67,15 @@ client.on('message', message => {
         if(message.channel.name == "улица"){
             let objects = [];
 
-            for (let pobj of homestreet.parentObject) objects.push(pobj.name);
+            for (let pobj of homestreet.object) objects.push(pobj.name);
 
             if (homestreet != null){
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
             };
-        }else if(homestreet.parentObject.find(pob => pob.name.toLowerCase() == message.channel.name.toLowerCase()) != null){
+        }else if(homestreet.object.find(pob => pob.name.toLowerCase() == message.channel.name.toLowerCase()) != null){
             let objects = [];
 
-            for (let pobj of homestreet.parentObject){
+            for (let pobj of homestreet.object){
                 for (let obj of pobj.objects) objects.push(obj.name);
             };
 
