@@ -20,11 +20,6 @@ const street = [
                 addCondition: 'Магазин'
             },
             {
-                name: 'Тест',
-                id: '0012',
-                addCondition: 'Магазин'
-            },
-            {
                 name: 'Дом-1',
                 id: '002',
                 addCondition: ''
