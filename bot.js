@@ -72,7 +72,7 @@ client.on('message', message => {
         if(message.channel.name == "улица"){
             let objects = [];
 
-            for (let pobj of homestreet.objects) if (pobj.addCondition == null) objects.push(pobj.name);
+            for (let pobj of homestreet.objects) if (pobj.addCondition == '') objects.push(pobj.name);
 
             if (homestreet != null){
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
