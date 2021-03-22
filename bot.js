@@ -75,7 +75,7 @@ client.on('message', message => {
             let objects = [];
 
             for (let pobj of homestreet.parentObject){
-                for (let obj of pobj) objects.push(obj.name);
+                for (let obj of pobj.objects) objects.push(obj.name);
             };
 
             if (homestreet != null && objects != null){
