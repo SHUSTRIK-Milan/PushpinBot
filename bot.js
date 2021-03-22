@@ -71,9 +71,7 @@ client.on('message', message => {
 
         if(message.channel.name == "улица"){
             let objects = [];
-            let ofObj = homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == '');
 
-            //for(let obj of ofObj) objects.push(obj.name);
             for (let pobj of homestreet.objects) if (pobj.addCondition == '') objects.push(pobj.name);
 
             if (homestreet != null){
@@ -81,9 +79,8 @@ client.on('message', message => {
             };
         }else if(homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == message.channel.name.toLowerCase()) != null){
             let objects = [];
-            let ofObj = homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == message.channel.name.toLowerCase());
 
-            for(let obj of ofObj) objects.push(obj.name);
+            for (let pobj of homestreet.objects) if (pobj.addCondition.toLowerCase() == message.channel.name.toLowerCase()) objects.push(pobj.name);
 
             if (homestreet != null && objects != null){
                 message.author.send(`Ближайшие помещения: ${objects.join(', ')}.`);
