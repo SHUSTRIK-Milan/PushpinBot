@@ -29,6 +29,10 @@ client.on('message', message => {
     const command = message.content.split(' ',2);
     const args = message.content.slice(command.join(' ').length+1);
 
+    console.log(command[1]);
+    console.log(command[2]);
+    console.log(args);
+
     let mb = message.author.bot;
 
     if (command[1] == `${prefix}осмотреться` && mb == false){
