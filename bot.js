@@ -61,7 +61,7 @@ client.on('message', message => {
 
     if (command[0] == `${prefix}осмотреться` && mb == false){
         message.delete();
-        let homestreet = street.find(st => st.name == message.channel.parent.name);
+        let homestreet = street.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
 
         if(message.channel.name == "улица"){
             let objects = [];
@@ -71,7 +71,7 @@ client.on('message', message => {
             if (homestreet != null){
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
             };
-        }else if(homestreet.parentObject.find(pob => pob.name == message.channel.name) != null){
+        }else if(homestreet.parentObject.find(pob => pob.name.toLowerCase() == message.channel.name.toLowerCase()) != null){
             let objects = [];
 
             for (let pobj of homestreet.parentObject) for (let obj of pobj) objects.push(obj.name);
