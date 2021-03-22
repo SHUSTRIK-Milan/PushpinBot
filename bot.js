@@ -64,7 +64,7 @@ client.on('message', message => {
             for (let obj of homestreet.parentObject) objects.push(obj.name);
 
             if (homestreet != null){
-                message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}`);
+                message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
             };
         };
     };
