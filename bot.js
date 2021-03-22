@@ -85,24 +85,31 @@ client.on('message', message => {
             if (homestreet != null && objects != null){
                 message.author.send(`Ближайшие помещения: ${objects.join(', ')}.`);
             };
+        }else{
+            message.author.send(`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
         };
     };
 
     if (command[0] == `${prefix}идти` && mb == false && message.channel.name == 'улица'){
+        message.delete();
+
         if (command[1] == "на"){
             let homestreet = street.find(st => st.name == message.channel.parent.name);
             let walkway = homestreet.radius.find(st => st.toLowerCase() == args.toLowerCase());
-            message.delete();
 
             if (walkway != null && message.channel.permissionOverwrites.get(message.author.id) != null){
                 client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
                 message.channel.parent.permissionOverwrites.get(message.author.id).delete();
-            }else if (walkway == null && street.find(st => st.name.toLowerCase() == args.toLowerCase())){
+            }else if (walkway == null && street.find(st => st.name.toLowerCase() == args.toLowerCase()) != null){
                 message.author.send(`${args} не является соседней улицей с ${homestreet.name}.`);
             }else{
                 message.author.send(`Вероятнее всего улицы ${args} нет, либо вы ввели ее неправильно.`);
             };
-        };
+        }else if (command[1] == "в"){
+
+        }else{
+            message.author.send(`Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
+        }
     };
 
     if(command[0] == `${prefix}send` && message.author.id == `621917381681479693`){	
