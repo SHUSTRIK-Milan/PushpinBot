@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const prefix = '#';
+const prefix = '!';
 
 let streets = [
     {
@@ -42,15 +42,19 @@ client.on('message', message => {
 
     if (message.content.slice(0,5).toLowerCase() == `${prefix}идти` && mb == false){
 
+        let arg = message.content.slice(6);
+
         let homestreet = streets.find(st => st.name == message.channel.parent.name);
-        let walkway = homestreet.radius.find(st => st.toLowerCase() == message.content.slice(6).toLowerCase());
+        let walkway = homestreet.radius.find(st => st.toLowerCase() == arg.toLowerCase());
         message.delete();
 
         if (walkway != null && message.channel.permissionOverwrites.get(message.author.id) != null){
             client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
             message.channel.parent.permissionOverwrites.get(message.author.id).delete();
+        }else if (walkway == null && streets.find(st => st.name.toLowerCase() == arg.toLowerCase())){
+            message.author.send(`${arg} не является соседней улицей с ${homestreet.name}.`);
         }else{
-            message.author.send(`Вероятнее всего улицы ${message.content.slice(6)} нет, либо вы ввели ее неправильно.`);
+            message.author.send(`Вероятнее всего улицы ${arg} нет, либо вы ввели ее неправильно.`);
         };
     };
 
