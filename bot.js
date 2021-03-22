@@ -73,8 +73,8 @@ client.on('message', message => {
             let objects = [];
             let ofObj = homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == '');
 
-            for(let obj of ofObj) objects.push(obj.name);
-            for (let pobj of homestreet.objects) if (pobj.addCondition == '') console.log(pobj.name);
+            //for(let obj of ofObj) objects.push(obj.name);
+            for (let pobj of homestreet.objects) if (pobj.addCondition == '') objects.push(pobj.name);
 
             if (homestreet != null){
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
