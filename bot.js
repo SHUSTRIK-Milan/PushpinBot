@@ -48,6 +48,10 @@ client.on('message', message => {
         let walkway = homestreet.radius.find(st => st.toLowerCase() == arg.toLowerCase());
         message.delete();
 
+        console.log(walkway);
+        console.log(arg);
+        console.log(streets.find(st => st.name.toLowerCase() == arg.toLowerCase()));
+
         if (walkway != null && message.channel.permissionOverwrites.get(message.author.id) != null){
             client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
             message.channel.parent.permissionOverwrites.get(message.author.id).delete();
