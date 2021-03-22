@@ -12,7 +12,12 @@ const street = [
             {
                 name: 'Магазин',
                 id: '001',
-                objects: []
+                objects: [
+                    {
+                        name: 'Туалет',
+                        id: '001'
+                    }
+                ]
             },
             {
                 name: 'Дом-1',
@@ -56,15 +61,23 @@ client.on('message', message => {
 
     if (command[0] == `${prefix}осмотреться` && mb == false){
         message.delete();
+        let homestreet = street.find(st => st.name == message.channel.parent.name);
 
         if(message.channel.name == "улица"){
-            let homestreet = street.find(st => st.name == message.channel.parent.name);
             let objects = [];
 
-            for (let obj of homestreet.parentObject) objects.push(obj.name);
+            for (let pobj of homestreet.parentObject) objects.push(pobj.name);
 
             if (homestreet != null){
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
+            };
+        }else if(homestreet.parentObject.find(pob => pob.name == message.channel.name) != null){
+            let objects = [];
+
+            for (let pobj of homestreet.parentObject) for (let obj of pobj) objects.push(obj.name);
+
+            if (homestreet != null && objects != null){
+                message.author.send(`Ближайшие помещения: ${objects.join(', ')}.`);
             };
         };
     };
