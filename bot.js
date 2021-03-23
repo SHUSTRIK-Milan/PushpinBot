@@ -92,9 +92,9 @@ client.on('message', message => {
 
     if (command[0] == `${prefix}идти` && mb == false){
         message.delete();
+        let homestreet = street.find(st => st.name == message.channel.parent.name);
 
         if (command[1] == "на" && message.channel.name == 'улица'){
-            let homestreet = street.find(st => st.name == message.channel.parent.name);
             let walkway = homestreet.radius.find(st => st.toLowerCase() == args.toLowerCase());
 
             if (walkway != null && message.channel.parent.permissionOverwrites.get(message.author.id) != null){
@@ -109,7 +109,6 @@ client.on('message', message => {
                 message.author.send(`Вероятнее всего улицы ${args} нет, либо вы ввели ее неправильно.`);
             };
         }else if (command[1] == "в"){
-            let homestreet = street.find(st => st.name == message.channel.parent.name);
             let walkway = homestreet.objects.find(st => st.name.toLowerCase() == args.toLowerCase());
         }else{
             message.author.send(`Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
