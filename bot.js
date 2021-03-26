@@ -82,19 +82,19 @@ client.on('message', message => {
                 let messageNormal = msg.content.split('\n');
 
                 for(let msg of messageNormal){
-                let split = msg.split(':');
-                if (split[0] != ''){
-                    mainArray.push(split);
-                }else{
-                    split.splice(0,1);
-                    mainArray.push(split);
-                }
+                    let split = msg.split(':');
+                    if (split[0] != ''){
+                        mainArray.push(split);
+                    }else{
+                        split.splice(0,1);
+                        mainArray.push(split);
+                    }
                 };
                 membersArray = [];
 
                 for(let i of mainArray){
-                var newMember = new member(i[0], i[1], i[2], i[3], i[4]);
-                membersArray.push(newMember);
+                    var newMember = new member(i[0], i[1], i[2], i[3], i[4]);
+                    membersArray.push(newMember);
                 };
 
                 return membersArray;
@@ -103,9 +103,9 @@ client.on('message', message => {
             };
         };
 
-        GetStats(`825075071403032626`,`825075316161642496`).then(members => {
+        /* GetStats(`825075071403032626`,`825075316161642496`).then(members => {
             console.log(members);
-        });
+        }); */
     };
 
     if (command[0] == `${prefix}осмотреться` && mb == false){
