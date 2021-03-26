@@ -4,6 +4,7 @@ const prefix = '!';
 
 const logsId = `825078587312177162`;
 const logsChannel = client.channels.cache.get(logsId);
+console.log(logsChannel);
 
 const street = [
     {
