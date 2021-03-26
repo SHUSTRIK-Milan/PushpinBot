@@ -66,7 +66,7 @@ client.on('message', message => {
     const command = message.content.split(' ',2);
     const args = message.content.slice(command.join(' ').length+1);
 
-    if (message.guild != null || mb == false || command[0] == `${prefix}осмотреться` || command[0] == `${prefix}идти` || ){
+    if (message.guild != null || mb == false || command[0] == `${prefix}осмотреться` || command[0] == `${prefix}идти` || message.channel.id != commitsID){
         client.channels.cache.get(logsId).send({embed: {
             color: 7844437,
             author: {
