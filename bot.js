@@ -69,7 +69,7 @@ client.on('message', message => {
     let mb = message.author.bot;
 
     function sendLog(cat,act,status,add){
-        //if (message.guild != null && mb == false && command[0] != `${prefix}осмотреться` && command[0] != `${prefix}идти` && message.channel.id != commitsID){
+        if (message.guild != null && mb == false && command[0] != `${prefix}осмотреться` && command[0] != `${prefix}идти` && message.channel.id != commitsID){
             client.channels.cache.get(logsId).send({embed: {
                 color: 14560833,
                 author: {
@@ -85,11 +85,11 @@ client.on('message', message => {
                 timestamp: new Date()
                 }
             });
-            
+
             return;
-        //}else{
-           //return;
-        //}
+        }else{
+            return;
+        }
     };
 
     sendLog(`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
