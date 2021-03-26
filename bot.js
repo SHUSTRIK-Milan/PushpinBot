@@ -2,6 +2,9 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const prefix = '!';
 
+const logsId = `825078587312177162`;
+const logsChannel = client.channels.cache.get(logsId);
+
 const street = [
     {
         name: 'Белт-Паркуэй',
@@ -63,6 +66,24 @@ client.on('message', message => {
     const command = message.content.split(' ',2);
     const args = message.content.slice(command.join(' ').length+1);
 
+    logsChannel.send({embed: {
+        color: 7844437,
+        author: {
+          name: message.author.username,
+          icon_url: message.author.avatarURL()
+        },
+        title: `[Общее] Отправил сообщение.`,
+        fields: [
+          {
+            name: "[Успешно] Допольнительно:",
+            value: `${message.content}`
+          }
+        ],
+        
+        timestamp: new Date()
+        }
+    });
+
     let mb = message.author.bot;
 
     if (message.channel.name == 'test' && mb == false){
@@ -119,6 +140,23 @@ client.on('message', message => {
 
             if (homestreet != null){
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
+                logsChannel.send({embed: {
+                    color: 7844437,
+                    author: {
+                      name: message.author.username,
+                      icon_url: message.author.avatarURL()
+                    },
+                    title: `[Общее] Осмотрелся на улице.`,
+                    fields: [
+                      {
+                        name: "[Успешно] Допольнительно:",
+                        value: `Вывод: Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`
+                      }
+                    ],
+                    
+                    timestamp: new Date()
+                    }
+                });
             };
         }else if(homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == message.channel.name.toLowerCase()) != null){
             let objects = [];
@@ -127,9 +165,43 @@ client.on('message', message => {
 
             if (homestreet != null && objects != null){
                 message.author.send(`Ближайшие помещения: ${objects.join(', ')}.`);
+                logsChannel.send({embed: {
+                    color: 7844437,
+                    author: {
+                      name: message.author.username,
+                      icon_url: message.author.avatarURL()
+                    },
+                    title: `[Общее] Осмотрелся в объекте.`,
+                    fields: [
+                      {
+                        name: "[Успешно] Допольнительно:",
+                        value: `Вывод: Ближайшие помещения: ${objects.join(', ')}.`
+                      }
+                    ],
+                    
+                    timestamp: new Date()
+                    }
+                });
             };
         }else{
             message.author.send(`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
+            logsChannel.send({embed: {
+                color: 7844437,
+                author: {
+                  name: message.author.username,
+                  icon_url: message.author.avatarURL()
+                },
+                title: `[Общее] Попытался осмотреться.`,
+                fields: [
+                  {
+                    name: "[Ошибка] Допольнительно:",
+                    value: `Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`
+                  }
+                ],
+                
+                timestamp: new Date()
+                }
+            });
         };
     };
 
@@ -145,16 +217,85 @@ client.on('message', message => {
                 if (cat.type == 'category'){
                     client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
                     message.channel.parent.permissionOverwrites.get(message.author.id).delete();
+
+                    logsChannel.send({embed: {
+                        color: 7844437,
+                        author: {
+                          name: message.author.username,
+                          icon_url: message.author.avatarURL()
+                        },
+                        title: `[Общее] Пошел`,
+                        fields: [
+                          {
+                            name: "[Успешно] Допольнительно:",
+                            value: `Перешел с ${homestreet.name} на ${walkway}.`
+                          }
+                        ],
+                        
+                        timestamp: new Date()
+                        }
+                    });
                 };
             }else if (walkway == null && street.find(st => st.name.toLowerCase() == args.toLowerCase()) != null){
                 message.author.send(`${args} не является соседней улицей с ${homestreet.name}.`);
+                logsChannel.send({embed: {
+                    color: 7844437,
+                    author: {
+                      name: message.author.username,
+                      icon_url: message.author.avatarURL()
+                    },
+                    title: `[Общее] Попытался пойти.`,
+                    fields: [
+                      {
+                        name: "[Ошибка] Допольнительно:",
+                        value: `Вывод: ${args} не является соседней улицей с ${homestreet.name}.`
+                      }
+                    ],
+                    
+                    timestamp: new Date()
+                    }
+                });
             }else{
                 message.author.send(`Вероятнее всего улицы ${args} нет, либо вы ввели ее неправильно.`);
+                logsChannel.send({embed: {
+                    color: 7844437,
+                    author: {
+                      name: message.author.username,
+                      icon_url: message.author.avatarURL()
+                    },
+                    title: `[Общее] Попытался пойти.`,
+                    fields: [
+                      {
+                        name: "[Ошибка] Допольнительно:",
+                        value: `Вывод: Вероятнее всего улицы ${args} нет, либо вы ввели ее неправильно.`
+                      }
+                    ],
+                    
+                    timestamp: new Date()
+                    }
+                });
             };
         }else if (command[1] == "в"){
             let walkway = homestreet.objects.find(st => st.name.toLowerCase() == args.toLowerCase());
         }else{
             message.author.send(`Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
+            logsChannel.send({embed: {
+                color: 7844437,
+                author: {
+                  name: message.author.username,
+                  icon_url: message.author.avatarURL()
+                },
+                title: `[Общее] Попытался пойти.`,
+                fields: [
+                  {
+                    name: "[Ошибка] Допольнительно:",
+                    value: `Вывод: Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`
+                  }
+                ],
+                
+                timestamp: new Date()
+                }
+            });
         }
     };
 
