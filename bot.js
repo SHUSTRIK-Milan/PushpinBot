@@ -66,6 +66,8 @@ client.on('message', message => {
     const command = message.content.split(' ',2);
     const args = message.content.slice(command.join(' ').length+1);
 
+    let mb = message.author.bot;
+
     if (message.guild != null && mb == false && command[0] != `${prefix}осмотреться` && command[0] != `${prefix}идти` && message.channel.id != commitsID){
         function sendLog(cat,act,status,add){
             client.channels.cache.get(logsId).send({embed: {
@@ -87,8 +89,6 @@ client.on('message', message => {
     };
 
     sendLog(`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
-
-    let mb = message.author.bot;
 
     if (message.channel.name == 'test' && mb == false){
         function member(nick, name, money, status, car) {
