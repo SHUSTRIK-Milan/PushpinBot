@@ -65,6 +65,49 @@ client.on('message', message => {
 
     let mb = message.author.bot;
 
+    if (message.channel.name == 'test' && mb == false){
+        function member(nick, name, money, status, car) {
+            this.nick = nick;
+            this.name = name;
+            this.money = money;
+            this.status = status;
+            this.car = car;
+        };
+
+        async function GetStats(idChl, idMsg) {
+            let channel = client.channels.cache.get(idChl);
+            let msg = await channel.messages.fetch(idMsg);
+            try{
+                mainArray = [];
+                let messageNormal = msg.content.split('\n');
+
+                for(let msg of messageNormal){
+                let split = msg.split(':');
+                if (split[0] != ''){
+                    mainArray.push(split);
+                }else{
+                    split.splice(0,1);
+                    mainArray.push(split);
+                }
+                };
+                membersArray = [];
+
+                for(let i of mainArray){
+                var newMember = new member(i[0], i[1], i[2], i[3], i[4]);
+                membersArray.push(newMember);
+                };
+
+                return membersArray;
+            }catch{
+                return null;
+            };
+        };
+
+        GetStats(`825075071403032626`,`825075316161642496`).then(members => {
+            console.log(members);
+        });
+    };
+
     if (command[0] == `${prefix}осмотреться` && mb == false){
         message.delete();
         let homestreet = street.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
