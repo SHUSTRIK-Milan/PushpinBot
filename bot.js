@@ -85,6 +85,8 @@ client.on('message', message => {
                 timestamp: new Date()
                 }
             });
+            
+            return;
         //}else{
            //return;
         //}
