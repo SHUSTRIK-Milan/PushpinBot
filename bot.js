@@ -3,8 +3,6 @@ const client = new Discord.Client();
 const prefix = '!';
 
 const logsId = `825078587312177162`;
-const logsChannel = client.channels.cache.get(logsId);
-console.log(logsChannel);
 
 const street = [
     {
@@ -61,6 +59,7 @@ const street = [
 
 client.on('ready', () => {
   console.log(`${client.user.tag} ready!`);
+  console.log(logsChannel);
 });
 
 client.on('message', message => {
@@ -309,3 +308,4 @@ client.on('message', message => {
 });
 
 client.login(process.env.BOT_TOKEN);
+const logsChannel = client.channels.cache.get(logsId);
