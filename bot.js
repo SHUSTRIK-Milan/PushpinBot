@@ -59,14 +59,13 @@ const street = [
 
 client.on('ready', () => {
   console.log(`${client.user.tag} ready!`);
-  console.log(logsChannel);
 });
 
 client.on('message', message => {
     const command = message.content.split(' ',2);
     const args = message.content.slice(command.join(' ').length+1);
 
-    logsChannel.send({embed: {
+    client.channels.cache.get(logsId).send({embed: {
         color: 7844437,
         author: {
           name: message.author.username,
@@ -140,7 +139,7 @@ client.on('message', message => {
 
             if (homestreet != null){
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
-                logsChannel.send({embed: {
+                client.channels.cache.get(logsId).send({embed: {
                     color: 7844437,
                     author: {
                       name: message.author.username,
@@ -165,7 +164,7 @@ client.on('message', message => {
 
             if (homestreet != null && objects != null){
                 message.author.send(`Ближайшие помещения: ${objects.join(', ')}.`);
-                logsChannel.send({embed: {
+                client.channels.cache.get(logsId).send({embed: {
                     color: 7844437,
                     author: {
                       name: message.author.username,
@@ -185,7 +184,7 @@ client.on('message', message => {
             };
         }else{
             message.author.send(`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
-            logsChannel.send({embed: {
+            client.channels.cache.get(logsId).send({embed: {
                 color: 7844437,
                 author: {
                   name: message.author.username,
@@ -218,7 +217,7 @@ client.on('message', message => {
                     client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
                     message.channel.parent.permissionOverwrites.get(message.author.id).delete();
 
-                    logsChannel.send({embed: {
+                    client.channels.cache.get(logsId).send({embed: {
                         color: 7844437,
                         author: {
                           name: message.author.username,
@@ -238,7 +237,7 @@ client.on('message', message => {
                 };
             }else if (walkway == null && street.find(st => st.name.toLowerCase() == args.toLowerCase()) != null){
                 message.author.send(`${args} не является соседней улицей с ${homestreet.name}.`);
-                logsChannel.send({embed: {
+                client.channels.cache.get(logsId).send({embed: {
                     color: 7844437,
                     author: {
                       name: message.author.username,
@@ -257,7 +256,7 @@ client.on('message', message => {
                 });
             }else{
                 message.author.send(`Вероятнее всего улицы ${args} нет, либо вы ввели ее неправильно.`);
-                logsChannel.send({embed: {
+                client.channels.cache.get(logsId).send({embed: {
                     color: 7844437,
                     author: {
                       name: message.author.username,
@@ -279,7 +278,7 @@ client.on('message', message => {
             let walkway = homestreet.objects.find(st => st.name.toLowerCase() == args.toLowerCase());
         }else{
             message.author.send(`Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
-            logsChannel.send({embed: {
+            client.channels.cache.get(logsId).send({embed: {
                 color: 7844437,
                 author: {
                   name: message.author.username,
@@ -308,4 +307,3 @@ client.on('message', message => {
 });
 
 client.login(process.env.BOT_TOKEN);
-const logsChannel = client.channels.cache.get(logsId);
