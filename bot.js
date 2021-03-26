@@ -65,23 +65,25 @@ client.on('message', message => {
     const command = message.content.split(' ',2);
     const args = message.content.slice(command.join(' ').length+1);
 
-    client.channels.cache.get(logsId).send({embed: {
-        color: 7844437,
-        author: {
-          name: message.author.username,
-          icon_url: message.author.avatarURL()
-        },
-        title: `[Общее] Отправил сообщение.`,
-        fields: [
-          {
-            name: "[Успешно] Допольнительно:",
-            value: `${message.content}`
-          }
-        ],
-        
-        timestamp: new Date()
-        }
-    });
+    if (message.guild != null || mb == false || command[0] == `${prefix}осмотреться` || command[0] == `${prefix}идти`){
+        client.channels.cache.get(logsId).send({embed: {
+            color: 7844437,
+            author: {
+            name: message.author.username,
+            icon_url: message.author.avatarURL()
+            },
+            title: `[Общее] Отправил сообщение.`,
+            fields: [
+            {
+                name: "[Успешно] Допольнительно:",
+                value: `${message.content}`
+            }
+            ],
+            
+            timestamp: new Date()
+            }
+        });
+    };
 
     let mb = message.author.bot;
 
