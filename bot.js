@@ -213,7 +213,7 @@ client.on('message', message => {
         
         if (arg > 0){
             console.log(arg);
-            message.channel.messages.fetch({limit: arg})
+            message.channel.messages.fetch({limit: 10})
             .then(message => {
                 message.delete();
                 console.log(message.content);
