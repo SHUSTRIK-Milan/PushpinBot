@@ -69,13 +69,14 @@ client.on('message', message => {
     let mb = message.author.bot;
 
     function sendLog(cat,act,status,add){
-        if (message.guild != null && mb == false && add != `${prefix}осмотреться` && add != `${prefix}идти` && message.channel.id != commitsID){
+        if (message.guild != null && mb == false && add.slice(0,length(`!осмотреться`)) != `!осмотреться` && add.slice(0,length(`!идти`)) != `!идти` && message.channel.id != commitsID){
             client.channels.cache.get(logsId).send({embed: {
                 color: 14560833,
                 author: {
                     name: message.author.username,
                     icon_url: message.author.avatarURL()
                 },
+                image: `https://cdn.discordapp.com/emojis/823501227747835934.png?v=1`,
                 title: `[${cat}] ${act}`,
                 fields: [{
                     name: `[${status}] Допольнительно:`,
