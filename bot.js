@@ -69,6 +69,10 @@ client.on('message', message => {
     let mb = message.author.bot;
 
     function sendLog(cat,act,status,add){
+        let img;
+        if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
+        if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
+
         if (message.guild != null && mb == false && add.slice(0,(`!осмотреться`).length) != `!осмотреться` && add.slice(0,(`!идти`).length) != `!идти` && message.channel.id != commitsID){
             client.channels.cache.get(logsId).send({embed: {
                 color: 14560833,
@@ -76,8 +80,8 @@ client.on('message', message => {
                     name: message.author.username,
                     icon_url: message.author.avatarURL()
                 },
-                image: {
-                    url: `https://i.imgur.com/cjSSwtu.png`
+                thumbnail: {
+                    url: img
                 },
                 title: `[${cat}] ${act}`,
                 fields: [{
