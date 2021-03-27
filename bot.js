@@ -207,7 +207,7 @@ client.on('message', message => {
         message.channel.send(`${args}`);	
     };
 
-    if(command[0] == `${prefix}очистить` && mb == false && message.guild.member(user).roles.cache.get(`822493460493500436`) != null){
+    if(command[0] == `${prefix}очистить` && mb == false && message.guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
         message.delete();
         let arg = parseInt(command[1]);
         
