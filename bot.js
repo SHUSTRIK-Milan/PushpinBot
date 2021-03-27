@@ -216,7 +216,7 @@ client.on('message', message => {
             message.channel.messages.fetch({limit: 10})
             .then(message => {
                 message.delete();
-                console.log(message.content);
+                console.log(message);
             });
             sendLog(`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`);
         }else{
