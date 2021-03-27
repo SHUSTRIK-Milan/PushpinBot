@@ -212,12 +212,7 @@ client.on('message', message => {
         let arg = parseInt(command[1]);
         
         if (arg > 0){
-            console.log(arg);
-            message.channel.messages.fetch({limit: 10})
-            .then(message => {
-                message.delete();
-                console.log(message);
-            });
+            message.channel.bulkDelete(arg, true);
             sendLog(`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`);
         }else{
             sendLog(`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Неверный аргумент.`);
