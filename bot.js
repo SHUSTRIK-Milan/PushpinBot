@@ -207,6 +207,18 @@ client.on('message', message => {
         message.channel.send(`${args}`);	
     };
 
+    if(command[0] == `${prefix}очистить` && mb == false && guild.member(user).roles.cache.get(`822493460493500436`) != null){
+        message.delete();
+        let arg = parseInt(command[1]);
+        
+        if (arg > 0){
+            message.channel.messages.fetch({limit: arg}).then(message => {message.delete()});
+            sendLog(`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`);
+        }else{
+            sendLog(`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Неверный аргумент.`);
+        };
+    };
+
 });
 
 client.login(process.env.BOT_TOKEN);
