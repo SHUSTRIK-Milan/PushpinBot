@@ -4,6 +4,11 @@ const prefix = '!';
 
 const logsId = `825078587312177162`;
 const commitsID = `823476184388993054`;
+const infoID = `822528060196388926`;
+const devID = `822796606952177664`;
+const mainIDusers = `822529113239453706`;
+const questID = `822885506270232651`;
+const mainIDteam = `822493674738941963`;
 
 const street = [
     {
@@ -73,7 +78,11 @@ client.on('message', message => {
         if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
         if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
 
-        if (message.guild != null && mb == false && add.slice(0,(`!осмотреться`).length) != `!осмотреться` && add.slice(0,(`!идти`).length) != `!идти` && message.channel.id != commitsID){
+        if (message.guild != null && mb == false && add.slice(0,1) != prefix
+        && message.channel.id != commitsID && message.channel.id != commitsID
+        && message.channel.id != infoID && message.channel.id != devID
+        && message.channel.id != mainIDusers && message.channel.id != questID
+        && message.channel.id != mainIDteam){
             client.channels.cache.get(logsId).send({embed: {
                 color: 14560833,
                 author: {
