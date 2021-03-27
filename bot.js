@@ -4,7 +4,6 @@ const prefix = '!';
 
 const logsId = `825078587312177162`;
 const commitsID = `823476184388993054`;
-const guild = client.guilds.cache.get('814795850885627964');
 
 const street = [
     {
@@ -61,7 +60,6 @@ const street = [
 
 client.on('ready', () => {
   console.log(`${client.user.tag} ready!`);
-  console.log(guild);
 });
 
 client.on('message', message => {
@@ -209,7 +207,7 @@ client.on('message', message => {
         message.channel.send(`${args}`);	
     };
 
-    if(command[0] == `${prefix}очистить` && mb == false && guild.member(user).roles.cache.get(`822493460493500436`) != null){
+    if(command[0] == `${prefix}очистить` && mb == false && message.guild.member(user).roles.cache.get(`822493460493500436`) != null){
         message.delete();
         let arg = parseInt(command[1]);
         
