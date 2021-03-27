@@ -220,7 +220,7 @@ client.on('message', message => {
         message.delete();
         let arg = parseInt(command[1]);
         
-        if (arg > 0){
+        if (arg > 0 && arg < 100){
             message.channel.bulkDelete(arg, true);
             sendLog(`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`);
         }else if (arg >= 100){
