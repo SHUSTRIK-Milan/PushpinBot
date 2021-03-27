@@ -69,7 +69,7 @@ client.on('message', message => {
     let mb = message.author.bot;
 
     function sendLog(cat,act,status,add){
-        if (message.guild != null && mb == false && add.slice(0,length(`!осмотреться`)) != `!осмотреться` && add.slice(0,length(`!идти`)) != `!идти` && message.channel.id != commitsID){
+        if (message.guild != null && mb == false && add.slice(0,(`!осмотреться`).length) != `!осмотреться` && add.slice(0,(`!идти`).length) != `!идти` && message.channel.id != commitsID){
             client.channels.cache.get(logsId).send({embed: {
                 color: 14560833,
                 author: {
