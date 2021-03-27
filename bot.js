@@ -76,7 +76,9 @@ client.on('message', message => {
                     name: message.author.username,
                     icon_url: message.author.avatarURL()
                 },
-                image: `https://cdn.discordapp.com/emojis/823501227747835934.png?v=1`,
+                image: {
+                    url: `https://i.imgur.com/cjSSwtu.png`
+                },
                 title: `[${cat}] ${act}`,
                 fields: [{
                     name: `[${status}] Допольнительно:`,
