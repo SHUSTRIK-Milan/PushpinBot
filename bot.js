@@ -87,7 +87,7 @@ client.on('message', message => {
             && message.channel.id != mainIDusers && message.channel.id != questID
             && message.channel.id != mainIDteam) nrm = true;
 
-        if (add.slice(0,1) == prefix) add = 'Воспользовался командой.';
+        if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
         
         if (message.guild != null && mb == false && nrm == true || 
             message.guild != null && mb == false && nrm == false && adm == true){
