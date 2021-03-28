@@ -78,11 +78,17 @@ client.on('message', message => {
         if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
         if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
 
-        if (message.guild != null && mb == false && add.slice(0,1) != prefix
-        && message.channel.id != commitsID && message.channel.id != commitsID
-        && message.channel.id != infoID && message.channel.id != devID
-        && message.channel.id != mainIDusers && message.channel.id != questID
-        && message.channel.id != mainIDteam){
+        let adm = false;
+        if (cat == 'Админ') adm = true;
+
+        let nrm = false;
+        if (message.channel.id != commitsID && message.channel.id != commitsID
+            && message.channel.id != infoID && message.channel.id != devID
+            && message.channel.id != mainIDusers && message.channel.id != questID
+            && message.channel.id != mainIDteam) nrm = true;
+        
+        if (message.guild != null && mb == false && nrm == true || 
+            message.guild != null && mb == false && nrm == false && adm == true){
             client.channels.cache.get(logsId).send({embed: {
                 color: 14560833,
                 author: {
