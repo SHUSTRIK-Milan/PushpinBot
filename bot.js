@@ -225,7 +225,6 @@ client.on('message', message => {
     };
 
     if(command[0] == `${prefix}очистить` && mb == false && message.guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
-        message.delete();
         let arg = parseInt(command[1]);
         
         if (arg > 0 && arg < 100){
