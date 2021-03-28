@@ -127,7 +127,7 @@ client.on('message', message => {
             this.car = car;
         };
 
-        async function GetStats(idChl, idMsg) {
+        /* async function GetStats(idChl, idMsg) {
             let channel = client.channels.cache.get(idChl);
             let msg = await channel.messages.fetch(idMsg);
             try{
@@ -156,7 +156,7 @@ client.on('message', message => {
             };
         };
 
-        /* GetStats(`825075071403032626`,`825075316161642496`).then(members => {
+        GetStats(`825075071403032626`,`825075316161642496`).then(members => {
             console.log(members);
         }); */
     };
