@@ -73,7 +73,7 @@ function sendLog(message,cat,act,status,add){
     let global = false;
     if (cat == 'Глобальное') global = true;
 
-    let addCon = false;
+    let nrm = false;
     if (message.channel.id != commitsID && message.channel.id != commitsID
         && message.channel.id != infoID && message.channel.id != devID
         && message.channel.id != mainIDusers && message.channel.id != questID
