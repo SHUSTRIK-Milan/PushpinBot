@@ -69,8 +69,10 @@ function sendLog(message,cat,act,status,add){
 
     let adm = false;
     if (cat == 'Админ') adm = true;
+    let global = false;
+    if (cat == 'Глобальное') global = true;
 
-    let nrm = false;
+    let addCon = false;
     if (message.channel.id != commitsID && message.channel.id != commitsID
         && message.channel.id != infoID && message.channel.id != devID
         && message.channel.id != mainIDusers && message.channel.id != questID
@@ -79,7 +81,8 @@ function sendLog(message,cat,act,status,add){
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
     
     if (message.guild != null && mb == false && nrm == true || 
-        message.guild != null && mb == false && nrm == false && adm == true){
+        message.guild != null && mb == false && nrm == false && adm == true ||
+        message.guild != null && mb == false && nrm == false && global == true){
         client.channels.cache.get(logsId).send({embed: {
             color: 14560833,
             author: {
@@ -111,7 +114,7 @@ client.on('ready', () => {
 });
 
 client.on('messageDelete', (message) => {
-
+    sendLog(message,'Глобальное','Сообщение удалено.','Успешно',`Содержимое сообщения: ${message.content}`)
 });
 
 client.on('message', message => {
