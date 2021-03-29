@@ -111,7 +111,7 @@ client.on('ready', () => {
 });
 
 client.on('messageDelete', (message) => {
-    
+
 });
 
 client.on('message', message => {
