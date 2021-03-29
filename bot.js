@@ -62,9 +62,56 @@ const street = [
     }
 ];
 
+function sendLog(message,cat,act,status,add){
+    let img;
+    if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
+    if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
+
+    let adm = false;
+    if (cat == 'Админ') adm = true;
+
+    let nrm = false;
+    if (message.channel.id != commitsID && message.channel.id != commitsID
+        && message.channel.id != infoID && message.channel.id != devID
+        && message.channel.id != mainIDusers && message.channel.id != questID
+        && message.channel.id != mainIDteam) nrm = true;
+
+    if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
+    
+    if (message.guild != null && mb == false && nrm == true || 
+        message.guild != null && mb == false && nrm == false && adm == true){
+        client.channels.cache.get(logsId).send({embed: {
+            color: 14560833,
+            author: {
+                name: message.author.username,
+                icon_url: message.author.avatarURL()
+            },
+            thumbnail: {
+                url: img
+            },
+            title: `[${cat}] ${act}`,
+            fields: [{
+                name: `[${status}] Допольнительно:`,
+                value: `${add}`
+            }],
+            
+            timestamp: new Date()
+            }
+        });
+
+        return;
+    }else{
+        return;
+    }
+};
+
 
 client.on('ready', () => {
-  console.log(`${client.user.tag} ready!`);
+    console.log(`${client.user.tag} ready!`);
+});
+
+client.on('messageDelete', (message) => {
+    
 });
 
 client.on('message', message => {
@@ -73,50 +120,7 @@ client.on('message', message => {
 
     let mb = message.author.bot;
 
-    function sendLog(cat,act,status,add){
-        let img;
-        if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
-        if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
-
-        let adm = false;
-        if (cat == 'Админ') adm = true;
-
-        let nrm = false;
-        if (message.channel.id != commitsID && message.channel.id != commitsID
-            && message.channel.id != infoID && message.channel.id != devID
-            && message.channel.id != mainIDusers && message.channel.id != questID
-            && message.channel.id != mainIDteam) nrm = true;
-
-        if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
-        
-        if (message.guild != null && mb == false && nrm == true || 
-            message.guild != null && mb == false && nrm == false && adm == true){
-            client.channels.cache.get(logsId).send({embed: {
-                color: 14560833,
-                author: {
-                    name: message.author.username,
-                    icon_url: message.author.avatarURL()
-                },
-                thumbnail: {
-                    url: img
-                },
-                title: `[${cat}] ${act}`,
-                fields: [{
-                    name: `[${status}] Допольнительно:`,
-                    value: `${add}`
-                }],
-                
-                timestamp: new Date()
-                }
-            });
-
-            return;
-        }else{
-            return;
-        }
-    };
-
-    sendLog(`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
+    sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
 
     if (message.channel.name == 'test' && mb == false){
         function member(nick, name, money, status, car) {
@@ -172,7 +176,7 @@ client.on('message', message => {
 
             if (homestreet != null){
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
-                sendLog(`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
+                sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
             };
         }else if(homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == message.channel.name.toLowerCase()) != null){
             let objects = [];
@@ -181,11 +185,11 @@ client.on('message', message => {
 
             if (homestreet != null && objects != null){
                 message.author.send(`Ближайшие помещения: ${objects.join(', ')}.`);
-                sendLog(`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения: ${objects.join(', ')}.`);
+                sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения: ${objects.join(', ')}.`);
             };
         }else{
             message.author.send(`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
-            sendLog(`Общее`,`Попытался осмотреться.`,`Ошибка`,`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
+            sendLog(message,`Общее`,`Попытался осмотреться.`,`Ошибка`,`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
         };
     };
 
@@ -201,20 +205,20 @@ client.on('message', message => {
                 if (cat.type == 'category'){
                     client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
                     message.channel.parent.permissionOverwrites.get(message.author.id).delete();
-                    sendLog(`Общее`,`Пошел.`,`Успешно`,`Перешел с ${homestreet.name} на ${walkway}.`);
+                    sendLog(message,`Общее`,`Пошел.`,`Успешно`,`Перешел с ${homestreet.name} на ${walkway}.`);
                 };
             }else if (walkway == null && street.find(st => st.name.toLowerCase() == args.toLowerCase()) != null){
                 message.author.send(`${args} не является соседней улицей с ${homestreet.name}.`);
-                sendLog(`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: ${args} не является соседней улицей с ${homestreet.name}.`);
+                sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: ${args} не является соседней улицей с ${homestreet.name}.`);
             }else{
                 message.author.send(`Вероятнее всего улицы ${args} нет, либо вы ввели ее неправильно.`);
-                sendLog(`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${args} нет, либо вы ввели ее неправильно.`);
+                sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${args} нет, либо вы ввели ее неправильно.`);
             };
         }else if (command[1] == "в"){
             let walkway = homestreet.objects.find(st => st.name.toLowerCase() == args.toLowerCase());
         }else{
             message.author.send(`Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
-            sendLog(`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
+            sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
         }
     };
 
@@ -229,11 +233,11 @@ client.on('message', message => {
         
         if (arg > 0 && arg < 100){
             message.channel.bulkDelete(arg, true);
-            sendLog(`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`);
+            sendLog(message,`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`);
         }else if (arg >= 100){
-            sendLog(`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Попытка удалить более 100 сообщений.`);
+            sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Попытка удалить более 100 сообщений.`);
         }else{
-            sendLog(`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Неверный аргумент.`);
+            sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Неверный аргумент.`);
         };
     };
 
