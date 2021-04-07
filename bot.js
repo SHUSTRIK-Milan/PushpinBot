@@ -252,4 +252,4 @@ client.on('message', message => {
 
 client.login(process.env.BOT_TOKEN);
 
-const guild = client.guilds.cache.get('814795850885627964');
+let guild = client.guilds.cache.get('814795850885627964');
