@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const prefix = '!';
 
-const guild = client.guilds.cache.cache.get(`814795850885627964`);
+const guild = client.guilds.cache.get(`814795850885627964`);
 
 const logsId = `825078587312177162`;
 const commitsID = `823476184388993054`;
