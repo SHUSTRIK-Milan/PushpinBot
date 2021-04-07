@@ -10,6 +10,44 @@ const mainIDusers = `822529113239453706`;
 const questID = `822885506270232651`;
 const mainIDteam = `822493674738941963`;
 
+async function GetStats(idChl, idMsg) {
+    let channel = client.channels.cache.get(idChl);
+    let msg = await channel.messages.fetch(idMsg);
+    try{
+        mainArray = [];
+        let messageNormal = msg.content.split('\n');
+        messageNormal.splice(0,1);
+        for(let msg of messageNormal){
+            let split = msg.split(':');
+            if (split[0] != ''){
+                mainArray.push(split);
+            }else{
+                split.splice(0,1);
+                mainArray.push(split);
+            }
+        };
+        membersArray = [];
+        for(let i of mainArray){
+            var newMember = new member(i[0], i[1], i[2]);
+            membersArray.push(newMember);
+        };
+        return membersArray;
+    }catch{
+        return null;
+    };
+};
+
+async function SetStats(idChl, idMsg, nick, id, SteamID) {
+    let channel = client.channels.cache.get(idChl);
+    let msg = await channel.messages.fetch(idMsg);
+    try{
+        msg.edit(msg.content + `\n:${nick}:${id}:${SteamID}`)
+        return;
+    }catch{
+        return null;
+    };
+};
+
 const street = [
     {
         name: 'Белт-Паркуэй',
@@ -124,49 +162,6 @@ client.on('message', message => {
     let mb = message.author.bot;
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
-
-    if (message.channel.name == 'test' && mb == false){
-        function member(nick, name, money, status, car) {
-            this.nick = nick;
-            this.name = name;
-            this.money = money;
-            this.status = status;
-            this.car = car;
-        };
-
-        /* async function GetStats(idChl, idMsg) {
-            let channel = client.channels.cache.get(idChl);
-            let msg = await channel.messages.fetch(idMsg);
-            try{
-                mainArray = [];
-                let messageNormal = msg.content.split('\n');
-
-                for(let msg of messageNormal){
-                    let split = msg.split(':');
-                    if (split[0] != ''){
-                        mainArray.push(split);
-                    }else{
-                        split.splice(0,1);
-                        mainArray.push(split);
-                    }
-                };
-                membersArray = [];
-
-                for(let i of mainArray){
-                    var newMember = new member(i[0], i[1], i[2], i[3], i[4]);
-                    membersArray.push(newMember);
-                };
-
-                return membersArray;
-            }catch{
-                return null;
-            };
-        };
-
-        GetStats(`825075071403032626`,`825075316161642496`).then(members => {
-            console.log(members);
-        }); */
-    };
 
     if (command[0] == `${prefix}осмотреться` && mb == false){
         message.delete();
