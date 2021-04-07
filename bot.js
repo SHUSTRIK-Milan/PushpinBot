@@ -10,6 +10,14 @@ const mainIDusers = `822529113239453706`;
 const questID = `822885506270232651`;
 const mainIDteam = `822493674738941963`;
 
+function member(nick, name, money, status, car) {
+    this.nick = nick;
+    this.name = name;
+    this.money = money;
+    this.status = status;
+    this.car = car;
+};
+
 async function GetStats(idChl, idMsg) {
     let channel = client.channels.cache.get(idChl);
     let msg = await channel.messages.fetch(idMsg);
