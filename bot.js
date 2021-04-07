@@ -171,8 +171,6 @@ client.on('message', message => {
 
     let mb = message.author.bot;
 
-    console.log(guild);
-
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
 
     if (command[0] == `${prefix}осмотреться` && mb == false){
