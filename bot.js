@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const prefix = '!';
+let guild;
 
 const logsId = `825078587312177162`;
 const commitsID = `823476184388993054`;
@@ -157,7 +158,7 @@ function sendLog(message,cat,act,status,add){
 
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
-    console.log(client.guilds.cache.get('814795850885627964'));
+    guild = client.guilds.cache.get('814795850885627964');
 });
 
 client.on('messageDelete', (message) => {
@@ -169,6 +170,8 @@ client.on('message', message => {
     const args = message.content.slice(command.join(' ').length+1);
 
     let mb = message.author.bot;
+
+    console.log(guild);
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
 
@@ -251,5 +254,3 @@ client.on('message', message => {
 });
 
 client.login(process.env.BOT_TOKEN);
-
-let guild = client.guilds.cache.get('814795850885627964');
