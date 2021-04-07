@@ -157,7 +157,7 @@ function sendLog(message,cat,act,status,add){
 
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
-    console.log(guild);
+    console.log(client.guilds.cache.get('814795850885627964'));
 });
 
 client.on('messageDelete', (message) => {
