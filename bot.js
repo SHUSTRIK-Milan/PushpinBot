@@ -109,7 +109,6 @@ function sendLog(message,cat,act,status,add){
     }
 };
 
-
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
 });
