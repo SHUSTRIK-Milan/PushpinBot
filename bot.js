@@ -2,6 +2,8 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const prefix = '!';
 
+const guild = client.guilds.cache.cache.get(`814795850885627964`);
+
 const logsId = `825078587312177162`;
 const commitsID = `823476184388993054`;
 const infoID = `822528060196388926`;
@@ -157,6 +159,7 @@ function sendLog(message,cat,act,status,add){
 
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
+    console.log(guild);
 });
 
 client.on('messageDelete', (message) => {
