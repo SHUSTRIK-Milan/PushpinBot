@@ -247,6 +247,23 @@ client.on('message', message => {
         };
     };
 
+    const args = message.content.slice(prefix.length).trim().split(' ');
+    const command = args.shift();
+    
+    if(command.toLowerCase() == "edit" && message.author.id == `621917381681479693`){
+
+      const argsTx = message.content.slice(prefix.length).split(`${command} `).join('').split(`${args[0]} `).join('').split(`${args[1]} `).join('')
+
+      message.channel.guild.channels.cache.find(id => id == `${args[0]}`).messages.fetch(`${args[1]}`)
+        .then(message =>{
+
+          if(!message.author.bot) return;
+          message.edit(`${argsTx}`);
+        
+        })
+        .catch(console.error);
+    };
+
 });
 
 client.login(process.env.BOT_TOKEN);
