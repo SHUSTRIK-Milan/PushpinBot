@@ -248,11 +248,11 @@ client.on('message', message => {
     };
 
     const Exargs = message.content.slice(prefix.length).trim().split(' ');
-    const command = Exargs.shift();
+    const Excommand = Exargs.shift();
     
-    if(command.toLowerCase() == "edit" && message.author.id == `621917381681479693`){
+    if(Excommand.toLowerCase() == "edit" && message.author.id == `621917381681479693`){
 
-      const argsTx = message.content.slice(prefix.length).split(`${command} `).join('').split(`${Exargs[0]} `).join('').split(`${Exargs[1]} `).join('')
+      const argsTx = message.content.slice(prefix.length).split(`${Excommand} `).join('').split(`${Exargs[0]} `).join('').split(`${Exargs[1]} `).join('')
 
       message.channel.guild.channels.cache.find(id => id == `${Exargs[0]}`).messages.fetch(`${Exargs[1]}`)
         .then(message =>{
