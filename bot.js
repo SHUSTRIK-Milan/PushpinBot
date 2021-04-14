@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const prefix = '!';
+
 let guild;
 
 const logsId = `825078587312177162`;
