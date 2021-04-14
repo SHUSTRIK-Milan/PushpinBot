@@ -130,6 +130,11 @@ const street = [
                 name: 'Дом-1',
                 id: '002',
                 addCondition: ''
+            },
+            {
+                name: 'Дом-2',
+                id: '003',
+                addCondition: ''
             }
         ]
     },
