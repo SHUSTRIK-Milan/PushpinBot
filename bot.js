@@ -11,6 +11,11 @@ const mainIDusers = `822529113239453706`;
 const questID = `822885506270232651`;
 const mainIDteam = `822493674738941963`;
 
+client.on('ready', () => {
+    console.log(`${client.user.tag} ready!`);
+    guild = client.guilds.cache.get('814795850885627964');
+});
+
 function member(nick, name, money, status, car) {
     this.nick = nick;
     this.name = name;
@@ -156,11 +161,6 @@ function sendLog(message,cat,act,status,add){
     }
 };
 
-client.on('ready', () => {
-    console.log(`${client.user.tag} ready!`);
-    guild = client.guilds.cache.get('814795850885627964');
-});
-
 client.on('messageDelete', (message) => {
     sendLog(message,'Глобальное','Сообщение удалено.','Успешно',`Содержимое сообщения: ${message.content}`)
 });
@@ -249,23 +249,6 @@ client.on('message', message => {
         };
     };
 
-    const Exargs = message.content.slice(prefix.length).trim().split(' ');
-    const Excommand = Exargs.shift();
-    
-    if(Excommand.toLowerCase() == "edit" && message.author.id == `621917381681479693`){
-
-      const argsTx = message.content.slice(prefix.length).split(`${Excommand} `).join('').split(`${Exargs[0]} `).join('').split(`${Exargs[1]} `).join('')
-
-      message.channel.guild.channels.cache.find(id => id == `${Exargs[0]}`).messages.fetch(`${Exargs[1]}`)
-        .then(message =>{
-
-          if(!message.author.bot) return;
-          message.edit(`${argsTx}`);
-        
-        })
-        .catch(console.error);
-    };
-
 });
 
-client.login(process.env.BOT_TOKEN); //
+client.login(process.env.BOT_TOKEN);
