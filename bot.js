@@ -162,6 +162,7 @@ const street = [
 ];
 
 function sendLog(message,cat,act,status,add){
+    
     let mb = message.author.bot;
     let img;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
