@@ -11,6 +11,11 @@ const mainIDusers = `822529113239453706`;
 const questID = `822885506270232651`;
 const mainIDteam = `822493674738941963`;
 
+client.on('ready', () => {
+    console.log(`${client.user.tag} ready!`);
+    guild = client.guilds.cache.get('814795850885627964');
+});
+
 function member(nick, name, money, status, car) {
     this.nick = nick;
     this.name = name;
@@ -155,11 +160,6 @@ function sendLog(message,cat,act,status,add){
         return;
     }
 };
-
-client.on('ready', () => {
-    console.log(`${client.user.tag} ready!`);
-    guild = client.guilds.cache.get('814795850885627964');
-});
 
 client.on('messageDelete', (message) => {
     sendLog(message,'Глобальное','Сообщение удалено.','Успешно',`Содержимое сообщения: ${message.content}`)
