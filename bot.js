@@ -14,6 +14,52 @@ const mainIDteam = `822493674738941963`;
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
     guild = client.guilds.cache.get('814795850885627964');
+
+    let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
+    let member = guild.memberCount;
+    let onlinemember = member - offlinemember - 1;
+
+    if (onlinemember > 0){
+      client.user.setPresence({
+        status: "online",
+        activity: {
+            name: `на ${onlinemember} участинков!`,
+            type: "WATCHING",
+        }
+      });
+    }else if (onlinemember == 0){
+      client.user.setPresence({
+        status: "idle",
+        activity: {
+            name: `в пустоту.`,
+            type: "WATCHING",
+        }
+      });
+    }
+});
+
+client.on('presenceUpdate', (om,nm) => {
+    let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
+    let member = guild.memberCount;
+    let onlinemember = member - offlinemember - 1;
+
+    if (onlinemember > 0){
+      client.user.setPresence({
+        status: "online",
+        activity: {
+            name: `на ${onlinemember} участинков!`,
+            type: "WATCHING",
+        }
+      });
+    }else if (onlinemember == 0){
+      client.user.setPresence({
+        status: "idle",
+        activity: {
+            name: `в пустоту.`,
+            type: "WATCHING",
+        }
+      });
+    }
 });
 
 function member(nick, name, money, status, car) {
