@@ -135,7 +135,7 @@ const street = [
                 name: 'Дом-2',
                 id: '003',
                 addCondition: ''
-            }
+            } 
         ]
     },
     {
