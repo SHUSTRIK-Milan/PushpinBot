@@ -170,7 +170,7 @@ client.on('message', message => {
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
 
-    if (comand(message).com == 'осмотреться' && mb == false){
+    if (comand(message)[com] == 'осмотреться' && mb == false){
         message.delete();
         let homestreet = Config.street.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
 
