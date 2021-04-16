@@ -154,9 +154,9 @@ function comand(message){
         sarg: sarg
     };
 
-    console.log(com);
-    console.log(arg);
-    console.log(sarg);
+    console.log(comand.com);
+    console.log(comand.arg);
+    console.log(comand.sarg);
 
     return comand;
 };
