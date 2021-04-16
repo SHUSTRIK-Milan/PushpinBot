@@ -166,7 +166,7 @@ function sendLog(message,cat,act,status,add){
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
 
-    let color;
+    let color = 11645371;
     if (cat == 'Админ') color = 4105807;
     if (cat == 'Глобальное') color = 14560833;
     if (cat == 'Общее') color = 11645371;
