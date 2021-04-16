@@ -1,16 +1,9 @@
 const Discord = require('discord.js');
+const Config = require('./config');
 const client = new Discord.Client();
 const prefix = '!';
 
 let guild;
-
-const logsId = `825078587312177162`;
-const commitsID = `823476184388993054`;
-const infoID = `822528060196388926`;
-const devID = `822796606952177664`;
-const mainIDusers = `822529113239453706`;
-const questID = `822885506270232651`;
-const mainIDteam = `822493674738941963`;
 
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
