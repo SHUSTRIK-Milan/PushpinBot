@@ -202,7 +202,7 @@ function comand(message){
 
     let com = msg.split(" ", 1).join('').slice(0,prefix.length);
     let arg = msg.slice(com.length+prefix.length+1);
-    let slArg = arg.splite(" ");
+    let slArg = arg.split(" ");
 
     let comand = {
         сom: com,
