@@ -172,11 +172,8 @@ function sendLog(message,cat,act,status,add){
     if (cat == 'Общее') color = 11645371;
 
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
-    
-    if(Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id) == null){
 
-         // потом удалить
-
+    if(Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id) == null || cat == 'Глобальное'){
         client.channels.cache.get(Config.BLChannelsID.logsId).send({embed: {
             color: color,
             author: {
