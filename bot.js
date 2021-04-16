@@ -200,7 +200,7 @@ function sendLog(message,cat,act,status,add){
 function comand(message){
     let msg = message.content;
 
-    let com = msg.split(" ", 1).join('').slice(1);
+    let com = msg.split(" ", 1).join('');
     let arg = msg.slice(com.length+2);
     let slArg = arg.split(" ");
 
