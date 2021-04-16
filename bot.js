@@ -148,7 +148,7 @@ function comand(message){
     let arg = msg.slice(com.length+prefix.length+1);
     let sarg = arg.split(" ");
 
-    let comand = {
+    var comand = {
         com: com.toLowerCase(),
         arg: arg.toLowerCase(),
         sarg: sarg
@@ -163,7 +163,7 @@ client.on('messageDelete', (message) => {
 
 client.on('message', message => {
     let mb = message.author.bot;
-    console.log(comand(message));
+    console.log(comand(message).com);
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
 
