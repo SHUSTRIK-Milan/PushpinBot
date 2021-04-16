@@ -150,7 +150,7 @@ function comand(message){
 
     var comand = {
         com: com,
-        arg: argm,
+        arg: arg,
         sarg: sarg
     };
 
