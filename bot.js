@@ -173,9 +173,9 @@ function sendLog(message,cat,act,status,add){
 
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
 
-    if(Config.BLChannelsID.find(chl => chl == message.channel.id) == null){
+    if(Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id) == null){
 
-        console.log(Config.BLChannelsID.find(chl => chl == message.channel.id)); // потом удалить
+        console.log(Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id)); // потом удалить
 
         client.channels.cache.get(Config.BLChannelsID.logsId).send({embed: {
             color: color,
