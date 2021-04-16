@@ -174,6 +174,10 @@ function sendLog(message,cat,act,status,add){
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
 
     for(let blchl in Config.BLChannelsID)if(message.channel.id != Config.BLChannelsID[blchl]){
+
+        console.log(message.channel.id);
+        console.log(Config.BLChannelsID[blchl]);
+        
         client.channels.cache.get(Config.BLChannelsID.logsId).send({embed: {
             color: color,
             author: {
