@@ -204,12 +204,12 @@ function comand(message){
     let arg = msg.slice(com.length+prefix.length+1);
     let slArg = arg.splite(" ");
 
-    let com = {
+    let comand = {
         сom: com,
         arg: arg,
         slArg: slArg
     }
-    return com;
+    return comand;
 };
 
 client.on('messageDelete', (message) => {
