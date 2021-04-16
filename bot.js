@@ -141,8 +141,9 @@ function sendLog(message,cat,act,status,add){
 };
 
 function comand(message){
+
     let msg = message.content;
-    if(msg.slice(0,1) != prefix) return;
+    if(msg.slice(0,1) != prefix) return false;
     
     let com = msg.split(" ", 1).join('').slice(prefix.length);
     let arg = msg.slice(com.length+prefix.length+1);
