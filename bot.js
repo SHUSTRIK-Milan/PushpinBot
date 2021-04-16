@@ -167,6 +167,17 @@ const street = [
 ];
 
 function sendLog(message,cat,act,status,add){
+
+    let blchls = [
+        commitsID,
+        infoID,
+        devID,
+        mainIDusers,
+        questID,
+        mainIDteam
+    ];
+
+    for(let blchl in blchls)if(message.channel.id != blchl)
     
     let mb = message.author.bot;
     let img;
@@ -178,17 +189,9 @@ function sendLog(message,cat,act,status,add){
     let global = false;
     if (cat == 'Глобальное') global = true;
 
-    let nrm = false;
-    if (message.channel.id != commitsID && message.channel.id != commitsID
-        && message.channel.id != infoID && message.channel.id != devID
-        && message.channel.id != mainIDusers && message.channel.id != questID
-        && message.channel.id != mainIDteam) nrm = true;
-
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
-    
-    if (message.guild != null && mb == false && nrm == true || 
-        message.guild != null && mb == false && nrm == false && adm == true ||
-        message.guild != null && mb == false && nrm == false && global == true){
+
+    for(let blchl in blchls)if(message.channel.id != blchl){
         client.channels.cache.get(logsId).send({embed: {
             color: 14560833,
             author: {
@@ -200,7 +203,7 @@ function sendLog(message,cat,act,status,add){
             },
             title: `[${cat}] ${act}`,
             fields: [{
-                name: `[${status}] Допольнительно:`,
+                name: `Допольнительно:`,
                 value: `${add}`
             }],
             
