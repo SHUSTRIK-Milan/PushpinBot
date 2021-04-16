@@ -199,10 +199,15 @@ function sendLog(message,cat,act,status,add){
 
 function comand(message){
     let msg = message.content;
+
+    let com = msg.split(" ", 1).join('').slice(0,prefix.length);
+    let arg = msg.slice(com.length+prefix.length+1);
+    let slArg = arg.splite(" ");
+
     let com = {
-        сom: msg.split(" ", 1).join('').slice(0,prefix.length),
-        arg: msg.slice(com.length+prefix.length+1),
-        slArg: arg.splite(" ")
+        сom: com,
+        arg: arg,
+        slArg: slArg
     }
     return com;
 };
