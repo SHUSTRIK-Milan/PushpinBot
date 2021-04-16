@@ -17,7 +17,7 @@ client.on('ready', () => {
       client.user.setPresence({
         status: "online",
         activity: {
-            name: `на ${onlinemember} участинков!`,
+            name: `на ${onlinemember} участников!`,
             type: "WATCHING",
         }
       });
@@ -41,7 +41,7 @@ client.on('presenceUpdate', (om,nm) => {
       client.user.setPresence({
         status: "online",
         activity: {
-            name: `на ${onlinemember} участинков!`,
+            name: `на ${onlinemember} участников!`,
             type: "WATCHING",
         }
       });
@@ -160,21 +160,19 @@ const street = [
 ];
 
 function sendLog(message,cat,act,status,add){
-    let mb = message.author.bot;
-    
     let img;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
 
-    let color;
+    let color = 11645371;
     if (cat == 'Админ') color = 4105807;
     if (cat == 'Глобальное') color = 14560833;
     if (cat == 'Общее') color = 11645371;
 
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
 
-    for(let blchl in Config.BLChannelsID)if(message.channel.id != blchl){
-        client.channels.cache.get(logsId).send({embed: {
+    if(Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id) == null){
+        client.channels.cache.get(Config.BLChannelsID.logsId).send({embed: {
             color: color,
             author: {
                 name: message.author.username,
@@ -210,7 +208,7 @@ function comand(message){
 };
 
 client.on('messageDelete', (message) => {
-    sendLog(message,'Глобальное','Сообщение удалено.','Успешно',`Содержимое сообщения: ${message.content}`)
+    sendLog(message,'Общее','Сообщение удалено.','Успешно',`Содержимое сообщения: ${message.content}`)
 });
 
 client.on('message', message => {
