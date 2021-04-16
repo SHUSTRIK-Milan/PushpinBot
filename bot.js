@@ -184,13 +184,13 @@ function sendLog(message,cat,act,status,add){
     let color;
     if (cat == 'Админ') color = 4105807;
     if (cat == 'Глобальное') color = 14560833;
-    if (cat == '')
+    if (cat == 'Общее') color = 11645371;
 
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
 
     for(let blchl in blchls)if(message.channel.id != blchl){
         client.channels.cache.get(logsId).send({embed: {
-            color: 14560833,
+            color: color,
             author: {
                 name: message.author.username,
                 icon_url: message.author.avatarURL()
