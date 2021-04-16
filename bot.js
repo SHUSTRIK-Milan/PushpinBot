@@ -149,8 +149,8 @@ function comand(message){
     let sarg = arg.split(" ");
 
     var comand = {
-        com: com.toLowerCase(),
-        arg: arg.toLowerCase(),
+        com: com,
+        arg: argm,
         sarg: sarg
     };
 
