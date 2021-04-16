@@ -102,62 +102,7 @@ async function SetStats(idChl, idMsg, nick, id, SteamID) {
     };
 };
 
-const street = [
-    {
-        name: 'Белт-Паркуэй',
-        id: '001',
-        radius: ['Бродвей'],
-        desc: 'Прекрасный город. Отличное начало жизни в этом городе.',
-        objects: [
-            {
-                name: 'Магазин',
-                id: '001',
-                addCondition: ''
-            },
-            {
-                name: 'Туалет',
-                id: '0011',
-                addCondition: 'Магазин'
-            },
-            {
-                name: 'Дом-1',
-                id: '002',
-                addCondition: ''
-            },
-            {
-                name: 'Дом-2',
-                id: '003',
-                addCondition: ''
-            } 
-        ]
-    },
-    {
-        name: 'Бродвей',
-        id: '002',
-        radius: ['Белт-Паркуэй', 'Парк-авеню'],
-        desc: 'Центр города.',
-        objects: [
-            {
-                name: 'Полицейский Департамент',
-                id: '001',
-                addCondition: ''
-            }
-        ]
-    },
-    {
-        name: 'Парк-авеню',
-        id: '003',
-        radius: ['Бродвей'],
-        desc: 'Самая зеленая улица города.',
-        objects: [
-            {
-                name: 'Завод',
-                id: '001',
-                addCondition: ''
-            }
-        ]
-    }
-];
+
 
 function sendLog(message,cat,act,status,add){
     let img = `https://i.imgur.com/cjSSwtu.png`;
@@ -231,7 +176,7 @@ client.on('message', message => {
 
     if (command[0] == `${prefix}осмотреться` && mb == false){
         message.delete();
-        let homestreet = street.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
+        let homestreet = Config.street.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
 
         if(message.channel.name == "улица"){
             let objects = [];
@@ -259,7 +204,7 @@ client.on('message', message => {
 
     if (command[0] == `${prefix}идти` && mb == false){
         message.delete();
-        let homestreet = street.find(st => st.name == message.channel.parent.name);
+        let homestreet = Config.street.find(st => st.name == message.channel.parent.name);
 
         if (command[1] == "на" && message.channel.name == 'улица'){
             let walkway = homestreet.radius.find(st => st.toLowerCase() == args.toLowerCase());
@@ -271,7 +216,7 @@ client.on('message', message => {
                     message.channel.parent.permissionOverwrites.get(message.author.id).delete();
                     sendLog(message,`Общее`,`Пошел.`,`Успешно`,`Перешел с ${homestreet.name} на ${walkway}.`);
                 };
-            }else if (walkway == null && street.find(st => st.name.toLowerCase() == args.toLowerCase()) != null){
+            }else if (walkway == null && Config.street.find(st => st.name.toLowerCase() == args.toLowerCase()) != null){
                 message.author.send(`${args} не является соседней улицей с ${homestreet.name}.`);
                 sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: ${args} не является соседней улицей с ${homestreet.name}.`);
             }else{
