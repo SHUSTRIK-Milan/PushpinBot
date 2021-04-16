@@ -141,20 +141,20 @@ function sendLog(message,cat,act,status,add){
 };
 
 function comand(message){
-    let msg = message.content;
-    if(msg.slice(0,1) != prefix) return;
+    if (msg.slice(0,1) == prefix){
+        let msg = message.content;
+        let com = msg.split(" ", 1).join('').slice(prefix.length);
+        let arg = msg.slice(com.length+prefix.length+1);
+        let sarg = arg.split(" ");
 
-    let com = msg.split(" ", 1).join('').slice(prefix.length);
-    let arg = msg.slice(com.length+prefix.length+1);
-    let sarg = arg.split(" ");
+        var comand = {
+            com: com,
+            arg: arg,
+            sarg: sarg
+        };
 
-    var comand = {
-        com: com,
-        arg: arg,
-        sarg: sarg
-    };
-
-    return comand;
+        return comand;
+    }else return;
 };
 
 client.on('messageDelete', (message) => {
