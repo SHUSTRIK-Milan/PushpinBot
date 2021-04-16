@@ -200,7 +200,7 @@ function sendLog(message,cat,act,status,add){
 function comand(message){
     let msg = message.content;
 
-    let com = msg.split(" ", 1).join('').slice(0,prefix.length);
+    let com = msg.split(" ", 1).join('').slice(prefix.length);
     let arg = msg.slice(com.length+prefix.length+1);
     let slArg = arg.split(" ");
 
@@ -210,9 +210,6 @@ function comand(message){
         slArg: slArg
     };
 
-    console.log(msg.split(" ", 1));
-    console.log(msg.split(" ", 1).join(''));
-    console.log(msg.split(" ", 1).join('').slice(0,prefix.length));
     return comand;
 };
 
@@ -228,7 +225,9 @@ client.on('message', message => {
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
 
-    comand(message);
+    console.log(comand(message).com);
+    console.log(comand(message).arg);
+    console.log(comand(message).slArg);
 
     if (command[0] == `${prefix}осмотреться` && mb == false){
         message.delete();
