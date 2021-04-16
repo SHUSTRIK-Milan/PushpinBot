@@ -167,7 +167,7 @@ const street = [
 ];
 
 function sendLog(message,cat,act,status,add){
-
+    let mb = message.author.bot;
     let blchls = [
         commitsID,
         infoID,
@@ -176,10 +176,7 @@ function sendLog(message,cat,act,status,add){
         questID,
         mainIDteam
     ];
-
-    for(let blchl in blchls)if(message.channel.id != blchl)
     
-    let mb = message.author.bot;
     let img;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
