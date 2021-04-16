@@ -154,10 +154,6 @@ function comand(message){
         sarg: sarg
     };
 
-    console.log(comand.com);
-    console.log(comand.arg);
-    console.log(comand.sarg);
-
     return comand;
 };
 
@@ -167,10 +163,11 @@ client.on('messageDelete', (message) => {
 
 client.on('message', message => {
     let mb = message.author.bot;
+    console.log(comand(message));
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
 
-    if (comand(message)[com] == 'осмотреться' && mb == false){
+    if (comand(message).com == 'осмотреться' && mb == false){
         message.delete();
         let homestreet = Config.street.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
 
