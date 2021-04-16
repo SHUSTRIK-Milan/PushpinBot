@@ -181,10 +181,10 @@ function sendLog(message,cat,act,status,add){
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
 
-    let adm = false;
-    if (cat == 'Админ') adm = true;
-    let global = false;
-    if (cat == 'Глобальное') global = true;
+    let color;
+    if (cat == 'Админ') color = 4105807;
+    if (cat == 'Глобальное') color = 14560833;
+    if (cat == '')
 
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
 
