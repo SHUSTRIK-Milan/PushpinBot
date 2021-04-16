@@ -1,19 +1,59 @@
 const Discord = require('discord.js');
+const Config = require('./config');
 const client = new Discord.Client();
 const prefix = '!';
-let guild;
 
-const logsId = `825078587312177162`;
-const commitsID = `823476184388993054`;
-const infoID = `822528060196388926`;
-const devID = `822796606952177664`;
-const mainIDusers = `822529113239453706`;
-const questID = `822885506270232651`;
-const mainIDteam = `822493674738941963`;
+let guild;
 
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
     guild = client.guilds.cache.get('814795850885627964');
+
+    let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
+    let member = guild.memberCount;
+    let onlinemember = member - offlinemember - 1;
+
+    if (onlinemember > 0){
+      client.user.setPresence({
+        status: "online",
+        activity: {
+            name: `на ${onlinemember} участинков!`,
+            type: "WATCHING",
+        }
+      });
+    }else if (onlinemember == 0){
+      client.user.setPresence({
+        status: "idle",
+        activity: {
+            name: `в пустоту.`,
+            type: "WATCHING",
+        }
+      });
+    }
+});
+
+client.on('presenceUpdate', (om,nm) => {
+    let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
+    let member = guild.memberCount;
+    let onlinemember = member - offlinemember - 1;
+
+    if (onlinemember > 0){
+      client.user.setPresence({
+        status: "online",
+        activity: {
+            name: `на ${onlinemember} участинков!`,
+            type: "WATCHING",
+        }
+      });
+    }else if (onlinemember == 0){
+      client.user.setPresence({
+        status: "idle",
+        activity: {
+            name: `в пустоту.`,
+            type: "WATCHING",
+        }
+      });
+    }
 });
 
 function member(nick, name, money, status, car) {
@@ -83,7 +123,12 @@ const street = [
                 name: 'Дом-1',
                 id: '002',
                 addCondition: ''
-            }
+            },
+            {
+                name: 'Дом-2',
+                id: '003',
+                addCondition: ''
+            } 
         ]
     },
     {
@@ -116,28 +161,21 @@ const street = [
 
 function sendLog(message,cat,act,status,add){
     let mb = message.author.bot;
+    
     let img;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
 
-    let adm = false;
-    if (cat == 'Админ') adm = true;
-    let global = false;
-    if (cat == 'Глобальное') global = true;
-
-    let nrm = false;
-    if (message.channel.id != commitsID && message.channel.id != commitsID
-        && message.channel.id != infoID && message.channel.id != devID
-        && message.channel.id != mainIDusers && message.channel.id != questID
-        && message.channel.id != mainIDteam) nrm = true;
+    let color;
+    if (cat == 'Админ') color = 4105807;
+    if (cat == 'Глобальное') color = 14560833;
+    if (cat == 'Общее') color = 11645371;
 
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
-    
-    if (message.guild != null && mb == false && nrm == true || 
-        message.guild != null && mb == false && nrm == false && adm == true ||
-        message.guild != null && mb == false && nrm == false && global == true){
+
+    for(let blchl in Config.BLChannelsID)if(message.channel.id != blchl){
         client.channels.cache.get(logsId).send({embed: {
-            color: 14560833,
+            color: color,
             author: {
                 name: message.author.username,
                 icon_url: message.author.avatarURL()
@@ -147,7 +185,7 @@ function sendLog(message,cat,act,status,add){
             },
             title: `[${cat}] ${act}`,
             fields: [{
-                name: `[${status}] Допольнительно:`,
+                name: `Допольнительно:`,
                 value: `${add}`
             }],
             
@@ -159,6 +197,16 @@ function sendLog(message,cat,act,status,add){
     }else{
         return;
     }
+};
+
+function comand(message){
+    let msg = message.content;
+    let com = {
+        сom: msg.split(" ", 1).join('').slice(0,prefix.length),
+        arg: msg.slice(com.length+prefix.length+1),
+        slArg: arg.splite(" ")
+    }
+    return com;
 };
 
 client.on('messageDelete', (message) => {
