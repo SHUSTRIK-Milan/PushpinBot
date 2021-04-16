@@ -219,9 +219,9 @@ client.on('message', message => {
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
 
-    console.log(comand().com);
-    console.log(comand().arg);
-    console.log(comand().slArg);
+    console.log(comand(message).com);
+    console.log(comand(message).arg);
+    console.log(comand(message).slArg);
 
     if (command[0] == `${prefix}осмотреться` && mb == false){
         message.delete();
