@@ -161,14 +161,6 @@ const street = [
 
 function sendLog(message,cat,act,status,add){
     let mb = message.author.bot;
-    let blchls = [
-        commitsID,
-        infoID,
-        devID,
-        mainIDusers,
-        questID,
-        mainIDteam
-    ];
     
     let img;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
@@ -181,7 +173,7 @@ function sendLog(message,cat,act,status,add){
 
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
 
-    for(let blchl in blchls)if(message.channel.id != blchl){
+    for(let blchl in Config.BLChannelsID)if(message.channel.id != blchl){
         client.channels.cache.get(logsId).send({embed: {
             color: color,
             author: {
