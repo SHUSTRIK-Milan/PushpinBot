@@ -210,9 +210,9 @@ function comand(message){
         slArg: slArg
     };
 
-    console.log(comand.com);
-    console.log(comand.arg);
-    console.log(comand.slArg);
+    console.log(msg.split(" ", 1));
+    console.log(msg.split(" ", 1).join(''));
+    console.log(msg.split(" ", 1).join('').slice(0,prefix.length));
     return comand;
 };
 
