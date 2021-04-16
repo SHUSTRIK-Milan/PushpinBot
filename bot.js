@@ -221,6 +221,10 @@ client.on('message', message => {
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
 
+    console.log(comand().com);
+    console.log(comand().arg);
+    console.log(comand().slArg);
+
     if (command[0] == `${prefix}осмотреться` && mb == false){
         message.delete();
         let homestreet = street.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
