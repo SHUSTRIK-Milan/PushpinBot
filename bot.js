@@ -164,10 +164,8 @@ client.on('messageDelete', (message) => {
 
 client.on('message', message => {
     let mb = message.author.bot;
-    
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
-    console.log(comand(message).com);
 
     if (comand(message).com == 'осмотреться' && mb == false){
         message.delete();
