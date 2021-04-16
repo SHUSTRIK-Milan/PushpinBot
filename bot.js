@@ -151,7 +151,7 @@ function comand(message){
     let comand = {
         com: com.toLowerCase(),
         arg: arg.toLowerCase(),
-        sarg: sarg.toLowerCase()
+        sarg: sarg
     };
 
     return comand;
