@@ -102,69 +102,12 @@ async function SetStats(idChl, idMsg, nick, id, SteamID) {
     };
 };
 
-const street = [
-    {
-        name: 'Белт-Паркуэй',
-        id: '001',
-        radius: ['Бродвей'],
-        desc: 'Прекрасный город. Отличное начало жизни в этом городе.',
-        objects: [
-            {
-                name: 'Магазин',
-                id: '001',
-                addCondition: ''
-            },
-            {
-                name: 'Туалет',
-                id: '0011',
-                addCondition: 'Магазин'
-            },
-            {
-                name: 'Дом-1',
-                id: '002',
-                addCondition: ''
-            },
-            {
-                name: 'Дом-2',
-                id: '003',
-                addCondition: ''
-            } 
-        ]
-    },
-    {
-        name: 'Бродвей',
-        id: '002',
-        radius: ['Белт-Паркуэй', 'Парк-авеню'],
-        desc: 'Центр города.',
-        objects: [
-            {
-                name: 'Полицейский Департамент',
-                id: '001',
-                addCondition: ''
-            }
-        ]
-    },
-    {
-        name: 'Парк-авеню',
-        id: '003',
-        radius: ['Бродвей'],
-        desc: 'Самая зеленая улица города.',
-        objects: [
-            {
-                name: 'Завод',
-                id: '001',
-                addCondition: ''
-            }
-        ]
-    }
-];
-
 function sendLog(message,cat,act,status,add){
-    let img;
+    let img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
 
-    let color = 11645371;
+    let color = 11645371; 
     if (cat == 'Админ') color = 4105807;
     if (cat == 'Глобальное') color = 14560833;
     if (cat == 'Общее') color = 11645371;
@@ -198,13 +141,21 @@ function sendLog(message,cat,act,status,add){
 };
 
 function comand(message){
+
     let msg = message.content;
-    let com = {
-        сom: msg.split(" ", 1).join('').slice(0,prefix.length),
-        arg: msg.slice(com.length+prefix.length+1),
-        slArg: arg.splite(" ")
-    }
-    return com;
+    if(msg.slice(0,1) != prefix) return false;
+    
+    let com = msg.split(" ", 1).join('').slice(prefix.length);
+    let arg = msg.slice(com.length+prefix.length+1);
+    let sarg = arg.split(" ");
+
+    var comand = {
+        com: com,
+        arg: arg,
+        sarg: sarg
+    };
+
+    return comand;
 };
 
 client.on('messageDelete', (message) => {
@@ -212,16 +163,13 @@ client.on('messageDelete', (message) => {
 });
 
 client.on('message', message => {
-    const command = message.content.split(' ',2);
-    const args = message.content.slice(command.join(' ').length+1);
-
     let mb = message.author.bot;
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
 
-    if (command[0] == `${prefix}осмотреться` && mb == false){
+    if (comand(message).com == 'осмотреться' && mb == false){
         message.delete();
-        let homestreet = street.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
+        let homestreet = Config.street.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
 
         if(message.channel.name == "улица"){
             let objects = [];
@@ -247,12 +195,12 @@ client.on('message', message => {
         };
     };
 
-    if (command[0] == `${prefix}идти` && mb == false){
+    if (comand(message).com == 'идти' && mb == false){
         message.delete();
-        let homestreet = street.find(st => st.name == message.channel.parent.name);
+        let homestreet = Config.street.find(st => st.name == message.channel.parent.name);
 
-        if (command[1] == "на" && message.channel.name == 'улица'){
-            let walkway = homestreet.radius.find(st => st.toLowerCase() == args.toLowerCase());
+        if (comand(message).sarg[0] == 'на' && message.channel.name == 'улица'){
+            let walkway = homestreet.radius.find(st => st.toLowerCase() == comand(message).arg);
 
             if (walkway != null && message.channel.parent.permissionOverwrites.get(message.author.id) != null){
                 let cat = client.channels.cache.find(cat => cat.name == walkway);
@@ -261,32 +209,32 @@ client.on('message', message => {
                     message.channel.parent.permissionOverwrites.get(message.author.id).delete();
                     sendLog(message,`Общее`,`Пошел.`,`Успешно`,`Перешел с ${homestreet.name} на ${walkway}.`);
                 };
-            }else if (walkway == null && street.find(st => st.name.toLowerCase() == args.toLowerCase()) != null){
-                message.author.send(`${args} не является соседней улицей с ${homestreet.name}.`);
-                sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: ${args} не является соседней улицей с ${homestreet.name}.`);
+            }else if (walkway == null && Config.street.find(st => st.name.toLowerCase() == comand(message).arg) != null){
+                message.author.send(`${comand(message).arg} не является соседней улицей с ${homestreet.name}.`);
+                sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: ${comand(message).arg} не является соседней улицей с ${homestreet.name}.`);
             }else{
-                message.author.send(`Вероятнее всего улицы ${args} нет, либо вы ввели ее неправильно.`);
-                sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${args} нет, либо вы ввели ее неправильно.`);
+                message.author.send(`Вероятнее всего улицы ${comand(message).arg} нет, либо вы ввели ее неправильно.`);
+                sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${comand(message).arg} нет, либо вы ввели ее неправильно.`);
             };
-        }else if (command[1] == "в"){
-            let walkway = homestreet.objects.find(st => st.name.toLowerCase() == args.toLowerCase());
+        }else if (comand(message).sarg[0] == 'в'){
+            let walkway = homestreet.objects.find(st => st.name.toLowerCase() == comand(message).arg);
         }else{
             message.author.send(`Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
             sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
         }
     };
 
-    if(command[0] == `${prefix}send` && message.author.id == `621917381681479693`){	
+    if(comand(message).com == `send` && message.author.id == `621917381681479693`){	
         if(mb) return;	
         message.delete();	
-        message.channel.send(`${args}`);	
+        message.channel.send(`${comand(message).arg}`);	
     };
 
-    if(command[0] == `${prefix}очистить` && mb == false && message.guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
-        let arg = parseInt(command[1]);
+    if(comand(message).com == `очистить` && mb == false && message.guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
+        let arg = parseInt(comand(message).sarg[0]);
         
         if (arg > 0 && arg < 100){
-            message.channel.bulkDelete(arg, true);
+            message.channel.bulkDelete(arg+1, true);
             sendLog(message,`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`);
         }else if (arg >= 100){
             sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Попытка удалить более 100 сообщений.`);
@@ -294,19 +242,14 @@ client.on('message', message => {
             sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Неверный аргумент.`);
         };
     };
-
-    const Exargs = message.content.slice(prefix.length).trim().split(' ');
-    const Excommand = Exargs.shift();
     
-    if(Excommand.toLowerCase() == "edit" && message.author.id == `621917381681479693`){
+    if(comand(message).com == `edit` && message.author.id == `621917381681479693`){
 
-      const argsTx = message.content.slice(prefix.length).split(`${Excommand} `).join('').split(`${Exargs[0]} `).join('').split(`${Exargs[1]} `).join('')
-
-      message.channel.guild.channels.cache.find(id => id == `${Exargs[0]}`).messages.fetch(`${Exargs[1]}`)
+      message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(message =>{
 
           if(!message.author.bot) return;
-          message.edit(`${argsTx}`);
+          message.edit(`${comand(message).arg}`);
         
         })
         .catch(console.error);
