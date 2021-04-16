@@ -160,8 +160,6 @@ const street = [
 ];
 
 function sendLog(message,cat,act,status,add){
-    let mb = message.author.bot;
-    
     let img;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
@@ -173,7 +171,7 @@ function sendLog(message,cat,act,status,add){
 
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
 
-    if(Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id) == null || cat == 'Глобальное'){
+    if(Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id) == null){
         client.channels.cache.get(Config.BLChannelsID.logsId).send({embed: {
             color: color,
             author: {
@@ -210,7 +208,7 @@ function comand(message){
 };
 
 client.on('messageDelete', (message) => {
-    sendLog(message,'Глобальное','Сообщение удалено.','Успешно',`Содержимое сообщения: ${message.content}`)
+    sendLog(message,'Общее','Сообщение удалено.','Успешно',`Содержимое сообщения: ${message.content}`)
 });
 
 client.on('message', message => {

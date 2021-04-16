@@ -15,7 +15,5 @@ module.exports.BLChannelsID = {
     commitsID: `823476184388993054`,
     infoID: `822528060196388926`,
     devID: `822796606952177664`,
-    mainIDteam: `822493674738941963`,
     headsID: `831214097005281290`,
-    devTeamID: `829995884150390795`
 }
