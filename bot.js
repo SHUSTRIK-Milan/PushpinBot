@@ -208,7 +208,11 @@ function comand(message){
         сom: com,
         arg: arg,
         slArg: slArg
-    }
+    };
+
+    console.log(comand.com);
+    console.log(comand.arg);
+    console.log(comand.slArg);
     return comand;
 };
 
@@ -224,9 +228,7 @@ client.on('message', message => {
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
 
-    console.log(comand(message).com);
-    console.log(comand(message).arg);
-    console.log(comand(message).slArg);
+    comand(message);
 
     if (command[0] == `${prefix}осмотреться` && mb == false){
         message.delete();
