@@ -163,7 +163,6 @@ client.on('messageDelete', (message) => {
 
 client.on('message', message => {
     let mb = message.author.bot;
-    console.log(comand(message).com);
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
 
