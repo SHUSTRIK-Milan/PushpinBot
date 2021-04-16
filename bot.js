@@ -17,7 +17,7 @@ client.on('ready', () => {
       client.user.setPresence({
         status: "online",
         activity: {
-            name: `на ${onlinemember} участинков!`,
+            name: `на ${onlinemember} участников!`,
             type: "WATCHING",
         }
       });
@@ -41,7 +41,7 @@ client.on('presenceUpdate', (om,nm) => {
       client.user.setPresence({
         status: "online",
         activity: {
-            name: `на ${onlinemember} участинков!`,
+            name: `на ${onlinemember} участников!`,
             type: "WATCHING",
         }
       });
