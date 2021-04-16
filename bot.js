@@ -141,23 +141,20 @@ function sendLog(message,cat,act,status,add){
 };
 
 function comand(message){
+    if(msg.slice(0,1) != prefix) return;
+
     let msg = message.content;
-    let com;
-    let arg;
-    let sarg;
-    if (msg.slice(0,1) == prefix){
-        com = msg.split(" ", 1).join('').slice(prefix.length);
-        arg = msg.slice(com.length+prefix.length+1);
-        sarg = arg.split(" ");
+    let com = msg.split(" ", 1).join('').slice(prefix.length);
+    let arg = msg.slice(com.length+prefix.length+1);
+    let sarg = arg.split(" ");
 
-        var comand = {
-            com: com,
-            arg: arg,
-            sarg: sarg
-        };
+    var comand = {
+        com: com,
+        arg: arg,
+        sarg: sarg
+    };
 
-        return comand;
-    }else return;
+    return comand;
 };
 
 client.on('messageDelete', (message) => {
@@ -166,8 +163,10 @@ client.on('messageDelete', (message) => {
 
 client.on('message', message => {
     let mb = message.author.bot;
+    
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
+    console.log(comand(message).com);
 
     if (comand(message).com == 'осмотреться' && mb == false){
         message.delete();
