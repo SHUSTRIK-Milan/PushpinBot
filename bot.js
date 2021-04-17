@@ -157,6 +157,11 @@ function comand(message,countS){
         carg: carg
     };
 
+    console.log(`com: ${com}`);
+    console.log(`arg: ${arg}`);
+    console.log(`sarg: ${sarg}`);
+    console.log(`carg: ${carg}`);
+
     return comand;
 };
 
