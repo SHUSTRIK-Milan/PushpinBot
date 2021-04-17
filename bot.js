@@ -159,7 +159,7 @@ function comand(message){
 };
 
 client.on('messageDelete', (message) => {
-    sendLog(message,'Общее','Сообщение удалено (<#${message.channel.id}>).','Успешно',`Содержимое сообщения: ${message.content}\nВ: <#${message.channel.id}>`)
+    sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}\nВ: <#${message.channel.id}>`)
 });
 
 client.on('message', message => {
