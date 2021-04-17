@@ -127,45 +127,53 @@ function sendLog(message,cat,act,status,add){
             title: `[${cat}] ${act}`,
             fields: [{
                 name: `Допольнительно:`,
-                value: `${add}`
+                value: `${add}\n[<#${message.channel.id}>]`
             }],
             
             timestamp: new Date()
             }
         });
-
         return;
     }else{
         return;
     }
 };
 
-function comand(message){
+function comand(message,countS){
 
+    if (countS == undefined) countS = 0;
     let msg = message.content;
     if(msg.slice(0,1) != prefix) return false;
     
     let com = msg.split(" ", 1).join('').slice(prefix.length);
     let arg = msg.slice(com.length+prefix.length+1);
     let sarg = arg.split(" ");
+    let carg = sarg.slice(countS-1).join(' ');
 
     var comand = {
         com: com,
         arg: arg,
-        sarg: sarg
+        sarg: sarg,
+        carg: carg
     };
+
+    console.log(countS);
+    console.log(`com: ${com}`);
+    console.log(`arg: ${arg}`);
+    console.log(`sarg: ${sarg}`);
+    console.log(`carg: ${carg}`);
 
     return comand;
 };
 
 client.on('messageDelete', (message) => {
-    sendLog(message,'Общее','Сообщение удалено.','Успешно',`Содержимое сообщения: ${message.content}`)
+    sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
 });
 
 client.on('message', message => {
     let mb = message.author.bot;
 
-    sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,message.content);
+    sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
     if (comand(message).com == 'осмотреться' && mb == false){
         message.delete();
@@ -230,7 +238,7 @@ client.on('message', message => {
         message.channel.send(`${comand(message).arg}`);	
     };
 
-    if(comand(message).com == `очистить` && mb == false && message.guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
+    if(comand(message).com == `clear` && mb == false && message.guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
         let arg = parseInt(comand(message).sarg[0]);
         
         if (arg > 0 && arg < 100){
@@ -244,12 +252,13 @@ client.on('message', message => {
     };
     
     if(comand(message).com == `edit` && message.author.id == `621917381681479693`){
+        let editmessage = comand(message,2).carg;
+        message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
+        .then(msg =>{
 
-      message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
-        .then(message =>{
-
-          if(!message.author.bot) return;
-          message.edit(`${comand(message).arg}`);
+            if(!msg.author.bot) return;
+            msg.edit(editmessage);
+            console.log(comand(msg,2).carg);
         
         })
         .catch(console.error);
