@@ -141,6 +141,7 @@ function sendLog(message,cat,act,status,add){
 
 function comand(message,countS){
 
+    print(countS);
     if (countS == null) countS = 0;
     let msg = message.content;
     if(msg.slice(0,1) != prefix) return false;
@@ -172,6 +173,8 @@ client.on('messageDelete', (message) => {
 
 client.on('message', message => {
     let mb = message.author.bot;
+
+    msg.edit(`${comand(message,2).carg}`)
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
