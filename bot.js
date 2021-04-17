@@ -141,8 +141,7 @@ function sendLog(message,cat,act,status,add){
 
 function comand(message,countS){
 
-    console.log(countS);
-    if (countS == null) countS = 0;
+    if (countS == undefined) countS = 0;
     let msg = message.content;
     if(msg.slice(0,1) != prefix) return false;
     
@@ -173,8 +172,6 @@ client.on('messageDelete', (message) => {
 
 client.on('message', message => {
     let mb = message.author.bot;
-
-    console.log(`${comand(message,2).carg}`);
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
@@ -255,13 +252,13 @@ client.on('message', message => {
     };
     
     if(comand(message).com == `edit` && message.author.id == `621917381681479693`){
-
-      message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
+        let editmessage = comand(msg,2).carg;
+        message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
 
-          if(!msg.author.bot) return;
-          msg.edit(`${comand(msg,2).carg}`);
-          console.log(comand(msg,2).carg);
+            if(!msg.author.bot) return;
+            msg.edit(editmessage);
+            console.log(comand(msg,2).carg);
         
         })
         .catch(console.error);
