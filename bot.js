@@ -148,7 +148,7 @@ function comand(message,countS){
     let com = msg.split(" ", 1).join('').slice(prefix.length);
     let arg = msg.slice(com.length+prefix.length+1);
     let sarg = arg.split(" ");
-    let carg = sarg.slice(countS-1).join(' ');
+    let carg = sarg.slice(countS).join(' ');
 
     var comand = {
         com: com,
@@ -156,12 +156,6 @@ function comand(message,countS){
         sarg: sarg,
         carg: carg
     };
-
-    console.log(countS);
-    console.log(`com: ${com}`);
-    console.log(`arg: ${arg}`);
-    console.log(`sarg: ${sarg}`);
-    console.log(`carg: ${carg}`);
 
     return comand;
 };
@@ -252,13 +246,11 @@ client.on('message', message => {
     };
     
     if(comand(message).com == `edit` && message.author.id == `621917381681479693`){
-        let editmessage = comand(message,2).carg;
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
 
             if(!msg.author.bot) return;
-            msg.edit(editmessage);
-            console.log(comand(msg,2).carg);
+            msg.edit(comand(message,2).carg);
         
         })
         .catch(console.error);
