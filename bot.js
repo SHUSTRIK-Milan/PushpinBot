@@ -254,11 +254,11 @@ client.on('message', message => {
     if(comand(message).com == `edit` && message.author.id == `621917381681479693`){
 
       message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
-        .then(message =>{
+        .then(msg =>{
 
-          if(!message.author.bot) return;
-          message.edit(`${comand(message,2).carg}`);
-          console.log(comand(message,0).carg);
+          if(!msg.author.bot) return;
+          msg.edit(`${comand(msg,2).carg}`);
+          console.log(comand(msg,2).carg);
         
         })
         .catch(console.error);
