@@ -126,8 +126,8 @@ function sendLog(message,cat,act,status,add){
             },
             title: `[${cat}] ${act}`,
             fields: [{
-                name: `[<#${message.channel.id}>] Допольнительно:`,
-                value: `${add}`
+                name: `Допольнительно:`,
+                value: `${add}\n[<#${message.channel.id}>]`
             }],
             
             timestamp: new Date()
