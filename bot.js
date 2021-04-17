@@ -148,7 +148,7 @@ function comand(message,countS){
     let com = msg.split(" ", 1).join('').slice(prefix.length);
     let arg = msg.slice(com.length+prefix.length+1);
     let sarg = arg.split(" ");
-    let carg = sarg.slice(countS-1).join(' ');
+    let carg = sarg.slice(countS).join(' ');
 
     var comand = {
         com: com,
@@ -258,7 +258,7 @@ client.on('message', message => {
 
             if(!msg.author.bot) return;
             msg.edit(editmessage);
-            console.log(comand(msg,2).carg);
+            console.log(comand(message,2).carg);
         
         })
         .catch(console.error);
