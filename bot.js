@@ -252,7 +252,7 @@ client.on('message', message => {
     };
     
     if(comand(message).com == `edit` && message.author.id == `621917381681479693`){
-        let editmessage = comand(msg,2).carg;
+        let editmessage = comand(message,2).carg;
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
 
