@@ -174,7 +174,7 @@ client.on('messageDelete', (message) => {
 client.on('message', message => {
     let mb = message.author.bot;
 
-    msg.edit(`${comand(message,2).carg}`)
+    console.log(`${comand(message,2).carg}`);
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
