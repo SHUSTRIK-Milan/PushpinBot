@@ -1,6 +1,6 @@
 module.exports.channelsID = {
     logsId: `825078587312177162`,
-    commitsID: `823476184388993054`,
+    commitsID: `829434075688206347`,
     infoID: `822528060196388926`,
     devID: `822796606952177664`,
     mainIDusers: `822529113239453706`,
@@ -12,7 +12,7 @@ module.exports.channelsID = {
 
 module.exports.BLChannelsID = {
     logsId: `825078587312177162`,
-    commitsID: `823476184388993054`,
+    commitsID: `829434075688206347`,
     infoID: `822528060196388926`,
     devID: `822796606952177664`,
     headsID: `831214097005281290`,
