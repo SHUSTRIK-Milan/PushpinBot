@@ -237,7 +237,7 @@ client.on('message', message => {
         
         if (arg > 0 && arg < 100){
             message.channel.bulkDelete(arg+1, true);
-            sendLog(message,`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg-1} сообщений.`);
+            sendLog(message,`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`);
         }else if (arg >= 100){
             sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Попытка удалить более 100 сообщений.`);
         }else{
