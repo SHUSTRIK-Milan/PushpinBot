@@ -141,7 +141,7 @@ function sendLog(message,cat,act,status,add){
 
 function comand(message,countS){
 
-    print(countS);
+    console.log(countS);
     if (countS == null) countS = 0;
     let msg = message.content;
     if(msg.slice(0,1) != prefix) return false;
