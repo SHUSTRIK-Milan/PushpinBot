@@ -178,7 +178,7 @@ client.on('message', message => {
 
             for (let pobj of homestreet.objects) if (pobj.addCondition == '') objects.push(pobj.name);
 
-            if (homestreet != null && objects.join(', ') != null){
+            if (homestreet != null && objects.join(', ') != ''){
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
                 sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
             }else{
@@ -190,7 +190,7 @@ client.on('message', message => {
 
             for (let pobj of homestreet.objects) if (pobj.addCondition.toLowerCase() == message.channel.name.toLowerCase()) objects.push(pobj.name);
 
-            if (homestreet != null && objects.join(', ') != null){
+            if (homestreet != null && objects.join(', ') != ''){
                 message.author.send(`Ближайшие помещения: ${objects.join(', ')}.`);
                 sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения: ${objects.join(', ')}.`);
             }else{
