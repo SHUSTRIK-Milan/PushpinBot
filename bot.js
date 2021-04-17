@@ -232,7 +232,7 @@ client.on('message', message => {
         message.channel.send(`${comand(message).arg}`);	
     };
 
-    if(comand(message).com == `очистить` && mb == false && message.guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
+    if(comand(message).com == `clear` && mb == false && message.guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
         let arg = parseInt(comand(message).sarg[0]);
         
         if (arg > 0 && arg < 100){
