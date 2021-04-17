@@ -178,18 +178,24 @@ client.on('message', message => {
 
             for (let pobj of homestreet.objects) if (pobj.addCondition == '') objects.push(pobj.name);
 
-            if (homestreet != null){
+            if (homestreet != null && objects.join(', ') != null){
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
                 sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
+            }else{
+                message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты отсутствуют.`);
+                sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты отсутствуют.`);
             };
         }else if(homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == message.channel.name.toLowerCase()) != null){
             let objects = [];
 
             for (let pobj of homestreet.objects) if (pobj.addCondition.toLowerCase() == message.channel.name.toLowerCase()) objects.push(pobj.name);
 
-            if (homestreet != null && objects != null){
+            if (homestreet != null && objects.join(', ') != null){
                 message.author.send(`Ближайшие помещения: ${objects.join(', ')}.`);
                 sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения: ${objects.join(', ')}.`);
+            }else{
+                message.author.send(`Ближайшие помещения отсутствуют.`);
+                sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения отсутствуют.`);
             };
         }else{
             message.author.send(`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
