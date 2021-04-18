@@ -5,7 +5,7 @@ const prefix = '!';
 
 var guild;
 var BDchnl = `833225101218152459`;
-var dopBDmsg = `833229954660827136`;
+var dopBDmsg = `833260237481705502`;
 
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
