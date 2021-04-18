@@ -69,9 +69,14 @@ function member(nick, name, money, status, car, user, steamID) {
 };
 
 async function GetStats() {
-    let idMsg = `21315`//dopBDmsg[dopBDmsg.length-1].split(':')[0];
     let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-    let msg = await channel.messages.fetch(idMsg); //подключаемся к сообщению, получая о нем все данные.
+    let oMsg = await channel.messages.fetch(dopBDmsg);
+    let nMsg = oMsg.content.split('\n');
+    let fMsg = nMsg[nMsg.length-1].split(':');
+    if (fMsg[0] == ''){
+        fMsg.splice(0,1);
+    };
+    let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
         mainArray = []; //задаем новый массив X
         let messageNormal = msg.content.split('\n'); //массив, который разбивает сообщение на строки (\n)
@@ -104,20 +109,19 @@ async function SetStats(nick, money, status, car, user, steamID) {
     if (fMsg[0] == ''){
         fMsg.splice(0,1);
     };
-    console.log(fMsg);
     let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
         if (msg.content.length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
-            msg.edit(msg.content + `\n:${nick}:${money}:${status},${car},${user},${steamID}`) //редактируем сообщение, добавляя еще одного пользователя
+            msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${nMsg.length}**\n${nArray.slice(1)}`)
+            msg.edit(msg.content + `\n:${nick}:${money}:${status}:${car}:${user}:${steamID}`) //редактируем сообщение, добавляя еще одного пользователя
             return;
         }else if (msg.content.length >= 2000){ //если сообщение привышает лимит
             channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ**`).then(msg => { //пишем новое сообщение
                 client.channels.cache.get(BDchnl).messages.fetch(dopBDmsg).then(message=>{ //получаем доп.БД сообщение
-                    let nArray = message.content.split('\n'); //считаем количество строк
-                    msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${nArray.length}**\n${nArray.slice(1)}`) //изменяем название нового БД, добавляя цифру
-                    message.edit(message.content + `\n:${msg.id}:${nArray.length}`) //записываем в доп.БД id и номер нового БД.
+                    msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${nMsg.length}**\n${nMsg.slice(1)}`) //изменяем название нового БД, добавляя цифру
+                    message.edit(message.content + `\n:${msg.id}:${nMsg.length}`) //записываем в доп.БД id и номер нового БД.
                 });
-                msg.edit(msg.content + `\n:${nick}:${money}:${status},${car},${user},${steamID}`); //дополняем новое БД записями.
+                msg.edit(msg.content + `\n:${nick}:${money}:${status}:${car}:${user}:${steamID}`); //дополняем новое БД записями.
             });
         };
     }catch{
