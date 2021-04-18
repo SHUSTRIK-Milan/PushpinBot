@@ -98,11 +98,13 @@ async function GetStats() {
 
 async function SetStats(nick, money, status, car, user, steamID) {
     let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-    let fMsg = await channel.messages.fetch(dopBDmsg);
-    let nMsg = fMsg.content.split('\n');
-    console.log(nMsg);
-    console.log(nMsg[nMsg.length-1].split(':'));
-    let msg = await channel.messages.fetch(fMsg); //подключаемся к сообщению, получая о нем все данные.
+    let nMsg = await channel.messages.fetch(dopBDmsg).content.split('\n');
+    let fMsg = nMsg[nMsg.length-1].split(':');
+    if (fMsg[0] == ''){
+        fMsg.splice(0,1);
+    };
+    console.log(fMsg);
+    let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
         if (msg.content.length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
             msg.edit(msg.content + `\n:${nick}:${money}:${status},${car},${user},${steamID}`) //редактируем сообщение, добавляя еще одного пользователя
