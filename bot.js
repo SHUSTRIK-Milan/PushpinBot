@@ -4,10 +4,9 @@ const Func = require('./func');
 
 const client = new Discord.Client();
 
+var guild;
 const prefix = '!';
 const BDpref = '^';
-
-var guild;
 var BDchnl = `833225101218152459`;
 var dopBDmsg = `833260237481705502`;
 

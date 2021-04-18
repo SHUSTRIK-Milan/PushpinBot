@@ -1,4 +1,8 @@
 const Config = require('./config');
+const prefix = '!';
+const BDpref = '^';
+var BDchnl = `833225101218152459`;
+var dopBDmsg = `833260237481705502`;
 
 function member(nick, name, money, status, car, user, steamID) {
     this.nick = nick;
