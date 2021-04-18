@@ -68,7 +68,8 @@ function member(nick, name, money, status, car, user, steamID) {
     this.steamID = steamID;
 };
 
-async function GetStats(idMsg) {
+async function GetStats() {
+    let idMsg = dopBDmsg[dopBDmsg.length-1].split(':')[0];
     let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let msg = await channel.messages.fetch(idMsg); //подключаемся к сообщению, получая о нем все данные.
     try{
@@ -95,7 +96,8 @@ async function GetStats(idMsg) {
     };
 };
 
-async function SetStats(idMsg, nick, money, status, car, user, steamID) {
+async function SetStats(nick, money, status, car, user, steamID) {
+    let idMsg = dopBDmsg[dopBDmsg.length-1].split(':')[0];
     let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let msg = await channel.messages.fetch(idMsg); //подключаемся к сообщению, получая о нем все данные.
     try{
@@ -276,6 +278,10 @@ client.on('message', message => {
         })
         .catch(console.error);
     };
+
+    if(comand(message).com == `sbd` && message.author.id == `621917381681479693`){
+        SetStats('Пётр Андропов','1205','','','SHUSTRIK','12456');
+    }; 
 
 });
 
