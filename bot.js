@@ -116,12 +116,7 @@ async function SetStats(nick, money, status, car, user, steamID) {
             let nnMsg = msg.content.split('\n');
             nnMsg.push(`${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`);
             console.log(nnMsg);
-
-            //msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`+edMsg.join('\n'));
-            
-
-            /* msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**` + `\n${nnMsg.slice(1)}`) //изменяем название нового БД, добавляя цифру
-            await msg.edit(msg.content + `\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`) //редактируем сообщение, добавляя еще одного пользователя */
+            msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`+edMsg.join('\n'));
             return;
         }else if ((`${msg.content}\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`).length >= 2000){ //если сообщение привышает лимит
             channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`).then(msg => { //пишем новое сообщение
