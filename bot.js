@@ -100,7 +100,7 @@ async function SetStats(nick, money, status, car, user, steamID) {
     let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let idMsg = await channel.messages.fetch(dopBDmsg);
     console.log(idMsg);
-    console.log(idMsg.content.split('\n')[dopBDmsg.length-1].split(':')[0]);
+    console.log(idMsg.content);
     let msg = await channel.messages.fetch(idMsg); //подключаемся к сообщению, получая о нем все данные.
     try{
         if (msg.content.length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
