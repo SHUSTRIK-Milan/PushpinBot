@@ -2,8 +2,11 @@ const Discord = require('discord.js');
 const Config = require('./config');
 const client = new Discord.Client();
 const prefix = '!';
+const BDpref = '^';
 
-let guild;
+var guild;
+var BDchnl = `833225101218152459`;
+var dopBDmsg = `833260237481705502`;
 
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
@@ -56,47 +59,70 @@ client.on('presenceUpdate', (om,nm) => {
     }
 });
 
-function member(nick, name, money, status, car) {
+function member(nick, name, money, status, car, user, steamID) {
     this.nick = nick;
     this.name = name;
     this.money = money;
     this.status = status;
     this.car = car;
+    this.user = user;
+    this.steamID = steamID;
 };
 
-async function GetStats(idChl, idMsg) {
-    let channel = client.channels.cache.get(idChl);
-    let msg = await channel.messages.fetch(idMsg);
+async function GetStats() {
+    let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
+    let oMsg = await channel.messages.fetch(dopBDmsg);
+    let nMsg = oMsg.content.split('\n');
+    let fMsg = nMsg[nMsg.length-1].split(BDpref);
+    if (fMsg[0] == ''){
+        fMsg.splice(0,1);
+    };
+    let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
-        mainArray = [];
-        let messageNormal = msg.content.split('\n');
-        messageNormal.splice(0,1);
-        for(let msg of messageNormal){
-            let split = msg.split(':');
-            if (split[0] != ''){
+        mainArray = []; //задаем новый массив X
+        let messageNormal = msg.content.split('\n'); //массив, который разбивает сообщение на строки (\n)
+        messageNormal.splice(0,1); //удаляем первый элемент всех строк, так как это название БД.
+        for(let msg of messageNormal){ //перебераем строки сообщения и задаем каждой строке переменную msg
+            let split = msg.split(BDpref); //разделяем каждое сообщение по двоеточиям, задавая переменную split
+            if (split[0] != ''){ //проверка на пустоту элементов. Если не пустой, то запускаем разделеное сообщение в массив X
                 mainArray.push(split);
             }else{
-                split.splice(0,1);
+                split.splice(0,1); //Если пустой, то удаляем пустой элемент и делаем ту-же операцию.
                 mainArray.push(split);
             }
         };
-        membersArray = [];
-        for(let i of mainArray){
-            var newMember = new member(i[0], i[1], i[2]);
+        membersArray = []; //задаем массив участников
+        for(let i of mainArray){ //перебераем массив X со всеми данными и сортируем их в объект member, который отправляем в массив участников
+            var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5], i[6]);
             membersArray.push(newMember);
         };
-        return membersArray;
+        return membersArray; //возвращаем массив участников
     }catch{
         return null;
     };
 };
 
-async function SetStats(idChl, idMsg, nick, id, SteamID) {
-    let channel = client.channels.cache.get(idChl);
-    let msg = await channel.messages.fetch(idMsg);
+async function SetStats(nick, money, status, car, user, steamID) {
+    let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
+    let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
+    let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
+    let fMsg = nMsg[nMsg.length-1].split(BDpref); //получаем последние данные в доп бд
+    if (fMsg[0] == ''){
+        fMsg.splice(0,1);
+    };
+    let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
-        msg.edit(msg.content + `\n:${nick}:${id}:${SteamID}`)
-        return;
+        if ((`${msg.content}\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
+            let nnMsg = msg.content.split('\n').slice(1);
+            nnMsg.push(`${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`);
+            console.log(nnMsg.join('\n'));
+            msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**\n`+nnMsg.join('\n'));
+            return;
+        }else if ((`${msg.content}\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`).length >= 2000){ //если сообщение привышает лимит
+            channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`).then(msg => { //пишем новое сообщение
+                oMsg.edit(oMsg.content + `\n${BDpref}${msg.id}${BDpref}${nMsg.length}`) //записываем в доп.БД id и номер нового БД.
+            });
+        };
     }catch{
         return null;
     };
@@ -178,18 +204,24 @@ client.on('message', message => {
 
             for (let pobj of homestreet.objects) if (pobj.addCondition == '') objects.push(pobj.name);
 
-            if (homestreet != null){
+            if (homestreet != null && objects.join(', ') != ''){
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
                 sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
+            }else{
+                message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты отсутствуют.`);
+                sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты отсутствуют.`);
             };
         }else if(homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == message.channel.name.toLowerCase()) != null){
             let objects = [];
 
             for (let pobj of homestreet.objects) if (pobj.addCondition.toLowerCase() == message.channel.name.toLowerCase()) objects.push(pobj.name);
 
-            if (homestreet != null && objects != null){
+            if (homestreet != null && objects.join(', ') != ''){
                 message.author.send(`Ближайшие помещения: ${objects.join(', ')}.`);
                 sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения: ${objects.join(', ')}.`);
+            }else{
+                message.author.send(`Ближайшие помещения отсутствуют.`);
+                sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения отсутствуют.`);
             };
         }else{
             message.author.send(`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
@@ -255,6 +287,10 @@ client.on('message', message => {
         })
         .catch(console.error);
     };
+
+    if(comand(message).com == `sbd` && guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
+        SetStats(`${message.author.username}`,`${Math.random()}`,`В розыске`,`Отсутствует`,`<@${message.author.id}>`,`${Math.random()}`);
+    }; 
 
 });
 
