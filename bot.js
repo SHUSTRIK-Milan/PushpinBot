@@ -69,7 +69,7 @@ function member(nick, name, money, status, car, user, steamID) {
 };
 
 async function GetStats() {
-    let idMsg = dopBDmsg[dopBDmsg.length-1].split(':')[0];
+    let idMsg = `21315`//dopBDmsg[dopBDmsg.length-1].split(':')[0];
     let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let msg = await channel.messages.fetch(idMsg); //подключаемся к сообщению, получая о нем все данные.
     try{
@@ -97,7 +97,8 @@ async function GetStats() {
 };
 
 async function SetStats(nick, money, status, car, user, steamID) {
-    let idMsg = dopBDmsg[dopBDmsg.length-1].split(':')[0];
+    let idMsg = await client.channels.cache.get(BDchnl).messages.fetch(dopBDmsg).content.split('\n')[dopBDmsg.length-1].split(':')[0];
+    console.log(idMsg);
     let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let msg = await channel.messages.fetch(idMsg); //подключаемся к сообщению, получая о нем все данные.
     try{
