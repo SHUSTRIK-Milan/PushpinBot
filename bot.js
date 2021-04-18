@@ -292,7 +292,7 @@ client.on('message', message => {
     };
 
     if(comand(message).com == `sbd` && message.author.id == `621917381681479693`){
-        SetStats('Пётр Андропов','1205','','','SHUSTRIK','12456');
+        SetStats(`${message.author.username}`,`${randomInteger(0, 5000000)}`,`В розыске`,`Отсутствует`,`<@${message.author.id}>`,`STEAM_0:1:${randomInteger(50000000, 55975235)}`);
     }; 
 
 });
