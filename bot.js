@@ -99,7 +99,7 @@ async function GetStats() {
 async function SetStats(nick, money, status, car, user, steamID) {
     let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let fMsg = await channel.messages.fetch(dopBDmsg);
-    let nMsg = msg.content.split('\n');
+    let nMsg = fMsg.content.split('\n');
     console.log(nMsg);
     console.log(nMsg[nMsg.length-1].split(':')[0]);
     let msg = await channel.messages.fetch(fMsg); //подключаемся к сообщению, получая о нем все данные.
