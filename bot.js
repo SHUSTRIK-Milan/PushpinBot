@@ -114,8 +114,8 @@ async function SetStats(nick, money, status, car, user, steamID) {
     try{
         if ((`${msg.content}\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
             let nnMsg = msg.content.split('\n');
-            let edMsg = nnMsg.push(`${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`);
-            console.log(edMsg);
+            nnMsg.push(`${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`);
+            console.log(nnMsg);
 
             //msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`+edMsg.join('\n'));
             
