@@ -117,6 +117,7 @@ async function SetStats(nick, money, status, car, user, steamID) {
             let edMsg = nnMsg.push(`${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`)
 
             msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`+edMsg.join('\n'));
+            console.log(edMsg)
 
             /* msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**` + `\n${nnMsg.slice(1)}`) //изменяем название нового БД, добавляя цифру
             await msg.edit(msg.content + `\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`) //редактируем сообщение, добавляя еще одного пользователя */
