@@ -288,8 +288,7 @@ client.on('message', message => {
     };
 
     if(comand(message).com == `sbd` && guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
-        SetStats(`${message.author.username}`,`${Math.random()}`,`В розыске`,`Отсутствует`,`<@${message.author.id}>`,`STEAM_0:1:${Math.random()}`);
-        GetStats().then(bd => console.log(bd));
+        SetStats(`${message.author.username}`,`${Math.random()}`,`В розыске`,`Отсутствует`,`<@${message.author.id}>`,`${Math.random()}`);
     }; 
 
 });
