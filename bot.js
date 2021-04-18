@@ -116,8 +116,8 @@ async function SetStats(nick, money, status, car, user, steamID) {
             return;
         }else if ((`${msg.content}\n:${nick}:${money}:${status}:${car}:${user}:${steamID}`).length >= 2000){ //если сообщение привышает лимит
             channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ**`).then(msg => { //пишем новое сообщение
-                let nArray = msg.content.split('\n');
-                client.channels.cache.get(BDchnl).messages.fetch(dopBDmsg).then(message=>{ //получаем доп.БД сообщение
+                client.channels.cache.get(BDchnl).messages.fetch(dopBDmsg).then(message=>{ //получаем доп.БД сообщени
+                    let nArray = message.content.split('\n');
                     msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${nArray.length}**\n${nArray.slice(1)}`) //изменяем название нового БД, добавляя цифру
                     message.edit(message.content + `\n:${msg.id}:${nArray.length}`) //записываем в доп.БД id и номер нового БД.
                 });
