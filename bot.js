@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const Config = require('./config');
 const client = new Discord.Client();
 const prefix = '!';
+const BDpref = '^';
 
 var guild;
 var BDchnl = `833225101218152459`;
@@ -72,7 +73,7 @@ async function GetStats() {
     let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let oMsg = await channel.messages.fetch(dopBDmsg);
     let nMsg = oMsg.content.split('\n');
-    let fMsg = nMsg[nMsg.length-1].split(':');
+    let fMsg = nMsg[nMsg.length-1].split(BDpref);
     if (fMsg[0] == ''){
         fMsg.splice(0,1);
     };
@@ -82,7 +83,7 @@ async function GetStats() {
         let messageNormal = msg.content.split('\n'); //массив, который разбивает сообщение на строки (\n)
         messageNormal.splice(0,1); //удаляем первый элемент всех строк, так как это название БД.
         for(let msg of messageNormal){ //перебераем строки сообщения и задаем каждой строке переменную msg
-            let split = msg.split(':'); //разделяем каждое сообщение по двоеточиям, задавая переменную split
+            let split = msg.split(BDpref); //разделяем каждое сообщение по двоеточиям, задавая переменную split
             if (split[0] != ''){ //проверка на пустоту элементов. Если не пустой, то запускаем разделеное сообщение в массив X
                 mainArray.push(split);
             }else{
@@ -105,25 +106,28 @@ async function SetStats(nick, money, status, car, user, steamID) {
     let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let oMsg = await channel.messages.fetch(dopBDmsg);
     let nMsg = oMsg.content.split('\n');
-    let fMsg = nMsg[nMsg.length-1].split(':');
+    let fMsg = nMsg[nMsg.length-1].split(BDpref);
     if (fMsg[0] == ''){
         fMsg.splice(0,1);
     };
     let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
-        if ((`${msg.content}\n:${nick}:${money}:${status}:${car}:${user}:${steamID}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
-            msg.edit(msg.content + `\n:${nick}:${money}:${status}:${car}:${user}:${steamID}`) //редактируем сообщение, добавляя еще одного пользователя
+        if ((`${msg.content}\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
+            let nDop = message.content.split('\n');
+            let nMsg = msg.content.split('\n');
+            msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${nDop.length}**\n${nMsg.slice(1)}`) //изменяем название нового БД, добавляя цифру
+            msg.edit(msg.content + `\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`) //редактируем сообщение, добавляя еще одного пользователя
             return;
-        }else if ((`${msg.content}\n:${nick}:${money}:${status}:${car}:${user}:${steamID}`).length >= 2000){ //если сообщение привышает лимит
+        }else if ((`${msg.content}\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`).length >= 2000){ //если сообщение привышает лимит
             channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ**`).then(msg => { //пишем новое сообщение
                 client.channels.cache.get(BDchnl).messages.fetch(dopBDmsg).then(message=>{ //получаем доп.БД сообщени
-                    let nArray = message.content.split('\n');
-                    message.edit(message.content + `\n:${msg.id}:${nArray.length}`) //записываем в доп.БД id и номер нового БД.
+                    let nDop = message.content.split('\n');
+                    message.edit(message.content + `\n${BDpref}${msg.id}${BDpref}${nDop.length}`) //записываем в доп.БД id и номер нового БД.
                     let nMsg = msg.content.split('\n');
-                    msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${nArray.length}**\n${nMsg.slice(1)}`) //изменяем название нового БД, добавляя цифру
+                    msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${nDop.length}**\n${nMsg.slice(1)}`) //изменяем название нового БД, добавляя цифру
                     
                 });
-                msg.edit(msg.content + `\n:${nick}:${money}:${status}:${car}:${user}:${steamID}`); //дополняем новое БД записями.
+                msg.edit(msg.content + `\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`); //дополняем новое БД записями.
             });
         };
     }catch{
