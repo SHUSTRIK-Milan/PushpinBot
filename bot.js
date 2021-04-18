@@ -104,30 +104,22 @@ async function GetStats() {
 
 async function SetStats(nick, money, status, car, user, steamID) {
     let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-    let oMsg = await channel.messages.fetch(dopBDmsg);
-    let nMsg = oMsg.content.split('\n');
-    let fMsg = nMsg[nMsg.length-1].split(BDpref);
+    let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
+    let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
+    let fMsg = nMsg[nMsg.length-1].split(BDpref); //получаем последние данные в доп бд
     if (fMsg[0] == ''){
         fMsg.splice(0,1);
     };
     let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
         if ((`${msg.content}\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
-            let nDop = message.content.split('\n');
-            let nMsg = msg.content.split('\n');
-            msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${nDop.length}**\n${nMsg.slice(1)}`) //изменяем название нового БД, добавляя цифру
+            let nnMsg = msg.content.split('\n');
+            msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${nMsg.length}**\n${nnMsg.slice(1)}`) //изменяем название нового БД, добавляя цифру
             msg.edit(msg.content + `\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`) //редактируем сообщение, добавляя еще одного пользователя
             return;
         }else if ((`${msg.content}\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`).length >= 2000){ //если сообщение привышает лимит
             channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ**`).then(msg => { //пишем новое сообщение
-                client.channels.cache.get(BDchnl).messages.fetch(dopBDmsg).then(message=>{ //получаем доп.БД сообщени
-                    let nDop = message.content.split('\n');
-                    message.edit(message.content + `\n${BDpref}${msg.id}${BDpref}${nDop.length}`) //записываем в доп.БД id и номер нового БД.
-                    let nMsg = msg.content.split('\n');
-                    msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${nDop.length}**\n${nMsg.slice(1)}`) //изменяем название нового БД, добавляя цифру
-                    
-                });
-                msg.edit(msg.content + `\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`); //дополняем новое БД записями.
+                oMsg.edit(oMsg.content + `\n${BDpref}${msg.id}${BDpref}${nMsg.length}`) //записываем в доп.БД id и номер нового БД.
             });
         };
     }catch{
