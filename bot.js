@@ -128,6 +128,12 @@ async function SetStats(nick, money, status, car, user, steamID) {
     };
 };
 
+function FindStats(){
+
+};
+
+async function 
+
 function sendLog(message,cat,act,status,add){
     let img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
