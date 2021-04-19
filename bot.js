@@ -132,7 +132,9 @@ function FindStats(){
 
 };
 
-async function 
+async function Stats(){
+
+};
 
 function sendLog(message,cat,act,status,add){
     let img = `https://i.imgur.com/cjSSwtu.png`;
