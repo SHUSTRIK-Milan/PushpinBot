@@ -278,6 +278,7 @@ client.on('message', message => {
     };
     
     if(comand(message).com == `edit` && message.author.id == `621917381681479693`){
+        message.delete();
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
 
@@ -289,8 +290,8 @@ client.on('message', message => {
     };
 
     if(comand(message).com == `sbd` && guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
-        SetStats(`${message.author.username}`,`${Math.random()}`,`В розыске`,`Отсутствует`,`<@${message.author.id}>`,`${Math.random()}`);
-    }; 
+        message.delete();
+    };
 
 });
 
