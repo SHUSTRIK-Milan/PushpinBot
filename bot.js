@@ -8,6 +8,11 @@ var guild;
 var BDchnl = `833225101218152459`;
 var dopBDmsg = `833260237481705502`;
 
+const SteamAPI = require('steamapi');
+const steam = new SteamAPI('52E6781CF3B4EB4234DC424555A7AD9C');
+
+function outPromise();
+
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
     guild = client.guilds.cache.get('814795850885627964');
@@ -96,7 +101,6 @@ async function GetStats() {
             var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5], i[6]);
             membersArray.push(newMember);
         };
-        //resolve();
         return membersArray; //возвращаем массив участников
     }catch{
         return null;
@@ -134,7 +138,7 @@ function FindStats(stat, value){
 };
 
 async function Stats(){
-
+    
 };
 
 function sendLog(message,cat,act,status,add){
@@ -286,7 +290,7 @@ client.on('message', message => {
         };
     };
     
-    if(comand(message).com == `edit` && message.author.id == `621917381681479693`){
+    if(comand(message).com == `edit` ){
         message.delete();
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
@@ -296,10 +300,6 @@ client.on('message', message => {
         
         })
         .catch(console.error);
-    };
-
-    if(comand(message).com == `sbd` && guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
-        message.delete();
     };
 
 });
