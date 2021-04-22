@@ -209,10 +209,10 @@ client.on('message', message => {
             let msgBot = msg.find(msgs => msgs.author.id == `822500483826450454`);
             if (msgBot != undefined){
                 message.edit(`📩 Отвечает на предложение: https://discord.com/channels/814795850885627964/831827280379641866/${msgBot.id}\n`);
-                message.delete();
+                if (comand(message).com != `send`) message.delete();
             }else{
                 message.delete();
-            };
+            }
         })
     };
 
