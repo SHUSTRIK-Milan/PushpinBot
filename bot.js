@@ -96,6 +96,7 @@ async function GetStats() {
             var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5], i[6]);
             membersArray.push(newMember);
         };
+        //resolve();
         return membersArray; //возвращаем массив участников
     }catch{
         return null;
@@ -128,7 +129,7 @@ async function SetStats(nick, money, status, car, user, steamID) {
     };
 };
 
-function FindStats(){
+function FindStats(stat, value){
 
 };
 
@@ -203,11 +204,19 @@ client.on('message', message => {
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
+    if (message.channel.id == '831214097005281290'){
+        message.channel.messages.fetch().then(msg => {
+            let msgBot = msg.filter(msg => msg.author.id == `822500483826450454`);
+            msgBot[msgBot.length-1].reply(message.content);
+            message.delete();
+        })
+    };
+
     if (comand(message).com == 'осмотреться' && mb == false){
         message.delete();
         let homestreet = Config.street.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
 
-        if(message.channel.name == "улица"){
+        if(message.channel.name == "улица"){   
             let objects = [];
 
             for (let pobj of homestreet.objects) if (pobj.addCondition == '') objects.push(pobj.name);
