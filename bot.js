@@ -204,15 +204,17 @@ client.on('message', message => {
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
-    /* if (message.channel.id == '831214097005281290'){
+    if (message.channel.id == '831827280379641866'){
         message.channel.messages.fetch().then(msg => {
             let msgBot = msg.find(msgs => msgs.author.id == `822500483826450454`);
             if (msgBot != undefined){
-                msgBot.reply(message.content);
+                message.edit(`📩 Отвечает на предложение: https://discord.com/channels/814795850885627964/831827280379641866/${msgBot.id}\n`);
+                message.delete();
+            }else{
                 message.delete();
             };
         })
-    }; */
+    };
 
     if (comand(message).com == 'осмотреться' && mb == false){
         message.delete();
