@@ -204,7 +204,7 @@ client.on('message', message => {
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
-    if (message.channel.id == '831827280379641866'){
+    if (message.channel.id == '831827280379641866' && mb == false){
         message.channel.messages.fetch().then(msg => {
             let msgBot = msg.find(msgs => msgs.author.id == `822500483826450454`);
             if (msgBot != undefined){
