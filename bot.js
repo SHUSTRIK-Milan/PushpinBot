@@ -208,8 +208,9 @@ client.on('message', message => {
         message.channel.messages.fetch().then(msg => {
             let msgBot = msg.find(msgs => msgs.author.id == `822500483826450454`);
             if (msgBot != undefined){
-                message.edit(`📩 Отвечает на предложение: https://discord.com/channels/814795850885627964/831827280379641866/${msgBot.id}\n`);
-                if (comand(message).com != `send`) message.delete();
+                message.edit(`📩 Отвечает на обсуждение: https://discord.com/channels/814795850885627964/831827280379641866/${msgBot.id}\n`+message.content);
+            }else if (comand(message).com == `send`){
+                console.log(`${message.author.tag} создал обсуждение.`);
             }else{
                 message.delete();
             }
