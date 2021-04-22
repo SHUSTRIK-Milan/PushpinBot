@@ -207,9 +207,10 @@ client.on('message', message => {
     if (message.channel.id == '831214097005281290'){
         message.channel.messages.fetch().then(msg => {
             let msgBot = msg.find(msgs => msgs.author.id == `822500483826450454`);
-            console.log(msgBot);
-            console.log(msgBot.content);
-            message.delete();
+            if (msgBot != undefined){
+                msgBot.reply(message.content);
+                message.delete();
+            };
         })
     };
 
