@@ -204,7 +204,7 @@ client.on('message', message => {
 
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
-    if (message.channel.id == '831214097005281290'){
+    /* if (message.channel.id == '831214097005281290'){
         message.channel.messages.fetch().then(msg => {
             let msgBot = msg.find(msgs => msgs.author.id == `822500483826450454`);
             if (msgBot != undefined){
@@ -212,7 +212,7 @@ client.on('message', message => {
                 message.delete();
             };
         })
-    };
+    }; */
 
     if (comand(message).com == 'осмотреться' && mb == false){
         message.delete();
