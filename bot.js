@@ -194,7 +194,7 @@ async function AddStats(user, money, status, car, steamID) {
     };
     let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
-        let id = `${fMsg[1]}${msg.content.split('\n').length}`;
+        let id = `${fMsg[1]}-${msg.content.split('\n').length}`;
         let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`;
         if ((`${msg.content}\n${bdInfo}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
             let nnMsg = msg.content.split('\n').slice(1);
@@ -211,8 +211,36 @@ async function AddStats(user, money, status, car, steamID) {
     };
 };
 
-async function EditStats(){
+async function EditStats(id, stat, dat){
+    var bdnum = id.split('-')[0];
+    var idnum = id.split('-')[1];
+    var AllStats = await GetStats();
+    var person = AllStats.find(pers => pers.id == id);
 
+    if(stat == 'id') stat = 0;
+    if(stat == 'user') stat = 1;
+    if(stat == 'money') stat = 2;
+    if(stat == 'status') stat = 3;
+    if(stat == 'car') stat = 4;
+    if(stat == 'steamID') stat = 5;
+
+    var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
+    var oMsg = await channel.messages.fetch(dopBDmsg);
+
+    let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
+    nMsg.splice(0,1);
+    let fMsg = nMsg[bdnum].split(BDpref); //получаем последние данные в доп бд
+    if (fMsg[0] == ''){
+        fMsg.splice(0,1);
+    };
+
+    var msg = await channel.messages.fetch(fMsg[0]);
+    var nnMsg = msg.content.split('\n');
+
+    var eStat = [];
+    for(let s in person) eStat.push(person[s]);
+    eStat.splice(stat,1,dat);
+    nnMsg.splice(idnum,1,eStat);
 };
 
 async function Stats(message){
@@ -395,8 +423,6 @@ client.on('message', message => {
             let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
             try{
                 nMsg.splice(0,1);
-                console.log(parseInt(comand(message).sarg[0])-1);
-                console.log(nMsg[parseInt(comand(message).sarg[0])-1]);
                 let fMsg = nMsg[parseInt(comand(message).sarg[0])-1].split(BDpref); //получаем последние данные в доп бд
                 if (fMsg[0] == ''){
                     fMsg.splice(0,1);
