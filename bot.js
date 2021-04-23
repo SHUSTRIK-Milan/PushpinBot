@@ -383,7 +383,7 @@ client.on('message', message => {
         AddStats(message.author.tag,123,123,123,`<@${message.author.id}>`,123)
     };
 
-    if(comand(message).com == 'cbd'){
+    if(comand(message).com == 'cbd' && message.author.id == `621917381681479693`){
         message.delete()
         let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
         channel.messages.fetch(dopBDmsg).then(oMsg => { //получаем сообщение доп бд
@@ -395,6 +395,11 @@ client.on('message', message => {
             console.log(parseInt(comand(message).sarg[0])-1);
             message.channel.send(`!edit 833225101218152459 ${fMsg[0]} > **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ 1**`);
         });
+    };
+
+    if(comand(message).com == 'cdbd' && message.author.id == `621917381681479693`){
+        message.delete()
+        message.send(`!edit 833225101218152459 833260237481705502 > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^833260177443651604^1`);
     };
 
     if(message.guild == undefined && mb == false){
