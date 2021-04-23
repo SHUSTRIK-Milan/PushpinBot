@@ -312,7 +312,7 @@ client.on('message', message => {
     };
 
     if(comand(message).com == `sbd`){
-        SetStats(message.author.tag,123,123,123,`<@${message.author.tag}>`,123)
+        SetStats(message.author.tag,123,123,123,`<@${message.author.id}>`,123)
     };
 
     if(comand(message).com == `test` && message.guild == undefined){
