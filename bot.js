@@ -229,6 +229,9 @@ async function EditStats(id, stat, dat){
 
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
     nMsg.splice(0,1);
+    console.log(bdnum);
+    console.log(idnum);
+    console.log(nMsg);
     let fMsg = nMsg[parseInt(bdnum)].split(BDpref); //получаем последние данные в доп бд
     if (fMsg[0] == ''){
         fMsg.splice(0,1);
