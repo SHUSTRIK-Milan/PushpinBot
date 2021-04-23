@@ -229,7 +229,7 @@ async function EditStats(id, stat, dat){
 
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
     nMsg.splice(0,1);
-    let fMsg = nMsg[bdnum].split(BDpref); //получаем последние данные в доп бд
+    let fMsg = nMsg[parseInt(bdnum)].split(BDpref); //получаем последние данные в доп бд
     if (fMsg[0] == ''){
         fMsg.splice(0,1);
     };
@@ -240,7 +240,7 @@ async function EditStats(id, stat, dat){
     var eStat = [];
     for(let s in person) eStat.push(person[s]);
     eStat.splice(stat,1,dat);
-    nnMsg.splice(idnum,1,eStat);
+    nnMsg.splice(parseInt(idnum),1,eStat);
 };
 
 async function Stats(message){
