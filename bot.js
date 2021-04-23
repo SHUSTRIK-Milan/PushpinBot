@@ -244,8 +244,6 @@ async function EditStats(id, stat, dat){
     if (nnMsg.join('\n') > 2000){
         nnMsg.splice(parseInt(idnum),1);
         AddStats(eStat[0],eStat[1],eStat[2],eStat[3],eStat[4],eStat[5]);
-    }else{
-        nnMsg.splice(parseInt(idnum),1,`^${eStat.join(BDpref)}`);
     }
         
     msg.edit(nnMsg.join('\n'));
