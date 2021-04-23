@@ -103,7 +103,15 @@ function comand(message,countS){
 
     if (countS == undefined) countS = 0;
     let msg = message.content;
-    if(msg.slice(0,1) != prefix) return false;
+
+    var comand = {
+        com: '0',
+        arg: '0',
+        sarg: '0',
+        carg: '0'
+    };
+
+    if(msg.slice(0,1) != prefix) return comand;
     
     let com = msg.split(" ", 1).join('').slice(prefix.length);
     let arg = msg.slice(com.length+prefix.length+1);
