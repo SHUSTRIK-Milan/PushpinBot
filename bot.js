@@ -236,14 +236,14 @@ async function EditStats(id, stat, dat){
 
     var msg = await channel.messages.fetch(fMsg[0]);
     var nnMsg = msg.content.split('\n');
-    nnMsg.splice(0,1);
 
     var eStat = [];
     for(let s in person) eStat.push(person[s]);
     eStat.splice(stat,1,dat);
-    nnMsg.splice(parseInt(idnum)-1,1,eStat);
+    nnMsg.splice(parseInt(idnum),1,`^${eStat.join(BDpref)}`);
 
     console.log(nnMsg);
+    msg.edit(nnMsg.join('\n'));
 };
 
 async function Stats(message){
