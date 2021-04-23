@@ -151,11 +151,11 @@ function member(id, user, money, status, car, steamID) {
     this.steamID = steamID;
 };
 
-async function GetStats() {
+async function GetStats(nNum) {
     let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
-    let fMsg = nMsg[nMsg.length-1].split(BDpref); //получаем последние данные в доп бд
+    let fMsg = nMsg[nNum].split(BDpref); //получаем последние данные в доп бд
     if (fMsg[0] == ''){
         fMsg.splice(0,1);
     };
@@ -228,7 +228,7 @@ async function AddStats(user, money, status, car, steamID) {
 async function EditStats(id, stat, dat){
     var bdnum = id.split('-')[0];
     var idnum = id.split('-')[1];
-    var AllStats = await GetStats();
+    var AllStats = await GetStats(bdnum);
     var person = AllStats.find(pers => pers.id == id);
 
     if(stat == 'user') stat = 1;
@@ -260,7 +260,7 @@ async function EditStats(id, stat, dat){
     console.log(eStat);
     console.log(fMsg[0]);
     console.log(nnMsg.join('\n').length)
-    
+
     nnMsg.splice(parseInt(idnum),1,`^${eStat.join(BDpref)}`);
 
     if (nnMsg.join('\n').length > 2000){
