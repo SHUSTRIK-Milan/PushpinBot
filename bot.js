@@ -136,6 +136,12 @@ function comand(message,countS){
     return comand;
 };
 
+function haveRole(message, roleid){
+    let haveorno = false;
+    if (guild.member(message.author).roles.cache.get(roleid) != null) haveorno = true;
+    return haveorno;
+};
+
 function member(nick, money, status, car, user, steamID) {
     this.nick = nick;
     this.money = money;
@@ -226,7 +232,7 @@ async function Stats(message){
     }else if (person == undefined && comand(message).com == `подтвердить` && steamProfile == null){ //пользователь не зарегистрирован
         message.author.send(`
 > **Процесс регистрации** 📚
-Здравствуйте! Я PushPin бот, а вы пользователь, желающий пройти верификацию. Всё верно? Если так, то давайте начнём.
+Привет! Я PushPin бот, а вы пользователь, желающий пройти верификацию. Всё верно? Если так, то давайте начнём.
 
 > **Для начала повторите команду, дополнив её ссылкой на свой стим-профиль** 📬
 Ссылка на стим-профиль получается очень просто. Вам достаточно повторять действия, отмеченные на этой справке.
@@ -347,7 +353,7 @@ client.on('message', message => {
         message.channel.send(`${comand(message).arg}`);	
     };
 
-    if(comand(message).com == `clear` && mb == false && message.guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
+    if(comand(message).com == `clear` && mb == false && haveRole(message, `822493460493500436`) == true){
         let arg = parseInt(comand(message).sarg[0]);
         
         if (arg > 0 && arg < 100){
@@ -360,7 +366,7 @@ client.on('message', message => {
         };
     };
     
-    if(comand(message).com == `edit` ){
+    if(comand(message).com == `edit` && haveRole(message, `833778527609552918`) == true){
         message.delete();
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
@@ -375,6 +381,11 @@ client.on('message', message => {
     if(comand(message).com == `sbd`){
         message.delete();
         AddStats(message.author.tag,123,123,123,`<@${message.author.id}>`,123)
+    };
+
+    if(comand(message).com == 'cbd'){
+        message.delete()
+        message.channel
     };
 
     if(message.guild == undefined && mb == false){
