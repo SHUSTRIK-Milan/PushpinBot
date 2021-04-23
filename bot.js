@@ -14,7 +14,7 @@ const steam = new SteamAPI('52E6781CF3B4EB4234DC424555A7AD9C');
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
     guild = client.guilds.cache.get('814795850885627964');
-    console.log(guild.channels.cache.get(`822493674738941963`).messages.cache.get(`835080700779692042`));
+    console.log(guild.channels.cache.get(`822493674738941963`).messages.cache);
 
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
