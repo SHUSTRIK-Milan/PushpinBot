@@ -202,7 +202,7 @@ async function AddStats(user, money, status, car, steamID) {
             msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**\n`+nnMsg.join('\n'));
             return;
         }else if ((`${msg.content}\n${bdInfo}`).length >= 2000){ //если сообщение привышает лимит
-            let smsg = await channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`).then(msg => { //пишем новое сообщение
+            let smsg = await channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`); //пишем новое сообщение
                 
             oMsg.edit(oMsg.content + `\n${BDpref}${msg.id}${BDpref}${nMsg.length}`); //записываем в доп.БД id и номер нового БД.
             
