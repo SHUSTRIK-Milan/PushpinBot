@@ -117,6 +117,13 @@ function comand(message,countS){
         carg: carg
     };
 
+    if (comand.com == 'cm'){
+        console.log(`com: ${com}`);
+        console.log(`arg: ${arg}`);
+        console.log(`sarg: ${sarg}`);
+        console.log(`carg: ${carg}`);
+    }
+
     return comand;
 };
 
@@ -163,7 +170,7 @@ async function GetStats() {
     };
 };
 
-async function SetStats(nick, name, money, status, car, user, steamID) {
+async function AddStats(nick, name, money, status, car, user, steamID) {
     let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
@@ -173,7 +180,7 @@ async function SetStats(nick, name, money, status, car, user, steamID) {
     };
     let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
-        let bdInfo = `${BDpref}${nick}${BDpref}${name}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`;
+        let bdInfo = `${nick}${BDpref}${name}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`;
         if ((`${msg.content}\n${bdInfo}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
             let nnMsg = msg.content.split('\n').slice(1);
             nnMsg.push(`${bdInfo}`);
@@ -197,17 +204,16 @@ function FindStats(stat, value){
 async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@${message.author.id}>`);
-    console.log(AllStats)
-    console.log(person);
+    if (comand(message).sarg[0] != '') var steamProfile = await steam.resolve(comand(message).sarg[0]);
 
-    if (person != undefined){ //пользователь зарегистрирован
+    if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
         message.author.send(`
 > **Вы уже зарегистрированы** 📟
 Вы уже зарегистрированы в базе данных пользователей. Если вы желаете обнулить свой аккаунт, обратитесь к администрации проекта.
         `,{
             tts: true
         })
-    }else if (person == undefined){ //пользователь не зарегистрирован
+    }else if (person == undefined && comand(message).com == `подтвердить`){ //пользователь не зарегистрирован
         message.author.send(`
 > **Процесс регистрации** 📚
 Здравствуйте! Я PushPin бот, а вы пользователь, желающий пройти верификацию. Всё верно? Если так, то давайте начнём.
@@ -220,7 +226,7 @@ async function Stats(message){
                 attachment: 'https://i.imgur.com/vVTXtbD.png',
                 name: 'howToGetSteamProfileLink.png'
             }]
-        })
+        });
     }else{ //ошибка
         message.author.send(`
 > **Возникла ошибка** 🔏
@@ -336,10 +342,10 @@ client.on('message', message => {
 
     if(comand(message).com == `sbd`){
         message.delete();
-        SetStats(message.author.tag,'Петр',123,123,123,`<@${message.author.id}>`,123)
+        AddStats(message.author.tag,'Петр',123,123,123,`<@${message.author.id}>`,123)
     };
 
-    if(comand(message).com == `подтвердить` && message.guild == undefined){
+    if(message.guild == undefined){
         Stats(message);
     };
 
