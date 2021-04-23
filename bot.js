@@ -117,19 +117,18 @@ function comand(message,countS){
         carg: carg
     };
 
-    if (comand.com == 'cm'){
+    /* if (comand.com == 'cm'){
         console.log(`com: ${com}`);
         console.log(`arg: ${arg}`);
         console.log(`sarg: ${sarg}`);
         console.log(`carg: ${carg}`);
-    }
+    } */
 
     return comand;
 };
 
-function member(nick, name, money, status, car, user, steamID) {
+function member(nick, money, status, car, user, steamID) {
     this.nick = nick;
-    this.name = name;
     this.money = money;
     this.status = status;
     this.car = car;
@@ -161,7 +160,7 @@ async function GetStats() {
         };
         membersArray = []; //задаем массив участников
         for(let i of mainArray){ //перебераем массив X со всеми данными и сортируем их в объект member, который отправляем в массив участников
-            var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5], i[6]);
+            var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5]);
             membersArray.push(newMember);
         };
         return membersArray; //возвращаем массив участников
@@ -170,7 +169,7 @@ async function GetStats() {
     };
 };
 
-async function AddStats(nick, name, money, status, car, user, steamID) {
+async function AddStats(nick, money, status, car, user, steamID) {
     let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
@@ -180,7 +179,7 @@ async function AddStats(nick, name, money, status, car, user, steamID) {
     };
     let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
-        let bdInfo = `${nick}${BDpref}${name}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`;
+        let bdInfo = `${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`;
         if ((`${msg.content}\n${bdInfo}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
             let nnMsg = msg.content.split('\n').slice(1);
             nnMsg.push(`${bdInfo}`);
@@ -204,7 +203,17 @@ function FindStats(stat, value){
 async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@${message.author.id}>`);
+    var steamProfile;
     if (comand(message).sarg[0] != '') var steamProfile = await steam.resolve(comand(message).sarg[0]);
+
+    if (comand(message).com != `подтвердить`){
+        message.author.send(`
+> **Это к чему?** 🤖
+Извини, я робот и не понимаю к чему это сообщение. Если это шутка, то она очень смешная!
+        `,{
+            tts: true
+        })
+    }; //рандомное сообщение
 
     if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
         message.author.send(`
@@ -213,12 +222,12 @@ async function Stats(message){
         `,{
             tts: true
         })
-    }else if (person == undefined && comand(message).com == `подтвердить`){ //пользователь не зарегистрирован
+    }else if (person == undefined && comand(message).com == `подтвердить` && steamProfile == null){ //пользователь не зарегистрирован
         message.author.send(`
 > **Процесс регистрации** 📚
 Здравствуйте! Я PushPin бот, а вы пользователь, желающий пройти верификацию. Всё верно? Если так, то давайте начнём.
 
-> Для начала отправьте мне ссылку на свой стим-профиль. 📬
+> **Для начала повторите команду, дополнив её ссылкой на свой стим-профиль** 📬
 Ссылка на стим-профиль получается очень просто. Вам достаточно повторять действия, отмеченные на этой справке.
         `,{
             tts: true,
@@ -227,14 +236,42 @@ async function Stats(message){
                 name: 'howToGetSteamProfileLink.png'
             }]
         });
-    }else{ //ошибка
+    }else if (comand(message).com == `подтвердить` && steamProfile == null){ //ошибка
         message.author.send(`
 > **Возникла ошибка** 🔏
 Возникла непредвиденная ошибка. Обратитесь к администрации проекта.
         `,{
             tts: true
         })
-    }
+    }; //информационная справка при отправке команды "подтвердить"
+
+    if (person == undefined && comand(message).com == `подтвердить` && steamProfile != null){
+        var steamProfileInfo = await steam.getUserSummary(steamProfile);
+        if (steamProfileInfo.nickname == `[PP] ${message.author.username}`){
+            message.author.send(`
+> **Успешно! Ваш аккаунт зарегистрирован** 🎉
+Все прошло успешно! Теперь вы свободно можете играть на проекте PushPin!
+            `,{
+                tts: true
+            })
+            AddStats(message.author.nickname,250,'Нет','Нет',`<@${message.author.id}>`,steamProfile);
+        }else if (steamProfileInfo.nickname != `[PP] ${message.author.username}`){
+            message.author.send(`
+> **Измените имя** 🖊️
+Чтобы успешно завершить аутентификацию временно измените имя своего профиля на [PP] ${message.author.username} и повторите попытку, дополнив команду ссылкой на свой стим-профиль. 
+            `,{
+                tts: true
+            })
+        }else{
+            message.author.send(`
+> **Возникла ошибка** 🔏
+Возникла непредвиденная ошибка. Обратитесь к администрации проекта.
+            `,{
+                tts: true
+            })
+        }
+    };
+    
 };
 
 client.on('messageDelete', (message) => {
@@ -342,7 +379,7 @@ client.on('message', message => {
 
     if(comand(message).com == `sbd`){
         message.delete();
-        AddStats(message.author.tag,'Петр',123,123,123,`<@${message.author.id}>`,123)
+        AddStats(message.author.tag,123,123,123,`<@${message.author.id}>`,123)
     };
 
     if(message.guild == undefined){
