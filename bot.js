@@ -203,9 +203,11 @@ async function AddStats(user, money, status, car, steamID) {
             return;
         }else if ((`${msg.content}\n${bdInfo}`).length >= 2000){ //если сообщение привышает лимит
             channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`).then(msg => { //пишем новое сообщение
-                oMsg.edit(oMsg.content + `\n${BDpref}${msg.id}${BDpref}${nMsg.length}`) //записываем в доп.БД id и номер нового БД.
+                oMsg.edit(oMsg.content + `\n${BDpref}${msg.id}${BDpref}${nMsg.length}`); //записываем в доп.БД id и номер нового БД.
+                let nnMsg = msg.content.split('\n').slice(1);
+                nnMsg.push(`${bdInfo}`);
+                msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**\n`+nnMsg.join('\n'));
             });
-            AddStats(user, money, status, car, steamID);
         };
     }catch{
         return null;
