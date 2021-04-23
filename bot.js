@@ -231,11 +231,11 @@ async function EditStats(id, stat, dat){
     var AllStats = await GetStats(bdnum);
     var person = AllStats.find(pers => pers.id == id);
 
-    if(stat == 'user') stat = 1;
-    if(stat == 'money') stat = 2;
-    if(stat == 'status') stat = 3;
-    if(stat == 'car') stat = 4;
-    if(stat == 'steamID') stat = 5;
+    if(stat == 'user') stat = 0;
+    if(stat == 'money') stat = 1;
+    if(stat == 'status') stat = 2;
+    if(stat == 'car') stat = 3;
+    if(stat == 'steamID') stat = 4;
 
     var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     var oMsg = await channel.messages.fetch(dopBDmsg);
