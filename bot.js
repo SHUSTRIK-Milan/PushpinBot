@@ -199,7 +199,6 @@ async function AddStats(user, money, status, car, steamID) {
         if ((`${msg.content}\n${bdInfo}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
             let nnMsg = msg.content.split('\n').slice(1);
             nnMsg.push(`${bdInfo}`);
-            console.log(nnMsg.join('\n'));
             msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**\n`+nnMsg.join('\n'));
             return;
         }else if ((`${msg.content}\n${bdInfo}`).length >= 2000){ //если сообщение привышает лимит
