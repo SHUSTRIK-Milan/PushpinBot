@@ -252,16 +252,16 @@ async function EditStats(id, stat, dat){
 
     var eStat = [];
     for(let s in person) eStat.push(person[s]);
-
-    console.log(eStat);
-
+    eStat.splice(0,1);
     eStat.splice(stat,1,dat);
 
     console.log(eStat);
+
+    console.log(eStat);
     console.log(fMsg[0]);
-    console.log(nnMsg.join('\n').length)
 
     nnMsg.splice(parseInt(idnum),1,`^${eStat.join(BDpref)}`);
+    console.log(nnMsg.join('\n').length);
 
     if (nnMsg.join('\n').length > 2000){
         console.log('больше');
