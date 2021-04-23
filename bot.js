@@ -205,10 +205,6 @@ async function AddStats(nick, money, status, car, user, steamID) {
     };
 };
 
-function FindStats(stat, value){
-
-};
-
 async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@${message.author.id}>`);
@@ -277,7 +273,7 @@ client.on('messageDelete', (message) => {
 client.on('message', message => {
     let mb = message.author.bot;
 
-    sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
+    if (mb == false) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
     if (comand(message).com == 'осмотреться' && mb == false){
         message.delete();
