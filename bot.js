@@ -3,6 +3,7 @@ const Config = require('./config');
 const client = new Discord.Client();
 const prefix = '!';
 const BDpref = '^';
+const urlSteam = `https://steamcommunity.com/`;
 
 var guild;
 var BDchnl = `833225101218152459`;
@@ -212,7 +213,7 @@ async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@${message.author.id}>`);
     var steamProfile;
-    if (comand(message).sarg[0] != '') var steamProfile = await steam.resolve(comand(message).sarg[0]);
+    if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) var steamProfile = await steam.resolve(comand(message).sarg[0]);
 
     if (comand(message).com != `подтвердить`){
         message.author.send(`
