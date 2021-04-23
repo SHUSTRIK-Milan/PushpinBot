@@ -378,7 +378,7 @@ client.on('message', message => {
         AddStats(message.author.tag,123,123,123,`<@${message.author.id}>`,123)
     };
 
-    if(message.guild == undefined){
+    if(message.guild == undefined && mb == false){
         Stats(message);
     };
 
