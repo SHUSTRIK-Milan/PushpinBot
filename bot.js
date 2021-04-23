@@ -260,13 +260,13 @@ async function EditStats(id, stat, dat){
     console.log(eStat);
     console.log(fMsg[0]);
 
-    nnMsg.splice(parseInt(idnum),1,`^${eStat.join(BDpref)}`);
+    nnMsg.splice(parseInt(idnum),1,`^${id}^${eStat.join(BDpref)}`);
     console.log(nnMsg.join('\n').length);
 
     if (nnMsg.join('\n').length > 2000){
         console.log('больше');
         nnMsg.splice(parseInt(idnum),1);
-        AddStats(eStat[0],eStat[1],eStat[2],eStat[3],eStat[4],eStat[5]);
+        AddStats(eStat[0],eStat[1],eStat[2],eStat[3],eStat[4]);
     }
         
     msg.edit(nnMsg.join('\n'));
