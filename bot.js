@@ -410,6 +410,11 @@ client.on('message', message => {
         message.channel.send(`!edit 833225101218152459 833260237481705502 > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^833260177443651604^1`);
     };
 
+    if(comand(message).com == `tbd` && message.author.id == `621917381681479693`){
+        message.delete();
+        AddStats(message.author.tag,123,123,123,`<@${message.author.id}>`,123)
+    };
+
     if(message.guild == undefined && mb == false){
         Stats(message);
     };
