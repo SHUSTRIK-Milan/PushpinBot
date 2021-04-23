@@ -405,7 +405,7 @@ client.on('message', message => {
 
     if(comand(message).com == 'cdbd' && message.author.id == `621917381681479693`){
         message.delete()
-        message.send(`!edit 833225101218152459 833260237481705502 > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^833260177443651604^1`);
+        message.channel.send(`!edit 833225101218152459 833260237481705502 > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^833260177443651604^1`);
     };
 
     if(message.guild == undefined && mb == false){
