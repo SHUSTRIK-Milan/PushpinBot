@@ -215,6 +215,7 @@ async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@${message.author.id}>`);
     var steamProfile;
+    var steamNick = `[PP] ${message.author.username}`.slice(0,32);
     if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) var steamProfile = await steam.resolve(comand(message).sarg[0]);
 
     if (comand(message).com != `подтвердить`){
@@ -252,14 +253,14 @@ async function Stats(message){
 
     if (person == undefined && comand(message).com == `подтвердить` && steamProfile != null){
         var steamProfileInfo = await steam.getUserSummary(steamProfile);
-        if (steamProfileInfo.nickname == `[PP] ${message.author.username}`){
+        if (steamProfileInfo.nickname == steamNick){
             message.author.send(`
 > **Успешно! Ваш аккаунт зарегистрирован** 🎉
 Все прошло успешно! Теперь вы свободно можете играть на проекте PushPin!
             `)
             AddStats(message.author.username,250,'Нет','Нет',`<@${message.author.id}>`,steamProfile);
             sendLog(message,'[Глобальное]','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
-        }else if (steamProfileInfo.nickname != `[PP] ${message.author.username}`){
+        }else if (steamProfileInfo.nickname != steamNick){
             message.author.send(`
 > **Измените имя** 📝
 Чтобы успешно завершить аутентификацию временно измените имя своего профиля на \`[PP] ${message.author.username}\` и повторите попытку, дополнив команду ссылкой на свой стим-профиль. 
