@@ -251,7 +251,7 @@ async function Stats(message){
         sendLog(message,'Глобальное','Попытался(-ась) подтвердить свой аккаунт.', 'Ошибка', `SteamID: ${steamProfile}`)
     }; //информационная справка при отправке команды "подтвердить"
 
-    if (person == undefined && comand(message).com == `подтвердить` && steamProfile != null){
+    if (person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) == null){
         var steamProfileInfo = await steam.getUserSummary(steamProfile);
         if (steamProfileInfo.nickname == steamNick){
             message.author.send(`
@@ -272,7 +272,12 @@ async function Stats(message){
             `);
             sendLog(message,'Глобальное','Попытался(-ась) подтвердить свой аккаунт.', 'Ошибка', `SteamID: ${steamProfile}`)
         }
-    };
+    }else{
+        message.author.send(`
+> **Я был о вас лучшего мнения** 😢
+Не пытайтесь меня обмануть. Ваш стим-аккаунт уже привязан к одному из участников.
+            `)
+    }
     
 };
 
