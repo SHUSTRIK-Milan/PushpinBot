@@ -272,7 +272,7 @@ async function Stats(message){
             `);
             sendLog(message,'Глобальное','Попытался(-ась) подтвердить свой аккаунт.', 'Ошибка', `SteamID: ${steamProfile}`)
         }
-    }else{
+    }else if(person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) != null){
         message.author.send(`
 > **Я был о вас лучшего мнения** 😢
 Не пытайтесь меня обмануть. Ваш стим-аккаунт уже привязан к одному из участников.
