@@ -389,6 +389,7 @@ client.on('message', message => {
         channel.messages.fetch(dopBDmsg).then(oMsg => { //получаем сообщение доп бд
             let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
             try{
+                nMsg.splice(0,1);
                 console.log(parseInt(comand(message).sarg[0])-1);
                 console.log(nMsg[parseInt(comand(message).sarg[0])-1]);
                 let fMsg = nMsg[parseInt(comand(message).sarg[0])-1].split(BDpref); //получаем последние данные в доп бд
