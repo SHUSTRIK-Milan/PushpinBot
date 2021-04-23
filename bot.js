@@ -196,6 +196,7 @@ function FindStats(stat, value){
 async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@${message.author.id}>`);
+    console.log(AllStats)
     console.log(person);
 
     if (person != undefined){
