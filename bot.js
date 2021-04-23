@@ -389,11 +389,14 @@ client.on('message', message => {
         channel.messages.fetch(dopBDmsg).then(oMsg => { //получаем сообщение доп бд
             let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
             let fMsg = nMsg[parseInt(comand(message).sarg[0])-1].split(BDpref); //получаем последние данные в доп бд
-            if (fMsg[0] == ''){
-                fMsg.splice(0,1);
-            };
-            console.log(parseInt(comand(message).sarg[0])-1);
-            message.channel.send(`!edit 833225101218152459 ${fMsg[0]} > **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ 1**`);
+            try{
+                if (fMsg[0] == ''){
+                    fMsg.splice(0,1);
+                };
+                message.channel.send(`!edit 833225101218152459 ${fMsg[0]} > **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ 1**`);
+            }catch{
+                console.log(`Недостача аргументов`);
+            }
         });
     };
 
