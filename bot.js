@@ -15,7 +15,6 @@ client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
     guild = client.guilds.cache.get('814795850885627964');
     console.log(guild.channels.cache.get(`822493674738941963`).messages.cache.first());
-    console.log(guild.channels.cache);
     
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
