@@ -242,8 +242,13 @@ async function EditStats(id, stat, dat){
     eStat.splice(stat,1,dat);
     nnMsg.splice(parseInt(idnum),1,`^${eStat.join(BDpref)}`);
 
-    console.log(nnMsg);
-    msg.edit(nnMsg.join('\n'));
+    if (nnMsg.join('\n') > 2000){
+        nnMsg.splice(parseInt(idnum),1);
+        AddStats(eStat[0],eStat[1],eStat[2],eStat[3],eStat[4],eStat[5]);
+    }else{
+        msg.edit(nnMsg.join('\n'));
+    }
+    
 };
 
 async function Stats(message){
