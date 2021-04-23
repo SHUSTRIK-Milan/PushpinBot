@@ -14,8 +14,7 @@ const steam = new SteamAPI('52E6781CF3B4EB4234DC424555A7AD9C');
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
     guild = client.guilds.cache.get('814795850885627964');
-    console.log(guild.channels.cache.get(`822493674738941963`).messages.cache.first());
-    
+
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
     let onlinemember = member - offlinemember - 1;
@@ -195,9 +194,16 @@ function FindStats(stat, value){
 };
 
 async function Stats(message){
-    if (comand(message).com == 'проверка'){
+    var AllStats = await GetStats();
+    var person = AllStats.find(pers => pers.user == `<@${message.author.id}>`);
+
+    if (person != undefined){
         message.author.send(`
 Привет!
+        `)
+    }else{
+        message.author.send(`
+Пока!
         `)
     }
 };
@@ -303,6 +309,14 @@ client.on('message', message => {
         
         })
         .catch(console.error);
+    };
+
+    if(comand(message).com == `sbd`){
+        SetStats(message.author.tag,123,123,123,`<@${message.author.tag}>`,123)
+    };
+
+    if(comand(message).com == `test` && message.guild == undefined){
+        Stats(message);
     };
 
 });
