@@ -241,6 +241,8 @@ async function EditStats(id, stat, dat){
     eStat.splice(stat,1,dat);
     nnMsg.splice(parseInt(idnum),1,`^${eStat.join(BDpref)}`);
     console.log(eStat);
+    console.log(nnMsg.join('\n'));
+    console.log(nnMsg.join('\n').length)
 
     if (nnMsg.join('\n') > 2000){
         console.log('больше');
