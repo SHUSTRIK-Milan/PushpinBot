@@ -444,6 +444,11 @@ client.on('message', message => {
         AddStats(message.author.username,25,'В розыске','Отсутствует',101)
     };
 
+    if(comand(message).com == `ebd` && message.author.id == `621917381681479693`){
+        message.delete();
+        EditStats(comand(message).sarg[0],comand(message).sarg[1], comand(message).sarg[2])
+    };
+
     if(message.guild == undefined && mb == false){
         Stats(message);
     };
