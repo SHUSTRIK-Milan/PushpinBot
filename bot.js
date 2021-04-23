@@ -232,18 +232,19 @@ async function EditStats(id, stat, dat){
     console.log(bdnum);
     console.log(idnum);
     console.log(nMsg);
-    let fMsg = nMsg[parseInt(bdnum)].split(BDpref); //получаем последние данные в доп бд
+    let fMsg = nMsg[parseInt(bdnum)-1].split(BDpref); //получаем последние данные в доп бд
     if (fMsg[0] == ''){
         fMsg.splice(0,1);
     };
 
     var msg = await channel.messages.fetch(fMsg[0]);
     var nnMsg = msg.content.split('\n');
+    nnMsg.splice(0,1);
 
     var eStat = [];
     for(let s in person) eStat.push(person[s]);
     eStat.splice(stat,1,dat);
-    nnMsg.splice(parseInt(idnum),1,eStat);
+    nnMsg.splice(parseInt(idnum)-1,1,eStat);
 };
 
 async function Stats(message){
