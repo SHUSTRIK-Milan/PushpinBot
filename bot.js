@@ -205,7 +205,7 @@ async function AddStats(user, money, status, car, steamID) {
             channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`).then(msg => { //пишем новое сообщение
                 oMsg.edit(oMsg.content + `\n${BDpref}${msg.id}${BDpref}${nMsg.length}`) //записываем в доп.БД id и номер нового БД.
             });
-            AddStats(user,money,status,car);
+            AddStats(user, money, status, car, steamID);
         };
     }catch{
         return null;
