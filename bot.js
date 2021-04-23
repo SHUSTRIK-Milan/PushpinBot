@@ -258,7 +258,7 @@ async function Stats(message){
 > **Успешно! Ваш аккаунт зарегистрирован** 🎉
 Все прошло успешно! Теперь вы свободно можете играть на проекте PushPin!
             `)
-            AddStats(message.author.username,250,'Нет','Нет',`<@${message.author.id}>`,steamProfile);
+            AddStats(`<@${message.author.id}>`,250,'Нет','Нет',steamProfile)
             sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
         }else if (steamProfileInfo.nickname != steamNick){
             message.author.send(`
