@@ -452,7 +452,7 @@ client.on('message', message => {
 
     if(comand(message).com == `tbd` && message.author.id == `621917381681479693`){
         message.delete();
-        AddStats(`<@${message.author.id}>`,25,'В розыске','Отсутствует',101)
+        setTimeout(() => AddStats(`<@${message.author.id}>`,25,'В розыске','Отсутствует',101), 1000);
     };
 
     if(comand(message).com == `ebd` && message.author.id == `621917381681479693`){
