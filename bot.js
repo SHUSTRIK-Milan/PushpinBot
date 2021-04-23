@@ -204,6 +204,17 @@ async function AddStats(user, money, status, car, steamID) {
         }else if ((`${msg.content}\n${bdInfo}`).length >= 2000){ //если сообщение привышает лимит
             channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`).then(msg => { //пишем новое сообщение
                 oMsg.edit(oMsg.content + `\n${BDpref}${msg.id}${BDpref}${nMsg.length}`); //записываем в доп.БД id и номер нового БД.
+
+                let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
+                let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
+                let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
+                let fMsg = nMsg[nMsg.length-1].split(BDpref); //получаем последние данные в доп бд
+                if (fMsg[0] == ''){
+                    fMsg.splice(0,1);
+                };
+                let id = `${fMsg[1]}-${msg.content.split('\n').length}`;
+                let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`;
+
                 let nnMsg = msg.content.split('\n').slice(1);
                 nnMsg.push(`${bdInfo}`);
                 msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**\n`+nnMsg.join('\n'));
