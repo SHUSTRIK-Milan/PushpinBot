@@ -411,7 +411,7 @@ client.on('message', message => {
 
     if(comand(message).com == `tbd` && message.author.id == `621917381681479693`){
         message.delete();
-        AddStats(message.author.tag,123,123,123,`<@${message.author.id}>`,123)
+        AddStats(message.author.username,25,'В розыске','Отсутствует',101)
     };
 
     if(message.guild == undefined && mb == false){
