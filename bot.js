@@ -142,12 +142,12 @@ function haveRole(message, roleid){
     return haveorno;
 };
 
-function member(nick, money, status, car, user, steamID) {
-    this.nick = nick;
+function member(id, user, money, status, car, steamID) {
+    this.id = id;
+    this.user = user;
     this.money = money;
     this.status = status;
     this.car = car;
-    this.user = user;
     this.steamID = steamID;
 };
 
@@ -165,7 +165,7 @@ async function GetStats() {
         let messageNormal = msg.content.split('\n'); //массив, который разбивает сообщение на строки (\n)
         messageNormal.splice(0,1); //удаляем первый элемент всех строк, так как это название БД.
         for(let msg of messageNormal){ //перебераем строки сообщения и задаем каждой строке переменную msg
-            let split = msg.split(BDpref); //разделяем каждое сообщение по двоеточиям, задавая переменную split
+            let split = msg.split(BDpref); //разделяем каждое сообщение по префиксу, задавая переменную split
             if (split[0] != ''){ //проверка на пустоту элементов. Если не пустой, то запускаем разделеное сообщение в массив X
                 mainArray.push(split);
             }else{
@@ -184,7 +184,7 @@ async function GetStats() {
     };
 };
 
-async function AddStats(nick, money, status, car, user, steamID) {
+async function AddStats(user, money, status, car, steamID) {
     let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
@@ -194,7 +194,8 @@ async function AddStats(nick, money, status, car, user, steamID) {
     };
     let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
-        let bdInfo = `${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`;
+        let id = msg.content.split('\n').length;
+        let bdInfo = `${BDpref}${id}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`;
         if ((`${msg.content}\n${bdInfo}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
             let nnMsg = msg.content.split('\n').slice(1);
             nnMsg.push(`${bdInfo}`);
