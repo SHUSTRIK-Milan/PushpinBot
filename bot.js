@@ -217,7 +217,6 @@ async function EditStats(id, stat, dat){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.id == id);
 
-    if(stat == 'id') stat = 0;
     if(stat == 'user') stat = 1;
     if(stat == 'money') stat = 2;
     if(stat == 'status') stat = 3;
