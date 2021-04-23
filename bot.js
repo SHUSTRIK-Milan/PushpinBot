@@ -11,8 +11,6 @@ var dopBDmsg = `833260237481705502`;
 const SteamAPI = require('steamapi');
 const steam = new SteamAPI('52E6781CF3B4EB4234DC424555A7AD9C');
 
-function outPromise();
-
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
     guild = client.guilds.cache.get('814795850885627964');
