@@ -161,8 +161,10 @@ async function GetStats(nNum) {
     let fmsgt = []
     for(n of nMsg){
         let nidmsg = n.split('\n');
-        console.log(nm.slice(0,8));
-        for(nm of nidmsg) if(nm.slice(0,8) != '> **БАЗА')idmsgs.push(nm.split('^')[1]);
+        for(nm of nidmsg){
+            console.log(nm.slice(0,8));
+            if(nm.slice(0,8) != '> **БАЗА')idmsgs.push(nm.split('^')[1])
+        };
     };
     console.log(idmsgs);
     for(m of idmsgs){
