@@ -162,9 +162,12 @@ async function GetStats(nNum) {
         n.split(BDpref);
         testN.push(n);
     };
+    /* for(i of testN){
+        i.split(BDpref)
+    }; */
     console.log(testN);
 
-    let fMsg = nMsg[nNum].split(BDpref); //получаем последние данные в доп бд
+    let fMsg = nMsg[nNum-1].split(BDpref); //получаем последние данные в доп бд
     if (fMsg[0] == ''){
         fMsg.splice(0,1);
     };
@@ -236,7 +239,7 @@ async function AddStats(user, money, status, car, steamID) {
 async function EditStats(id, stat, dat){
     var bdnum = id.split('-')[0];
     var idnum = id.split('-')[1];
-    var AllStats = await GetStats(bdnum);
+    var AllStats = await GetStats(parseInt(bdnum));
     var person = AllStats.find(pers => pers.id == id);
 
     if(stat == 'user') stat = 0;
