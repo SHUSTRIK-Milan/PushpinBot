@@ -161,17 +161,15 @@ async function GetStats(nNum) {
     let fmsgt = []
     for(n of nMsg){
         let nidmsg = n.split('\n');
-        for(nm of nidmsg){
-            console.log(nm.slice(0,8));
-            if(nm.slice(0,8) != '> **БАЗА')idmsgs.push(nm.split('^')[1])
-        };
+        for(nm of nidmsg) idmsgs.push(nm.split('^')[1]);
     };
     console.log(idmsgs);
     for(m of idmsgs){
         let msg = await channel.messages.fetch(m);
-        fmsgt.push(msg.content);
+        let nmsg = msg.content.split('\n');
+        for(m of nmsg) if(m.slice(0,8) != '> **БАЗА')fmsgt.push(m);
     }
-    //console.log(fmsgt.join('\n'));
+    console.log(fmsgt.join('\n'));
 
     /* let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
