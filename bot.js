@@ -254,7 +254,9 @@ async function EditStats(id, stat, dat){
     var eStat = [];
     for(let s in person) eStat.push(person[s]);
     eStat.splice(0,1);
+    console.log(eStat);
     eStat.splice(stat,1,dat);
+    console.log(eStat);
 
     nnMsg.splice(parseInt(idnum),1,`^${id}^${eStat.join(BDpref)}`);
     console.log(nnMsg.join('\n').length);
