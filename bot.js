@@ -163,19 +163,16 @@ async function GetStats(nNum) {
         let nidmsg = n.split('\n');
         for(nm of nidmsg) idmsgs.push(nm.split('^')[1]);
     };
-    console.log(idmsgs);
     for(m of idmsgs){
         let msg = await channel.messages.fetch(m);
         let nmsg = msg.content.split('\n');
         for(m of nmsg) if(m.slice(0,8) != '> **БАЗА')fmsgt.push(m);
     }
-    console.log(fmsgt.join('\n'));
 
-    /* let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
+    let msg = fmsgt.join('\n'); //подключаемся к сообщению, получая о нем все данные.
     try{
         mainArray = []; //задаем новый массив X
         let messageNormal = msg.content.split('\n'); //массив, который разбивает сообщение на строки (\n)
-        messageNormal.splice(0,1); //удаляем первый элемент всех строк, так как это название БД.
         for(let msg of messageNormal){ //перебераем строки сообщения и задаем каждой строке переменную msg
             let split = msg.split(BDpref); //разделяем каждое сообщение по префиксу, задавая переменную split
             if (split[0] != ''){ //проверка на пустоту элементов. Если не пустой, то запускаем разделеное сообщение в массив X
@@ -190,10 +187,11 @@ async function GetStats(nNum) {
             var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5]);
             membersArray.push(newMember);
         };
+        console.log(membersArray);
         return membersArray; //возвращаем массив участников
     }catch{
         return null;
-    }; */
+    };
 };
 
 async function AddStats(user, money, status, car, steamID) {
