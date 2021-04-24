@@ -126,13 +126,6 @@ function comand(message,countS){
         carg: carg
     };
 
-    /* if (comand.com == 'cm'){
-        console.log(`com: ${com}`);
-        console.log(`arg: ${arg}`);
-        console.log(`sarg: ${sarg}`);
-        console.log(`carg: ${carg}`);
-    } */
-
     return comand;
 };
 
@@ -477,7 +470,12 @@ client.on('message', message => {
 
     if(comand(message).com == `ebd` && message.author.id == `621917381681479693`){
         message.delete();
-        EditStats(comand(message).sarg[0],comand(message).sarg[1], comand(message).sarg[2])
+        EditStats(comand(message).sarg[0],comand(message).sarg[1], comand(message,2).carg)
+    };
+
+    if(comand(message).com == `cex` && message.author.id == `621917381681479693`){
+        message.delete();
+        
     };
 
     if(message.guild == undefined && mb == false){
