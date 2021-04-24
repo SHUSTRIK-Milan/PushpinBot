@@ -76,7 +76,7 @@ function sendLog(message,cat,act,status,add){
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
 
     if(Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id) == null){
-        guild.channels.cache.get(Config.BLChannelsID.logsId).send({embed: {
+        guild.channels.cache.get(Config.channelsID.logsId).send({embed: {
             color: color,
             author: {
                 name: message.author.username,
@@ -109,7 +109,7 @@ function createEx(rule,status,num,add){
     if (status == 'Правильно') color = 9819812;
     if (status == 'Неправильно') color = 14508910;
 
-    guild.channels.cache.get(Config.BLChannelsID.generalT).send({embed: {
+    guild.channels.cache.get(Config.channelsID.generalT).send({embed: {
         color: color,
         thumbnail: {
             url: img
