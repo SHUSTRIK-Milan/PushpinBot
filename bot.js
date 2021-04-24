@@ -159,7 +159,7 @@ async function GetStats(nNum) {
 
     let idmsgs = [];
     let fmsgt = []
-    for(n of nMsg) idmsgs.push(n.split('\n')[0]);
+    for(n of nMsg) idmsgs.push(n.split('\n').split('^')[1]);
     console.log(idmsgs);
     for(m of idmsgs){
         let msg = await channel.messages.fetch(m);
