@@ -170,28 +170,27 @@ async function GetStats(nNum) {
     }
 
     let msg = fmsgt.join('\n'); //подключаемся к сообщению, получая о нем все данные.
-    try{
-        mainArray = []; //задаем новый массив X
-        let messageNormal = msg.content.split('\n'); //массив, который разбивает сообщение на строки (\n)
-        for(let msg of messageNormal){ //перебераем строки сообщения и задаем каждой строке переменную msg
-            let split = msg.split(BDpref); //разделяем каждое сообщение по префиксу, задавая переменную split
-            if (split[0] != ''){ //проверка на пустоту элементов. Если не пустой, то запускаем разделеное сообщение в массив X
-                mainArray.push(split);
-            }else{
-                split.splice(0,1); //Если пустой, то удаляем пустой элемент и делаем ту-же операцию.
-                mainArray.push(split);
-            }
-        };
-        membersArray = []; //задаем массив участников
-        for(let i of mainArray){ //перебераем массив X со всеми данными и сортируем их в объект member, который отправляем в массив участников
-            var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5]);
-            membersArray.push(newMember);
-        };
-        console.log(membersArray);
-        return membersArray; //возвращаем массив участников
-    }catch{
-        return null;
+
+    console.log(msg);
+
+    mainArray = []; //задаем новый массив X
+    let messageNormal = msg.content.split('\n'); //массив, который разбивает сообщение на строки (\n)
+    for(let msg of messageNormal){ //перебераем строки сообщения и задаем каждой строке переменную msg
+        let split = msg.split(BDpref); //разделяем каждое сообщение по префиксу, задавая переменную split
+        if (split[0] != ''){ //проверка на пустоту элементов. Если не пустой, то запускаем разделеное сообщение в массив X
+            mainArray.push(split);
+        }else{
+            split.splice(0,1); //Если пустой, то удаляем пустой элемент и делаем ту-же операцию.
+            mainArray.push(split);
+        }
     };
+    membersArray = []; //задаем массив участников
+    for(let i of mainArray){ //перебераем массив X со всеми данными и сортируем их в объект member, который отправляем в массив участников
+        var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5]);
+        membersArray.push(newMember);
+    };
+    console.log(membersArray);
+    return membersArray; //возвращаем массив участников
 };
 
 async function AddStats(user, money, status, car, steamID) {
