@@ -166,6 +166,7 @@ async function GetStats(nNum) {
         i.split(BDpref)
     }; */
     console.log(testN);
+    console.log(`testN`);
 
     let fMsg = nMsg[nNum-1].split(BDpref); //получаем последние данные в доп бд
     if (fMsg[0] == ''){
