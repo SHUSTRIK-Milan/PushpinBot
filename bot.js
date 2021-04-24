@@ -156,10 +156,10 @@ async function GetStats(nNum) {
     let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
     nMsg.splice(0,1); //удаляем заголовок
-    
+
     let idmsgs = [];
     let fmsgt = []
-    for(n of nMsg) n.split('\n')[0].push(idmsgs);
+    for(n of nMsg) idmsgs.push(n.split('\n')[0]);
     for(m of idmsgs){
         let msg = await channel.messages.fetch(fMsg[0]);
         fmsgt.push(idmsgs);
