@@ -220,7 +220,7 @@ async function AddStats(user, money, status, car, steamID) {
             dbd.oMsg.edit(dbd.oMsg.content + `\n${BDpref}${smsg.id}${BDpref}${nMsg.length}`); //записываем в доп.БД id и номер нового БД.
             console.log(smsg);
 
-            let dbd = await refDI();
+            dbd = await refDI();
             let id = `${dbd.fMsg[1]}-${smsg.content.split('\n').length}`;
             let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`;
 
