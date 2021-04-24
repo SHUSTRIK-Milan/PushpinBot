@@ -498,7 +498,7 @@ client.on('message', message => {
 
     if(comand(message).com == `cex` && message.author.id == `621917381681479693`){
         message.delete();
-        
+        createEx(comand(message).sarg[0],comand(message).sarg[1],comand(message).sarg[3],comand(message,3).carg)
     };
 
     if(message.guild == undefined && mb == false){
