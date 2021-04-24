@@ -155,6 +155,15 @@ async function GetStats(nNum) {
     let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
+
+    nMsg.splice(0,1); //удаляем заголовок
+    let testN;
+    for(n of nMsg){
+        n.split(BDpref);
+        testN.push(n);
+    };
+    console.log(testN);
+
     let fMsg = nMsg[nNum].split(BDpref); //получаем последние данные в доп бд
     if (fMsg[0] == ''){
         fMsg.splice(0,1);
@@ -185,40 +194,39 @@ async function GetStats(nNum) {
 };
 
 async function AddStats(user, money, status, car, steamID) {
-    var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-    var oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
-    var nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
-    var fMsg = nMsg[nMsg.length-1].split(BDpref); //получаем последние данные в доп бд
-    if (fMsg[0] == ''){
-        fMsg.splice(0,1);
+    async function refDI(){
+        var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
+        var oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
+        var nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
+        var fMsg = nMsg[nMsg.length-1].split(BDpref); //получаем последние данные в доп бд
+        if (fMsg[0] == ''){
+            fMsg.splice(0,1);
+        };
+        var msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
+        return{oMsg:oMsg,nMsg:nMsg,fMsg:fMsg,msg:msg};
     };
-    var msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
-        let id = `${fMsg[1]}-${msg.content.split('\n').length}`;
+        let dbd = await refDI();
+        let id = `${dbd.fMsg[1]}-${dbd.msg.content.split('\n').length}`;
         let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`;
-        if ((`${msg.content}\n${bdInfo}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
-            let nnMsg = msg.content.split('\n').slice(1);
+        if ((`${dbd.msg.content}\n${bdInfo}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
+            let nnMsg = dbd.msg.content.split('\n').slice(1);
             nnMsg.push(`${bdInfo}`);
-            msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**\n`+nnMsg.join('\n'));
+            dbd.msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**\n`+nnMsg.join('\n'));
             return;
         }else if ((`${msg.content}\n${bdInfo}`).length >= 2000){ //если сообщение привышает лимит
-            let smsg = await channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`); //пишем новое сообщение
-                
-            oMsg.edit(oMsg.content + `\n${BDpref}${msg.id}${BDpref}${nMsg.length}`); //записываем в доп.БД id и номер нового БД.
-            
-            let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-            let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
-            let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
-            let fMsg = nMsg[nMsg.length-1].split(BDpref); //получаем последние данные в доп бд
-            if (fMsg[0] == ''){
-                fMsg.splice(0,1);
-            };
-            let id = `${fMsg[1]}-${smsg.content.split('\n').length}`;
+            let dbd = await refDI();
+            let smsg = await channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**`); //пишем новое сообщение
+            dbd.oMsg.edit(dbd.oMsg.content + `\n${BDpref}${smsg.id}${BDpref}${nMsg.length}`); //записываем в доп.БД id и номер нового БД.
+            console.log(smsg);
+
+            let dbd = await refDI();
+            let id = `${dbd.fMsg[1]}-${smsg.content.split('\n').length}`;
             let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`;
 
             let nnMsg = smsg.content.split('\n').slice(1);
             nnMsg.push(`${bdInfo}`);
-            smsg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**\n`+nnMsg.join('\n'));
+            smsg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**\n`+nnMsg.join('\n'));
         };
     }catch{
         return null;
