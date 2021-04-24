@@ -214,10 +214,10 @@ async function AddStats(user, money, status, car, steamID) {
             nnMsg.push(`${bdInfo}`);
             dbd.msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**\n`+nnMsg.join('\n'));
             return;
-        }else if ((`${msg.content}\n${bdInfo}`).length >= 2000){ //если сообщение привышает лимит
+        }else if ((`${dbd.msg.content}\n${bdInfo}`).length >= 2000){ //если сообщение привышает лимит
             let dbd = await refDI();
             let smsg = await channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**`); //пишем новое сообщение
-            dbd.oMsg.edit(dbd.oMsg.content + `\n${BDpref}${smsg.id}${BDpref}${nMsg.length}`); //записываем в доп.БД id и номер нового БД.
+            dbd.oMsg.edit(dbd.oMsg.content + `\n${BDpref}${smsg.id}${BDpref}${dbd.nMsg.length}`); //записываем в доп.БД id и номер нового БД.
             console.log(smsg);
 
             dbd = await refDI();
