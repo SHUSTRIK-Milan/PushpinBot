@@ -180,13 +180,11 @@ async function GetStats(nNum) {
         }
     };
 
-    console.log(mainArray);
     membersArray = []; //задаем массив участников
     for(let i of mainArray){ //перебераем массив X со всеми данными и сортируем их в объект member, который отправляем в массив участников
         var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5]);
         membersArray.push(newMember);
     };
-    console.log(membersArray);
     return membersArray; //возвращаем массив участников
 };
 
@@ -233,7 +231,7 @@ async function AddStats(user, money, status, car, steamID) {
 async function EditStats(id, stat, dat){
     var bdnum = id.split('-')[0];
     var idnum = id.split('-')[1];
-    var AllStats = await GetStats(parseInt(bdnum));
+    var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.id == id);
 
     if(stat == 'user') stat = 0;
