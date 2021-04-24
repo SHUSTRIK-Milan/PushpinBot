@@ -169,13 +169,8 @@ async function GetStats(nNum) {
         for(m of nmsg) if(m.slice(0,8) != '> **БАЗА')fmsgt.push(m);
     }
 
-    let msg = fmsgt.join('\n'); //подключаемся к сообщению, получая о нем все данные.
-
-    console.log(msg);
-
     mainArray = []; //задаем новый массив X
-    let messageNormal = msg.content.split('\n'); //массив, который разбивает сообщение на строки (\n)
-    for(let msg of messageNormal){ //перебераем строки сообщения и задаем каждой строке переменную msg
+    for(let msg of fmsgt){ //перебераем строки сообщения и задаем каждой строке переменную msg
         let split = msg.split(BDpref); //разделяем каждое сообщение по префиксу, задавая переменную split
         if (split[0] != ''){ //проверка на пустоту элементов. Если не пустой, то запускаем разделеное сообщение в массив X
             mainArray.push(split);
@@ -184,6 +179,8 @@ async function GetStats(nNum) {
             mainArray.push(split);
         }
     };
+
+    console.log(mainArray);
     membersArray = []; //задаем массив участников
     for(let i of mainArray){ //перебераем массив X со всеми данными и сортируем их в объект member, который отправляем в массив участников
         var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5]);
