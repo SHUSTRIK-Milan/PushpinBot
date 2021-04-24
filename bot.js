@@ -216,7 +216,6 @@ async function AddStats(user, money, status, car, steamID) {
             return;
         }else if ((`${dbd.msg.content}\n${bdInfo}`).length >= 2000){ //если сообщение привышает лимит
             let dbd = await refDI();
-            console.log(dbd.msg);
             let smsg = await dbd.channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**`); //пишем новое сообщение
             dbd.oMsg.edit(dbd.oMsg.content + `\n${BDpref}${smsg.id}${BDpref}${dbd.nMsg.length}`); //записываем в доп.БД id и номер нового БД.
             console.log(smsg);
