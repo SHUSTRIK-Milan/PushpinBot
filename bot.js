@@ -203,7 +203,7 @@ async function AddStats(user, money, status, car, steamID) {
             fMsg.splice(0,1);
         };
         var msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
-        return{oMsg:oMsg,nMsg:nMsg,fMsg:fMsg,msg:msg};
+        return{channel:channel,oMsg:oMsg,nMsg:nMsg,fMsg:fMsg,msg:msg};
     };
     try{
         let dbd = await refDI();
@@ -217,7 +217,7 @@ async function AddStats(user, money, status, car, steamID) {
         }else if ((`${dbd.msg.content}\n${bdInfo}`).length >= 2000){ //если сообщение привышает лимит
             let dbd = await refDI();
             console.log(dbd.msg);
-            let smsg = await channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**`); //пишем новое сообщение
+            let smsg = await dbd.channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**`); //пишем новое сообщение
             dbd.oMsg.edit(dbd.oMsg.content + `\n${BDpref}${smsg.id}${BDpref}${dbd.nMsg.length}`); //записываем в доп.БД id и номер нового БД.
             console.log(smsg);
 
