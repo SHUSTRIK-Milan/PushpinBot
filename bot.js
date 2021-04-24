@@ -3,10 +3,14 @@ const Config = require('./config');
 const client = new Discord.Client();
 const prefix = '!';
 const BDpref = '^';
+const urlSteam = `https://steamcommunity.com/`;
 
 var guild;
-var BDchnl = `833225101218152459`;
-var dopBDmsg = `833260237481705502`;
+const BDchnl = `833225101218152459`;
+const dopBDmsg = `833260237481705502`;
+
+const SteamAPI = require('steamapi');
+const steam = new SteamAPI('52E6781CF3B4EB4234DC424555A7AD9C');
 
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
@@ -59,75 +63,6 @@ client.on('presenceUpdate', (om,nm) => {
     }
 });
 
-function member(nick, name, money, status, car, user, steamID) {
-    this.nick = nick;
-    this.name = name;
-    this.money = money;
-    this.status = status;
-    this.car = car;
-    this.user = user;
-    this.steamID = steamID;
-};
-
-async function GetStats() {
-    let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-    let oMsg = await channel.messages.fetch(dopBDmsg);
-    let nMsg = oMsg.content.split('\n');
-    let fMsg = nMsg[nMsg.length-1].split(BDpref);
-    if (fMsg[0] == ''){
-        fMsg.splice(0,1);
-    };
-    let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
-    try{
-        mainArray = []; //задаем новый массив X
-        let messageNormal = msg.content.split('\n'); //массив, который разбивает сообщение на строки (\n)
-        messageNormal.splice(0,1); //удаляем первый элемент всех строк, так как это название БД.
-        for(let msg of messageNormal){ //перебераем строки сообщения и задаем каждой строке переменную msg
-            let split = msg.split(BDpref); //разделяем каждое сообщение по двоеточиям, задавая переменную split
-            if (split[0] != ''){ //проверка на пустоту элементов. Если не пустой, то запускаем разделеное сообщение в массив X
-                mainArray.push(split);
-            }else{
-                split.splice(0,1); //Если пустой, то удаляем пустой элемент и делаем ту-же операцию.
-                mainArray.push(split);
-            }
-        };
-        membersArray = []; //задаем массив участников
-        for(let i of mainArray){ //перебераем массив X со всеми данными и сортируем их в объект member, который отправляем в массив участников
-            var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5], i[6]);
-            membersArray.push(newMember);
-        };
-        return membersArray; //возвращаем массив участников
-    }catch{
-        return null;
-    };
-};
-
-async function SetStats(nick, money, status, car, user, steamID) {
-    let channel = client.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-    let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
-    let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
-    let fMsg = nMsg[nMsg.length-1].split(BDpref); //получаем последние данные в доп бд
-    if (fMsg[0] == ''){
-        fMsg.splice(0,1);
-    };
-    let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
-    try{
-        if ((`${msg.content}\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
-            let nnMsg = msg.content.split('\n').slice(1);
-            nnMsg.push(`${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`);
-            console.log(nnMsg.join('\n'));
-            msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**\n`+nnMsg.join('\n'));
-            return;
-        }else if ((`${msg.content}\n${BDpref}${nick}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${user}${BDpref}${steamID}`).length >= 2000){ //если сообщение привышает лимит
-            channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${fMsg[1]}**`).then(msg => { //пишем новое сообщение
-                oMsg.edit(oMsg.content + `\n${BDpref}${msg.id}${BDpref}${nMsg.length}`) //записываем в доп.БД id и номер нового БД.
-            });
-        };
-    }catch{
-        return null;
-    };
-};
-
 function sendLog(message,cat,act,status,add){
     let img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
@@ -141,7 +76,7 @@ function sendLog(message,cat,act,status,add){
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
 
     if(Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id) == null){
-        client.channels.cache.get(Config.BLChannelsID.logsId).send({embed: {
+        guild.channels.cache.get(Config.BLChannelsID.logsId).send({embed: {
             color: color,
             author: {
                 name: message.author.username,
@@ -169,7 +104,15 @@ function comand(message,countS){
 
     if (countS == undefined) countS = 0;
     let msg = message.content;
-    if(msg.slice(0,1) != prefix) return false;
+
+    var comand = {
+        com: '0',
+        arg: '0',
+        sarg: '0',
+        carg: '0'
+    };
+
+    if(msg.slice(0,1) != prefix) return comand;
     
     let com = msg.split(" ", 1).join('').slice(prefix.length);
     let arg = msg.slice(com.length+prefix.length+1);
@@ -183,7 +126,222 @@ function comand(message,countS){
         carg: carg
     };
 
+    /* if (comand.com == 'cm'){
+        console.log(`com: ${com}`);
+        console.log(`arg: ${arg}`);
+        console.log(`sarg: ${sarg}`);
+        console.log(`carg: ${carg}`);
+    } */
+
     return comand;
+};
+
+function haveRole(message, roleid){
+    let haveorno = false;
+    if (guild.member(message.author).roles.cache.get(roleid) != null) haveorno = true;
+    return haveorno;
+};
+
+function member(id, user, money, status, car, steamID) {
+    this.id = id;
+    this.user = user;
+    this.money = money;
+    this.status = status;
+    this.car = car;
+    this.steamID = steamID;
+};
+
+async function GetStats(nNum) {
+    let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
+    let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
+    let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
+    nMsg.splice(0,1); //удаляем заголовок
+
+    let idmsgs = [];
+    let fmsgt = []
+    for(n of nMsg){
+        let nidmsg = n.split('\n');
+        for(nm of nidmsg) idmsgs.push(nm.split('^')[1]);
+    };
+    for(m of idmsgs){
+        let msg = await channel.messages.fetch(m);
+        let nmsg = msg.content.split('\n');
+        for(m of nmsg) if(m.slice(0,8) != '> **БАЗА')fmsgt.push(m);
+    }
+
+    mainArray = []; //задаем новый массив X
+    for(let msg of fmsgt){ //перебераем строки сообщения и задаем каждой строке переменную msg
+        let split = msg.split(BDpref); //разделяем каждое сообщение по префиксу, задавая переменную split
+        if (split[0] != ''){ //проверка на пустоту элементов. Если не пустой, то запускаем разделеное сообщение в массив X
+            mainArray.push(split);
+        }else{
+            split.splice(0,1); //Если пустой, то удаляем пустой элемент и делаем ту-же операцию.
+            mainArray.push(split);
+        }
+    };
+
+    membersArray = []; //задаем массив участников
+    for(let i of mainArray){ //перебераем массив X со всеми данными и сортируем их в объект member, который отправляем в массив участников
+        var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5]);
+        membersArray.push(newMember);
+    };
+    return membersArray; //возвращаем массив участников
+};
+
+async function AddStats(user, money, status, car, steamID) {
+    async function refDI(){
+        var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
+        var oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
+        var nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
+        var fMsg = nMsg[nMsg.length-1].split(BDpref); //получаем последние данные в доп бд
+        if (fMsg[0] == ''){
+            fMsg.splice(0,1);
+        };
+        var msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
+        return{channel:channel,oMsg:oMsg,nMsg:nMsg,fMsg:fMsg,msg:msg};
+    };
+    try{
+        let dbd = await refDI();
+        let id = `${dbd.fMsg[1]}-${dbd.msg.content.split('\n').length}`;
+        let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`;
+        if ((`${dbd.msg.content}\n${bdInfo}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
+            let nnMsg = dbd.msg.content.split('\n').slice(1);
+            nnMsg.push(`${bdInfo}`);
+            dbd.msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**\n`+nnMsg.join('\n'));
+            return;
+        }else if ((`${dbd.msg.content}\n${bdInfo}`).length >= 2000){ //если сообщение привышает лимит
+            let dbd = await refDI();
+            let smsg = await dbd.channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**`); //пишем новое сообщение
+            dbd.oMsg.edit(dbd.oMsg.content + `\n${BDpref}${smsg.id}${BDpref}${dbd.nMsg.length}`); //записываем в доп.БД id и номер нового БД.
+            console.log(smsg);
+
+            dbd = await refDI();
+            let id = `${dbd.fMsg[1]}-${smsg.content.split('\n').length}`;
+            let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`;
+
+            let nnMsg = smsg.content.split('\n').slice(1);
+            nnMsg.push(`${bdInfo}`);
+            smsg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**\n`+nnMsg.join('\n'));
+        };
+    }catch{
+        return null;
+    };
+};
+
+async function EditStats(id, stat, dat){
+    var bdnum = id.split('-')[0];
+    var idnum = id.split('-')[1];
+    var AllStats = await GetStats();
+    var person = AllStats.find(pers => pers.id == id);
+
+    if(stat == 'user') stat = 0;
+    if(stat == 'money') stat = 1;
+    if(stat == 'status') stat = 2;
+    if(stat == 'car') stat = 3;
+    if(stat == 'steamID') stat = 4;
+
+    var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
+    var oMsg = await channel.messages.fetch(dopBDmsg);
+
+    let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
+    nMsg.splice(0,1);
+    let fMsg = nMsg[parseInt(bdnum)-1].split(BDpref); //получаем последние данные в доп бд
+    if (fMsg[0] == ''){
+        fMsg.splice(0,1);
+    };
+
+    var msg = await channel.messages.fetch(fMsg[0]);
+    var nnMsg = msg.content.split('\n');
+
+    var eStat = [];
+    for(let s in person) eStat.push(person[s]);
+    eStat.splice(0,1);
+    eStat.splice(stat,1,dat);
+
+    nnMsg.splice(parseInt(idnum),1,`^${id}^${eStat.join(BDpref)}`);
+    console.log(nnMsg);
+    console.log(nnMsg.join('\n').length);
+
+    if (nnMsg.join('\n').length > 2000){
+        console.log('больше');
+        console.log(nnMsg);
+        console.log(idnum);
+        nnMsg.splice(parseInt(idnum),1);
+        AddStats(eStat[0],eStat[1],eStat[2],eStat[3],eStat[4]);
+    }
+        
+    msg.edit(nnMsg.join('\n'));
+    
+};
+
+async function Stats(message){
+    var AllStats = await GetStats();
+    var person = AllStats.find(pers => pers.user == `<@${message.author.id}>`);
+    var steamProfile;
+    var steamNick = `[PP] ${message.author.username}`.slice(0,32);
+    if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) var steamProfile = await steam.resolve(comand(message).sarg[0]);
+
+    if (comand(message).com != `подтвердить`){
+        message.author.send(`
+> **Это к чему?** 🤖
+Извини, я робот и не понимаю к чему это сообщение. Если это шутка, то она очень смешная!
+        `)
+    }; //рандомное сообщение
+
+    if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
+        message.author.send(`
+> **Вы уже зарегистрированы** 📟
+Вы уже зарегистрированы в базе данных пользователей. Если вы желаете обнулить свой аккаунт, обратитесь к администрации проекта.
+        `)
+    }else if (person == undefined && comand(message).com == `подтвердить` && steamProfile == null){ //пользователь не зарегистрирован
+        message.author.send(`
+> **Процесс регистрации** 📚
+Привет! Я PushPin бот, а вы пользователь, желающий пройти верификацию. Всё верно? Если так, то давайте начнём.
+
+> **Для начала повторите команду, дополнив её ссылкой на свой стим-профиль** 📬
+Ссылка на стим-профиль получается очень просто. Вам достаточно повторять действия, отмеченные на этой справке.
+        `,{
+            files: [{
+                attachment: 'https://i.imgur.com/vVTXtbD.png',
+                name: 'howToGetSteamProfileLink.png'
+            }]
+        });
+    }else if (comand(message).com == `подтвердить` && steamProfile == null){ //ошибка
+        message.author.send(`
+> **Возникла ошибка** 🔏
+Возникла непредвиденная ошибка. Обратитесь к администрации проекта.
+        `);
+        sendLog(message,'Глобальное','Попытался(-ась) подтвердить свой аккаунт.', 'Ошибка', `SteamID: ${steamProfile}`)
+    }; //информационная справка при отправке команды "подтвердить"
+
+    if (person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) == null){
+        var steamProfileInfo = await steam.getUserSummary(steamProfile);
+        if (steamProfileInfo.nickname == steamNick){
+            message.author.send(`
+> **Успешно! Ваш аккаунт зарегистрирован** 🎉
+Все прошло успешно! Теперь вы свободно можете играть на проекте PushPin!
+            `)
+            AddStats(`<@${message.author.id}>`,250,'Нет','Нет',steamProfile)
+            sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
+        }else if (steamProfileInfo.nickname != steamNick){
+            message.author.send(`
+> **Измените имя** 📝
+Чтобы успешно завершить аутентификацию временно измените имя своего профиля на \`${steamNick}\` и повторите попытку, дополнив команду ссылкой на свой стим-профиль. 
+            `)
+        }else{
+            message.author.send(`
+> **Возникла ошибка** 🔏
+Возникла непредвиденная ошибка. Обратитесь к администрации проекта.
+            `);
+            sendLog(message,'Глобальное','Попытался(-ась) подтвердить свой аккаунт.', 'Ошибка', `SteamID: ${steamProfile}`)
+        }
+    }else if(person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) != null){
+        message.author.send(`
+> **Я был о вас лучшего мнения** 😢
+Не пытайтесь меня обмануть. Ваш стим-аккаунт уже привязан к одному из участников.
+            `)
+    }
+    
 };
 
 client.on('messageDelete', (message) => {
@@ -193,13 +351,13 @@ client.on('messageDelete', (message) => {
 client.on('message', message => {
     let mb = message.author.bot;
 
-    sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
+    if (mb == false) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
     if (comand(message).com == 'осмотреться' && mb == false){
         message.delete();
         let homestreet = Config.street.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
 
-        if(message.channel.name == "улица"){
+        if(message.channel.name == "улица"){   
             let objects = [];
 
             for (let pobj of homestreet.objects) if (pobj.addCondition == '') objects.push(pobj.name);
@@ -264,7 +422,7 @@ client.on('message', message => {
         message.channel.send(`${comand(message).arg}`);	
     };
 
-    if(comand(message).com == `clear` && mb == false && message.guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
+    if(comand(message).com == `clear` && mb == false && haveRole(message, `822493460493500436`) == true){
         let arg = parseInt(comand(message).sarg[0]);
         
         if (arg > 0 && arg < 100){
@@ -277,7 +435,7 @@ client.on('message', message => {
         };
     };
     
-    if(comand(message).com == `edit` && message.author.id == `621917381681479693`){
+    if(comand(message).com == `edit` && haveRole(message, `833778527609552918`) == true){
         message.delete();
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
@@ -289,8 +447,41 @@ client.on('message', message => {
         .catch(console.error);
     };
 
-    if(comand(message).com == `sbd` && guild.member(message.author).roles.cache.get(`822493460493500436`) != null){
+    if(comand(message).com == 'cbd' && message.author.id == `621917381681479693`){
+        message.delete()
+        let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
+        channel.messages.fetch(dopBDmsg).then(oMsg => { //получаем сообщение доп бд
+            let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
+            try{
+                nMsg.splice(0,1);
+                let fMsg = nMsg[parseInt(comand(message).sarg[0])-1].split(BDpref); //получаем последние данные в доп бд
+                if (fMsg[0] == ''){
+                    fMsg.splice(0,1);
+                };
+                message.channel.send(`!edit 833225101218152459 ${fMsg[0]} > **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ 1**`);
+            }catch{
+                console.log(`Недостача аргументов`);
+            }
+        });
+    };
+
+    if(comand(message).com == 'cdbd' && message.author.id == `621917381681479693`){
+        message.delete()
+        message.channel.send(`!edit 833225101218152459 833260237481705502 > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^833260177443651604^1`);
+    };
+
+    if(comand(message).com == `tbd` && message.author.id == `621917381681479693`){
         message.delete();
+        setTimeout(() => AddStats(`<@${message.author.id}>`,25,'В розыске','Отсутствует',101), 1000);
+    };
+
+    if(comand(message).com == `ebd` && message.author.id == `621917381681479693`){
+        message.delete();
+        EditStats(comand(message).sarg[0],comand(message).sarg[1], comand(message).sarg[2])
+    };
+
+    if(message.guild == undefined && mb == false){
+        Stats(message);
     };
 
 });

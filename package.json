@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/SHUSTRIK-Milan/PushpinBot#readme",
   "dependencies": {
-    "discord.js": "^12.5.1"
+    "discord.js": "^12.5.1",
+    "steamapi": "^2.1.3"
   }
 }
