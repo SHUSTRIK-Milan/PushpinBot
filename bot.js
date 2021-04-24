@@ -100,6 +100,29 @@ function sendLog(message,cat,act,status,add){
     }
 };
 
+function createEx(rule,status,num,add){
+    let img = `https://i.imgur.com/cjSSwtu.png`;
+    if (status == 'Правильно') img = `https://i.imgur.com/cjSSwtu.png`;
+    if (status == 'Неправильно') img = `https://i.imgur.com/utuBexR.png`;
+
+    let color = 11645371; 
+    if (status == 'Правильно') color = 9819812;
+    if (status == 'Неправильно') color = 14508910;
+
+    guild.channels.cache.get(Config.BLChannelsID.generalT).send({embed: {
+        color: color,
+        thumbnail: {
+            url: img
+        },
+        fields: [{
+            name: `[${rule}] Пример #${num}`,
+            value: `${add}`
+        }]
+        }
+    });
+    return;
+};
+
 function comand(message,countS){
 
     if (countS == undefined) countS = 0;
