@@ -157,7 +157,7 @@ async function GetStats(nNum) {
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
 
     nMsg.splice(0,1); //удаляем заголовок
-    let testN;
+    let testN = [];
     for(n of nMsg){
         n.split(BDpref);
         testN.push(n);
