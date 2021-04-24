@@ -170,7 +170,7 @@ async function GetStats(nNum) {
     }
     console.log(fmsgt.join('\n'));
 
-    let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
+    /* let msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
     try{
         mainArray = []; //задаем новый массив X
         let messageNormal = msg.content.split('\n'); //массив, который разбивает сообщение на строки (\n)
@@ -192,7 +192,7 @@ async function GetStats(nNum) {
         return membersArray; //возвращаем массив участников
     }catch{
         return null;
-    };
+    }; */
 };
 
 async function AddStats(user, money, status, car, steamID) {
