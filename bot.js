@@ -160,11 +160,11 @@ async function GetStats(nNum) {
     let idmsgs = [];
     let fmsgt = []
     for(n of nMsg) idmsgs.push(n.split('\n')[0]);
-    for(m of idmsgs){
-        let msg = await channel.messages.fetch(fMsg[0]);
-        fmsgt.push(idmsgs);
-    }
     console.log(idmsgs);
+    for(m of idmsgs){
+        let msg = await channel.messages.fetch(m);
+        fmsgt.push(msg.content);
+    }
     console.log(fmsgt.join('\n'));
 
     let fMsg = nMsg[nNum-1].split(BDpref); //получаем последние данные в доп бд
