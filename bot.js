@@ -261,6 +261,8 @@ async function EditStats(id, stat, dat){
 
     if (nnMsg.join('\n').length > 2000){
         console.log('больше');
+        console.log(nnMsg);
+        console.log(idnum);
         nnMsg.splice(parseInt(idnum),1);
         AddStats(eStat[0],eStat[1],eStat[2],eStat[3],eStat[4]);
     }
