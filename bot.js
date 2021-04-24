@@ -155,19 +155,7 @@ async function GetStats(nNum) {
     let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
-
     nMsg.splice(0,1); //удаляем заголовок
-    let testN = [];
-    for(n of nMsg){
-        n.split(BDpref);
-        console.log(n);
-        testN.push(n);
-    };
-    /* for(i of testN){
-        i.split(BDpref)
-    }; */
-    console.log(testN);
-    console.log(`testN`);
 
     let fMsg = nMsg[nNum-1].split(BDpref); //получаем последние данные в доп бд
     if (fMsg[0] == ''){
