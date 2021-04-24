@@ -156,6 +156,16 @@ async function GetStats(nNum) {
     let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
     nMsg.splice(0,1); //удаляем заголовок
+    
+    let idmsgs = [];
+    let fmsgt = []
+    for(n of nMsg) n.split('\n')[0].push(idmsgs);
+    for(m of idmsgs){
+        let msg = await channel.messages.fetch(fMsg[0]);
+        fmsgt.push(idmsgs);
+    }
+    console.log(idmsgs);
+    console.log(fmsgt.join('\n'));
 
     let fMsg = nMsg[nNum-1].split(BDpref); //получаем последние данные в доп бд
     if (fMsg[0] == ''){
