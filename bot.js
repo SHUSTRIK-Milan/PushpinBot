@@ -160,6 +160,7 @@ async function GetStats(nNum) {
     let testN = [];
     for(n of nMsg){
         n.split(BDpref);
+        console.log(n);
         testN.push(n);
     };
     /* for(i of testN){
