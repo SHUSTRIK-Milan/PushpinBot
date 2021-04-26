@@ -180,7 +180,7 @@ function member(id, user, money, status, car, steamID) {
     this.steamID = steamID;
 };
 
-async function GetStats(nNum) {
+async function GetStats() {
     let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
@@ -351,7 +351,7 @@ async function Stats(message){
 Все прошло успешно! Теперь вы свободно можете играть на проекте PushPin!
             `)
             AddStats(`<@${message.author.id}>`,250,'Нет','Нет',steamProfile)
-            guild.members.fetch(message.author.id).then(member => {removeRole(member,`829423238169755658`),giveRole(member,`822497385208741928`)});
+            guild.members.fetch(message.author.id).then(member => {removeRole(member,`829423238169755658`),giveRole(member,`836269090996879387`)});
             sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
         }else if (steamProfileInfo.nickname != steamNick){
             message.author.send(`
