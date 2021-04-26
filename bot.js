@@ -63,6 +63,50 @@ client.on('presenceUpdate', (om,nm) => {
     }
 });
 
+client.on('guildMemberAdd', (member) => {
+    const role = "829423238169755658";
+    member.roles.add(role).catch(console.error);
+});
+
+function comand(message,countS){
+
+    if (countS == undefined) countS = 0;
+    let msg = message.content;
+
+    var comand = {
+        com: '0',
+        arg: '0',
+        sarg: '0',
+        carg: '0'
+    };
+
+    if(msg.slice(0,1) != prefix) return comand;
+    
+    let com = msg.split(" ", 1).join('').slice(prefix.length);
+    let arg = msg.slice(com.length+prefix.length+1);
+    let sarg = arg.split(" ");
+    let carg = sarg.slice(countS).join(' ');
+
+    var comand = {
+        com: com,
+        arg: arg,
+        sarg: sarg,
+        carg: carg
+    };
+
+    return comand;
+};
+
+function haveRole(message, roleid){
+    let haveorno = false;
+    if (guild.member(message.author).roles.cache.get(roleid) != null) haveorno = true;
+    return haveorno;
+};
+
+function giveRole(roleId){
+    member.roles.add(roleId).catch(console.error);
+};
+
 function sendLog(message,cat,act,status,add){
     let img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
@@ -121,41 +165,6 @@ function createEx(rule,status,num,add){
         }
     });
     return;
-};
-
-function comand(message,countS){
-
-    if (countS == undefined) countS = 0;
-    let msg = message.content;
-
-    var comand = {
-        com: '0',
-        arg: '0',
-        sarg: '0',
-        carg: '0'
-    };
-
-    if(msg.slice(0,1) != prefix) return comand;
-    
-    let com = msg.split(" ", 1).join('').slice(prefix.length);
-    let arg = msg.slice(com.length+prefix.length+1);
-    let sarg = arg.split(" ");
-    let carg = sarg.slice(countS).join(' ');
-
-    var comand = {
-        com: com,
-        arg: arg,
-        sarg: sarg,
-        carg: carg
-    };
-
-    return comand;
-};
-
-function haveRole(message, roleid){
-    let haveorno = false;
-    if (guild.member(message.author).roles.cache.get(roleid) != null) haveorno = true;
-    return haveorno;
 };
 
 function member(id, user, money, status, car, steamID) {
