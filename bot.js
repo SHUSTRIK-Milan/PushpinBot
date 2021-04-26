@@ -103,8 +103,12 @@ function haveRole(message, roleid){
     return haveorno;
 };
 
-function giveRole(roleId){
+function giveRole(member, roleId){
     member.roles.add(roleId).catch(console.error);
+};
+
+function removeRole(member, roleId){
+    member.roles.remove(roleId).catch(console.error);
 };
 
 function sendLog(message,cat,act,status,add){
@@ -347,6 +351,7 @@ async function Stats(message){
 Все прошло успешно! Теперь вы свободно можете играть на проекте PushPin!
             `)
             AddStats(`<@${message.author.id}>`,250,'Нет','Нет',steamProfile)
+            guild.members.fetch(message.author.id).then(member => {removeRole(member,`829423238169755658`),giveRole(member,`822497385208741928`)});
             sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
         }else if (steamProfileInfo.nickname != steamNick){
             message.author.send(`
