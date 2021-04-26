@@ -104,11 +104,11 @@ function haveRole(message, roleid){
 };
 
 function giveRole(member, roleId){
-    member.roles.add(roleId).catch(console.error);
+    member.roles.add(roleId, `Добавил роль под ID: ${roleId}.`).catch(console.error);
 };
 
 function removeRole(member, roleId){
-    member.roles.remove(roleId).catch(console.error);
+    member.roles.remove(roleId, `Удалил роль под ID: ${roleId}.`).catch(console.error);
 };
 
 function sendLog(message,cat,act,status,add){
