@@ -225,35 +225,31 @@ async function AddStats(user, money, status, car, steamID) {
         var fMsg = nMsg[nMsg.length-1].split(BDpref); //получаем последние данные в доп бд
         if (fMsg[0] == ''){
             fMsg.splice(0,1);
-        };
+        }; //удаляем пустые строки
         var msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
-        return{channel:channel,oMsg:oMsg,nMsg:nMsg,fMsg:fMsg,msg:msg};
+        return{channel:channel,oMsg:oMsg,nMsg:nMsg,fMsg:fMsg,msg:msg}; //возвращаю все переменные
     };
     try{
-        let dbd = await refDI();
-        let id = `${dbd.fMsg[1]}-${dbd.msg.content.split('\n').length}`;
-        let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`;
+        let dbd = await refDI(); //получая данные с доп бд
+        let id = `${dbd.fMsg[1]}-${dbd.msg.content.split('\n').length}`; //создаю ID
+        let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`; //создаю переменную всех данных
         if ((`${dbd.msg.content}\n${bdInfo}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
-            let nnMsg = dbd.msg.content.split('\n').slice(1);
-            nnMsg.push(`${bdInfo}`);
-            dbd.msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**\n`+nnMsg.join('\n'));
+            let nnMsg = dbd.msg.content.split('\n').slice(1); //разделяю сообщение на строки, удаляя название
+            nnMsg.push(`${bdInfo}`); //добавляю к разделеному сообщению данные
+            dbd.msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**\n`+nnMsg.join('\n')); //редактирую сообщение со всеми данными
             return;
         }else if ((`${dbd.msg.content}\n${bdInfo}`).length >= 2000){ //если сообщение привышает лимит
-            let dbd = await refDI();
-            console.log(dbd.nMsg);
+            let dbd = await refDI(); //получаю данные
             let smsg = await dbd.channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ**`); //пишем новое сообщение
-            await dbd.oMsg.edit(dbd.oMsg.content + `\n${BDpref}${smsg.id}${BDpref}${dbd.nMsg.length}`); //записываем в доп.БД id и номер нового БД.
+            await dbd.oMsg.edit(dbd.oMsg.content + `\n${BDpref}${smsg.id}${BDpref}${dbd.nMsg.length}`); //записываем в доп.БД id и номер нового БД
 
-            dbd = await refDI();
-            console.log(dbd.nMsg);
-            let id = `${dbd.fMsg[1]}-${smsg.content.split('\n').length}`;
-            console.log(id);
-            console.log(dbd.fMsg[1]);
-            let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`;
+            dbd = await refDI(); //получаю данные
+            let id = `${dbd.fMsg[1]}-${smsg.content.split('\n').length}`; //создаю ID
+            let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`; //создаю переменную всех данных
 
-            let nnMsg = smsg.content.split('\n').slice(1);
-            nnMsg.push(`${bdInfo}`);
-            smsg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**\n`+nnMsg.join('\n'));
+            let nnMsg = smsg.content.split('\n').slice(1); //разделяю сообщение на строки, удаляя название
+            nnMsg.push(`${bdInfo}`); //добавляю к разделеному сообщению данные
+            smsg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**\n`+nnMsg.join('\n')); //редактирую сообщение со всеми данными
         };
     }catch{
         return null;
