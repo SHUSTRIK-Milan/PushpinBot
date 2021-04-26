@@ -408,7 +408,7 @@ client.on('message', message => {
         let homestreet = Config.street.find(st => st.name == message.channel.parent.name);
 
         if (comand(message).sarg[0] == 'на' && message.channel.name == 'улица'){
-            let walkway = homestreet.radius.find(st => st.toLowerCase() == comand(message).arg);
+            let walkway = homestreet.radius.find(st => st.toLowerCase() == comand(message,1).carg);
 
             if (walkway != null && message.channel.parent.permissionOverwrites.get(message.author.id) != null){
                 let cat = client.channels.cache.find(cat => cat.name == walkway);
@@ -417,15 +417,15 @@ client.on('message', message => {
                     message.channel.parent.permissionOverwrites.get(message.author.id).delete();
                     sendLog(message,`Общее`,`Пошел.`,`Успешно`,`Перешел с ${homestreet.name} на ${walkway}.`);
                 };
-            }else if (walkway == null && Config.street.find(st => st.name.toLowerCase() == comand(message).arg) != null){
-                message.author.send(`${comand(message).arg} не является соседней улицей с ${homestreet.name}.`);
-                sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: ${comand(message).arg} не является соседней улицей с ${homestreet.name}.`);
+            }else if (walkway == null && Config.street.find(st => st.name.toLowerCase() == comand(message,1).carg) != null){
+                message.author.send(`${comand(message,1).carg} не является соседней улицей с ${homestreet.name}.`);
+                sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: ${comand(message,1).carg} не является соседней улицей с ${homestreet.name}.`);
             }else{
-                message.author.send(`Вероятнее всего улицы ${comand(message).arg} нет, либо вы ввели ее неправильно.`);
-                sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${comand(message).arg} нет, либо вы ввели ее неправильно.`);
+                message.author.send(`Вероятнее всего улицы ${comand(message,1).carg} нет, либо вы ввели ее неправильно.`);
+                sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${comand(message,1).carg} нет, либо вы ввели ее неправильно.`);
             };
         }else if (comand(message).sarg[0] == 'в'){
-            let walkway = homestreet.objects.find(st => st.name.toLowerCase() == comand(message).arg);
+            let walkway = homestreet.objects.find(st => st.name.toLowerCase() == comand(message,1).carg);
         }else{
             message.author.send(`Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
             sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
