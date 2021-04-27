@@ -186,7 +186,7 @@ async function createCom(embd, message){
         let lastcom = await commits.data[countC-1];
 
         let nCommits = [];
-        for (let i = 0; i < countC; i++) {
+        for (let i = countC-1; i > -1; i--) {
             lastcom = await commits.data[i];
             nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
         }
