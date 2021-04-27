@@ -177,10 +177,11 @@ function createEx(rule,status,num,add){
 };
 
 async function createCom(embd){
-    let branches = await fork.listBranches();
-    let commits = await fork.listCommits();
+    let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
+    let branch = nTitle.slice(0,nTitle.length-1);
+    let commits = await fork.listCommits({sha:branch});
     let lastcom = await commits.data[commits.data.length-1];
-    console.log(branches)
+    console.log(commits)
 
     let color = 11645371;
     if(embd.title.slice(-10) == 'new commit') color = 8506509;
