@@ -45,6 +45,7 @@ client.on('ready', () => {
     fork.listCommits().then(com => {
         console.log(com.data[com.data.length-1]);
         console.log(com.status);
+        console.log(com);
     });
 });
 
