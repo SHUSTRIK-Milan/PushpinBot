@@ -10,7 +10,12 @@ const BDchnl = `833225101218152459`;
 const dopBDmsg = `833260237481705502`;
 
 const SteamAPI = require('steamapi');
+var GitHub = require('github-api');
 const steam = new SteamAPI('52E6781CF3B4EB4234DC424555A7AD9C');
+var gitA = new GitHub({
+    token: process.env.git
+});
+var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot');
 
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
