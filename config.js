@@ -7,7 +7,9 @@ module.exports.channelsID = {
     questID: `822885506270232651`,
     mainIDteam: `822493674738941963`,
     headsID: `831214097005281290`,
-    devTeamID: `829995884150390795`
+    devTeamID: `829995884150390795`,
+    generalR: `835434150596837446`,
+    generalT: `835434387293339658`
 };
 
 module.exports.BLChannelsID = {
