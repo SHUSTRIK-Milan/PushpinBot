@@ -183,15 +183,15 @@ async function createCom(embd){
     let countC = parseInt(embd.title.split(' ')[1]);
     let lastcom = await commits.data[0];
 
-    let commits = [];
+    let nCommits = [];
     if (countC>1){
         for (let i = 0; i < countC; i++) {
-            lastcom = await commits.data[i];
-            commits.push(`\`[${lastcom.html_url.slice(52).slice(0,7)}](${lastcom.html_url})\``);
+            lastcom = await nCommits.data[i];
+            nCommits.push(`\`[${lastcom.html_url.slice(52).slice(0,7)}](${lastcom.html_url})\``);
         }
     }
     
-    console.log(commits);
+    console.log(nCommits);
     console.log(embd);
 
     let color = 11645371;
@@ -199,7 +199,7 @@ async function createCom(embd){
 
     guild.channels.cache.get(Config.channelsID.commitsID).send({embed: {
         title: `[PushpinBot:dev] ${countC} коммит(ов).`,
-        description: commits.join('\n'),
+        description: nCommits.join('\n'),
         color: color,
         author: {
             name: lastcom.author.login,
