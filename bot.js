@@ -179,6 +179,7 @@ function createEx(rule,status,num,add){
 async function createCom(embd){
     let commits = await fork.listCommits();
     let lastcom = commits.data[commits.data.length-1];
+    console.log(lastcom)
 
     let color = 11645371;
     if(embd.title.slice(-10) == 'new commit') color = 8506509;
@@ -187,7 +188,7 @@ async function createCom(embd){
         color: color,
         author: {
             name: lastcom.author.login,
-            icon_url: author.avatar_url
+            icon_url: lastcom.author.avatar_url
         },
         fields: [{
             name: `[] Пример `,
