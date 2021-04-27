@@ -183,14 +183,12 @@ async function createCom(embd, message){
     try{
         message.delete()
         let countC = parseInt(embd.title.split(' ')[1]);
-        let lastcom = await commits.data[0];
+        let lastcom = await commits.data[countC-1];
 
         let nCommits = [];
-        if (countC>1){
-            for (let i = 0; i < countC; i++) {
-                lastcom = await commits.data[i];
-                nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
-            }
+        for (let i = 0; i < countC; i++) {
+            lastcom = await commits.data[i];
+            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
         }
 
         console.log(nCommits);
