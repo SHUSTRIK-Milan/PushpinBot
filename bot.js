@@ -180,14 +180,15 @@ async function createCom(embd){
     let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
     let branch = nTitle.slice(0,nTitle.length-1);
     let commits = await fork.listCommits({sha:branch});
-    let lastcom = await commits.data[commits.data.length-1];
-    console.log(commits)
-    console.log(branch);
+    let lastcom = await commits.data[0];
+    console.log(lastcom);
 
     let color = 11645371;
     if(embd.title.slice(-10) == 'new commit') color = 8506509;
 
     guild.channels.cache.get(Config.channelsID.commitsID).send({embed: {
+        title: `[PushpinBot:dev] 1 новый коммит.`,
+        description: `[${lastcom.html_url.slice(52).slice(0,7)}](${lastcom.html_url})`,
         color: color,
         author: {
             name: lastcom.author.login,
