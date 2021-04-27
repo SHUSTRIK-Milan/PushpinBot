@@ -42,11 +42,6 @@ client.on('ready', () => {
         }
       });
     };
-    fork.listCommits().then(com => {
-        console.log(com.data[com.data.length-1]);
-        console.log(com.status);
-        console.log(com);
-    });
 });
 
 client.on('presenceUpdate', (om,nm) => {
@@ -493,6 +488,13 @@ client.on('message', message => {
     if(message.guild == undefined && mb == false){
         Stats(message);
     };
+
+    if(message.channel.id == Config.channelsID.commitsID){
+        fork.listCommits().then(com => {
+            console.log(com.data[com.data.length-1]);
+        });
+        console.log(message);
+    }
 
 });
 
