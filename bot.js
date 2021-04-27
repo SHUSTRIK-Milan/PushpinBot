@@ -187,8 +187,8 @@ async function createCom(embd){
     if (countC>1){
         for (let i = 0; i < countC; i++) {
             lastcom = await commits.data[i];
-            nCommits.push(`\`[${lastcom.html_url.slice(52).slice(0,7)}]\`(${lastcom.html_url})`);
         }
+        nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
     }
     
     console.log(lastcom);
