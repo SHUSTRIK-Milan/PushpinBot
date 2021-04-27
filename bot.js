@@ -207,7 +207,7 @@ async function createCom(embd, message){
             fields: [],
             timestamp: new Date()
         }});
-    }
+    }catch{}
     return;
 };
 
