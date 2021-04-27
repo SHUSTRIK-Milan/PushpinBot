@@ -10,7 +10,12 @@ const BDchnl = `833225101218152459`;
 const dopBDmsg = `833260237481705502`;
 
 const SteamAPI = require('steamapi');
+var GitHub = require('github-api');
 const steam = new SteamAPI('52E6781CF3B4EB4234DC424555A7AD9C');
+var gitA = new GitHub({
+    token: process.env.git
+});
+var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot');
 
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
@@ -168,6 +173,41 @@ function createEx(rule,status,num,add){
         }]
         }
     });
+    return;
+};
+
+async function createCom(embd, message){
+    let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
+    let branch = nTitle.slice(0,nTitle.length-1);
+    let commits = await fork.listCommits({sha:branch});
+    try{
+        message.delete()
+        let countC = parseInt(embd.title.split(' ')[1]);
+        let lastcom = await commits.data[countC-1];
+
+        let nCommits = [];
+        for (let i = countC-1; i > -1; i--) {
+            lastcom = await commits.data[i];
+            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
+        }
+
+        console.log(nCommits);
+
+        let color = 11645371;
+        if(countC>0) color = 8506509;
+
+        guild.channels.cache.get(Config.channelsID.commitsID).send({embed: {
+            title: `[PushpinBot:dev] ${countC} коммит(ов).`,
+            description: nCommits.join('\n'),
+            color: color,
+            author: {
+                name: lastcom.author.login,
+                icon_url: lastcom.author.avatar_url
+            },
+            fields: [],
+            timestamp: new Date()
+        }});
+    }catch{}
     return;
 };
 
@@ -516,6 +556,10 @@ client.on('message', message => {
     if(message.guild == undefined && mb == false){
         Stats(message);
     };
+
+    if(message.channel.id == Config.channelsID.commitsID && message.author.id != '822500483826450454'){
+        createCom(message.embeds[0],message);
+    }
 
 });
 
