@@ -171,6 +171,28 @@ function createEx(rule,status,num,add){
     return;
 };
 
+async function createCom(embd){
+    let commits = await fork.listCommits();
+    let lastcom = commits.data[commits.data.length-1];
+
+    let color = 11645371;
+    if(embd.title.slice(-10) == 'new commit') color = 8506509;
+
+    guild.channels.cache.get(Config.channelsID.commitsID).send({embed: {
+        color: color,
+        author: {
+            name: lastcom.author.login,
+            icon_url: author.avatar_url
+        },
+        fields: [{
+            name: `[] Пример `,
+            value: `g`
+        }]
+        }
+    });
+    return;
+};
+
 function member(id, user, money, status, car, steamID) {
     this.id = id;
     this.user = user;
@@ -518,10 +540,7 @@ client.on('message', message => {
     };
 
     if(message.channel.id == Config.channelsID.commitsID){
-        fork.listCommits().then(com => {
-            console.log(com.data[com.data.length-1]);
-        });
-        console.log(message);
+        createCom(message.embeds[0]);
     }
 
 });
