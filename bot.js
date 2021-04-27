@@ -545,7 +545,7 @@ client.on('message', message => {
         Stats(message);
     };
 
-    if(message.channel.id == Config.channelsID.commitsID){
+    if(message.channel.id == Config.channelsID.commitsID && message.author.id != '822500483826450454'){
         createCom(message.embeds[0]);
     }
 
