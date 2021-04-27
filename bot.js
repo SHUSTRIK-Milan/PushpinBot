@@ -10,12 +10,7 @@ const BDchnl = `833225101218152459`;
 const dopBDmsg = `833260237481705502`;
 
 const SteamAPI = require('steamapi');
-var GitHub = require('github-api');
 const steam = new SteamAPI('52E6781CF3B4EB4234DC424555A7AD9C');
-var gitA = new GitHub({
-    token: process.env.git
-});
-var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot');
 
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`);
@@ -41,7 +36,7 @@ client.on('ready', () => {
             type: "WATCHING",
         }
       });
-    };
+    }
 });
 
 client.on('presenceUpdate', (om,nm) => {
@@ -330,7 +325,6 @@ async function Stats(message){
         message.author.send(`
 > **Процесс регистрации** 📚
 Привет! Я PushPin бот, а вы пользователь, желающий пройти верификацию. Всё верно? Если так, то давайте начнём.
-
 > **Для начала повторите команду, дополнив её ссылкой на свой стим-профиль** 📬
 Ссылка на стим-профиль получается очень просто. Вам достаточно повторять действия, отмеченные на этой справке.
         `,{
