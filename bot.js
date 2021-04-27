@@ -42,7 +42,10 @@ client.on('ready', () => {
         }
       });
     };
-    fork.listCommits().then(com => console.log(com.data[com.data.length-1]));
+    fork.listCommits().then(com => {
+        console.log(com.data[com.data.length-1]);
+        console.log(com.status);
+    });
 });
 
 client.on('presenceUpdate', (om,nm) => {
