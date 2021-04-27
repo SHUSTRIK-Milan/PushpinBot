@@ -176,38 +176,38 @@ function createEx(rule,status,num,add){
     return;
 };
 
-async function createCom(embd){
+async function createCom(embd, message){
     let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
     let branch = nTitle.slice(0,nTitle.length-1);
     let commits = await fork.listCommits({sha:branch});
-    let countC = parseInt(embd.title.split(' ')[1]);
-    let lastcom = await commits.data[0];
+    try{
+        message.delete()
+        let countC = parseInt(embd.title.split(' ')[1]);
+        let lastcom = await commits.data[0];
 
-    let nCommits = [];
-    if (countC>1){
-        for (let i = 0; i < countC; i++) {
-            lastcom = await commits.data[i];
+        let nCommits = [];
+        if (countC>1){
+            for (let i = 0; i < countC; i++) {
+                lastcom = await commits.data[i];
+            }
+            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
         }
-        nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
+
+        let color = 11645371;
+        if(countC>0) color = 8506509;
+
+        guild.channels.cache.get(Config.channelsID.commitsID).send({embed: {
+            title: `[PushpinBot:dev] ${countC} коммит(ов).`,
+            description: nCommits.join('\n'),
+            color: color,
+            author: {
+                name: lastcom.author.login,
+                icon_url: lastcom.author.avatar_url
+            },
+            fields: [],
+            timestamp: new Date()
+        }});
     }
-    
-    console.log(lastcom);
-    console.log(embd);
-
-    let color = 11645371;
-    if(countC>0) color = 8506509;
-
-    guild.channels.cache.get(Config.channelsID.commitsID).send({embed: {
-        title: `[PushpinBot:dev] ${countC} коммит(ов).`,
-        description: nCommits.join('\n'),
-        color: color,
-        author: {
-            name: lastcom.author.login,
-            icon_url: lastcom.author.avatar_url
-        },
-        fields: [],
-        timestamp: new Date()
-    }});
     return;
 };
 
@@ -558,7 +558,7 @@ client.on('message', message => {
     };
 
     if(message.channel.id == Config.channelsID.commitsID && message.author.id != '822500483826450454'){
-        createCom(message.embeds[0]);
+        createCom(message.embeds[0],message);
     }
 
 });
