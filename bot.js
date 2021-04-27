@@ -189,9 +189,11 @@ async function createCom(embd, message){
         if (countC>1){
             for (let i = 0; i < countC; i++) {
                 lastcom = await commits.data[i];
+                nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
             }
-            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
         }
+
+        console.log(nCommits);
 
         let color = 11645371;
         if(countC>0) color = 8506509;
