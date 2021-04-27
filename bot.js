@@ -178,7 +178,7 @@ function createEx(rule,status,num,add){
 
 async function createCom(embd){
     let commits = await fork.listCommits();
-    let lastcom = commits.data[commits.data.length-1];
+    let lastcom = await commits.data[commits.data.length-1];
     console.log(lastcom)
 
     let color = 11645371;
