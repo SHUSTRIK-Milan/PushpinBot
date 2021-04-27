@@ -182,6 +182,7 @@ async function createCom(embd){
     let commits = await fork.listCommits({sha:branch});
     let lastcom = await commits.data[commits.data.length-1];
     console.log(commits)
+    console.log(branch);
 
     let color = 11645371;
     if(embd.title.slice(-10) == 'new commit') color = 8506509;
