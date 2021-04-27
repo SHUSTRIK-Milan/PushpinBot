@@ -205,12 +205,9 @@ async function createCom(embd){
             name: lastcom.author.login,
             icon_url: lastcom.author.avatar_url
         },
-        fields: [{
-            name: `[] Пример `,
-            value: `g`
-        }]
-        }
-    });
+        fields: [],
+        timestamp: new Date()
+    }});
     return;
 };
 
