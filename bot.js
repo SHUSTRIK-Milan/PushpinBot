@@ -216,7 +216,7 @@ async function createCom(embd, message){
         let lastReq = await req.data[0];
         message.delete();
         guild.channels.cache.get(Config.channelsID.commitsID).send({embed: {
-            title: `[PushpinBot:${lastReq.head.ref}] новое слияние веток.`,
+            title: `[PushpinBot:${lastReq.head.ref}] Новое слияние веток.`,
             description: `\`(${lastReq.head.ref} → ${lastReq.base.ref})\` ${lastReq.title}`,
             url: lastReq.url,
             color: 13158471,
