@@ -191,13 +191,11 @@ async function createCom(embd, message){
             nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
         }
 
-        console.log(nCommits);
-
         let color = 11645371;
         if(countC>0) color = 8506509;
 
         guild.channels.cache.get(Config.channelsID.commitsID).send({embed: {
-            title: `[PushpinBot:dev] ${countC} коммит(ов).`,
+            title: `[PushpinBot:${branch}] ${countC} коммит(ов).`,
             description: nCommits.join('\n'),
             color: color,
             author: {
