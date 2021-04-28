@@ -177,10 +177,15 @@ function createEx(rule,status,num,add){
 };
 
 async function createCom(embd, message){
-    let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
-    let branch = nTitle.slice(0,nTitle.length-1);
-    let commits = await fork.listCommits({sha:branch});
-    try{
+    let act = null;
+    for(let a of embd.title.split(':')){
+        if(a.slice(-6) == 'closed') act = 'merge';
+        if(a.slice(-7) == 'commits' || a.slice(-6) == 'commit') act = 'commit';
+    };
+    if(act == 'commit'){
+        let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
+        let branch = nTitle.slice(0,nTitle.length-1);
+        let commits = await fork.listCommits({sha:branch});
         message.delete()
         let countC = parseInt(embd.title.split(' ')[1]);
         let lastcom = await commits.data[countC-1];
@@ -205,7 +210,9 @@ async function createCom(embd, message){
             fields: [],
             timestamp: new Date()
         }});
-    }catch{}
+    }else if(act == 'merge'){
+        fork.listPullRequests({state:'close'});
+    };
     return;
 };
 
