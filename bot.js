@@ -506,13 +506,13 @@ client.on('message', message => {
         }
     };
 
-    if(comand(message).com == `send` && message.author.id == `621917381681479693`){	
+    if(comand(message).com == `send` && haveRole(message, `833778527609552918`) == true){	
         if(mb) return;	
         message.delete();	
         message.channel.send(`${comand(message).arg}`);	
     };
 
-    if(comand(message).com == `clear` && mb == false && haveRole(message, `822493460493500436`) == true){
+    if(comand(message).com == `clear` && mb == false && haveRole(message, `833778527609552918`) == true){
         let arg = parseInt(comand(message).sarg[0]);
         
         if (arg > 0 && arg < 100){
@@ -525,7 +525,8 @@ client.on('message', message => {
         };
     };
     
-    if(comand(message).com == `edit` && haveRole(message, `833778527609552918`) == true){
+    if(comand(message).com == `edit` && haveRole(message, `833778527609552918`) == true
+    || comand(message).com == `edit` && haveRole(message, `822501730964078633`) == true){
         message.delete();
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
