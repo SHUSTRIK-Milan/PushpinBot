@@ -211,7 +211,7 @@ async function createCom(embd, message){
             timestamp: new Date()
         }});
     }else if(act == 'merge'){
-        fork.listPullRequests({state:'close'}).then(m => console.log(m));
+        fork.listPullRequests({state:'close'}).then(m => console.log(m.data[0]));
     };
     return;
 };
