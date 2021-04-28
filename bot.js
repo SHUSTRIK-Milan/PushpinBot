@@ -211,8 +211,24 @@ async function createCom(embd, message){
             timestamp: new Date()
         }});
     }else if(act == 'merge'){
-        fork.listPullRequests({state:'close'}).then(m => console.log(m.data[0]));
-    };
+        let req = await fork.listPullRequests({state:'close'});
+        let lastReq = await req.data[0];
+        message.delete();
+        guild.channels.cache.get(Config.channelsID.commitsID).send({embed: {
+            title: `[PushpinBot:${lastReq.head.ref}] новое слияние веток.`,
+            description: `(\`${lastReq.head.ref} => ${lastReq.base.ref}\`) ${lastReq.title}`,
+            url: lastReq.url,
+            color: 13158471,
+            author: {
+                name: lastReq.user.login,
+                icon_url: lastReq.user.avatar_url
+            },
+            fields: [],
+            timestamp: new Date()
+        }});
+    }else{
+        message.delete()
+    }
     return;
 };
 
