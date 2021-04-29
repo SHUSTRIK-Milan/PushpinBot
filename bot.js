@@ -439,7 +439,9 @@ async function Stats(message){
 function updateChannels(){
 
     for(street of Config.streets){
-        guild.channels.create(street.name,{type:'category', permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}],position:5});
+        guild.channels.create(street.name,{
+            type:'category', permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}],position:Object.getOwnPropertyNames(Config.catID).length-1
+        });
     };
 };
 
@@ -600,10 +602,6 @@ client.on('message', message => {
 
     if(comand(message).com == `checkpos` && message.author.id == `621917381681479693`){
         message.delete();
-        let t = guild.channels.cache.get(`836472670899404810`);
-        console.log(t);
-        console.log(t.name);
-        console.log(t.position);
         console.log(`1: ${message.channel.position}`);
         console.log(`2: ${message.channel.parent.position}`);
     }
