@@ -441,6 +441,10 @@ async function updateChannels(){
     let channelsID = [];
     let warn = false;
 
+    streets = [];
+    haveStreets = [];
+    outStreets = [];
+
     for (channel in Config.channelsID) channelsID.push(Config.channelsID[channel]);
     for (outAllChannel of allChannels){
         for(street of Config.streets) if(`«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase()) channelsID.push(`${outAllChannel[0]}`)
@@ -456,10 +460,16 @@ async function updateChannels(){
     };
 
     for (outAllChannel of allChannels){
-        console.log(outAllChannel[1].name.toLowerCase());
-        //console.log(Config.streets.find(street => `«${street.name.toLowerCase()}»` != outAllChannel[1].name.toLowerCase()).name);
+        for(street of Config.streets) streets.push(street);
+        haveStreets.push(Config.streets.find(street => `«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase()));
     };
-    
+
+    for(hstreet of haveStreets){
+        outStreets.push(streets.filter(street => street.name != hstreet.name))
+    };
+
+    console.log(outStreets);
+
     if(warn == true){
         for (street of Config.streets){
             var cat = await guild.channels.create(`«${street.name}»`,{
