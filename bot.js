@@ -468,7 +468,8 @@ async function updateChannels(){
     console.log(pawObjects);
     let oObjects = [];
     for(street of Config.streets){
-        oObjects.push(street.objects.filter(object => !pawObjects.includes(object)));
+        fobjects = street.objects.filter(object => !pawObjects.includes(object));
+        for(fo of fobjects) oObjects.push(fo);
     };
 
     console.log(oStreets);
