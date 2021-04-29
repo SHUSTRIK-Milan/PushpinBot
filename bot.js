@@ -465,26 +465,23 @@ async function updateChannels(){
     };
 
     let oStreets = Config.streets.filter(street => !pawStreets.includes(street));
-    console.log(pawObjects);
     let oObjects = [];
     for(street of Config.streets){
         fobjects = street.objects.filter(object => !pawObjects.includes(object));
         for(fo of fobjects) oObjects.push(fo);
     };
 
-    console.log(oStreets);
-    console.log(oObjects);
-    /* for (street of Config.streets){
+    for (street of oStreets){
         var cat = await guild.channels.create(`«${street.name}»`,{
             type:'category', permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}]
         });
         
-        for(object of street.objects){
+        for(object of oObjects){
             guild.channels.create(`${object.name}`,{
                 type:'text', parent:cat, permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}]
             });
         };
-    }; */
+    };
 };
 
 client.on('messageDelete', (message) => {
