@@ -472,6 +472,7 @@ async function updateChannels(){
             };
         };
     };
+    
 };
 
 client.on('messageDelete', (message) => {
