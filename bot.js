@@ -442,7 +442,7 @@ async function updateChannels(){
 
     for (channel in Config.channelsID) channelsID.push(Config.channelsID[channel]);
     for (outAllChannel of allChannels){
-        if(channelsID.find(channel => channel == outAllChannel[0]) == undefined) setTimeout(() => guild.channels.cache.get(outAllChannel[0]).delete(), 250);;
+        if(channelsID.find(channel => channel == outAllChannel[0]) == undefined) guild.channels.cache.get(outAllChannel[0]).delete();
         /* Мы перебираем все каналы и путём проверки на наличие данных отделяем те, которые есть в файли и которых нет.
         То бишь, мы сравниваем каналы и те, которые ничему не равны удаляем.*/
     } 
@@ -453,9 +453,9 @@ async function updateChannels(){
         });
         
         for(object of street.objects){
-            setTimeout(() => {guild.channels.create(`${object.name}`,{
+            guild.channels.create(`${object.name}`,{
                 type:'text', parent:cat, permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}]
-            })},250);
+            });
         }
     };
 };
