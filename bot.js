@@ -434,6 +434,10 @@ async function Stats(message){
     
 };
 
+function updateChannels(){
+    console.log(guild.channels.cache.filter(channel => channel.type == 'category'));
+};
+
 client.on('messageDelete', (message) => {
     sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
 });
@@ -583,6 +587,8 @@ client.on('message', message => {
     if(message.channel.id == Config.channelsID.commitsID && message.author.id != '822500483826450454'){
         createCom(message.embeds[0],message);
     }
+
+    if(comand(message).com == `update` && message.author.id == `621917381681479693`)
 
 });
 
