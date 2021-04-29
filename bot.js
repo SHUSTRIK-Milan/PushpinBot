@@ -437,6 +437,9 @@ async function Stats(message){
 };
 
 function updateChannels(){
+    let t = guild.channels.cache.filter(channel => channel.type == 'category');
+    for(i of t){console.log(i.name),console.log(i.position)};
+
     for(street of Config.streets){
         guild.channels.create(street.name,{type:'category', permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}],position:5});
     };
