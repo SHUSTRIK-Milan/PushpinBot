@@ -1,31 +1,51 @@
 module.exports.channelsID = {
-    main: `814795850885627965`, //main[ooc]
-    rules: `835433939812089856`, //projectRules
-    lore: `836472670899404810`, //lore
-    team_general: `822762670058766336`, //team-general
-    team_admin: `835628015986671626`, //team-admin
-    team_helper: `835204987285274624`, //team-helper
-    team_moders: `835205499397472296`, //team-moders
-    /////////////////////////////////
-    logsId: `825078587312177162`,//logs
-    commitsID: `829434075688206347`,//commits
-    infoID: `822528060196388926`,//welcome
-    devID: `822796606952177664`,//devblog
-    mainIDusers: `822529113239453706`,//chat
-    questID: `822885506270232651`,//qa
-    mainIDteam: `822493674738941963`,//chat
-    headsID: `831214097005281290`,//heads
-    devTeamID: `829995884150390795`,//dev-team
-    generalR: `835434150596837446`,//general rules
-    generalT: `835434387293339658`//general terminology
+    welcome: `822528060196388926`,
+    devblog: `829429779207815229`,
+    commits: `829434075688206347`,
+    /////////main[OOC]////////////
+    main: `814795850885627965`,
+    chatMain: `822529113239453706`,
+    qa: `822885506270232651`,
+    offers: `831827280379641866`,
+    voiceMain: `814795850885627969`,
+    /////////Project Rules//////
+    projectRules: `835433939812089856`,
+    generalRules: `835434150596837446`,
+    generalTerm: `835434387293339658`,
+    /////////Lore///////////////
+    lore: `836472670899404810`,
+    generalLore: `836481279377539112`,
+    /////////Team-General/////////////
+    teamGeneral: `822762670058766336`,
+    teamDev: `829995884150390795`,
+    chatTeam: `822493674738941963`,
+    head: `831214097005281290`,
+    logs: `825078587312177162`,
+    bd: `833225101218152459`,
+    discus: `833617702832046121`,
+    voiceTeam: `835201663534891060`,
+    /////////Team-Admin/////////////
+    teamAdmin: `835628015986671626`,
+    chatAdmin: `835628842415947856`,
+    headAdmin: `835628904084406272`,
+    /////////Team-Helper/////////////
+    teamHelper: `835204987285274624`,
+    chatHelper: `833779481902710825`,
+    headHelper: `835621333223604274`,
+    resultHelper: `835190639578316821`,
+    /////////Team-Moders/////////////
+    teamModers: `835205499397472296`,
+    chatModers: `835205499397472296`,
+    punishments: `833779056347709462`
 };
 
 module.exports.BLChannelsID = {
-    logsId: `825078587312177162`,
-    commitsID: `829434075688206347`,
-    infoID: `822528060196388926`,
-    devID: `822796606952177664`,
-    headsID: `831214097005281290`,
+    welcome: `822528060196388926`,
+    devblog: `829429779207815229`,
+    commits: `829434075688206347`,
+    head: `831214097005281290`,
+    logs: `825078587312177162`,
+    bd: `833225101218152459`
 };
 
 module.exports.streets = [
