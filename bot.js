@@ -588,7 +588,9 @@ client.on('message', message => {
         createCom(message.embeds[0],message);
     }
 
-    if(comand(message).com == `update` && message.author.id == `621917381681479693`)
+    if(comand(message).com == `update` && message.author.id == `621917381681479693`){
+        updateChannels();
+    };
 
 });
 
