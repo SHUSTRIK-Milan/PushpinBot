@@ -446,7 +446,7 @@ async function updateChannels(){
     for (channel in Config.channelsID) channelsID.push(Config.channelsID[channel]);
     for (outAllChannel of allChannels){
         
-        if(Config.streets.find(street => `«${street.name.toLowerCase()}»` == `«${outAllChannel[1].name.toLowerCase()}»`) == undefined) s.push(outAllChannel[1].name);
+        if(Config.streets.find(street => `«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase()) == undefined) s.push(outAllChannel[1].name);
 
         if(Config.streets.find(street => street.objects.find(object => object.name.toLowerCase() == outAllChannel[1].name.toLowerCase())) == undefined) o.push(outAllChannel[1].name);
 
