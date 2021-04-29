@@ -452,6 +452,9 @@ async function updateChannels(){
     };
 
     for (outAllChannel of allChannels){
+        let street = Config.streets.find(street => `«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase());
+        if (street != undefined) haveStreets.push(street);
+
         if(channelsID.find(channel => channel == outAllChannel[0]) == undefined){
             guild.channels.cache.get(outAllChannel[0]).delete();
         };
@@ -459,10 +462,7 @@ async function updateChannels(){
         То бишь, мы сравниваем каналы и те, которые ничему не равны удаляем.*/
     };
 
-    for (outAllChannel of allChannels){
-        for(street of Config.streets) streets.push(street);
-        haveStreets.push(Config.streets.find(street => `«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase()));
-    };
+    for(street of Config.streets) streets.push(street);
 
     console.log(streets);
     console.log(haveStreets);
