@@ -453,11 +453,9 @@ async function updateChannels(){
         });
         
         for(object of street.objects){
-            console.log(street);
-            console.log(object);
-            guild.channels.create(`${object.name}`,{
+            setTimeout(() => {guild.channels.create(`${object.name}`,{
                 type:'text', parent:cat, permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}]
-            })
+            })},250);
         }
     };
 };
