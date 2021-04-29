@@ -439,14 +439,17 @@ async function Stats(message){
 function updateChannels(){
     let allChannels = guild.channels.cache;
     let channelsID = [];
-    for(channel in Config.channelsID) channelsID.push(channel);
 
-    for(channel of allChannels) if(channel[0] != channel) console.log(channel[1].name);
-    for(street of Config.streets){
+    for(channel in Config.channelsID) channelsID.push(Config.channelsID[channel]);
+    for(outAllChannel of allChannels){
+        for(channel of channelsID) if(outAllChannel[0] != channel) console.log(outAllChannel[1].name);
+    } 
+
+    /* for(street of Config.streets){
         guild.channels.create(`«${street.name}»`,{
             type:'category', permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}]
         });
-    };
+    }; */
 };
 
 client.on('messageDelete', (message) => {
