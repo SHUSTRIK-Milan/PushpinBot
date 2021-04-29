@@ -441,10 +441,10 @@ async function updateChannels(){
     let channelsID = [];
 
     for (channel in Config.channelsID) channelsID.push(Config.channelsID[channel]);
-    for (outAllChannel of allChannels){
+    /* for (outAllChannel of allChannels){
         for(street of Config.streets) if(`«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase()) channelsID.push(`${outAllChannel[0]}`)//channelsID.push(outAllChannel[1].name);
         for(street of Config.streets) if(street.objects.find(object => object.name.toLowerCase() == outAllChannel[1].name.toLowerCase()) != undefined) channelsID.push(`${outAllChannel[0]}`)//channelsID.push(outAllChannel[1].name);
-    };
+    }; */
 
     for (outAllChannel of allChannels){
         if(channelsID.find(channel => channel == outAllChannel[0]) == undefined){
