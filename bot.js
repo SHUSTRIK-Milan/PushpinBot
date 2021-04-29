@@ -129,7 +129,7 @@ function sendLog(message,cat,act,status,add){
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
 
     if(Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id) == null){
-        guild.channels.cache.get(Config.channelsID.logsId).send({embed: {
+        guild.channels.cache.get(Config.channelsID.logs).send({embed: {
             color: color,
             author: {
                 name: message.author.username,
@@ -162,7 +162,7 @@ function createEx(rule,status,num,add){
     if (status == 'Правильно') color = 9819812;
     if (status == 'Неправильно') color = 14508910;
 
-    guild.channels.cache.get(Config.channelsID.generalT).send({embed: {
+    guild.channels.cache.get(Config.channelsID.generalTerm).send({embed: {
         color: color,
         thumbnail: {
             url: img
@@ -201,7 +201,7 @@ async function createCom(embd, message){
         let color = 11645371;
         if(countC>0) color = 8506509;
 
-        guild.channels.cache.get(Config.channelsID.commitsID).send({embed: {
+        guild.channels.cache.get(Config.channelsID.commits).send({embed: {
             title: `[PushpinBot:${branch}] ${countC} коммит(ов).`,
             description: nCommits.join('\n'),
             url: lastcom.html_url,
@@ -217,7 +217,7 @@ async function createCom(embd, message){
         let req = await fork.listPullRequests({state:'close'});
         let lastReq = await req.data[0];
         message.delete();
-        guild.channels.cache.get(Config.channelsID.commitsID).send({embed: {
+        guild.channels.cache.get(Config.channelsID.commits).send({embed: {
             title: `[PushpinBot:${lastReq.head.ref}] Новое слияние веток.`,
             description: `\`(${lastReq.head.ref} → ${lastReq.base.ref})\` ${lastReq.title}`,
             url: lastReq.url,
@@ -595,7 +595,7 @@ client.on('message', message => {
         Stats(message);
     };
 
-    if(message.channel.id == Config.channelsID.commitsID && message.author.id != '822500483826450454'){
+    if(message.channel.id == Config.channelsID.commits && message.author.id != '822500483826450454'){
         createCom(message.embeds[0],message);
     }
 
