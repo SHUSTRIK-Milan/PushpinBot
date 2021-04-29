@@ -455,9 +455,7 @@ async function updateChannels(){
         То бишь, мы сравниваем каналы и те, которые ничему не равны удаляем.*/
     };
 
-    for (outAllChannel of allChannels){
-        console.log(Config.streets.find(street => `«${street.name.toLowerCase()}»` != outAllChannel[1].name.toLowerCase()).name);
-    };
+    console.log(Config.streets.find(street => `«${street.name.toLowerCase()}»` != `«Бродвей»`.toLowerCase()).name);
     
     if(warn == true){
         for (street of Config.streets){
