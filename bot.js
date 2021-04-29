@@ -578,7 +578,7 @@ client.on('message', message => {
                 if (fMsg[0] == ''){
                     fMsg.splice(0,1);
                 };
-                message.channel.send(`!edit 833225101218152459 ${fMsg[0]} > **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ 1**`);
+                message.channel.send(`!edit ${BDchnl} ${fMsg[0]} > **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ 1**`);
             }catch{
                 console.log(`Недостача аргументов`);
             }
@@ -587,7 +587,7 @@ client.on('message', message => {
 
     if(comand(message).com == 'cdbd' && message.author.id == `621917381681479693`){
         message.delete()
-        message.channel.send(`!edit 833225101218152459 ${dopBDmsg} > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^837399281203281990^1`);
+        message.channel.send(`!edit ${BDchnl} ${dopBDmsg} > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^837399281203281990^1`);
     };
 
     if(comand(message).com == `tbd` && message.author.id == `621917381681479693`){
