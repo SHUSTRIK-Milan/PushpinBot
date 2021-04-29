@@ -449,10 +449,12 @@ async function updateChannels(){
     };
 
     for (outAllChannel of allChannels){
-        let pawStreets = Config.streets.find(street => `«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase());
+        /* let pawStreets = Config.streets.find(street => `«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase());
         if(pawStreets != undefined) oStreets.push(pawStreets);
         let pawObjects = Config.streets.find(street => `«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase());
-        if(pawObjects != undefined) oObjects.push(pawObjects);
+        if(pawObjects != undefined) oObjects.push(pawObjects); */
+        let test = Config.streets.find(street => `«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase());
+        if(test != undefined) console.log(test);
 
         if(channelsID.find(channel => channel == outAllChannel[0]) == undefined){
             guild.channels.cache.get(outAllChannel[0]).delete();
