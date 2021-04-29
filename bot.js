@@ -456,9 +456,7 @@ async function updateChannels(){
     };
 
     for (outAllChannel of allChannels){
-        for (street of Config.streets){
-            if(`«${street.name}»` != outAllChannel[1].name) console.log(outAllChannel[1].name);
-        };
+        console.log(Config.streets.find(street => `«${street.name.toLowerCase()}»` != outAllChannel[1].name.toLowerCase()).name);
     };
     
     if(warn == true){
