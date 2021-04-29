@@ -601,7 +601,10 @@ client.on('message', message => {
     if(comand(message).com == `checkpos` && message.author.id == `621917381681479693`){
         message.delete();
         let t = guild.channels.cache.filter(channel => channel.type == 'category');
-        for(i of t){console.log(i.name),console.log(i.position)};
+        for(i of t){
+            console.log(i.name);
+            console.log(i.position)
+        };
         console.log(`1: ${message.channel.position}`);
         console.log(`2: ${message.channel.parent.position}`);
     }
