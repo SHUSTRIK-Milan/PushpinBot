@@ -599,6 +599,11 @@ client.on('message', message => {
         updateChannels();
     };
 
+    if(comand(message).com == `checkpos` && message.author.id == `621917381681479693`){
+        message.delete();
+        message.channel.position;
+    }
+
 });
 
 client.login(process.env.BOT_TOKEN);
