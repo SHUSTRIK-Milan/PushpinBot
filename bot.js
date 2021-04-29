@@ -438,6 +438,10 @@ async function Stats(message){
 
 function updateChannels(){
     console.log(guild.channels.cache.filter(channel => channel.type == 'category'));
+
+    for(street of Config.streets){
+        guild.channels.create(street.name,{type:'category', permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}],position:5});
+    };
 };
 
 client.on('messageDelete', (message) => {
@@ -451,7 +455,7 @@ client.on('message', message => {
 
     if (comand(message).com == 'осмотреться' && mb == false){
         message.delete();
-        let homestreet = Config.street.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
+        let homestreet = Config.streets.find(st => st.name.toLowerCase() == message.channel.parent.name.toLowerCase());
 
         if(message.channel.name == "улица"){   
             let objects = [];
@@ -485,7 +489,7 @@ client.on('message', message => {
 
     if (comand(message).com == 'идти' && mb == false){
         message.delete();
-        let homestreet = Config.street.find(st => st.name == message.channel.parent.name);
+        let homestreet = Config.streets.find(st => st.name == message.channel.parent.name);
         let argsStreet = comand(message,1).carg;
 
         if (comand(message).sarg[0] == 'на' && message.channel.name == 'улица'){
@@ -497,7 +501,7 @@ client.on('message', message => {
                     message.channel.parent.permissionOverwrites.get(message.author.id).delete();
                     sendLog(message,`Общее`,`Пошел.`,`Успешно`,`Перешел с ${homestreet.name} на ${walkway}.`);
                 };
-            }else if (walkway == null && Config.street.find(st => st.name.toLowerCase() == argsStreet.toLowerCase()) != null){
+            }else if (walkway == null && Config.streets.find(st => st.name.toLowerCase() == argsStreet.toLowerCase()) != null){
                 message.author.send(`${argsStreet} не является соседней улицей с ${homestreet.name}.`);
                 sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsStreet} не является соседней улицей с ${homestreet.name}.`);
             }else{
