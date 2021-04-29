@@ -602,6 +602,7 @@ client.on('message', message => {
     if(comand(message).com == `checkpos` && message.author.id == `621917381681479693`){
         message.delete();
         console.log(message.channel.position);
+        console.log(message.channel.parent.position);
     }
 
 });
