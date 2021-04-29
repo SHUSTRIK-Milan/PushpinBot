@@ -439,7 +439,6 @@ async function Stats(message){
 async function updateChannels(){
     let allChannels = guild.channels.cache;
     let channelsID = [];
-    let oStreets = [];
     let pawStreets = [];
 
     for (channel in Config.channelsID) channelsID.push(Config.channelsID[channel]);
@@ -459,7 +458,7 @@ async function updateChannels(){
         То бишь, мы сравниваем каналы и те, которые ничему не равны удаляем.*/
     };
 
-    console.log(pawStreets);
+    console.log(Config.streets.filter(street => !pawStreets.includes(street)));
 
     /* for (street of Config.streets){
         var cat = await guild.channels.create(`«${street.name}»`,{
