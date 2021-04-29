@@ -439,13 +439,12 @@ async function Stats(message){
 function updateChannels(){
     let allChannels = guild.channels.cache;
     let channelsID = [];
-    let count = 0;
 
     for(channel in Config.channelsID) channelsID.push(Config.channelsID[channel]);
     console.log(channelsID);
     for(outAllChannel of allChannels){
-        if(outAllChannel[0] != channelsID[count]) console.log(outAllChannel[1].name);
-        count += 1;
+        console.log(outAllChannel[0]);
+        if(channelsID.find(channel => channel == outAllChannel[0]) == undefined) console.log(outAllChannel[1].name);
     } 
 
     /* for(street of Config.streets){
