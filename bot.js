@@ -443,8 +443,7 @@ function updateChannels(){
     for(channel in Config.channelsID) channelsID.push(Config.channelsID[channel]);
     console.log(channelsID);
     for(outAllChannel of allChannels){
-        console.log(outAllChannel[0]);
-        if(channelsID.find(channel => channel == outAllChannel[0]) == undefined) console.log(outAllChannel[1].name);
+        if(channelsID.find(channel => channel == outAllChannel[0]) == undefined) guild.channels.cache.get(outAllChannel[0]).delete();
     } 
 
     /* for(street of Config.streets){
