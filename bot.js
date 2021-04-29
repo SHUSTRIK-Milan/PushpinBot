@@ -602,6 +602,7 @@ client.on('message', message => {
         message.delete();
         let t = guild.channels.cache.filter(channel => channel.type == 'category');
         for(let i in t){
+            console.log(i);
             console.log(i.name);
             console.log(i.position)
         };
