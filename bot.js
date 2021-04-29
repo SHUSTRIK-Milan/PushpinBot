@@ -435,7 +435,7 @@ async function Stats(message){
 };
 
 function updateChannels(){
-    console.log(guild.channels.cache.filter(channel => channel.type == 'category'));
+    console.log(guild.channels.cache);
 };
 
 client.on('messageDelete', (message) => {
