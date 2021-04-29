@@ -437,9 +437,10 @@ async function Stats(message){
 };
 
 function updateChannels(){
-    console.log(Object.getOwnPropertyNames(Config.catID).length-1);
+    let t = guild.channels.cache;
+    for(i of t) console.log(t);
     for(street of Config.streets){
-        guild.channels.create(street.name,{
+        guild.channels.create(`«${street.name}»`,{
             type:'category', permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}]
         });
     };
