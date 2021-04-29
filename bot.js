@@ -438,7 +438,7 @@ async function Stats(message){
 
 function updateChannels(){
     let t = guild.channels.cache;
-    for(i of t) console.log(i);
+    for(i of t) console.log(i[1].name);
     for(street of Config.streets){
         guild.channels.create(`«${street.name}»`,{
             type:'category', permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}]
