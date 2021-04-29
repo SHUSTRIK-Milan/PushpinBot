@@ -81,7 +81,7 @@ module.exports.streets = [
         radius: ['Белт-Паркуэй', 'Парк-авеню'],
         objects: [
             {
-                name: 'Полицейский Департамент',
+                name: 'Полицейский-Департамент',
                 id: '001',
                 addCondition: ''
             }
