@@ -449,6 +449,7 @@ async function updateChannels(){
     for (outAllChannel of allChannels){
         if(channelsID.find(channel => channel == outAllChannel[0]) == undefined){
             guild.channels.cache.get(outAllChannel[0]).delete();
+        }else{
             for (street of Config.streets){
                 var cat = await guild.channels.create(`«${street.name}»`,{
                     type:'category', permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}]
