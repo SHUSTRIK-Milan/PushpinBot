@@ -460,12 +460,15 @@ async function updateChannels(){
     };
 
     for (outAllChannel of allChannels){
-        for(street of Config.streets) streets.push(street.name);
-        haveStreets.push(Config.streets.find(street => `«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase()).name);
+        for(street of Config.streets) streets.push(street);
+        haveStreets.push(Config.streets.find(street => `«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase()));
     };
 
+    console.log(streets);
+    console.log(haveStreets);
+
     for(hstreet of haveStreets){
-        outStreets.push(streets.filter(street => street != hstreet))
+        outStreets.push(streets.filter(street => street.name != hstreet.name))
     };
 
     console.log(outStreets);
