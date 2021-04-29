@@ -468,7 +468,7 @@ async function updateChannels(){
     console.log(haveStreets);
 
     for(hstreet of haveStreets){
-        outStreets.push(streets.filter(street => street.name != hstreet.name))
+        outStreets = (streets.filter(street => street.name != hstreet.name))
     };
 
     console.log(outStreets);
