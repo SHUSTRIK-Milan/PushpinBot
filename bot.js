@@ -445,7 +445,7 @@ async function updateChannels(){
         for(street of Config.streets) if(`«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase()) channelsID.push(`${outAllChannel[0]}`)//channelsID.push(outAllChannel[1].name);
         for(street of Config.streets) if(street.objects.find(object => object.name.toLowerCase() == outAllChannel[1].name.toLowerCase()) != undefined) channelsID.push(`${outAllChannel[0]}`)//channelsID.push(outAllChannel[1].name);
     };
-    
+
     for (outAllChannel of allChannels){
         if(channelsID.find(channel => channel == outAllChannel[0]) == undefined) guild.channels.cache.get(outAllChannel[0]).delete();
         /* Мы перебираем все каналы и путём проверки на наличие данных отделяем те, которые есть в файли и которых нет.
