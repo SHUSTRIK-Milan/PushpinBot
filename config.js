@@ -1,6 +1,7 @@
 module.exports.catID = {
     main: `814795850885627965`, //main[ooc]
     rules: `835433939812089856`, //projectRules
+    lore: `836472670899404810`, //lore
     team_general: `822762670058766336`, //team-general
     team_admin: `835628015986671626`, //team-admin
     team_helper: `835204987285274624`, //team-helper
