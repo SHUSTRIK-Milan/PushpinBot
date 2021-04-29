@@ -35,7 +35,7 @@ module.exports.channelsID = {
     resultHelper: `835190639578316821`,
     /////////Team-Moders/////////////
     teamModers: `835205499397472296`,
-    chatModers: `835205499397472296`,
+    chatModers: `835205687638360115`,
     punishments: `833779056347709462`
 };
 
