@@ -29,7 +29,7 @@ module.exports.BLChannelsID = {
     headsID: `831214097005281290`,
 };
 
-module.exports.street = [
+module.exports.streets = [
     {
         name: 'Белт-Паркуэй',
         id: '001',
