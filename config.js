@@ -25,7 +25,7 @@ module.exports.channelsID = {
     discus: `833617702832046121`,
     voiceTeam: `835201663534891060`,
     /////////Team-Admin/////////////
-    teamAdmin: `835628015986671626`,
+    teamAdmin: `837369577046016030`,
     chatAdmin: `835628842415947856`,
     headAdmin: `835628904084406272`,
     /////////Team-Helper/////////////
