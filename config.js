@@ -1,14 +1,12 @@
-module.exports.catID = {
+module.exports.channelsID = {
     main: `814795850885627965`, //main[ooc]
     rules: `835433939812089856`, //projectRules
     lore: `836472670899404810`, //lore
     team_general: `822762670058766336`, //team-general
     team_admin: `835628015986671626`, //team-admin
     team_helper: `835204987285274624`, //team-helper
-    team_moders: `835205499397472296` //team-moders
-};
-
-module.exports.channelsID = {
+    team_moders: `835205499397472296`, //team-moders
+    /////////////////////////////////
     logsId: `825078587312177162`,//logs
     commitsID: `829434075688206347`,//commits
     infoID: `822528060196388926`,//welcome
