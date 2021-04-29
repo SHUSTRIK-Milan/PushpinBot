@@ -457,7 +457,7 @@ async function updateChannels(){
 
     for (outAllChannel of allChannels){
         for (street of Config.streets){
-            if(`«${street.name}»` == outAllChannel[1].name) console.log(street.name);
+            if(`«${street.name}»` != outAllChannel[1].name) console.log(street.name);
         };
     };
     
