@@ -441,6 +441,7 @@ async function updateChannels(status){
     let channelsID = [];
 
     if(status == 'warn'){
+        for (channel in Config.channelsID) channelsID.push(Config.channelsID[channel]);
         for (outAllChannel of allChannels){
             if(channelsID.find(channel => channel == outAllChannel[0]) == undefined){
                 guild.channels.cache.get(outAllChannel[0]).delete();
