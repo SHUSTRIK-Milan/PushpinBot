@@ -456,7 +456,6 @@ async function updateChannels(){
     };
 
     for (outAllChannel of allChannels){
-        console.log(outAllChannel[1].name.toLowerCase());
         console.log(Config.streets.find(street => `«${street.name.toLowerCase()}»` != outAllChannel[1].name.toLowerCase()).name);
     };
     
