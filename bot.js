@@ -441,10 +441,6 @@ async function updateChannels(){
     let channelsID = [];
     let warn = false;
 
-    streets = [];
-    haveStreets = [];
-    outStreets = [];
-
     for (channel in Config.channelsID) channelsID.push(Config.channelsID[channel]);
     for (outAllChannel of allChannels){
         for(street of Config.streets) if(`«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase()) channelsID.push(`${outAllChannel[0]}`)
@@ -452,8 +448,8 @@ async function updateChannels(){
     };
 
     for (outAllChannel of allChannels){
-        let street = Config.streets.find(street => `«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase());
-        if (street != undefined) haveStreets.push(street);
+        for (street of Config.streets)
+            if(outAllChannel[1].name.toLowerCase() != `«${street.name.toLowerCase()}»`) console.log(`«${street.name.toLowerCase()}»`);
 
         if(channelsID.find(channel => channel == outAllChannel[0]) == undefined){
             guild.channels.cache.get(outAllChannel[0]).delete();
@@ -461,17 +457,6 @@ async function updateChannels(){
         /* Мы перебираем все каналы и путём проверки на наличие данных отделяем те, которые есть в файли и которых нет.
         То бишь, мы сравниваем каналы и те, которые ничему не равны удаляем.*/
     };
-
-    for(street of Config.streets) streets.push(street);
-
-    console.log(streets);
-    console.log(haveStreets);
-
-    for(hstreet of haveStreets){
-        outStreets = (streets.filter(street => street.name != hstreet.name))
-    };
-
-    console.log(outStreets);
 
     if(warn == true){
         for (street of Config.streets){
