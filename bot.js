@@ -450,11 +450,16 @@ async function updateChannels(){
     for (outAllChannel of allChannels){
         if(channelsID.find(channel => channel == outAllChannel[0]) == undefined){
             guild.channels.cache.get(outAllChannel[0]).delete();
-            warn = true;
         };
         /* Мы перебираем все каналы и путём проверки на наличие данных отделяем те, которые есть в файли и которых нет.
         То бишь, мы сравниваем каналы и те, которые ничему не равны удаляем.*/
-    }
+    };
+
+    for (outAllChannel of allChannels){
+        for (street of Config.streets){
+            if(`«${street.name}»` == outAllChannel[1].name) console.log(street.name);
+        };
+    };
     
     if(warn == true){
         for (street of Config.streets){
