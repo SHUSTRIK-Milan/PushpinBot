@@ -477,7 +477,7 @@ async function updateChannels(){
         });
         
         for(object of oObjects){
-            guild.channels.create(`${object.name}`,{
+            if(street.objects.find(obj => obj == object) != undefined) guild.channels.create(`${object.name}`,{
                 type:'text', parent:cat, permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}]
             });
         };
