@@ -440,7 +440,7 @@ async function updateChannels(){
     let allChannels = guild.channels.cache;
     let channelsID = [];
     let oStreets = [];
-    let oObjects = [];
+    let pawStreets = [];
 
     for (channel in Config.channelsID) channelsID.push(Config.channelsID[channel]);
     for (outAllChannel of allChannels){
@@ -449,10 +449,8 @@ async function updateChannels(){
     };
 
     for (outAllChannel of allChannels){
-        oStreets = Config.streets.filter(street => !outAllChannel[1].name.toLowerCase().includes(`«${street.name.toLowerCase()}»`));
-        for(street of Config.streets){
-            oObjects = street.objects.filter(object => !outAllChannel[1].name.toLowerCase().includes(object.name.toLowerCase()));
-        }
+        let pawStreet = Config.streets.find(street => `«${street.name.toLowerCase()}»` == outAllChannel[1].name.toLowerCase());
+        if(pawStreet != undefined) pawStreets.push(pawStreet);
 
         if(channelsID.find(channel => channel == outAllChannel[0]) == undefined){
             guild.channels.cache.get(outAllChannel[0]).delete();
@@ -461,8 +459,7 @@ async function updateChannels(){
         То бишь, мы сравниваем каналы и те, которые ничему не равны удаляем.*/
     };
 
-    console.log(oStreets);
-    console.log(oObjects);
+    console.log(pawStreets);
 
     /* for (street of Config.streets){
         var cat = await guild.channels.create(`«${street.name}»`,{
