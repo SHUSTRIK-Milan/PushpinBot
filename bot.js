@@ -442,6 +442,10 @@ async function updateChannels(){
 
     for (channel in Config.channelsID) channelsID.push(Config.channelsID[channel]);
     for (outAllChannel of allChannels){
+        if(Config.streets.find(street => street.name.toLowerCase() == outAllChannel[1].name.toLowerCase()) == undefined) console.log(outAllChannel[1].name);
+
+        if(Config.streets.find(street => street.objects.name.toLowerCase() == outAllChannel[1].name.toLowerCase()) == undefined) console.log(outAllChannel[1].name);
+
         if(channelsID.find(channel => channel == outAllChannel[0]) == undefined) guild.channels.cache.get(outAllChannel[0]).delete();
         /* Мы перебираем все каналы и путём проверки на наличие данных отделяем те, которые есть в файли и которых нет.
         То бишь, мы сравниваем каналы и те, которые ничему не равны удаляем.*/
