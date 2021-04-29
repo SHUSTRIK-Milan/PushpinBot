@@ -448,8 +448,9 @@ async function updateChannels(){
     };
 
     for (outAllChannel of allChannels){
-        for (street of Config.streets)
+        for (street of Config.streets){
             if(outAllChannel[1].name.toLowerCase() != `«${street.name.toLowerCase()}»`) console.log(`«${street.name.toLowerCase()}»`);
+        }
 
         if(channelsID.find(channel => channel == outAllChannel[0]) == undefined){
             guild.channels.cache.get(outAllChannel[0]).delete();
