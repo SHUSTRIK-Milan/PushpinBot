@@ -450,8 +450,9 @@ async function updateChannels(){
         if(channelsID.find(channel => channel == outAllChannel[0]) == undefined) guild.channels.cache.get(outAllChannel[0]).delete();
         /* Мы перебираем все каналы и путём проверки на наличие данных отделяем те, которые есть в файли и которых нет.
         То бишь, мы сравниваем каналы и те, которые ничему не равны удаляем.*/
+        if(channelsID.find(channel => channel == outAllChannel[0]) != undefined) console.log(outAllChannel[1].name);
     } 
-
+    
     for (street of Config.streets){
         var cat = await guild.channels.create(`«${street.name}»`,{
             type:'category', permissionOverwrites:[{id:`814795850885627964`,deny:'VIEW_CHANNEL'}]
