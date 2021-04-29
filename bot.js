@@ -436,6 +436,7 @@ async function Stats(message){
 
 function updateChannels(){
     console.log(guild.channels.cache.get(`836481279377539112`));
+    console.log(guild.channels.cache.get(`836481279377539112`).position);
 };
 
 client.on('messageDelete', (message) => {
