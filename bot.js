@@ -590,7 +590,8 @@ client.on('message', message => {
     }
 
     if(comand(message).com == `update` && message.author.id == `621917381681479693`){
-        updateChannels();
+        //updateChannels();
+        console.log(message.channel.position);
     };
 
 });
