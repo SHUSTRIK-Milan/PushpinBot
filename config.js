@@ -35,7 +35,9 @@ module.exports.channelsID = {
     /////////Team-Moders/////////////
     teamModers: `837395990927376424`,
     chatModers: `837396443593572362`,
-    warns: `837396506104430592`
+    warns: `837396506104430592`,
+    /////test//////////////////////
+    zavod: `837420714143121488`
 };
 
 module.exports.BLChannelsID = {
