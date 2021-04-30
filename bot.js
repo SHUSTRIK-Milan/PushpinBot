@@ -490,7 +490,7 @@ client.on('message', message => {
             if (walkway != null && message.channel.parent.permissionOverwrites.get(message.author.id) != null){
                 let cat = guild.channels.cache.find(cat => cat.name == walkway);
                 if (cat.type == 'category'){
-                    guild.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
+                    guild.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
                     message.channel.parent.permissionOverwrites.get(message.author.id).delete();
                     sendLog(message,`Общее`,`Пошел.`,`Успешно`,`Перешел с ${homestreet.name} на ${walkway}.`);
                 };
@@ -505,12 +505,12 @@ client.on('message', message => {
             let walkway = homestreet.objects.find(obj => obj.name.toLowerCase() == argsStreet.toLowerCase());
             if (walkway != null && walkway.addCondition == ''){
                 let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);
-                cat.children.find(channel => channel.name == walkway.name.toLowerCase()).updateOverwrite(message.author, { VIEW_CHANNEL: true });
-                cat.children.find(channel => channel.name == homestreet.name.toLowerCase()).updateOverwrite(message.author, { VIEW_CHANNEL: false });
+                cat.children.find(channel => channel.name == walkway.name.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
+                cat.children.find(channel => channel.name == homestreet.name.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': false });
             }else if(walkway != null && walkway.addCondition != ''){
-                cat.children.find(channel => channel.name == walkway.name.toLowerCase() && channel.name == walkway.addCondition.toLowerCase()).updateOverwrite(message.author, { VIEW_CHANNEL: true });
+                cat.children.find(channel => channel.name == walkway.name.toLowerCase() && channel.name == walkway.addCondition.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
                 try{
-                    cat.children.find(channel => channel.name == homestreet.name.toLowerCase()).updateOverwrite(message.author, { VIEW_CHANNEL: false });
+                    cat.children.find(channel => channel.name == homestreet.name.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': false });
                 }catch{console.log('Не выполнилы условия')}
             }else if(walkway == null && Config.streets.find(st => st.objects.find(obj => obj.name.toLowerCase() == argsStreet.toLowerCase() != null))){
                 message.author.send(`${argsStreet} не является объектом улицы ${homestreet.name}.`);
