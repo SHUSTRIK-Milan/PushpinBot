@@ -415,7 +415,7 @@ async function Stats(message){
             AddStats(`<@${message.author.id}>`,250,'Нет','Нет',steamProfile)
             guild.members.fetch(message.author.id).then(member => {removeRole(member,`829423238169755658`),giveRole(member,`836269090996879387`)});
             sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
-            guild.channels.cache.get(`837644857098108948`).overwritePermissions([{id:guild.members.cache.get()}]);
+            guild.channels.cache.get(`837644857098108948`).overwritePermissions([{id:guild.members.cache.get(message.author.id),allow:'VIEW_CHANNEL'}]);
         }else if (steamProfileInfo.nickname != steamNick){
             message.author.send(`
 > **Измените имя** 📝
@@ -443,7 +443,6 @@ client.on('messageDelete', (message) => {
 
 client.on('message', message => {
     let mb = message.author.bot;
-    console.log(guild.members.cache);
 
     if (mb == false) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
