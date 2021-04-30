@@ -468,12 +468,19 @@ client.on('message', message => {
             for (let pobj of homestreet.objects) if (pobj.addCondition.toLowerCase() == message.channel.name.toLowerCase()) objects.push(pobj.name);
 
             if (homestreet != null && objects.join(', ') != ''){
-                message.author.send(`Ближайшие помещения: ${objects.join(', ')}.`);
+                message.author.send(`Ближайшие помещения: ${objects.join(', ')}.\nПуть для выхода: Улица`);
                 sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения: ${objects.join(', ')}.`);
             }else{
                 message.author.send(`Ближайшие помещения отсутствуют.`);
                 sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения отсутствуют.`);
             };
+        }else if(homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name && obj.addCondition != '')){
+            let objects = [];
+
+            for (let pobj of homestreet.objects) if (pobj.addCondition.toLowerCase() == message.channel.name.toLowerCase()) objects.push(pobj.name);
+
+            message.author.send(`Ближайшие помещения: ${objects.join(', ')}.\nПуть для выхода: ${homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name && obj.addCondition != '').addCondition}`);
+            sendLog(message,`Общее`,`Осмотрелся в помещение.`,`Успешно`,`Вывод: Ближайшие помещения: ${objects.join(', ')}.\nПуть для выхода: ${homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name && obj.addCondition != '').addCondition}`);
         }else{
             message.author.send(`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
             sendLog(message,`Общее`,`Попытался осмотреться.`,`Ошибка`,`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
