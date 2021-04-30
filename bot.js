@@ -515,8 +515,8 @@ client.on('message', message => {
                 let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);
                 cat.children.find(channel => channel.name == walkway.name.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
                 message.channel.permissionOverwrites.get(message.author.id).delete();
-            }else if(walkway != null && walkway.addCondition != '')
-                let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);{
+            }else if(walkway != null && walkway.addCondition != ''){
+                let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);
                 cat.children.find(channel => channel.name == walkway.name.toLowerCase() && message.channel.name == walkway.addCondition.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
                 try{
                     message.channel.permissionOverwrites.get(message.author.id).delete();
