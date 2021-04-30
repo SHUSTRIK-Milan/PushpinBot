@@ -506,8 +506,7 @@ client.on('message', message => {
             if (walkway != null && walkway.addCondition == ''){
                 let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);
                 cat.children.find(channel => channel.name == walkway.name.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
-                console.log(cat.children.find(channel => channel.name == homestreet.name.toLowerCase()));
-                console.log(omestreet.name.toLowerCase());
+                console.log(cat.children.find(channel => channel.name == `«${homestreet.name.toLowerCase()}»`));
                 //cat.children.find(channel => channel.name == homestreet.name.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': false });
             }else if(walkway != null && walkway.addCondition != ''){
                 cat.children.find(channel => channel.name == walkway.name.toLowerCase() && channel.name == walkway.addCondition.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
