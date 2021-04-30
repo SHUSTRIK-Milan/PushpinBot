@@ -503,10 +503,8 @@ client.on('message', message => {
             };
         }else if (comand(message).sarg[0] == 'в'){
             let walkway = homestreet.objects.find(obj => obj.name.toLowerCase() == argsStreet.toLowerCase());
-            let cat = guild.channels.cache.find(cat => cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);
-            if (cat.type == 'category'){
-                console.log(cat);
-            };
+            let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);
+            console.log(cat);
             console.log(walkway);
         }else{
             message.author.send(`Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
