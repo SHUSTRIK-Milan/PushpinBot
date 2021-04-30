@@ -488,9 +488,9 @@ client.on('message', message => {
         if (comand(message).sarg[0] == 'на' && message.channel.name == 'улица'){
             let walkway = homestreet.radius.find(st => st.toLowerCase() == argsStreet.toLowerCase());
             if (walkway != null && message.channel.parent.permissionOverwrites.get(message.author.id) != null){
-                let cat = client.channels.cache.find(cat => cat.name == walkway);
+                let cat = guild.channels.cache.find(cat => cat.name == walkway);
                 if (cat.type == 'category'){
-                    client.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
+                    guild.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { VIEW_CHANNEL: true });
                     message.channel.parent.permissionOverwrites.get(message.author.id).delete();
                     sendLog(message,`Общее`,`Пошел.`,`Успешно`,`Перешел с ${homestreet.name} на ${walkway}.`);
                 };
@@ -503,6 +503,10 @@ client.on('message', message => {
             };
         }else if (comand(message).sarg[0] == 'в'){
             let walkway = homestreet.objects.find(obj => obj.name.toLowerCase() == argsStreet.toLowerCase());
+            let cat = guild.channels.cache.find(cat => cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);
+            if (cat.type == 'category'){
+                console.log(cat);
+            };
             console.log(walkway);
         }else{
             message.author.send(`Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
