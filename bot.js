@@ -502,7 +502,8 @@ client.on('message', message => {
                 sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsStreet} нет, либо вы ввели ее неправильно.`);
             };
         }else if (comand(message).sarg[0] == 'в'){
-            let walkway = homestreet.objects.find(st => st.name.toLowerCase() == argsStreet.toLowerCase());
+            let walkway = homestreet.objects.find(obj => obj.name.toLowerCase() == argsStreet.toLowerCase());
+            console.log(walkway);
         }else{
             message.author.send(`Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
             sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
