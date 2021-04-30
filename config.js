@@ -54,23 +54,28 @@ module.exports.streets = [
         radius: ['Бродвей'],
         objects: [
             {
-                name: 'Магазин',
+                name: 'Улица',
                 id: '001',
                 addCondition: ''
             },
             {
-                name: 'Туалет',
-                id: '0011',
-                addCondition: 'Магазин'
-            },
-            {
-                name: 'Дом-1',
+                name: 'Магазин',
                 id: '002',
                 addCondition: ''
             },
             {
-                name: 'Дом-2',
+                name: 'Туалет',
+                id: '0021',
+                addCondition: 'Магазин'
+            },
+            {
+                name: 'Дом-1',
                 id: '003',
+                addCondition: ''
+            },
+            {
+                name: 'Дом-2',
+                id: '004',
                 addCondition: ''
             } 
         ]
@@ -81,8 +86,13 @@ module.exports.streets = [
         radius: ['Белт-Паркуэй', 'Парк-авеню'],
         objects: [
             {
-                name: 'Полицейский-Департамент',
+                name: 'Улица',
                 id: '001',
+                addCondition: ''
+            },
+            {
+                name: 'Полицейский-Департамент',
+                id: '002',
                 addCondition: ''
             }
         ]
@@ -93,8 +103,13 @@ module.exports.streets = [
         radius: ['Бродвей'],
         objects: [
             {
-                name: 'Завод',
+                name: 'Улица',
                 id: '001',
+                addCondition: ''
+            },
+            {
+                name: 'Завод',
+                id: '002',
                 addCondition: ''
             }
         ]
