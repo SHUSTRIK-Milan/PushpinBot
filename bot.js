@@ -503,9 +503,19 @@ client.on('message', message => {
             };
         }else if (comand(message).sarg[0] == 'в'){
             let walkway = homestreet.objects.find(obj => obj.name.toLowerCase() == argsStreet.toLowerCase());
-            let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);
-            console.log(cat);
-            console.log(walkway);
+            if (walkway != null && walkway.addCondition == ''){
+                let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);
+                cat.children.find(channel => channel.name == walkway.name.toLowerCase()).updateOverwrite(message.author, { VIEW_CHANNEL: true });
+                cat.children.find(channel => channel.name == homestreet.name.toLowerCase()).updateOverwrite(message.author, { VIEW_CHANNEL: false });
+            }else if(walkway != null && walkway.addCondition != ''){
+                cat.children.find(channel => channel.name == walkway.name.toLowerCase() && channel.name == walkway.addCondition.toLowerCase()).updateOverwrite(message.author, { VIEW_CHANNEL: true });
+                try{
+                    cat.children.find(channel => channel.name == homestreet.name.toLowerCase()).updateOverwrite(message.author, { VIEW_CHANNEL: false });
+                }catch{console.log('Не выполнилы условия')}
+            }else if(walkway == null && Config.streets.find(st => st.objects.find(obj => obj.name.toLowerCase() == argsStreet.toLowerCase() != null))){
+                message.author.send(`${argsStreet} не является объектом улицы ${homestreet.name}.`);
+                sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsStreet} не является объектом улицы ${homestreet.name}.`);
+            }
         }else{
             message.author.send(`Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
             sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
