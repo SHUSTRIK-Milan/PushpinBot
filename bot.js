@@ -503,8 +503,8 @@ client.on('message', message => {
             };
         }else if (comand(message).sarg[0] == 'в'){
             let walkway = homestreet.objects.find(obj => obj.name.toLowerCase() == argsStreet.toLowerCase());
+            let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);
             if (walkway != null && walkway.addCondition == ''){
-                let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);
                 cat.children.find(channel => channel.name == walkway.name.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
                 cat.children.find(channel => channel.name == message.channel.name).permissionOverwrites.get(message.author.id).delete();
             }else if(walkway != null && walkway.addCondition != ''){
