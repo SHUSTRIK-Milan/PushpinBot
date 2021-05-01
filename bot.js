@@ -551,8 +551,8 @@ client.on('message', message => {
         };
     };
     
-    if(comand(message).com == `edit` && haveRole(message, `833778527609552918`) == true && !mb && !mg
-    || comand(message).com == `edit` && haveRole(message, `822501730964078633`) == true && !mb && !mg){
+    if(comand(message).com == `edit` && haveRole(message, `833778527609552918`) == true && !mg
+    || comand(message).com == `edit` && haveRole(message, `822501730964078633`) == true && !mg){
         message.delete();
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
