@@ -606,14 +606,9 @@ client.on('message', message => {
         Stats(message);
     };
 
-    if(message.channel.id == Config.channelsID.commits && message.author.id != '822500483826450454' && !mb && !mg){
+    if(message.channel.id == Config.channelsID.commits && message.author.id != '822500483826450454' && !mg){
         createCom(message.embeds[0],message);
     }
-
-    if(comand(message).com == `update` && message.author.id == `621917381681479693` && !mb && !mg){
-        message.delete();
-        updateChannels();
-    };
 
     if(comand(message).com == `checkpos` && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete();
