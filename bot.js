@@ -462,6 +462,8 @@ client.on('message', message => {
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты отсутствуют.`);
                 sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты отсутствуют.`);
             };
+        }else if(homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name).addCondition != ''){
+            console.log('Вы в помещение');
         }else if(homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == message.channel.name.toLowerCase()) != null){
             let objects = [];
 
@@ -474,13 +476,6 @@ client.on('message', message => {
                 message.author.send(`Ближайшие помещения отсутствуют.\nПуть для выхода: Улица.`);
                 sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения отсутствуют.`);
             };
-        }else if(homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name && obj.addCondition != '')){
-            let objects = [];
-
-            for (let pobj of homestreet.objects) if (pobj.addCondition.toLowerCase() == message.channel.name.toLowerCase()) objects.push(pobj.name);
-
-            message.author.send(`Ближайшие помещения: ${objects.join(', ')}.\nПуть для выхода: ${homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name && obj.addCondition != '').addCondition}`);
-            sendLog(message,`Общее`,`Осмотрелся в помещение.`,`Успешно`,`Вывод: Ближайшие помещения: ${objects.join(', ')}.\nПуть для выхода: ${homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name && obj.addCondition != '').addCondition}`);
         }else{
             message.author.send(`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
             sendLog(message,`Общее`,`Попытался осмотреться.`,`Ошибка`,`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
