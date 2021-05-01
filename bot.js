@@ -504,7 +504,7 @@ client.on('message', message => {
                 sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsStreet} нет, либо вы ввели ее неправильно.`);
             };
         }else if (comand(message).sarg[0] == 'в'){
-            let walkway = homestreet.objects.find(obj => obj.name.toLowerCase() == argsStreet.toLowerCase());
+            /* let walkway = homestreet.objects.find(obj => obj.name.toLowerCase() == argsStreet.toLowerCase());
             console.log(walkway);
             if (walkway != null && walkway.addCondition == ''){
                 let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.name.toLowerCase() == `«${homestreet.name.toLowerCase()}»` && cat.children.find(channel => channel.name == walkway.name.toLowerCase()) != undefined);
@@ -519,7 +519,7 @@ client.on('message', message => {
             }else if(walkway == null && Config.streets.find(st => st.objects.find(obj => obj.name.toLowerCase() == argsStreet.toLowerCase() != null))){
                 message.author.send(`${argsStreet} не является объектом улицы ${homestreet.name}.`);
                 sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsStreet} не является объектом улицы ${homestreet.name}.`);
-            }
+            } */
         }else{
             message.author.send(`Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
             sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вызов команды \`идти\` должны выполнятся с дополнительными аргументами: на - для перехода на улицу или в - для перехода в помещение/объект.`);
