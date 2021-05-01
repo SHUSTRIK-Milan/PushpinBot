@@ -441,10 +441,11 @@ client.on('messageDelete', (message) => {
 
 client.on('message', message => {
     let mb = message.author.bot;
+    let mg = message.guild == undefined;
 
-    if (mb == false) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
+    if (!mb && !mg) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
-    if (comand(message).com == 'осмотреться' && mb == false){
+    if (comand(message).com == 'осмотреться' && !mb && !mg){
         message.delete();
         let homestreet = Config.streets.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase());
 
@@ -488,7 +489,7 @@ client.on('message', message => {
         };
     };
 
-    if (comand(message).com == 'идти' && mb == false){
+    if (comand(message).com == 'идти' && !mb && !mg){
         message.delete();
         let homestreet = Config.streets.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase());
         let argsStreet = comand(message,1).carg;
@@ -532,13 +533,12 @@ client.on('message', message => {
         }
     };
 
-    if(comand(message).com == `send` && haveRole(message, `833778527609552918`) == true){	
-        if(mb) return;	
+    if(comand(message).com == `send` && haveRole(message, `833778527609552918`) == true && !mb && !mg){	
         message.delete();	
         message.channel.send(`${comand(message).arg}`);	
     };
 
-    if(comand(message).com == `clear` && mb == false && haveRole(message, `833778527609552918`) == true){
+    if(comand(message).com == `clear` && !mb && !mg && haveRole(message, `833778527609552918`) == true){
         let arg = parseInt(comand(message).sarg[0]);
         
         if (arg > 0 && arg < 100){
@@ -551,8 +551,8 @@ client.on('message', message => {
         };
     };
     
-    if(comand(message).com == `edit` && haveRole(message, `833778527609552918`) == true
-    || comand(message).com == `edit` && haveRole(message, `822501730964078633`) == true){
+    if(comand(message).com == `edit` && haveRole(message, `833778527609552918`) == true && !mb && !mg
+    || comand(message).com == `edit` && haveRole(message, `822501730964078633`) == true && !mb && !mg){
         message.delete();
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
@@ -564,7 +564,7 @@ client.on('message', message => {
         .catch(console.error);
     };
 
-    if(comand(message).com == 'cbd' && message.author.id == `621917381681479693`){
+    if(comand(message).com == 'cbd' && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete()
         let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
         channel.messages.fetch(dopBDmsg).then(oMsg => { //получаем сообщение доп бд
@@ -582,40 +582,40 @@ client.on('message', message => {
         });
     };
 
-    if(comand(message).com == 'cdbd' && message.author.id == `621917381681479693`){
+    if(comand(message).com == 'cdbd' && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete()
         message.channel.send(`!edit ${BDchnl} ${dopBDmsg} > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^837399281203281990^1`);
     };
 
-    if(comand(message).com == `tbd` && message.author.id == `621917381681479693`){
+    if(comand(message).com == `tbd` && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete();
         setTimeout(() => AddStats(`<@${message.author.id}>`,25,'В розыске','Отсутствует',101), 1000);
     };
 
-    if(comand(message).com == `ebd` && message.author.id == `621917381681479693`){
+    if(comand(message).com == `ebd` && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete();
         EditStats(comand(message).sarg[0],comand(message).sarg[1], comand(message,2).carg)
     };
 
-    if(comand(message).com == `cex` && message.author.id == `621917381681479693`){
+    if(comand(message).com == `cex` && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete();
         createEx(comand(message).sarg[0],comand(message).sarg[1],comand(message).sarg[2],comand(message,3).carg)
     };
 
-    if(message.guild == undefined && mb == false){
+    if(!mb && mg){
         Stats(message);
     };
 
-    if(message.channel.id == Config.channelsID.commits && message.author.id != '822500483826450454'){
+    if(message.channel.id == Config.channelsID.commits && message.author.id != '822500483826450454' && !mb && !mg){
         createCom(message.embeds[0],message);
     }
 
-    if(comand(message).com == `update` && message.author.id == `621917381681479693`){
+    if(comand(message).com == `update` && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete();
         updateChannels();
     };
 
-    if(comand(message).com == `checkpos` && message.author.id == `621917381681479693`){
+    if(comand(message).com == `checkpos` && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete();
         console.log(`1: ${message.channel.position}`);
         console.log(`2: ${message.channel.parent.position}`);
