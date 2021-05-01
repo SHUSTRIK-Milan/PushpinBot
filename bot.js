@@ -23,7 +23,7 @@ client.on('ready', () => {
 
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
-    let onlinemember = member - offlinemember - 1;
+    let onlinemember = member - offlinemember - 2;
 
     if (onlinemember > 0){
       client.user.setPresence({
@@ -47,7 +47,7 @@ client.on('ready', () => {
 client.on('presenceUpdate', (om,nm) => {
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
-    let onlinemember = member - offlinemember - 1;
+    let onlinemember = member - offlinemember - 2;
 
     if (onlinemember > 0){
       client.user.setPresence({
@@ -468,10 +468,10 @@ client.on('message', message => {
             for (let pobj of homestreet.objects) if (pobj.addCondition.toLowerCase() == message.channel.name.toLowerCase()) objects.push(pobj.name);
 
             if (homestreet != null && objects.join(', ') != ''){
-                message.author.send(`Ближайшие помещения: ${objects.join(', ')}.\nПуть для выхода: Улица`);
+                message.author.send(`Ближайшие помещения: ${objects.join(', ')}.\nПуть для выхода: Улица.`);
                 sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения: ${objects.join(', ')}.`);
             }else{
-                message.author.send(`Ближайшие помещения отсутствуют.`);
+                message.author.send(`Ближайшие помещения отсутствуют.\nПуть для выхода: Улица.`);
                 sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения отсутствуют.`);
             };
         }else if(homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name && obj.addCondition != '')){
