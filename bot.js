@@ -7,7 +7,7 @@ const urlSteam = `https://steamcommunity.com/`;
 
 var guild;
 const BDchnl = Config.channelsID.bd;
-const dopBDmsg = `837399281203281990`;
+const dopBDmsg = `838003963412480070`;
 
 const SteamAPI = require('steamapi');
 var GitHub = require('github-api');
@@ -584,7 +584,7 @@ client.on('message', message => {
 
     if(comand(message).com == 'cdbd' && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete()
-        message.channel.send(`!edit ${BDchnl} ${dopBDmsg} > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^837399281203281990^1`);
+        message.channel.send(`!edit ${BDchnl} ${dopBDmsg} > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^838003797149220884^1`);
     };
 
     if(comand(message).com == `tbd` && message.author.id == `621917381681479693` && !mb && !mg){
