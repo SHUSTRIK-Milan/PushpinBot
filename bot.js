@@ -597,6 +597,11 @@ client.on('message', message => {
         EditStats(comand(message).sarg[0],comand(message).sarg[1], comand(message,2).carg)
     };
 
+    if(comand(message).com == `gbd` && message.author.id == `621917381681479693` && !mb && !mg){
+        message.delete();
+        GetStats().then(stats => console.log(stats));
+    };
+
     if(comand(message).com == `cex` && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete();
         createEx(comand(message).sarg[0],comand(message).sarg[1],comand(message).sarg[2],comand(message,3).carg)
