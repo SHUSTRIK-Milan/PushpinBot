@@ -349,13 +349,8 @@ async function EditStats(id, stat, dat){
     eStat.splice(stat,1,dat);
 
     nnMsg.splice(parseInt(idnum),1,`^${id}^${eStat.join(BDpref)}`);
-    console.log(nnMsg);
-    console.log(nnMsg.join('\n').length);
 
     if (nnMsg.join('\n').length > 2000){
-        console.log('больше');
-        console.log(nnMsg);
-        console.log(idnum);
         nnMsg.splice(parseInt(idnum),1);
         AddStats(eStat[0],eStat[1],eStat[2],eStat[3],eStat[4]);
     }
@@ -534,7 +529,10 @@ client.on('message', message => {
     };
 
     if(comand(message).com == `баланс` && !mb && !mg){
-        message.author.send(`Текущий баланс: ${GetStats().then(stats => stats.find(stat => stat.user == `<@${message.author.id}>`).money)}`);
+        message.delete();
+        let stats = async () => { return GetStats() };
+        console.log(stats);
+        //message.author.send(`Текущий баланс: ${GetStats().then(stats => stats.find(stat => stat.user == `<@${message.author.id}>`).money)}`);
     }
 
     if(comand(message).com == `заплатить` && !mb && !mg ||
