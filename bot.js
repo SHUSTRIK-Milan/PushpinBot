@@ -530,9 +530,7 @@ client.on('message', message => {
 
     if(comand(message).com == `баланс` && !mb && !mg){
         message.delete();
-        let stats = async () => { return GetStats() };
-        console.log(stats);
-        //message.author.send(`Текущий баланс: ${GetStats().then(stats => stats.find(stat => stat.user == `<@${message.author.id}>`).money)}`);
+        GetStats().then(stats => message.author.send(`Текущий баланс: ${stats.find(stat => stat.user == `<@${message.author.id}>`).money}`));
     }
 
     if(comand(message).com == `заплатить` && !mb && !mg ||
