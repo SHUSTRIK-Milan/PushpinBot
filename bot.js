@@ -533,6 +533,15 @@ client.on('message', message => {
         }
     };
 
+    if(comand(message).com == `баланс` && !mb && !mg){
+        message.author.send(`Текущий баланс: ${GetStats().then(stats => stats.find(stat => stat.user == `<@${message.author.id}>`).money)}`);
+    }
+
+    if(comand(message).com == `заплатить` && !mb && !mg ||
+    comand(message).com == `платить` && !mb && !mg){
+        console.log();
+    }; 
+
     if(comand(message).com == `send` && haveRole(message, `833778527609552918`) == true && !mb && !mg){	
         message.delete();	
         message.channel.send(`${comand(message).arg}`);	
