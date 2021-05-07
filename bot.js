@@ -559,8 +559,8 @@ client.on('message', message => {
             let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
             let gUser = stats.find(stat => stat.user == com.sarg[0]);
 
-            console.log(com.sarg[0]);
-            console.log(typeof com.sarg[0]);
+            console.log(user);
+            console.log(gUser);
 
             let money = com.sarg[1];
 
@@ -569,9 +569,6 @@ client.on('message', message => {
             if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); return};
 
             EditStats(`${user.id}`,`money`,`${parseInt(user.money) - parseInt(money)}`);
-            console.log(`${parseInt(user.money) - parseInt(money)}`);
-            console.log(`${parseInt(user.money)}`);
-            console.log(`${parseInt(money)}`);
             await EditStats(`${gUser.id}`,`money`,`${parseInt(gUser.money) + parseInt(money)}`);
             await message.author.send(`> Деньги успешно переведены.`);
             return;
