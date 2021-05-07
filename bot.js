@@ -577,8 +577,8 @@ client.on('message', message => {
             EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
             setTimeout(() => EditStats(gUser.id,`money`,`${parseInt(gUser.money) + parseInt(money)}`), 250);
             
-            user_user.send(`> Вы дали ${gUser_user.username} ${moneyT.format(parseInt(money))}`);
-            gUser_user.send(`> ${user_user.username} дал вам ${moneyT.format(parseInt(money))}`);
+            user_user.send(`> Вы дали ${gUser_user.username}: ${moneyT.format(parseInt(money))}`);
+            gUser_user.send(`> ${user_user.username} дал вам: ${moneyT.format(parseInt(money))}`);
             return;
         };
         pay(comand(message));
