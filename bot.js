@@ -555,7 +555,7 @@ client.on('message', message => {
         async function pay(com){
             stats = await GetStats();
             if (stats.length == 0){return};
-            
+
             let user = stats.find(stat => stat.user == `<@${message.author.id}>`);
             let gUser = stats.find(stat => stat.user == com.sarg[0]);
             let money = com.sarg[1];
@@ -649,7 +649,7 @@ client.on('message', message => {
 
     if(comand(message).com == `сlore` && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete();
-        createLore(comand(message).sarg[0],comand(message).sarg[1],comand(message,3).carg,message)
+        createLore(comand(message).sarg[0],comand(message).sarg[1],comand(message,2).carg,message)
     };
 
     if(!mb && mg){
