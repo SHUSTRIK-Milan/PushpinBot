@@ -559,7 +559,8 @@ client.on('message', message => {
             let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
             let gUser = stats.find(stat => stat.user == com.sarg[0]);
             let money = com.sarg[1];
-
+            
+            if(user == undefined){return}
             if(gUser == undefined){ message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства.`); return};
             if(isNaN(parseInt(money))){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся.`); return};
             if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); return};
@@ -568,8 +569,8 @@ client.on('message', message => {
             console.log(`money`);
             console.log(`${parseInt(user.money) - parseInt(money)}`);
 
-            await EditStats(`${gUser.id}`,`money`,`${parseInt(gUser.money) + parseInt(money)}`);
-            await EditStats(`1-3`,`money`,`${parseInt(user.money) - parseInt(money)}`);
+            await EditStats(gUser.id,`money`,`${parseInt(gUser.money) + parseInt(money)}`);
+            await EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
             await message.author.send(`> Деньги успешно переведены.`);
             return;
         };
