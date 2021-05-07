@@ -569,8 +569,11 @@ client.on('message', message => {
             console.log(`money`);
             console.log(`${parseInt(gUser.money) + parseInt(money)}`);
 
-            EditStats(`1-2`,`money`,`${parseInt(gUser.money) + parseInt(money)}`);
-            await EditStats(`${user.id}`,`money`,`${parseInt(user.money) - parseInt(money)}`);
+            EditStats(`${user.id}`,`money`,`${parseInt(user.money) - parseInt(money)}`)
+            try{
+                EditStats(`1-2`,`money`,`${parseInt(gUser.money) + parseInt(money)}`);
+            }catch{};
+            
             message.author.send(`> Деньги успешно переведены.`);
             return;
         };
