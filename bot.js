@@ -547,7 +547,7 @@ client.on('message', message => {
             currency: "USD",
             minimumSignificantDigits: 1
         })
-        GetStats().then(stats => message.author.send(`Текущий баланс: ${moneyT.format(stats.find(stat => stat.user == `<@${message.author.id}>`).money)}`));
+        GetStats().then(stats => message.author.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@${message.author.id}>`).money))}`));
     }
 
     if(comand(message).com == `заплатить` && !mb && !mg ||
