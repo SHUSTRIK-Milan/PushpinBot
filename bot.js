@@ -530,7 +530,12 @@ client.on('message', message => {
 
     if(comand(message).com == `баланс` && !mb && !mg){
         message.delete();
-        GetStats().then(stats => message.author.send(`Текущий баланс: ${stats.find(stat => stat.user == `<@${message.author.id}>`).money}`));
+        let moneyT = new Intl.NumberFormat("ru", {
+            style: "currency",
+            currency: "USD",
+            minimumSignificantDigits: 1
+        })
+        GetStats().then(stats => message.author.send(`Текущий баланс: ${moneyT.format(stats.find(stat => stat.user == `<@${message.author.id}>`).money)}`));
     }
 
     if(comand(message).com == `заплатить` && !mb && !mg ||
