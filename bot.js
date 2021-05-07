@@ -556,9 +556,18 @@ client.on('message', message => {
             stats = await GetStats();
             if (stats.length == 0){return};
 
+            let moneyT = new Intl.NumberFormat("ru", {
+                style: "currency",
+                currency: "USD",
+                minimumSignificantDigits: 1
+            })
+
             let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
             let gUser = stats.find(stat => stat.user == com.sarg[0]);
             let money = com.sarg[1];
+
+            let user_user = message.author;
+            let gUser_user = guild.members.cache.find(gUser.user.replace(/[<@!>]/g,''));
             
             if(user == undefined){return}
             if(gUser == undefined){ message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства.`); return};
@@ -572,7 +581,8 @@ client.on('message', message => {
             EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
             setTimeout(() => EditStats(gUser.id,`money`,`${parseInt(gUser.money) + parseInt(money)}`), 250);
             
-            message.author.send(`> Деньги успешно переведены.`);
+            user_user.send(`> Вы дали ${gUser_user.username} ${moneyT.format(parseInt(money))}`);
+            gUser_user.send(`> ${user_user.username} дал вам ${moneyT.format(parseInt(money))}`);
             return;
         };
         pay(comand(message));
