@@ -564,6 +564,7 @@ client.on('message', message => {
 
             let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
             let gUser = stats.find(stat => stat.user == com.sarg[0]);
+            if (user.id == gUser.id){return};
             let money = com.sarg[1];
 
             let user_user = message.author;
