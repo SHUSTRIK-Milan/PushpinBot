@@ -568,7 +568,7 @@ client.on('message', message => {
             if(parseInt(money) == NaN){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся.`); return};
             if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); return};
 
-            EditStats(`${user.id}`,`money`,`${parseInt(user.money) - parseInt(money)}`);
+            await EditStats(`${user.id}`,`money`,`${parseInt(user.money) - parseInt(money)}`);
             await EditStats(`${gUser.id}`,`money`,`${parseInt(gUser.money) + parseInt(money)}`);
             await message.author.send(`> Деньги успешно переведены.`);
             return;
