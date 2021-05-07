@@ -625,7 +625,7 @@ client.on('message', message => {
         message.channel.send(`!edit ${BDchnl} ${dopBDmsg} > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^838003797149220884^1`);
     };
 
-    if(comand(message).com == `tbd` && message.author.id == `621917381681479693` && !mb && !mg){
+    if(comand(message).com == `tbd` && haveRole(message,`822493460493500436`) && !mb && !mg){
         message.delete();
         setTimeout(() => AddStats(`<@${message.author.id}>`,25,'В розыске','Отсутствует',101), 1000);
     };
