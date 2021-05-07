@@ -368,7 +368,7 @@ async function EditStats(id, stat, dat){
     }
         
     msg.edit(nnMsg.join('\n'));
-    
+    return;
 };
 
 async function Stats(message){
