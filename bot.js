@@ -569,7 +569,7 @@ client.on('message', message => {
             console.log(`money`);
             console.log(`${parseInt(gUser.money) + parseInt(money)}`);
 
-            EditStats(`${gUser.id}`,`money`,`${parseInt(gUser.money) + parseInt(money)}`);
+            EditStats(`1-2`,`money`,`${parseInt(gUser.money) + parseInt(money)}`);
             EditStats(`${user.id}`,`money`,`${parseInt(user.money) - parseInt(money)}`);
             message.author.send(`> Деньги успешно переведены.`);
             return;
