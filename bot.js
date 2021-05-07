@@ -73,10 +73,9 @@ client.on('guildMemberAdd', (member) => {
     member.roles.add(role).catch(console.error);
 });
 
-function comand(message,countSb){
+function comand(message,countS){
 
-    if (countSb == undefined) countSb = 0;
-    if (countSa == undefined) countSa = 0;
+    if (countS == undefined) countS = 0;
     let msg = message.content;
 
     var comand = {
@@ -91,7 +90,7 @@ function comand(message,countSb){
     let com = msg.split(" ", 1).join('').slice(prefix.length);
     let arg = msg.slice(com.length+prefix.length+1);
     let sarg = arg.split(" ");
-    let carg = sarg.slice(countSb).join(' ');
+    let carg = sarg.slice(countS).join(' ');
     var comand = {
         com: com,
         arg: arg,
