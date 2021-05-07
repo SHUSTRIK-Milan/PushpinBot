@@ -565,13 +565,13 @@ client.on('message', message => {
             if(isNaN(parseInt(money))){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся.`); return};
             if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); return};
 
-            console.log(`${user.id}`);
+            console.log(`${gUser.id}`);
             console.log(`money`);
-            console.log(`${parseInt(user.money) - parseInt(money)}`);
+            console.log(`${parseInt(gUser.money) + parseInt(money)}`);
 
             EditStats(`${gUser.id}`,`money`,`${parseInt(gUser.money) + parseInt(money)}`);
-            await EditStats(`${user.id}`,`money`,`${parseInt(user.money) - parseInt(money)}`);
-            await message.author.send(`> Деньги успешно переведены.`);
+            EditStats(`${user.id}`,`money`,`${parseInt(user.money) - parseInt(money)}`);
+            message.author.send(`> Деньги успешно переведены.`);
             return;
         };
         pay(comand(message));
