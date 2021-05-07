@@ -568,15 +568,12 @@ client.on('message', message => {
 
             let user_user = message.author;
             let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,''));
+            console.log(gUser_user);
             
             if(user == undefined){return}
             if(gUser == undefined){ message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства.`); return};
             if(isNaN(parseInt(money))){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся.`); return};
             if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); return};
-
-            console.log(`${gUser.id}`);
-            console.log(`money`);
-            console.log(`${parseInt(gUser.money) + parseInt(money)}`);
 
             EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
             setTimeout(() => EditStats(gUser.id,`money`,`${parseInt(gUser.money) + parseInt(money)}`), 250);
