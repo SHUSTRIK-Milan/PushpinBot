@@ -569,6 +569,7 @@ client.on('message', message => {
             return;
         };
         pay(comand(message));
+        message.delete();
     }; 
 
     if(comand(message).com == `send` && haveRole(message, `833778527609552918`) == true && !mb && !mg){	
