@@ -73,9 +73,10 @@ client.on('guildMemberAdd', (member) => {
     member.roles.add(role).catch(console.error);
 });
 
-function comand(message,countS){
+function comand(message,countSb){
 
-    if (countS == undefined) countS = 0;
+    if (countSb == undefined) countSb = 0;
+    if (countSa == undefined) countSa = 0;
     let msg = message.content;
 
     var comand = {
@@ -90,8 +91,7 @@ function comand(message,countS){
     let com = msg.split(" ", 1).join('').slice(prefix.length);
     let arg = msg.slice(com.length+prefix.length+1);
     let sarg = arg.split(" ");
-    let carg = sarg.slice(countS).join(' ');
-
+    let carg = sarg.slice(countSb).join(' ');
     var comand = {
         com: com,
         arg: arg,
@@ -176,8 +176,8 @@ function createEx(rule,status,num,add,message){
     return;
 };
 
-function createLore(title,desc,image,message){
-    guild.channels.cache.get(Config.channelsID.generalLore).send({embed: {
+function createLore(title,image,desc,message){
+    message.channel.send.send({embed: {
         fields: [{
             name: title,
             value: desc
@@ -628,6 +628,11 @@ client.on('message', message => {
     if(comand(message).com == `cex` && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete();
         createEx(comand(message).sarg[0],comand(message).sarg[1],comand(message).sarg[2],comand(message,3).carg,message)
+    };
+
+    if(comand(message).com == `сlore` && message.author.id == `621917381681479693` && !mb && !mg){
+        message.delete();
+        createLore(comand(message).sarg[0],comand(message).sarg[1],comand(message,3).carg,message)
     };
 
     if(!mb && mg){
