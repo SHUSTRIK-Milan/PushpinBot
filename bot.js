@@ -561,7 +561,7 @@ client.on('message', message => {
             let money = com.sarg[1];
 
             if(gUser == undefined){ message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства.`); return};
-            if(parseInt(money) == undefined){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся.`); return};
+            if(!isNaN(money)){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся.`); return};
             if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); return};
 
             console.log(`${user.id}`);
