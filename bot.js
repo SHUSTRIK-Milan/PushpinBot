@@ -373,7 +373,7 @@ async function EditStats(id, stat, dat){
 
 async function Stats(message){
     var AllStats = await GetStats();
-    var person = AllStats.find(pers => pers.user == `<@${message.author.id}>`);
+    var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`);
     var steamProfile;
     var steamNick = `[PP] ${message.author.username}`.slice(0,32);
     if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) var steamProfile = await steam.resolve(comand(message).sarg[0]);
@@ -417,7 +417,7 @@ async function Stats(message){
 > **Успешно! Ваш аккаунт зарегистрирован** 🎉
 Все прошло успешно! Теперь вы свободно можете играть на проекте PushPin!
             `)
-            AddStats(`<@${message.author.id}>`,250,'Нет','Нет',steamProfile)
+            AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfile)
             guild.members.fetch(message.author.id).then(member => {removeRole(member,`829423238169755658`),giveRole(member,`836269090996879387`)});
             sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
             guild.channels.cache.get(`837644857098108948`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
@@ -547,7 +547,7 @@ client.on('message', message => {
             currency: "USD",
             minimumSignificantDigits: 1
         })
-        GetStats().then(stats => message.author.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@${message.author.id}>`).money))}`));
+        GetStats().then(stats => message.author.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))}`));
     }
 
     if(comand(message).com == `заплатить` && !mb && !mg ||
@@ -556,7 +556,7 @@ client.on('message', message => {
             stats = await GetStats();
             if (stats.length == 0){return};
 
-            let user = stats.find(stat => stat.user == `<@${message.author.id}>`);
+            let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
             let gUser = stats.find(stat => stat.user == com.sarg[0]);
 
             console.log(com.sarg[0]);
@@ -636,7 +636,7 @@ client.on('message', message => {
 
     if(comand(message).com == `tbd` && haveRole(message,`822493460493500436`) && !mb && !mg){
         message.delete();
-        setTimeout(() => AddStats(`<@${message.author.id}>`,25,'В розыске','Отсутствует',101), 1000);
+        setTimeout(() => AddStats(`<@!${message.author.id}>`,25,'В розыске','Отсутствует',101), 1000);
     };
 
     if(comand(message).com == `ebd` && message.author.id == `621917381681479693` && !mb && !mg){
