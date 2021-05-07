@@ -565,8 +565,8 @@ client.on('message', message => {
             if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); return};
 
             EditStats(`${user.id}`,`money`,`${parseInt(user.money) - parseInt(money)}`);
-            EditStats(`${gUser.id}`,`money`,`${parseInt(gUser.money) + parseInt(money)}`);
-            message.author.send(`> Деньги успешно переведены.`);
+            await EditStats(`${gUser.id}`,`money`,`${parseInt(gUser.money) + parseInt(money)}`);
+            await message.author.send(`> Деньги успешно переведены.`);
             return;
         };
         pay(comand(message));
