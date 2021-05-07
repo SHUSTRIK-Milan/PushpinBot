@@ -567,7 +567,7 @@ client.on('message', message => {
             let money = com.sarg[1];
 
             let user_user = message.author;
-            let gUser_user = guild.members.cache.find(gUser.user.replace(/[<@!>]/g,''));
+            let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,''));
             
             if(user == undefined){return}
             if(gUser == undefined){ message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства.`); return};
