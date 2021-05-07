@@ -553,8 +553,9 @@ client.on('message', message => {
     if(comand(message).com == `заплатить` && !mb && !mg ||
     comand(message).com == `платить` && !mb && !mg){
         async function pay(com){
-            stat = await GetStats();
-            if (stat.length == 0){return};
+            stats = await GetStats();
+            if (stats.length == 0){return};
+            
             let user = stats.find(stat => stat.user == `<@${message.author.id}>`);
             let gUser = stats.find(stat => stat.user == com.sarg[0]);
             let money = com.sarg[1];
