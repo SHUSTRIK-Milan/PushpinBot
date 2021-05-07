@@ -153,7 +153,7 @@ function sendLog(message,cat,act,status,add){
     }
 };
 
-function createEx(rule,status,num,add){
+function createEx(rule,status,num,add,message){
     let img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Правильно') img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Неправильно') img = `https://i.imgur.com/utuBexR.png`;
@@ -162,7 +162,7 @@ function createEx(rule,status,num,add){
     if (status == 'Правильно') color = 9819812;
     if (status == 'Неправильно') color = 14508910;
 
-    guild.channels.cache.get(Config.channelsID.generalTerm).send({embed: {
+    message.channel.send({embed: {
         color: color,
         thumbnail: {
             url: img
@@ -175,6 +175,19 @@ function createEx(rule,status,num,add){
     });
     return;
 };
+
+function createLore(title,desc,image,message){
+    guild.channels.cache.get(Config.channelsID.generalLore).send({embed: {
+        fields: [{
+            name: title,
+            value: desc
+        }],
+        image:{url:image}
+        }
+    });
+    return;
+};
+
 
 async function createCom(embd, message){
     let act = null;
@@ -614,7 +627,7 @@ client.on('message', message => {
 
     if(comand(message).com == `cex` && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete();
-        createEx(comand(message).sarg[0],comand(message).sarg[1],comand(message).sarg[2],comand(message,3).carg)
+        createEx(comand(message).sarg[0],comand(message).sarg[1],comand(message).sarg[2],comand(message,3).carg,message)
     };
 
     if(!mb && mg){
