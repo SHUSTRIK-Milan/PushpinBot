@@ -553,7 +553,22 @@ client.on('message', message => {
 
     if(comand(message).com == `заплатить` && !mb && !mg ||
     comand(message).com == `платить` && !mb && !mg){
-        console.log();
+        async function pay(com){
+            stat = await GetStats();
+            let user = stats.find(stat => stat.user == `<@${message.author.id}>`);
+            let gUser = stats.find(stat => stat.user == com.sarg[0]);
+            let money = com.sarg[1];
+
+            if(gUser == undefined){ message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства.`); return};
+            if(parseInt(money) == NaN){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся.`); return};
+            if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); return};
+
+            EditStats(user.id,money,`${parseInt(user.money) - parseInt(money)}`);
+            EditStats(gUser.id,money,`${parseInt(gUser.money) + parseInt(money)}`);
+            message.author.send(`> Деньги успешно переведены.`);
+            return;
+        };
+        pay(comand(message));
     }; 
 
     if(comand(message).com == `send` && haveRole(message, `833778527609552918`) == true && !mb && !mg){	
