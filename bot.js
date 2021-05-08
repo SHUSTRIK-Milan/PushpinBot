@@ -375,26 +375,25 @@ async function EditStats(id, stat, dat){
 async function delStats(id){
     if (id == ''){return}; 
     var bdnum = id.split('-')[0];
-
+    
     var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     var oMsg = await channel.messages.fetch(dopBDmsg);
 
     let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
     nMsg.splice(0,1);
+    if(nMsg[parseInt(bdnum)-1] == undefined){return};
     let fMsg = nMsg[parseInt(bdnum)-1].split(BDpref); //получаем последние данные в доп бд
-    try{
-        if (fMsg[0] == ''){
-            fMsg.splice(0,1);
-        };
+    if (fMsg[0] == ''){
+        fMsg.splice(0,1);
+    };
 
-        var msg = await channel.messages.fetch(fMsg[0]);
-        var nnMsg = msg.content.split('\n');
-        var stat = nnMsg.find(n => n.split(BDpref)[1] == id);
-        if (stat == undefined){return};
+    var msg = await channel.messages.fetch(fMsg[0]);
+    var nnMsg = msg.content.split('\n');
+    var stat = nnMsg.find(n => n.split(BDpref)[1] == id);
+    if (stat == undefined){return};
 
-        nnMsg.splice(nnMsg.indexOf(stat),1);
-        msg.edit(nnMsg.join('\n'));
-    }catch{return};
+    nnMsg.splice(nnMsg.indexOf(stat),1);
+    msg.edit(nnMsg.join('\n'));
 };
 
 async function Stats(message){
