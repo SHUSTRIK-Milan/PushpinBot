@@ -392,7 +392,7 @@ async function delStats(id){
     var title = nnMsg.splice(0,1);
     nnMsg.splice(parseInt(idnum)-1,1);
 
-    msg.edit(`${title}\n${nnMsg.join('\n')}`);
+    msg.edit(`${title[0]}\n${nnMsg.join('\n')}`);
 };
 
 async function Stats(message){
