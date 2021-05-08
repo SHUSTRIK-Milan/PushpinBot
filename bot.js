@@ -371,6 +371,28 @@ async function EditStats(id, stat, dat){
     return;
 };
 
+async function delStats(id){
+    var bdnum = id.split('-')[0];
+    var idnum = id.split('-')[1];
+
+    var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
+    var oMsg = await channel.messages.fetch(dopBDmsg);
+
+    let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
+    nMsg.splice(0,1);
+    let fMsg = nMsg[parseInt(bdnum)-1].split(BDpref); //получаем последние данные в доп бд
+    if (fMsg[0] == ''){
+        fMsg.splice(0,1);
+    };
+
+    var msg = await channel.messages.fetch(fMsg[0]);
+    var nnMsg = msg.content.split('\n');
+    nnMsg.splice(0,1);
+    console.log(nnMsg)
+
+    console.log(nnMsg[idnum]);
+};
+
 async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`);
