@@ -390,6 +390,7 @@ async function delStats(id){
     var msg = await channel.messages.fetch(fMsg[0]);
     var nnMsg = msg.content.split('\n');
     var stat = nnMsg.find(n => n.split(BDpref)[1] == id);
+    if (stat == undefined){return};
 
     nnMsg.splice(nnMsg.indexOf(stat),1);
     msg.edit(nnMsg.join('\n'));
