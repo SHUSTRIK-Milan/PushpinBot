@@ -392,7 +392,7 @@ async function delStats(id){
     nnMsg.splice(0,1);
     console.log(nnMsg)
 
-    console.log(nnMsg[parseint(idnum)-1]);
+    console.log(nnMsg[parseInt(idnum)-1]);
 };
 
 async function Stats(message){
