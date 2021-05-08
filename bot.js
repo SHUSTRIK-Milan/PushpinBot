@@ -331,6 +331,7 @@ async function AddStats(user, money, status, car, steamID) {
 };
 
 async function EditStats(id, stat, dat){
+    if (id == null){return}; 
     var bdnum = id.split('-')[0];
     var idnum = id.split('-')[1];
     var AllStats = await GetStats();
@@ -372,6 +373,7 @@ async function EditStats(id, stat, dat){
 };
 
 async function delStats(id){
+    if (id == null){return}; 
     var bdnum = id.split('-')[0];
     var idnum = id.split('-')[1];
 
@@ -670,6 +672,11 @@ client.on('message', message => {
     if(comand(message).com == `ebd` && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete();
         EditStats(comand(message).sarg[0],comand(message).sarg[1], comand(message,2).carg)
+    };
+
+    if(comand(message).com == `delbd` && message.author.id == `621917381681479693` && !mb && !mg){
+        message.delete();
+        delStats(comand(message).sarg[0])
     };
 
     if(comand(message).com == `gbd` && message.author.id == `621917381681479693` && !mb && !mg){
