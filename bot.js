@@ -373,6 +373,7 @@ async function EditStats(id, stat, dat){
 };
 
 async function delStats(id){
+    console.log(id);
     if (id == null){return}; 
     var bdnum = id.split('-')[0];
     var idnum = id.split('-')[1];
