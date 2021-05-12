@@ -642,6 +642,10 @@ client.on('message', message => {
         .catch(console.error);
     };
 
+    if(comand(message).com == `checkm` && message.author.id == `621917381681479693` && !mb && !mg){
+        console.log(comand(message));
+    };
+
     if(comand(message).com == 'cbd' && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete()
         let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
