@@ -177,6 +177,7 @@ function createEx(rule,status,num,add,message){
 
 function createLore(title,img,desc,message){
     message.channel.send({embed: {
+            color: 15521158,
             fields: [{
                 name: `${title}`,
                 value: `${desc}`
