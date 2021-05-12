@@ -162,14 +162,14 @@ function createEx(rule,status,num,add,message){
     if (status == 'Неправильно') color = 14508910;
 
     message.channel.send({embed: {
-        color: color,
-        thumbnail: {
-            url: img
-        },
-        fields: [{
-            name: `[${rule}] Пример #${num}`,
-            value: `${add}`
-        }]
+            color: color,
+            thumbnail: {
+                url: img
+            },
+            fields: [{
+                name: `[${rule}] Пример #${num}`,
+                value: `${add}`
+            }]
         }
     });
     return;
@@ -177,11 +177,11 @@ function createEx(rule,status,num,add,message){
 
 function createLore(title,img,desc,message){
     message.channel.send({embed: {
-        fields: [{
-            name: title,
-            value: desc
-        }],
-        image:{url:img}
+            fields: [{
+                name: `${title}`,
+                value: `${desc}`
+            }],
+            image:{url:img}
         }
     });
     return;
