@@ -695,7 +695,7 @@ client.on('message', message => {
         createEx(comand(message).sarg[0],comand(message).sarg[1],comand(message).sarg[2],comand(message,3).carg,message)
     };
 
-    if(comand(message).com == `сlore` && message.author.id == `621917381681479693` && !mb && !mg){
+    if(comand(message).com == `clore` && message.author.id == `621917381681479693` && !mb && !mg){
         message.delete();
         createLore(comand(message).sarg[0],comand(message).sarg[1],comand(message,2).carg,message)
     };
