@@ -175,13 +175,13 @@ function createEx(rule,status,num,add,message){
     return;
 };
 
-function createLore(title,image,desc,message){
+function createLore(title,img,desc,message){
     message.channel.send({embed: {
         fields: [{
             name: title,
             value: desc
         }],
-        image:{url:image}
+        image:{url:img}
         }
     });
     return;
