@@ -176,7 +176,7 @@ function createEx(rule,status,num,add,message){
 };
 
 function createLore(title,image,desc,message){
-    message.channel.send.send({embed: {
+    message.channel.send({embed: {
         fields: [{
             name: title,
             value: desc
