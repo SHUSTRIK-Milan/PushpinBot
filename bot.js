@@ -194,6 +194,7 @@ async function createCom(embd, message){
     for(let a of embd.title.split(':')){
         if(a.slice(-6) == 'closed') act = 'merge';
         if(a.slice(-7) == 'commits' || a.slice(-6) == 'commit') act = 'commit';
+        console.log(`${a} (${a.slice(-6)} ; ${a.slice(-7)})`)
     };
     if(act == 'commit'){
         let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
