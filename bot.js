@@ -188,7 +188,6 @@ function createLore(title,img,desc,message){
     return;
 };
 
-
 async function createCom(embd, message){
     let act = null;
     for(let a of embd.title.split(':')){
