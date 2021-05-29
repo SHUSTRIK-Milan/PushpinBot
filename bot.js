@@ -127,7 +127,7 @@ function sendLog(message,cat,act,status,add){
 
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
 
-    if(Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id) == null){
+    if (Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id) == null){
         guild.channels.cache.get(Config.channelsID.logs).send({embed: {
             color: color,
             author: {
@@ -477,6 +477,11 @@ client.on('message', message => {
     let mg = message.guild == undefined;
 
     if (!mb && !mg) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
+
+    if (message.channel.id == Config.channelsID.offers && !mb){
+        message.react("👍");
+        message.react("👎");
+    };
 
     if (comand(message).com == 'осмотреться' && !mb && !mg){
         message.delete();
