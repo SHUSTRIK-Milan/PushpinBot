@@ -5,6 +5,8 @@ const prefix = '!';
 const BDpref = '^';
 const urlSteam = `https://steamcommunity.com/`;
 
+//АПШГПРОАВЛПРЛАПРЛАРПАЛРПЛ
+
 var guild;
 const BDchnl = Config.channelsID.bd;
 const dopBDmsg = `838003963412480070`;
