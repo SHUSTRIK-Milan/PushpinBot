@@ -199,33 +199,31 @@ async function createCom(embd, message){
         let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
         let branch = nTitle.slice(0,nTitle.length-1);
         let commits = await fork.listCommits({sha:branch});
-        try{
-            message.delete()
-            let countC = parseInt(embd.title.split(' ')[1]);
-            let lastcom = await commits.data[countC-1];
+        message.delete()
+        let countC = parseInt(embd.title.split(' ')[1]);
+        let lastcom = await commits.data[countC-1];
 
-            let nCommits = [];
-            for (let i = countC-1; i > -1; i--) {
-                lastcom = await commits.data[i];
-                nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
-            }
+        let nCommits = [];
+        for (let i = countC-1; i > -1; i--) {
+            lastcom = await commits.data[i];
+            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
+        }
 
-            let color = 11645371;
-            if(countC>0) color = 8506509;
+        let color = 11645371;
+        if(countC>0) color = 8506509;
 
-            guild.channels.cache.get(Config.channelsID.commits).send({embed: {
-                title: `[PushpinBot:${branch}] ${countC} коммит(ов).`,
-                description: nCommits.join('\n'),
-                url: lastcom.html_url,
-                color: color,
-                author: {
-                    name: lastcom.author.login,
-                    icon_url: lastcom.author.avatar_url
-                },
-                fields: [],
-                timestamp: new Date()
-            }});
-        }catch{'Ошибка тут!'}
+        guild.channels.cache.get(Config.channelsID.commits).send({embed: {
+            title: `[PushpinBot:${branch}] ${countC} коммит(ов).`,
+            description: nCommits.join('\n'),
+            url: lastcom.html_url,
+            color: color,
+            author: {
+                name: lastcom.author.login,
+                icon_url: lastcom.author.avatar_url
+            },
+            fields: [],
+            timestamp: new Date()
+        }});
     }else if(act == 'merge'){
         let req = await fork.listPullRequests({state:'close'});
         let lastReq = await req.data[0];
