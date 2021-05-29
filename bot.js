@@ -199,6 +199,7 @@ async function createCom(embd, message){
     if(act == 'commit'){
         let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
         let branch = nTitle.slice(0,nTitle.length-1);
+        console.log(`${nTitle}(${nTitle.slice(0,nTitle.length-1)})`);
         let commits = await fork.listCommits({sha:branch});
         message.delete()
         let countC = parseInt(embd.title.split(' ')[1]);
