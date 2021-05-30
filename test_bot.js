@@ -11,7 +11,7 @@ client.on('ready', () => {
     guild = client.guilds.cache.get('840180165665619998');
 });
 client.on("messageDelete", (message) => {
-    message.channel.send(message.author.username+' удалил сообщение: '+ message.content+message.channel.name)
+    message.channel.send(message.author.username+' удалил сообщение: '+message.content+'| Из: '+message.channel.name)
 })
 
 client.on('message', (message) => {
