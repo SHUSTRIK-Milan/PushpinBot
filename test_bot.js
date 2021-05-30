@@ -19,6 +19,7 @@ client.on('message', (message) => {
     if(message.content == 'dest' && !message.author.bot){
         client.destroy();
     
+        
     }
     if(message.content.toLowerCase() == "cock" && !message.author.bot && message.channel.name !='adverts'){
         message.channel.send( ' Cock, please ')
