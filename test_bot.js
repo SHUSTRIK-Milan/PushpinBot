@@ -10,5 +10,4 @@ client.on('ready', () => {
     guild = client.guilds.cache.get('814795850885627964');
 });
 
-//client.login(process.env.TestBOT_TOKEN);
-client.login(`ODQwMjMwNTMxNjYwNTEzMjgw.YJVLqQ.Lr7HGn01gH50OUcHrHr4Rl-BpSM`);
+client.login(process.env.TestBOT_TOKEN);
