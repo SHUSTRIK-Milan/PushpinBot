@@ -13,4 +13,4 @@ client.on('message', (message) => {
     console.log(message.content);
 })
 
-client.login(process.env.TestBOT_TOKEN);
+client.login(Config.discordTocens.testBot);

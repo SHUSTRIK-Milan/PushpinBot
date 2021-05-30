@@ -30,6 +30,10 @@ module.exports.BLChannelsID = {
     bd: `838002825765322792`,
 };
 
+module.exports.discordTocens = {
+    testBot: `ODQwMjMwNTMxNjYwNTEzMjgw.YJVLqQ.Lr7HGn01gH50OUcHrHr4Rl-BpSM`
+};
+
 module.exports.streets = [
     {
         name: 'Белт-Паркуэй',
