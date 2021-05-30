@@ -480,7 +480,7 @@ client.on('message', message => {
     if (message.channel.id == Config.channelsID.offers && !mb){
         message.react("👍");
         message.react("👎");
-        console.log('новое сообщение в offers')
+        console.log('Новое сообщение в offers')
     };
 
     if (comand(message).com == 'осмотреться' && !mb && !mg){
