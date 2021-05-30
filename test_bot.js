@@ -6,9 +6,8 @@ const client = new Discord.Client();
 var guild;
 
 function randomRange(min,max){
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
+    let rand = min - 0.5 + Math.random() * (max - min + 1);
+    return Math.round(rand);
 }
 
 client.on('ready', () => {
