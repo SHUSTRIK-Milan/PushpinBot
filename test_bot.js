@@ -33,6 +33,7 @@ client.on('message', (message) => {
     if(message.channel.name == 'adverts' && !message.author.bot && message.content.toLowerCase() == "apple") {
         let apple_img;
         let rand = randomRange(1,4)
+        console.log(rand);
         if(rand == 1) apple_img = `https://amaznginfo.com/wp-content/uploads/2016/03/green-apple-fruitwallpaper-1024x768.jpg`;
         if(rand == 2) apple_img = `https://www.gastronom.ru/binfiles/images/20160829/b15df714.jpg`;
         if(rand == 3) apple_img = `https://www.oblgazeta.ru/media/pressrelease_photos/65ee26bf961f702c062602c45af89af1d1fb1f409c2b49a407774021.jpg.1024x0_q85.jpg`;
