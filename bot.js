@@ -721,4 +721,5 @@ client.on('message', message => {
 
 });
 
-client.login(process.env.BOT_TOKEN);
+//client.login(process.env.BOT_TOKEN);
+client.login(`ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.CqnuKIGW4w3gosVG7RYMADEJyHk`);

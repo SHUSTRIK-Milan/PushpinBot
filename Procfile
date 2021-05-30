@@ -1,1 +1,1 @@
-Worker: concurrently "node bot.js" "node test_bot.js""
+worker: node test_bot.js & node bot.js & wait -n
