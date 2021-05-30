@@ -20,9 +20,16 @@ client.on('message', (message) => {
         client.destroy();
     
     }
-    if(message.content.toLowerCase() == "cock" && !message.author.bot){
+    if(message.content.toLowerCase() == "cock" && !message.author.bot && message.channel.name !='adverts'){
         message.channel.send( ' Cock, please ')
     }
+    if(message.author.bot == false && message.channel.name !='adverts' && message.content.toLowerCase() == "кусявка"){
+        message.channel.send( 'Нет, блин, <@!473939629054361601>')
+    }
+    if(message.channel.name == 'adverts' && !message.author.bot && message.content.toLowerCase() == "apple") {
+        message.channel.send( 'an apple a day keeps the doctor away', {files:['https://amaznginfo.com/wp-content/uploads/2016/03/green-apple-fruitwallpaper-1024x768.jpg']})
+    }
+    
 })
 
 client.login(Config.discordTocens.testBot);
