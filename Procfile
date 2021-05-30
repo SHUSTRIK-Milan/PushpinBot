@@ -1,1 +1,1 @@
-Worker: node bot.js && node test_bot.js
+Worker: concurrently "node bot.js" "node test_bot.js""
