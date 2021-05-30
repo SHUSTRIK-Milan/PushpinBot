@@ -210,7 +210,7 @@ async function createCom(embd, message){
 
         let color = 11645371;
         if(countC>0) color = 8506509;
-
+        console.log(lastcom.author);
         guild.channels.cache.get(Config.channelsID.commits).send({embed: {
             title: `[PushpinBot:${branch}] ${countC} коммит(ов).`,
             description: nCommits.join('\n'),
