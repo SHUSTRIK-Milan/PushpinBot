@@ -36,7 +36,7 @@ module.exports.discordTocens = {
 
 module.exports.streets = [
     {
-        name: 'Белт-Паркуэй',
+        name: 'Черчель-Стрит',
         id: '001',
         radius: ['Бродвей'],
         objects: [
@@ -44,48 +44,23 @@ module.exports.streets = [
                 name: 'Улица',
                 id: '001',
                 addCondition: ''
-            },
-            {
-                name: 'Магазин',
-                id: '002',
-                addCondition: ''
-            },
-            {
-                name: 'Туалет',
-                id: '0021',
-                addCondition: 'Магазин'
-            },
-            {
-                name: 'Дом-1',
-                id: '003',
-                addCondition: ''
-            },
-            {
-                name: 'Дом-2',
-                id: '004',
-                addCondition: ''
-            } 
+            }
         ]
     },
     {
         name: 'Бродвей',
-        id: '002',
-        radius: ['Белт-Паркуэй', 'Парк-авеню'],
+        id: '003',
+        radius: ['Черчель-Стрит','Либерти','Фримонт'],
         objects: [
             {
                 name: 'Улица',
                 id: '001',
                 addCondition: ''
-            },
-            {
-                name: 'Полицейский-Департамент',
-                id: '002',
-                addCondition: ''
             }
         ]
     },
     {
-        name: 'Парк-авеню',
+        name: 'Либерти',
         id: '003',
         radius: ['Бродвей'],
         objects: [
@@ -93,12 +68,43 @@ module.exports.streets = [
                 name: 'Улица',
                 id: '001',
                 addCondition: ''
-            },
+            }
+        ]
+    },
+    {
+        name: 'Фримонт',
+        id: '003',
+        radius: ['Бродвей'],
+        objects: [
             {
-                name: 'Завод',
-                id: '002',
+                name: 'Улица',
+                id: '001',
                 addCondition: ''
             }
         ]
-    }
+    },
+    {
+        name: 'Конарв',
+        id: '002',
+        radius: ['Фримонт','Либерти','Белт-Паркуй'],
+        objects: [
+            {
+                name: 'Улица',
+                id: '001',
+                addCondition: ''
+            },
+        ]
+    },
+    {
+        name: 'Белт-Паркуй',
+        id: '003',
+        radius: ['Конарв'],
+        objects: [
+            {
+                name: 'Улица',
+                id: '001',
+                addCondition: ''
+            }
+        ]
+    },
 ];
