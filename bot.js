@@ -498,17 +498,6 @@ client.on('message', message => {
                 message.author.send(`Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты отсутствуют.`);
                 sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты отсутствуют.`);
             };
-        }else if(homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name).addCondition != ''){
-            let objects = [];
-            for (let pobj of homestreet.objects) if (pobj.addCondition.toLowerCase() == message.channel.name.toLowerCase()) objects.push(pobj.name);
-
-            if (homestreet != null && objects.join(', ') != ''){
-                message.author.send(`Ближайшие помещения: ${objects.join(', ')}.\nПуть для выхода: ${homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name).addCondition}.`);
-                sendLog(message,`Общее`,`Осмотрелся в помещение.`,`Успешно`,`Вывод: Ближайшие помещения: ${objects.join(', ')}.\nПуть для выхода: ${homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name).addCondition}.`);
-            }else{
-                message.author.send(`Ближайшие помещения отсутствуют.\nПуть для выхода: ${homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name).addCondition}.`);
-                sendLog(message,`Общее`,`Осмотрелся в помещение.`,`Успешно`,`Вывод: Ближайшие помещения отсутствуют.\nПуть для выхода: ${homestreet.objects.find(obj => obj.name.toLowerCase() == message.channel.name).addCondition}.`);
-            };
         }else if(homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == message.channel.name.toLowerCase()) != null){
             let objects = [];
             for (let pobj of homestreet.objects) if (pobj.addCondition.toLowerCase() == message.channel.name.toLowerCase()) objects.push(pobj.name);
