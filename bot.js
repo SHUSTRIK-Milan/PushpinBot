@@ -519,10 +519,14 @@ client.on('message', message => {
         message.delete();
         let homestreet = Config.streets.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase());
         let argsStreet = comand(message,1).carg;
+        let argsStreetID = guild.channels.cache.get(comand(message,1).carg.slice(2).slice(0,-1));
+        if(argsStreetID == undefined) argsStreet = 'nullChannel';
 
         if (comand(message).sarg[0] == 'на' && message.channel.name == 'улица'){
             let walkway = homestreet.radius.find(st => st.toLowerCase() == argsStreet.toLowerCase());
-            if (walkway != null && message.channel.parent.permissionOverwrites.get(message.author.id) != null){
+            if(walkway == undefined) walkway = homestreet.radius.find(st => st.toLowerCase() == argsStreetID.name.slice(1).slice(0,-1).toLowerCase());
+            console.log(walkway)
+            /* if (walkway != null && message.channel.parent.permissionOverwrites.get(message.author.id) != null){
                 let cat = guild.channels.cache.find(cat => cat.name == walkway);
                 if (cat.type == 'category'){
                     guild.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
@@ -535,7 +539,7 @@ client.on('message', message => {
             }else{
                 message.author.send(`Вероятнее всего улицы ${argsStreet} нет, либо вы ввели ее неправильно.`);
                 sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsStreet} нет, либо вы ввели ее неправильно.`);
-            };
+            }; */
         }else if (comand(message).sarg[0] == 'в'){
             /* let walkway = homestreet.objects.find(obj => obj.name.toLowerCase() == argsStreet.toLowerCase());
             console.log(walkway);
