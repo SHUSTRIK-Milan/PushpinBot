@@ -519,17 +519,17 @@ client.on('message', message => {
         message.delete();
         let homestreet = Config.streets.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase());
         let argsStreet = guild.channels.cache.get(comand(message,1).carg.slice(2).slice(0,-1));
-        if(argsStreet != undefined) argsStreet = argsStreet.name;
+        if(argsStreet != undefined) argsStreet = argsStreet.name.slice(1).slice(0,-1).toLowerCase();
         if(argsStreet == undefined) argsStreet = comand(message,1).carg;
 
         if (comand(message).sarg[0] == 'на' && message.channel.name == 'улица'){
-            let walkway = homestreet.radius.find(st => st.toLowerCase() == argsStreet.slice(1).slice(0,-1).toLowerCase());
+            let walkway = homestreet.radius.find(st => st.toLowerCase() == argsStreet);
             if(walkway == undefined) walkway = homestreet.radius.find(st => st.toLowerCase() == argsStreet.toLowerCase());
             console.log(argsStreet);
             console.log(walkway)
 
             if (walkway != null && message.channel.parent.permissionOverwrites.get(message.author.id) != null){
-                let cat = guild.channels.cache.find(cat => cat.name == `«${walkway}»`);
+                let cat = guild.channels.cache.find(cat => cat.name.toLowerCase() == `«${walkway}»`.toLowerCase());
                 if (cat.type == 'category'){
                     guild.channels.cache.find(cat => cat.name == walkway).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
                     message.channel.parent.permissionOverwrites.get(message.author.id).delete();
