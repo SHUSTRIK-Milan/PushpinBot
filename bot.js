@@ -531,7 +531,7 @@ client.on('message', message => {
             if (walkway != null && message.channel.parent.permissionOverwrites.get(message.author.id) != null){
                 let cat = guild.channels.cache.find(cat => cat.name.toLowerCase() == `«${walkway}»`.toLowerCase());
                 if (cat.type == 'category'){
-                    guild.channels.cache.find(cat => cat.name == walkway.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
+                    guild.channels.cache.find(cat => cat.name.toLowerCase() == `«${walkway}»`.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
                     message.channel.parent.permissionOverwrites.get(message.author.id).delete();
                     sendLog(message,`Общее`,`Пошел.`,`Успешно`,`Перешел с ${homestreet.name} на ${walkway}.`);
                 };
