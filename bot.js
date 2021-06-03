@@ -492,10 +492,10 @@ client.on('message', message => {
             for (let pobj of homestreet.objects) if (pobj.addCondition == '') objects.push(pobj.name);
 
             if (homestreet != null && objects.join(', ') != ''){
-                message.author.send(`Соседние улицы с ${homestreet.name}:\n> ${homestreet.radius.join(',\n> ')}.\nБлижайшие объекты:\n> ${objects.join(',\n> ')}.`);
+                message.author.send(`Соседние улицы с ${homestreet.name}:\n> ${homestreet.radius.join(';\n> ')}.\nБлижайшие объекты:\n> ${objects.join(';\n> ')}.`);
                 sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
             }else{
-                message.author.send(`Соседние улицы с ${homestreet.name}:\n> ${homestreet.radius.join(',\n> ')}.\nБлижайшие объекты отсутствуют.`);
+                message.author.send(`Соседние улицы с ${homestreet.name}:\n> ${homestreet.radius.join(';\n> ')}.\nБлижайшие объекты отсутствуют.`);
                 sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homestreet.name}: ${homestreet.radius.join(', ')}.\nБлижайшие объекты отсутствуют.`);
             };
         }else if(homestreet.objects.filter(ob => ob.addCondition.toLowerCase() == message.channel.name.toLowerCase()) != null){
@@ -503,7 +503,7 @@ client.on('message', message => {
             for (let pobj of homestreet.objects) if (pobj.addCondition.toLowerCase() == message.channel.name.toLowerCase()) objects.push(pobj.name);
 
             if (homestreet != null && objects.join(', ') != ''){
-                message.author.send(`Ближайшие помещения:\n> ${objects.join(',\n> ')}.\nПуть для выхода: Улица.`);
+                message.author.send(`Ближайшие помещения:\n> ${objects.join(';\n> ')}.\nПуть для выхода: Улица.`);
                 sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения: ${objects.join(', ')}.`);
             }else{
                 message.author.send(`Ближайшие помещения отсутствуют.\nПуть для выхода: Улица.`);
