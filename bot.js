@@ -8,6 +8,7 @@ const urlSteam = `https://steamcommunity.com/`;
 var guild;
 const BDchnl = Config.channelsID.bd;
 const dopBDmsg = `838003963412480070`;
+const policeBDmsg = `851070854259277855`;
 
 const SteamAPI = require('steamapi');
 var GitHub = require('github-api');
@@ -613,14 +614,22 @@ client.on('message', message => {
 
     if(comand(message).com == `job` && !mb && !mg){
         if(message.channel.name == 'полицейский-департамент'){
-            let role = '851059230710693911';
-            if(haveRole(message.member, role)) removeRole(message.member, role);
-            if(!haveRole(message.member, role)) giveRole(message.member, role);
+            guild.channels.cache.find(BDchnl).messages.fetch(policeBDmsg).then(oMsg => {
+                let role = '851059230710693911';
+                let nMsg = oMsg.split('\n');
+                nMsg.splice(0,1);
+
+                if(nMsg.find(member => member == message.member.id) != null){
+                    if(haveRole(message.member, role)) removeRole(message.member, role);
+                    if(!haveRole(message.member, role)) giveRole(message.member, role);
+                };
+            });
         };
     };
 
     if(comand(message).com == `911` && !mb && !mg ||
     comand(message).com == `511` && !mb && !mg){
+        message.delete();
         let role = '851059230710693911';
         let cops = guild.members.cache.filter(member => haveRole(member, role) == true);
         for(let cop of cops){
