@@ -101,9 +101,7 @@ function comand(message,countS){
     return comand;
 };
 
-function haveRole(message, roleid, member){
-    let have = false;
-    if(message != '') member = message.author;
+function haveRole(member, roleid){
     if (guild.member(member).roles.cache.get(roleid) != null) have = true;
     return have;
 };
@@ -615,26 +613,26 @@ client.on('message', message => {
     if(comand(message).com == `job` && !mb && !mg){
         if(message.channel.name == 'полицейский-департамент'){
             let role = '851059230710693911';
-            if(haveRole(message, role)) removeRole(message, role);
-            if(!haveRole(message, role)) giveRole(message, role);
+            if(haveRole(message.member, role)) removeRole(message, role);
+            if(!haveRole(message.member, role)) giveRole(message, role);
         };
     };
 
     if(comand(message).com == `911` && !mb && !mg ||
     comand(message).com == `511` && !mb && !mg){
         let role = '851059230710693911';
-        let cops = guild.members.cache.filter(member => haveRole('', role, member) == true);
+        let cops = guild.members.cache.filter(member => haveRole(message.member, role) == true);
         for(let cop of cops){
             cop.send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${message.comand(message).arg}`)
         }
     };
 
-    if(comand(message).com == `send` && haveRole(message, `833778527609552918`) == true && !mb && !mg){	
+    if(comand(message).com == `send` && haveRole(message.member, `833778527609552918`) == true && !mb && !mg){	
         message.delete();	
         message.channel.send(`${comand(message).arg}`);	
     };
 
-    if(comand(message).com == `clear` && !mb && !mg && haveRole(message, `833778527609552918`) == true){
+    if(comand(message).com == `clear` && !mb && !mg && haveRole(message.member, `833778527609552918`) == true){
         let arg = parseInt(comand(message).sarg[0]);
         
         if (arg > 0 && arg < 100){
@@ -647,8 +645,8 @@ client.on('message', message => {
         };
     };
     
-    if(comand(message).com == `edit` && haveRole(message, `833778527609552918`) == true && !mg
-    || comand(message).com == `edit` && haveRole(message, `822501730964078633`) == true && !mg){
+    if(comand(message).com == `edit` && haveRole(message.member, `833778527609552918`) == true && !mg
+    || comand(message).com == `edit` && haveRole(message.member, `822501730964078633`) == true && !mg){
         message.delete();
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
@@ -687,7 +685,7 @@ client.on('message', message => {
         message.channel.send(`!edit ${BDchnl} ${dopBDmsg} > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^838003797149220884^1`);
     };
 
-    if(comand(message).com == `tbd` && haveRole(message,`822493460493500436`) && !mb && !mg){
+    if(comand(message).com == `tbd` && haveRole(message.member,`822493460493500436`) && !mb && !mg){
         message.delete();
         setTimeout(() => AddStats(`<@!${message.author.id}>`,25,'В розыске','Отсутствует',101), 1000);
     };
