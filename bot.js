@@ -622,9 +622,9 @@ client.on('message', message => {
     if(comand(message).com == `911` && !mb && !mg ||
     comand(message).com == `511` && !mb && !mg){
         let role = '851059230710693911';
-        let cops = guild.members.cache.filter(member => haveRole(message.member, role) == true);
+        let cops = guild.members.cache.filter(member => haveRole(member, role) == true);
         for(let cop of cops){
-            cop.send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${message.comand(message).arg}`)
+            cop.send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${comand(message).arg}`)
         }
     };
 
