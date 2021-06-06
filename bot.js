@@ -612,7 +612,7 @@ client.on('message', message => {
         message.delete();
     };
 
-    if(comand(message).com == `экипировка` && !mb && !mg){
+    if(comand(message).com == `форма` && !mb && !mg){
         message.delete();
         if(message.channel.name == 'полицейский-департамент'){
             let channel = guild.channels.cache.get(BDchnl);
