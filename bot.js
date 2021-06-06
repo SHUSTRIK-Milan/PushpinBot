@@ -622,6 +622,8 @@ client.on('message', message => {
                 if(nMsg.find(member => member == message.member.id) != null){
                     if(haveRole(message.member, role)) removeRole(message.member, role);
                     if(!haveRole(message.member, role)) giveRole(message.member, role);
+                }else{
+                    message.author.send(`Вы отсутствуете в базе данных полицейских. Обратитесь к капитану полиции.`);
                 };
             });
         };
