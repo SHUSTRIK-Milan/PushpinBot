@@ -102,6 +102,7 @@ function comand(message,countS){
 };
 
 function haveRole(member, roleid){
+    let have = false;
     if (guild.member(member).roles.cache.get(roleid) != null) have = true;
     return have;
 };
