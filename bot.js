@@ -624,8 +624,7 @@ client.on('message', message => {
         let role = '851059230710693911';
         let cops = guild.members.cache.filter(member => haveRole(member, role) == true);
         for(let cop of cops){
-            console.log(cop);
-            /* cop.send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${comand(message).arg}`) */
+            cop[1].send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${comand(message).arg}`)
         }
     };
 
