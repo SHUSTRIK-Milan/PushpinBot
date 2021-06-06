@@ -617,7 +617,7 @@ client.on('message', message => {
             let channel = guild.channels.cache.get(BDchnl);
             channel.messages.fetch(policeBDmsg).then(oMsg => {
                 let role = '851059230710693911';
-                let nMsg = oMsg.split('\n');
+                let nMsg = oMsg.content.split('\n');
                 nMsg.splice(0,1);
 
                 if(nMsg.find(member => member == message.member.id) != null){
