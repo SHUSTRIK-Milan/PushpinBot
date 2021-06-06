@@ -614,8 +614,8 @@ client.on('message', message => {
     if(comand(message).com == `job` && !mb && !mg){
         if(message.channel.name == 'полицейский-департамент'){
             let role = '851059230710693911';
-            if(haveRole(message.member, role)) removeRole(message, role);
-            if(!haveRole(message.member, role)) giveRole(message, role);
+            if(haveRole(message.member, role)) removeRole(message.member, role);
+            if(!haveRole(message.member, role)) giveRole(message.member, role);
         };
     };
 
