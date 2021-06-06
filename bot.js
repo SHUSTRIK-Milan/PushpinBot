@@ -87,10 +87,10 @@ function comand(message,countS){
 
     if(msg.slice(0,1) != prefix) return comand;
     
-    let com = msg.split(" ", 1).join('').slice(prefix.length);
-    let arg = msg.slice(com.length+prefix.length+1);
-    let sarg = arg.split(" ");
-    let carg = sarg.slice(countS).join(' ');
+    let com = msg.split(" ", 1).join('').slice(prefix.length); // команда, первый слитнонаписанный текст
+    let arg = msg.slice(com.length+prefix.length+1); // все, что идет после команды
+    let sarg = arg.split(" "); // разбитый аргумент на пробелы
+    let carg = sarg.slice(countS).join(' '); // отрезанние от разбитого аргумента первых аргументов
     var comand = {
         com: com,
         arg: arg,
@@ -101,10 +101,11 @@ function comand(message,countS){
     return comand;
 };
 
-function haveRole(message, roleid){
-    let haveorno = false;
-    if (guild.member(message.author).roles.cache.get(roleid) != null) haveorno = true;
-    return haveorno;
+function haveRole(message, roleid, member){
+    let have = false;
+    if(message != '') member = message.author;
+    if (guild.member(member).roles.cache.get(roleid) != null) have = true;
+    return have;
 };
 
 function giveRole(member, roleId){
@@ -609,7 +610,24 @@ client.on('message', message => {
         };
         pay(comand(message));
         message.delete();
-    }; 
+    };
+
+    if(comand(message).com == `job` && !mb && !mg){
+        if(message.channel.name == 'полицейский-департамент'){
+            let role = '851059230710693911';
+            if(haveRole(message, role)) removeRole(message, role);
+            if(!haveRole(message, role)) giveRole(message, role);
+        };
+    };
+
+    if(comand(message).com == `911` && !mb && !mg ||
+    comand(message).com == `511` && !mb && !mg){
+        let role = '851059230710693911';
+        let cops = guild.members.cache.filter(member => haveRole('', role, member) == true);
+        for(let cop of cops){
+            cop.send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${message.comand(message).arg}`)
+        }
+    };
 
     if(comand(message).com == `send` && haveRole(message, `833778527609552918`) == true && !mb && !mg){	
         message.delete();	
