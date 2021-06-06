@@ -612,9 +612,9 @@ client.on('message', message => {
         message.delete();
     };
 
-    if(comand(message).com == `job` && !mb && !mg){
+    if(comand(message).com == `экипировка` && !mb && !mg){
         if(message.channel.name == 'полицейский-департамент'){
-            let channel = guild.channels.cache.find(BDchnl);
+            let channel = guild.channels.cache.get(BDchnl);
             channel.messages.fetch(policeBDmsg).then(oMsg => {
                 let role = '851059230710693911';
                 let nMsg = oMsg.split('\n');
