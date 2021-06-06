@@ -622,8 +622,16 @@ client.on('message', message => {
                 nMsg.splice(0,1);
 
                 if(nMsg.find(member => member == message.member.id) != null){
-                    if(haveRole(message.member, role)) removeRole(message.member, role);
-                    if(!haveRole(message.member, role)) giveRole(message.member, role);
+                    if(haveRole(message.member, role)){
+                        removeRole(message.member, '851059230710693911');
+                        removeRole(message.member, '851059555499638825');
+                        removeRole(message.member, '836183994646921248');
+                    }
+                    if(!haveRole(message.member, role)){
+                        giveRole(message.member, '851059230710693911');
+                        giveRole(message.member, '851059555499638825');
+                        giveRole(message.member, '836183994646921248');
+                    }
                 }else{
                     message.author.send(`Вы отсутствуете в базе данных полицейских. Обратитесь к капитану полиции.`);
                 };
