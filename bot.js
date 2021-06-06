@@ -614,7 +614,8 @@ client.on('message', message => {
 
     if(comand(message).com == `job` && !mb && !mg){
         if(message.channel.name == 'полицейский-департамент'){
-            guild.channels.cache.find(BDchnl).messages.fetch(policeBDmsg).then(oMsg => {
+            let channel = guild.channels.cache.find(BDchnl);
+            channel.messages.fetch(policeBDmsg).then(oMsg => {
                 let role = '851059230710693911';
                 let nMsg = oMsg.split('\n');
                 nMsg.splice(0,1);
