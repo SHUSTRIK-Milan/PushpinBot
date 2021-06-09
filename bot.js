@@ -104,8 +104,8 @@ function comand(message,countS){
 
 function haveRole(member, roleid){
     let have = false;
+    if(member.user.bot){return have}
     if (guild.member(member).roles.cache.get(roleid) != null) have = true;
-    console.log(member);
     return have;
 };
 
