@@ -644,18 +644,18 @@ client.on('message', message => {
     comand(message).com == `511` && !mb && !mg){
         message.delete();
         let role = '851059230710693911';
-        let cops = guild.members.cache.filter(member => haveRole(member, role) == true);
+        let cops = guild.members.cache.filter(member => haveRole(member, role));
         for(let cop of cops){
             cop[1].send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${comand(message).arg}`)
         }
     };
 
-    if(comand(message).com == `send` && haveRole(message.member, `833778527609552918`) == true && !mb && !mg && head){	
+    if(comand(message).com == `send` && !mb && !mg && (haveRole(message.member, `833778527609552918`) || head)){	
         message.delete();	
         message.channel.send(`${comand(message).arg}`);	
     };
 
-    if(comand(message).com == `clear` && !mb && !mg && haveRole(message.member, `833778527609552918`) == true && head){
+    if(comand(message).com == `clear` && !mb && !mg && (haveRole(message.member, `833778527609552918`) || head)){
         let arg = parseInt(comand(message).sarg[0]);
         
         if (arg > 0 && arg < 100){
@@ -668,8 +668,8 @@ client.on('message', message => {
         };
     };
     
-    if(comand(message).com == `edit` && haveRole(message.member, `833778527609552918`) == true && !mg && head
-    || comand(message).com == `edit` && haveRole(message.member, `822501730964078633`) == true && !mg && head){
+    if(comand(message).com == `edit` && !mg && (haveRole(message.member, `833778527609552918`) || head)
+    || comand(message).com == `edit` && !mg && (haveRole(message.member, `822501730964078633`) || head)){
         message.delete();
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
