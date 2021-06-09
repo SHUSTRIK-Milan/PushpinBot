@@ -104,7 +104,7 @@ function comand(message,countS){
 
 function haveRole(member, roleid){
     let have = false;
-    if(member == null) console.log(member);
+    if(member == null){return have};
     if (member.roles.cache.get(roleid) != null) have = true;
     return have;
 };
