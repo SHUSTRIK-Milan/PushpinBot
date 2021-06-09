@@ -474,6 +474,7 @@ client.on('messageDelete', (message) => {
 client.on('message', message => {
     let mb = message.author.bot;
     let mg = message.guild == undefined;
+    let head = haveRole(message.member, '822493460493500436')
 
     if (!mb && !mg) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
@@ -649,12 +650,12 @@ client.on('message', message => {
         }
     };
 
-    if(comand(message).com == `send` && haveRole(message.member, `833778527609552918`) == true && !mb && !mg){	
+    if(comand(message).com == `send` && haveRole(message.member, `833778527609552918`) == true && !mb && !mg && head){	
         message.delete();	
         message.channel.send(`${comand(message).arg}`);	
     };
 
-    if(comand(message).com == `clear` && !mb && !mg && haveRole(message.member, `833778527609552918`) == true){
+    if(comand(message).com == `clear` && !mb && !mg && haveRole(message.member, `833778527609552918`) == true && head){
         let arg = parseInt(comand(message).sarg[0]);
         
         if (arg > 0 && arg < 100){
@@ -667,8 +668,8 @@ client.on('message', message => {
         };
     };
     
-    if(comand(message).com == `edit` && haveRole(message.member, `833778527609552918`) == true && !mg
-    || comand(message).com == `edit` && haveRole(message.member, `822501730964078633`) == true && !mg){
+    if(comand(message).com == `edit` && haveRole(message.member, `833778527609552918`) == true && !mg && head
+    || comand(message).com == `edit` && haveRole(message.member, `822501730964078633`) == true && !mg && head){
         message.delete();
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
