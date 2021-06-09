@@ -104,6 +104,7 @@ function comand(message,countS){
 
 function haveRole(member, roleid){
     let have = false;
+    if(member == null) console.log(member);
     if (member.roles.cache.get(roleid) != null) have = true;
     return have;
 };
@@ -645,7 +646,6 @@ client.on('message', message => {
         message.delete();
         let role = '851059230710693911';
         let cops = guild.members.cache.filter(member => haveRole(member, role));
-        console.log(guild.members.cache);
         for(let cop of cops){
             cop[1].send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${comand(message).arg}`)
         }
