@@ -694,13 +694,13 @@ client.on('message', message => {
     if(comand(message).com == `911` && !mb && !mg){
         message.delete();
         if(comand(message).sarg[0] == '1'){
-            message.author.send(`**Вы вызывали пожарную службу** ⚕️\n> ${comand(message,1).carg}`);
+            message.author.send(`**Вы вызывали пожарную службу** 🔥\n> ${comand(message,1).carg}`);
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_fire));
             for(let worker of staff){
                 worker[1].send(`**${message.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${comand(message,1).carg}`)
             }
         }else if(comand(message).sarg[0] == '2'){
-            message.author.send(`**Вы вызывали полицию** ⚕️\n> ${comand(message,1).carg}`);
+            message.author.send(`**Вы вызывали полицию** 🚔\n> ${comand(message,1).carg}`);
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_police));
             for(let worker of staff){
                 worker[1].send(`**${message.member.nickname} вызывал(а) полицию** 🚔\n> ${comand(message,1).carg}`)
