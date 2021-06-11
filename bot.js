@@ -637,58 +637,22 @@ client.on('message', message => {
                 giveRole(member, '836183994646921248');
             }
         };
-        if(message.channel.id == Config.channelsID.dep_police){
-            let channel = guild.channels.cache.get(BDchnl);
-            channel.messages.fetch(Config.dopBDids.msg_police).then(oMsg => {
-                let nMsg = oMsg.content.split('\n');
-                nMsg.splice(0,1);
 
-                if(nMsg.find(member => member == message.member.id) != null){
-                    giveForm(message.member, Config.dopBDids.role_police);
-                }else{
-                    message.author.send(`**Вы отсутствуете в базе данных полицейских** 🗂️ Обратитесь к капитану полиции.`);
-                };
-            });
-        };
-        if(message.channel.id == Config.channelsID.dep_med){
-            let channel = guild.channels.cache.get(BDchnl);
-            channel.messages.fetch(Config.dopBDids.msg_med).then(oMsg => {
-                let nMsg = oMsg.content.split('\n');
-                nMsg.splice(0,1);
-
-                if(nMsg.find(member => member == message.member.id) != null){
-                    giveForm(message.member, Config.dopBDids.role_med);
-                }else{
-                    message.author.send(`**Вы отсутствуете в базе данных медицинских работников** 🗂️ Обратитесь к начальству.`);
-                };
-            });
-        };
-        if(message.channel.id == Config.channelsID.dep_fire){
-            let channel = guild.channels.cache.get(BDchnl);
-            channel.messages.fetch(Config.dopBDids.msg_fire).then(oMsg => {
-                let nMsg = oMsg.content.split('\n');
-                nMsg.splice(0,1);
-
-                if(nMsg.find(member => member == message.member.id) != null){
-                    giveForm(message.member, Config.dopBDids.role_fire);
-                }else{
-                    message.author.send(`**Вы отсутствуете в базе данных пожарных** 🗂️ Обратитесь к начальству.`);
-                };
-            });
-        };
-        if(message.channel.id == Config.channelsID.dep_mayor){
-            let channel = guild.channels.cache.get(BDchnl);
-            channel.messages.fetch(Config.dopBDids.msg_mayor).then(oMsg => {
-                let nMsg = oMsg.content.split('\n');
-                nMsg.splice(0,1);
-
-                if(nMsg.find(member => member == message.member.id) != null){
-                    giveForm(message.member, Config.dopBDids.role_mayor);
-                }else{
-                    message.author.send(`**Вы отсутствуете в базе данных работников мэрии** 🗂️ Обратитесь к начальству.`);
-                };
-            });
-        };
+        for(let dept in Config.departments){
+            if(message.channel.id == Config.departments[dept][0]){
+                let channel = guild.channels.cache.get(BDchnl);
+                channel.messages.fetch(Config.departments[dept][1]).then(oMsg => {
+                    let nMsg = oMsg.content.split('\n');
+                    nMsg.splice(0,1);
+    
+                    if(nMsg.find(member => member == message.member.id) != null){
+                        giveForm(message.member, Config.departments[dept][2]);
+                    }else{
+                        message.author.send(`**Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
+                    };
+                });
+            };
+        }
     };
 
     if(comand(message).com == `911` && !mb && !mg){
