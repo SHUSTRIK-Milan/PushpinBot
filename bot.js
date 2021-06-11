@@ -8,7 +8,6 @@ const urlSteam = `https://steamcommunity.com/`;
 var guild;
 const BDchnl = Config.channelsID.bd;
 const dopBDmsg = `838003963412480070`;
-const policeBDmsg = `851070854259277855`;
 
 const SteamAPI = require('steamapi');
 var GitHub = require('github-api');
@@ -616,39 +615,98 @@ client.on('message', message => {
 
     if(comand(message).com == `форма` && !mb && !mg){
         message.delete();
-        if(message.channel.name == 'полицейский-департамент'){
+        function giveForm(member, role){
+            if(haveRole(member, role)){
+                removeRole(member, role);
+                removeRole(member, '851059555499638825');
+                removeRole(member, '836183994646921248');
+            }
+            if(!haveRole(member, role)){
+                giveRole(member, role);
+                giveRole(member, '851059555499638825');
+                giveRole(member, '836183994646921248');
+            }
+        };
+        if(message.channel.id == Config.channelsID.dep_police){
             let channel = guild.channels.cache.get(BDchnl);
-            channel.messages.fetch(policeBDmsg).then(oMsg => {
-                let role = '851059230710693911';
+            channel.messages.fetch(Config.dopBDids.msg_police).then(oMsg => {
                 let nMsg = oMsg.content.split('\n');
                 nMsg.splice(0,1);
 
                 if(nMsg.find(member => member == message.member.id) != null){
-                    if(haveRole(message.member, role)){
-                        removeRole(message.member, '851059230710693911');
-                        removeRole(message.member, '851059555499638825');
-                        removeRole(message.member, '836183994646921248');
-                    }
-                    if(!haveRole(message.member, role)){
-                        giveRole(message.member, '851059230710693911');
-                        giveRole(message.member, '851059555499638825');
-                        giveRole(message.member, '836183994646921248');
-                    }
+                    giveForm(message.member, Config.dopBDids.role_police);
                 }else{
                     message.author.send(`Вы отсутствуете в базе данных полицейских. Обратитесь к капитану полиции.`);
                 };
             });
         };
+        if(message.channel.id == Config.channelsID.dep_med){
+            let channel = guild.channels.cache.get(BDchnl);
+            channel.messages.fetch(Config.dopBDids.msg_med).then(oMsg => {
+                let nMsg = oMsg.content.split('\n');
+                nMsg.splice(0,1);
+
+                if(nMsg.find(member => member == message.member.id) != null){
+                    giveForm(message.member, Config.dopBDids.role_med);
+                }else{
+                    message.author.send(`Вы отсутствуете в базе данных медицинских работников. Обратитесь к начальству.`);
+                };
+            });
+        };
+        if(message.channel.id == Config.channelsID.dep_fire){
+            let channel = guild.channels.cache.get(BDchnl);
+            channel.messages.fetch(Config.dopBDids.msg_fire).then(oMsg => {
+                let nMsg = oMsg.content.split('\n');
+                nMsg.splice(0,1);
+
+                if(nMsg.find(member => member == message.member.id) != null){
+                    giveForm(message.member, Config.dopBDids.role_fire);
+                }else{
+                    message.author.send(`Вы отсутствуете в базе данных пожарных. Обратитесь к начальству.`);
+                };
+            });
+        };
+        if(message.channel.id == Config.channelsID.dep_mayor){
+            let channel = guild.channels.cache.get(BDchnl);
+            channel.messages.fetch(Config.dopBDids.msg_mayor).then(oMsg => {
+                let nMsg = oMsg.content.split('\n');
+                nMsg.splice(0,1);
+
+                if(nMsg.find(member => member == message.member.id) != null){
+                    giveForm(message.member, Config.dopBDids.role_mayor);
+                }else{
+                    message.author.send(`Вы отсутствуете в базе данных работников мэрии. Обратитесь к начальству.`);
+                };
+            });
+        };
     };
 
-    if(comand(message).com == `911` && !mb && !mg ||
-    comand(message).com == `511` && !mb && !mg){
-        message.delete();
-        let role = '851059230710693911';
-        let cops = guild.members.cache.filter(member => haveRole(member, role));
-        for(let cop of cops){
-            cop[1].send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${comand(message).arg}`)
-        }
+    if(comand(message).com == `911` && !mb && !mg){
+        if(comand(message).sarg[0] == '1'){
+            message.delete();
+            let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_fire));
+            for(let worker of staff){
+                worker[1].send(`${message.member.nickname} вызывал(а) пожарную службу с таким текстом: ${comand(message).arg}`)
+            }
+        }else if(comand(message).sarg[0] == '2'){
+            message.delete();
+            let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_police));
+            for(let worker of staff){
+                worker[1].send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${comand(message).arg}`)
+            }
+        }else if(comand(message).sarg[0] == '3'){
+            message.delete();
+            let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_med));
+            for(let worker of staff){
+                worker[1].send(`${message.member.nickname} вызывал(а) медицинскую службу с таким текстом: ${comand(message).arg}`)
+            }
+        }else{
+            message.author.send(```Для вызова служб по номеру 911 используйте дополнительный код службы:
+> 1 – пожарная служба.
+> 2 – полиция.
+> 3 – медицинская служба.
+            ```);
+        };
     };
 
     if(comand(message).com == `send` && !mb && !mg && (haveRole(message.member, `833778527609552918`) || head)){	
