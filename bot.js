@@ -683,7 +683,7 @@ client.on('message', message => {
 
     if(comand(message).com == `911` && !mb && !mg){
         message.delete();
-        console.log(comand(message,1));
+        console.log(comand(message,1).carg);
         if(comand(message).sarg[0] == '1'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_fire));
             for(let worker of staff){
