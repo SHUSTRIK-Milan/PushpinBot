@@ -683,20 +683,21 @@ client.on('message', message => {
 
     if(comand(message).com == `911` && !mb && !mg){
         message.delete();
+        console.log(comand(message,1));
         if(comand(message).sarg[0] == '1'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_fire));
             for(let worker of staff){
-                worker[1].send(`${message.member.nickname} вызывал(а) пожарную службу с таким текстом: ${comand(message,0).сarg}`)
+                worker[1].send(`${message.member.nickname} вызывал(а) пожарную службу с таким текстом: ${comand(message,1).сarg}`)
             }
         }else if(comand(message).sarg[0] == '2'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_police));
             for(let worker of staff){
-                worker[1].send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${comand(message,0).сarg}`)
+                worker[1].send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${comand(message,1).сarg}`)
             }
         }else if(comand(message).sarg[0] == '3'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_med));
             for(let worker of staff){
-                worker[1].send(`${message.member.nickname} вызывал(а) медицинскую службу с таким текстом: ${comand(message,0).сarg}`)
+                worker[1].send(`${message.member.nickname} вызывал(а) медицинскую службу с таким текстом: ${comand(message,1).сarg}`)
             }
         }else{
             message.author.send(`Для вызова служб по номеру 911 используйте дополнительный код службы:
