@@ -521,12 +521,12 @@ client.on('message', message => {
         message.delete();
         let homestreet = Config.streets.find(st => `🏬 «${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase());
         let argsStreet = guild.channels.cache.get(comand(message,1).carg.slice(2).slice(0,-1));
+        console.log(argsStreet.name);
         if(argsStreet != undefined) argsStreet = argsStreet.name.slice(3).slice(0,-1).toLowerCase();
         if(argsStreet == undefined) argsStreet = comand(message,1).carg;
 
         if (comand(message).sarg[0] == 'на' && message.channel.name == 'улица'){
-            let walkway = homestreet.radius.find(st => st.toLowerCase() == argsStreet);
-            if(walkway == undefined) walkway = homestreet.radius.find(st => st.toLowerCase() == argsStreet.toLowerCase());
+            let walkway = homestreet.radius.find(st => st.toLowerCase() == argsStreet.toLowerCase());
             console.log(argsStreet);
             console.log(walkway)
 
