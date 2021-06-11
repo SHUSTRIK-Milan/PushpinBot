@@ -486,7 +486,7 @@ client.on('message', message => {
 
     if (comand(message).com == 'осмотреться' && !mb && !mg){
         message.delete();
-        let homestreet = Config.streets.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase());
+        let homestreet = Config.streets.find(st => `🏬 «${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase());
 
         if(message.channel.name == "улица"){   
             let objects = [];
