@@ -575,6 +575,7 @@ client.on('message', message => {
             minimumSignificantDigits: 1
         })
         GetStats().then(stats => message.author.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))} 💰`));
+        sendLog(message,'Общее','Узнал свой баланс.','Успешно',`Вывод: Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))} 💰`)
     }
 
     if(comand(message).com == `заплатить` && !mb && !mg ||
@@ -598,15 +599,21 @@ client.on('message', message => {
             let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,'')).user;
             
             if(user == undefined){return}
-            if(gUser == undefined){ message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`); return};
-            if(isNaN(parseInt(money))){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); return};
-            if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); return};
+            if(gUser == undefined){
+                message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
+                sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
+                return;
+            };
+            if(isNaN(parseInt(money))){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); return};
+            if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: У вас недостаточно средств.`); return};
 
             EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
             setTimeout(() => EditStats(gUser.id,`money`,`${parseInt(gUser.money) + parseInt(money)}`), 250);
             
             user_user.send(`> Вы дали ${gUser_user.username}: ${moneyT.format(parseInt(money))}`);
             gUser_user.send(`> ${user_user.username} дал вам: ${moneyT.format(parseInt(money))}`);
+
+            sendLog(message,'Общее','Передал деньги.','Успешно',`Вывод: Вы дали ${gUser_user.username}: ${moneyT.format(parseInt(money))}`)
             return;
         };
         pay(comand(message));
