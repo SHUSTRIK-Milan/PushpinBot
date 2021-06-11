@@ -682,20 +682,18 @@ client.on('message', message => {
     };
 
     if(comand(message).com == `911` && !mb && !mg){
+        message.delete();
         if(comand(message).sarg[0] == '1'){
-            message.delete();
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_fire));
             for(let worker of staff){
                 worker[1].send(`${message.member.nickname} вызывал(а) пожарную службу с таким текстом: ${comand(message).arg}`)
             }
         }else if(comand(message).sarg[0] == '2'){
-            message.delete();
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_police));
             for(let worker of staff){
                 worker[1].send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${comand(message).arg}`)
             }
         }else if(comand(message).sarg[0] == '3'){
-            message.delete();
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_med));
             for(let worker of staff){
                 worker[1].send(`${message.member.nickname} вызывал(а) медицинскую службу с таким текстом: ${comand(message).arg}`)
