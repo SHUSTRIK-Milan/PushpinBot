@@ -636,7 +636,7 @@ client.on('message', message => {
                 if(nMsg.find(member => member == message.member.id) != null){
                     giveForm(message.member, Config.dopBDids.role_police);
                 }else{
-                    message.author.send(`Вы отсутствуете в базе данных полицейских. Обратитесь к капитану полиции.`);
+                    message.author.send(`**Вы отсутствуете в базе данных полицейских** 🗂️ Обратитесь к капитану полиции.`);
                 };
             });
         };
@@ -649,7 +649,7 @@ client.on('message', message => {
                 if(nMsg.find(member => member == message.member.id) != null){
                     giveForm(message.member, Config.dopBDids.role_med);
                 }else{
-                    message.author.send(`Вы отсутствуете в базе данных медицинских работников. Обратитесь к начальству.`);
+                    message.author.send(`**Вы отсутствуете в базе данных медицинских работников** 🗂️ Обратитесь к начальству.`);
                 };
             });
         };
@@ -662,7 +662,7 @@ client.on('message', message => {
                 if(nMsg.find(member => member == message.member.id) != null){
                     giveForm(message.member, Config.dopBDids.role_fire);
                 }else{
-                    message.author.send(`Вы отсутствуете в базе данных пожарных. Обратитесь к начальству.`);
+                    message.author.send(`**Вы отсутствуете в базе данных пожарных** 🗂️ Обратитесь к начальству.`);
                 };
             });
         };
@@ -675,7 +675,7 @@ client.on('message', message => {
                 if(nMsg.find(member => member == message.member.id) != null){
                     giveForm(message.member, Config.dopBDids.role_mayor);
                 }else{
-                    message.author.send(`Вы отсутствуете в базе данных работников мэрии. Обратитесь к начальству.`);
+                    message.author.send(`**Вы отсутствуете в базе данных работников мэрии** 🗂️ Обратитесь к начальству.`);
                 };
             });
         };
@@ -686,20 +686,20 @@ client.on('message', message => {
         if(comand(message).sarg[0] == '1'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_fire));
             for(let worker of staff){
-                worker[1].send(`${message.member.nickname} вызывал(а) пожарную службу с таким текстом: ${comand(message,1).carg}`)
+                worker[1].send(`**${message.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${comand(message,1).carg}`)
             }
         }else if(comand(message).sarg[0] == '2'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_police));
             for(let worker of staff){
-                worker[1].send(`${message.member.nickname} вызывал(а) полицию с таким текстом: ${comand(message,1).carg}`)
+                worker[1].send(`**${message.member.nickname} вызывал(а) полицию** 🚔\n> ${comand(message,1).carg}`)
             }
         }else if(comand(message).sarg[0] == '3'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_med));
             for(let worker of staff){
-                worker[1].send(`${message.member.nickname} вызывал(а) медицинскую службу с таким текстом: ${comand(message,1).carg}`)
+                worker[1].send(`**${message.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${comand(message,1).carg}`)
             }
         }else{
-            message.author.send(`Для вызова служб по номеру 911 используйте дополнительный код службы:
+            message.author.send(`**Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️
 > 1 – пожарная служба.
 > 2 – полиция.
 > 3 – медицинская служба.
