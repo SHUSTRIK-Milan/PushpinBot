@@ -574,7 +574,7 @@ client.on('message', message => {
             currency: "USD",
             minimumSignificantDigits: 1
         })
-        GetStats().then(stats => message.author.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))}`));
+        GetStats().then(stats => message.author.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))} 💰`));
     }
 
     if(comand(message).com == `заплатить` && !mb && !mg ||
@@ -598,8 +598,8 @@ client.on('message', message => {
             let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,'')).user;
             
             if(user == undefined){return}
-            if(gUser == undefined){ message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства.`); return};
-            if(isNaN(parseInt(money))){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся.`); return};
+            if(gUser == undefined){ message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`); return};
+            if(isNaN(parseInt(money))){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); return};
             if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); return};
 
             EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
