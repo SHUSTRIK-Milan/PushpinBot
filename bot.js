@@ -519,9 +519,9 @@ client.on('message', message => {
 
     if (comand(message).com == 'идти' && !mb && !mg){
         message.delete();
-        let homestreet = Config.streets.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase());
+        let homestreet = Config.streets.find(st => `🏬 «${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase());
         let argsStreet = guild.channels.cache.get(comand(message,1).carg.slice(2).slice(0,-1));
-        if(argsStreet != undefined) argsStreet = argsStreet.name.slice(1).slice(0,-1).toLowerCase();
+        if(argsStreet != undefined) argsStreet = argsStreet.name.slice(3).slice(0,-1).toLowerCase();
         if(argsStreet == undefined) argsStreet = comand(message,1).carg;
 
         if (comand(message).sarg[0] == 'на' && message.channel.name == 'улица'){
@@ -531,9 +531,9 @@ client.on('message', message => {
             console.log(walkway)
 
             if (walkway != null && message.channel.parent.permissionOverwrites.get(message.author.id) != null){
-                let cat = guild.channels.cache.find(cat => cat.name.toLowerCase() == `«${walkway}»`.toLowerCase());
+                let cat = guild.channels.cache.find(cat => cat.name.toLowerCase() == `🏬 «${walkway}»`.toLowerCase());
                 if (cat.type == 'category'){
-                    guild.channels.cache.find(cat => cat.name.toLowerCase() == `«${walkway}»`.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
+                    guild.channels.cache.find(cat => cat.name.toLowerCase() == `🏬 «${walkway}»`.toLowerCase()).updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
                     message.channel.parent.permissionOverwrites.get(message.author.id).delete();
                     sendLog(message,`Общее`,`Пошел.`,`Успешно`,`Перешел с ${homestreet.name} на ${walkway}.`);
                 };
