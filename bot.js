@@ -575,6 +575,7 @@ client.on('message', message => {
             minimumSignificantDigits: 1
         })
         GetStats().then(stats => {
+            if (stats.length == 0){return};
             message.author.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))} 💰`);
             sendLog(message,'Общее','Узнал свой баланс.','Успешно',`Вывод: Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))} 💰`);
         });
