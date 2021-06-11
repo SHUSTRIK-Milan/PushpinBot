@@ -255,6 +255,71 @@ module.exports.streets = [
                 id: '001',
                 addCondition: ''
             },
+            {
+                name: 'Либерти 1',
+                id: '002',
+                addCondition: ''
+            },
+            {
+                name: 'Либерти 1, 1 этаж',
+                id: '003',
+                addCondition: ''
+            },
+            {
+                name: 'Либерти 1, 1 этаж, 1 квартира',
+                id: '004',
+                addCondition: ''
+            },
+            {
+                name: 'Либерти 1, 1 этаж, 2 квартира',
+                id: '005',
+                addCondition: ''
+            },
+            {
+                name: 'Либерти 1, 1 этаж, 3 квартира',
+                id: '006',
+                addCondition: ''
+            },
+            {
+                name: 'Либерти 2',
+                id: '007',
+                addCondition: ''
+            },
+            {
+                name: 'Либерти 2, 1 этаж',
+                id: '008',
+                addCondition: ''
+            },
+            {
+                name: 'Либерти 2, 1 этаж, 1 квартира',
+                id: '009',
+                addCondition: ''
+            },
+            {
+                name: 'Либерти 2, 1 этаж, 2 квартира',
+                id: '010',
+                addCondition: ''
+            },
+            {
+                name: 'Либерти 2, 1 этаж, 3 квартира',
+                id: '011',
+                addCondition: ''
+            },
+            {
+                name: 'Либерти 3, баскетбольная площадка',
+                id: '012',
+                addCondition: ''
+            },
+            {
+                name: 'Либерти 4, 1 комната',
+                id: '013',
+                addCondition: ''
+            },
+            {
+                name: 'Либерти 4, 2 комната',
+                id: '014',
+                addCondition: 'Либерти 4, 1 комната'
+            },
         ]
     },
     {
