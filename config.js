@@ -82,7 +82,7 @@ module.exports.streets = [
                 addCondition: ''
             },
             {
-                name: 'Черчель-Стрит 1-2 комната',
+                name: 'Черчель-Стрит 1, 2 комната',
                 id: '006',
                 addCondition: 'Черчель-Стрит 1'
             },
@@ -92,7 +92,7 @@ module.exports.streets = [
                 addCondition: ''
             },
             {
-                name: 'Черчель-Стрит 2-2 комната',
+                name: 'Черчель-Стрит 2, 2 комната',
                 id: '008',
                 addCondition: 'Черчель-Стрит 2'
             },
@@ -102,7 +102,7 @@ module.exports.streets = [
                 addCondition: ''
             },
             {
-                name: 'Черчель-Стрит 3-2 комната',
+                name: 'Черчель-Стрит 3, 2 комната',
                 id: '010',
                 addCondition: 'Черчель-Стрит 3'
             },
@@ -112,7 +112,7 @@ module.exports.streets = [
                 addCondition: ''
             },
             {
-                name: 'Черчель-Стрит 4-2 комната',
+                name: 'Черчель-Стрит 4, 2 комната',
                 id: '012',
                 addCondition: 'Черчель-Стрит 4'
             },
