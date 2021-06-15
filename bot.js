@@ -486,7 +486,7 @@ client.on('message', message => {
 
     if (comand(message).com == 'осмотреться' && !mb && !mg){
         message.delete();
-        let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(2));
+        let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
         console.log(homePos);
         console.log(message.channel.parent.name.toLowerCase().slice(2));
 
@@ -517,7 +517,7 @@ client.on('message', message => {
 
         if (message.channel.parent.permissionOverwrites.get(message.author.id) != null){ message.author.send('> Вы находитесь в админ-моде.');
         }else if (walkway != null){
-            let cat = guild.channels.cache.find(cat => cat.name.toLowerCase().slice(2) == `«${walkway}»`.toLowerCase());
+            let cat = guild.channels.cache.find(cat => cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
             //ищем каналы чье имя будет равно имени объекта пути
             if (cat.type == 'category'){
             //проверяем канал на тип категории
