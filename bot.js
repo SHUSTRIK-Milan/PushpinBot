@@ -443,6 +443,7 @@ async function Stats(message){
 Все прошло успешно! Теперь вы свободно можете играть на проекте PushPin!
             `)
             AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfile)
+            console.log(message.member);
 
             giveRole(message.member,`854315001543786507`); //citizen
             giveRole(message.member,`851059555499638825`); //rp-role
@@ -451,7 +452,7 @@ async function Stats(message){
             removeRole(message.member,`829423238169755658`); //ooc
 
             sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
-            guild.channels.cache.get(`837644857098108948`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
+            guild.channels.cache.get(`849709660579954748`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
         }else if (steamProfileInfo.nickname != steamNick){
             message.author.send(`
 > **Измените имя** 📝
