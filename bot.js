@@ -520,8 +520,8 @@ client.on('message', message => {
             //ищем каналы чье имя будет равно имени объекта пути
             if (cat.type == 'category'){
             //проверяем канал на тип категории
-                if (cat.permissionOverwrites.get(message.author.id) != null){ message.author.send('> Вы находитесь в админ-моде.'); return};
-                console.log(cat.permissionOverwrites.get(message.author.id).allow);
+                //if (cat.permissionOverwrites.get(message.author.id) != null){ message.author.send('> Вы находитесь в админ-моде.'); return};
+                console.log(cat.permissionOverwrites.get(message.author.id));
                 cat.updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
                 //даем право читать сообщения в категории.
                 message.channel.parent.permissionOverwrites.get(message.author.id).delete();
