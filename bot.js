@@ -680,8 +680,7 @@ client.on('message', message => {
 
     if(comand(message).com == `@` && !mb && !mg){
         message.delete();
-        let staff = guild.members.cache.filter(member => haveRole(member, '830061387849662515'));  //&& member.presence.status != 'offline'
-        console.log(staff);
+        let staff = guild.members.cache.filter(member => haveRole(member, '830061387849662515') && member.presence.status != 'offline');
         if(staff == []){
             message.author.send(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`);
             guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${message.author.tag} написал жалобу, но администраторов нет в сети:**`, {embed: {
@@ -698,6 +697,7 @@ client.on('message', message => {
         }else{
             message.author.send(`**Вы вызывали администратора** 👥\n> ${comand(message).arg}`);
             for(let worker of staff){
+                console.log(worker);
                 worker[1].send(`**${message.member.nickname} вызывал(а) администратора** 👥\n> ${comand(message).arg}`)
             }
         }
