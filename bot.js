@@ -680,7 +680,7 @@ client.on('message', message => {
 
     if(comand(message).com == `@` && !mb && !mg){
         message.delete();
-        let staff = guild.members.cache.filter(member => haveRole(member, '830061387849662515') && member.presence.status != 'offline');
+        let staff = guild.members.cache.filter(member => haveRole(member, '830061387849662515'));  //&& member.presence.status != 'offline'
         console.log(staff);
         if(staff == []){
             message.author.send(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`);
