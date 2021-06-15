@@ -515,12 +515,12 @@ client.on('message', message => {
         console.log(argsObj);
         console.log(walkway)
 
-        }else if (walkway != null){
+        if (walkway != null){
             let cat = guild.channels.cache.find(cat => cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
             //ищем каналы чье имя будет равно имени объекта пути
             if (cat.type == 'category'){
             //проверяем канал на тип категории
-                if (cat.permissionOverwrites.get(message.author.id) != null){ message.author.send('> Вы находитесь в админ-моде.');
+                if (cat.permissionOverwrites.get(message.author.id) != null){ message.author.send('> Вы находитесь в админ-моде.'); return};
                 cat.updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
                 //даем право читать сообщения в категории.
                 message.channel.parent.permissionOverwrites.get(message.author.id).delete();
