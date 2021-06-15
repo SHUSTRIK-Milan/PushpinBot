@@ -631,7 +631,7 @@ client.on('message', message => {
         message.delete();
         if(comand(message).sarg[0] == '1'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.fire[2]));
-            if(staff == []){
+            if(staff.size == 0){
                 message.author.send(`**На данный момент пожарные на службе отсутствуют** 🔥`);
             }else{
                 message.author.send(`**Вы вызывали пожарную службу** 🔥\n> ${comand(message,1).carg}`);
@@ -641,7 +641,7 @@ client.on('message', message => {
             }
         }else if(comand(message).sarg[0] == '2'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.police[2]));
-            if(staff == []){
+            if(staff.size == 0){
                 message.author.send(`**На данный момент полицейские на службе отсутствуют** 🚔`);
             }else{
                 message.author.send(`**Вы вызывали полицию** 🚔\n> ${comand(message,1).carg}`);
@@ -651,7 +651,7 @@ client.on('message', message => {
             }
         }else if(comand(message).sarg[0] == '3'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.med[2]));
-            if(staff == []){
+            if(staff.size == 0){
                 message.author.send(`**На данный момент медики на службе отсутствуют** ⚕️`);
             }else{
                 message.author.send(`**Вы вызывали медицинскую службу** ⚕️\n> ${comand(message,1).carg}`);
