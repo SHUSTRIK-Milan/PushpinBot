@@ -508,7 +508,7 @@ client.on('message', message => {
         //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
         let argsObj = guild.channels.cache.get(comand(message,1).carg.slice(2).slice(0,-1));
         if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase();
-        if(argsObj == undefined) argsObj = comand(message,1).carg;
+        if(argsObj == undefined) argsObj = comand(message).arg;
         //проверяю не канал ли аргумент, если нет, то просто беру написанное.
         let walkway = homePos.radius.find(obj => obj.toLowerCase() == argsObj.toLowerCase());
         //ищу среди радиуса домашнего объекта тот объект, который был указан в аргументе.
