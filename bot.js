@@ -638,6 +638,7 @@ client.on('message', message => {
                 for(let worker of staff){
                     worker[1].send(`**${message.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${comand(message,1).carg}`)
                 }
+            }
         }else if(comand(message).sarg[0] == '2'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_police));
             if(staff == []){
