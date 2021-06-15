@@ -597,13 +597,9 @@ client.on('message', message => {
         function giveForm(member, role){
             if(haveRole(member, role)){
                 removeRole(member, role);
-                removeRole(member, '851059555499638825');
-                removeRole(member, '836183994646921248');
             }
             if(!haveRole(member, role)){
                 giveRole(member, role);
-                giveRole(member, '851059555499638825');
-                giveRole(member, '836183994646921248');
             }
         };
 
