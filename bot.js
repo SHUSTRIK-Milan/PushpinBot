@@ -443,7 +443,13 @@ async function Stats(message){
 Все прошло успешно! Теперь вы свободно можете играть на проекте PushPin!
             `)
             AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfile)
-            guild.members.fetch(message.author.id).then(member => {removeRole(member,`829423238169755658`),giveRole(member,`836269090996879387`)});
+
+            giveRole(message.member,`854315001543786507`); //citizen
+            giveRole(message.member,`851059555499638825`); //rp-role
+            giveRole(message.member,`836183994646921248`); //pushpin
+            giveRole(message.member,`836269090996879387`); //user
+            removeRole(message.member,`829423238169755658`); //ooc
+
             sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
             guild.channels.cache.get(`837644857098108948`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
         }else if (steamProfileInfo.nickname != steamNick){
