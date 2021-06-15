@@ -682,7 +682,7 @@ client.on('message', message => {
         message.delete();
         let staff = guild.members.cache.filter(member => haveRole(member, '830061387849662515') && member.presence.status != 'offline');
         console.log(staff.size);
-        if(staff == {}){
+        if(staff.size == 0){
             message.author.send(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`);
             guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${message.author.tag} написал жалобу, но администраторов нет в сети:**`, {embed: {
                     color: color,
