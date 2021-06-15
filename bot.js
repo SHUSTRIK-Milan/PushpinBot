@@ -575,7 +575,7 @@ client.on('message', message => {
             if (user.id == gUser.id){return};
             let money = com.sarg[1];
 
-            let user_user = message.author.member;
+            let user_user = message.member;
             let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,''));
             
             if(user == undefined){return}
