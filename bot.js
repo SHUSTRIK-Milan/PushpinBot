@@ -575,10 +575,11 @@ client.on('message', message => {
             if (user.id == gUser.id){return};
             let money = com.sarg[1];
 
-            let user_user = message.author;
-            let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,'')).user;
+            let user_user = message.author.member;
+            let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,''));
             
             if(user == undefined){return}
+            if(user == gUser_user){return}
             if(gUser == undefined){
                 message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
                 sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
@@ -590,10 +591,10 @@ client.on('message', message => {
             EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
             setTimeout(() => EditStats(gUser.id,`money`,`${parseInt(gUser.money) + parseInt(money)}`), 250);
             
-            user_user.send(`> Вы дали ${gUser_user.username}: ${moneyT.format(parseInt(money))}`);
-            gUser_user.send(`> ${user_user.username} дал вам: ${moneyT.format(parseInt(money))}`);
+            user_user.send(`> Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`);
+            gUser_user.send(`> ${user_user.nickname} дал вам: ${moneyT.format(parseInt(money))}`);
 
-            sendLog(message,'Общее','Передал деньги.','Успешно',`Вывод: Вы дали ${gUser_user.username}: ${moneyT.format(parseInt(money))}`)
+            sendLog(message,'Общее','Передал деньги.','Успешно',`Вывод: Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`)
             return;
         };
         pay(comand(message));
