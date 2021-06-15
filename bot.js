@@ -630,7 +630,7 @@ client.on('message', message => {
     if(comand(message).com == `911` && !mb && !mg){
         message.delete();
         if(comand(message).sarg[0] == '1'){
-            let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_fire));
+            let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.fire[2]));
             if(staff == []){
                 message.author.send(`**На данный момент пожарные на службе отсутствуют** 🔥`);
             }else{
@@ -640,7 +640,7 @@ client.on('message', message => {
                 }
             }
         }else if(comand(message).sarg[0] == '2'){
-            let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_police));
+            let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.police[2]));
             if(staff == []){
                 message.author.send(`**На данный момент полицейские на службе отсутствуют** 🚔`);
             }else{
@@ -650,7 +650,7 @@ client.on('message', message => {
                 }
             }
         }else if(comand(message).sarg[0] == '3'){
-            let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_med));
+            let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.med[2]));
             if(staff == []){
                 message.author.send(`**На данный момент медики на службе отсутствуют** ⚕️`);
             }else{
