@@ -630,22 +630,33 @@ client.on('message', message => {
     if(comand(message).com == `911` && !mb && !mg){
         message.delete();
         if(comand(message).sarg[0] == '1'){
-            message.author.send(`**Вы вызывали пожарную службу** 🔥\n> ${comand(message,1).carg}`);
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_fire));
-            for(let worker of staff){
-                worker[1].send(`**${message.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${comand(message,1).carg}`)
-            }
+            if(staff == []){
+                message.author.send(`**На данный момент пожарные на службе отсутствуют** 🔥`);
+            }else{
+                message.author.send(`**Вы вызывали пожарную службу** 🔥\n> ${comand(message,1).carg}`);
+                for(let worker of staff){
+                    worker[1].send(`**${message.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${comand(message,1).carg}`)
+                }
         }else if(comand(message).sarg[0] == '2'){
-            message.author.send(`**Вы вызывали полицию** 🚔\n> ${comand(message,1).carg}`);
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_police));
-            for(let worker of staff){
-                worker[1].send(`**${message.member.nickname} вызывал(а) полицию** 🚔\n> ${comand(message,1).carg}`)
+            if(staff == []){
+                message.author.send(`**На данный момент полицейские на службе отсутствуют** 🚔`);
+            }else{
+                message.author.send(`**Вы вызывали полицию** 🚔\n> ${comand(message,1).carg}`);
+                for(let worker of staff){
+                    worker[1].send(`**${message.member.nickname} вызывал(а) полицию** 🚔\n> ${comand(message,1).carg}`)
+                }
             }
         }else if(comand(message).sarg[0] == '3'){
-            message.author.send(`**Вы вызывали медицинскую службу** ⚕️\n> ${comand(message,1).carg}`);
             let staff = guild.members.cache.filter(member => haveRole(member, Config.dopBDids.role_med));
-            for(let worker of staff){
-                worker[1].send(`**${message.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${comand(message,1).carg}`)
+            if(staff == []){
+                message.author.send(`**На данный момент медики на службе отсутствуют** ⚕️`);
+            }else{
+                message.author.send(`**Вы вызывали медицинскую службу** ⚕️\n> ${comand(message,1).carg}`);
+                for(let worker of staff){
+                    worker[1].send(`**${message.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${comand(message,1).carg}`)
+                }
             }
         }else{
             message.author.send(`**Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️
@@ -657,11 +668,36 @@ client.on('message', message => {
     };
 
     if(comand(message).com == 'admin' && !mb && !mg){
+        message.delete();
         if(haveRole(message.member, '835630198199681026')){
             removeRole(message.member, '835630198199681026');
         }
         if(!haveRole(message.member, '835630198199681026')){
             giveRole(message.member, '835630198199681026');
+        }
+    };
+
+    if(comand(message).com == `@` && !mb && !mg){
+        message.delete();
+        let staff = guild.members.cache.filter(member => haveRole(member, '830061387849662515') && member.presence.status != 'offline');
+        if(staff == []){
+            message.author.send(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`);
+            guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${message.author.tag} написал жалобу, но администраторов нет в сети:**`, {embed: {
+                    color: color,
+                    thumbnail: {
+                        url: message.author.displayAvatarURL()
+                    },
+                    fields: [{
+                        name: `Текст жалобы:`,
+                        value: `${comand(message).arg}`
+                    }]
+                }
+            });
+        }else{
+            message.author.send(`**Вы вызывали администратора** 👥\n> ${comand(message).arg}`);
+            for(let worker of staff){
+                worker[1].send(`**${message.member.nickname} вызывал(а) администратора** 👥\n> ${comand(message).arg}`)
+            }
         }
     };
 
