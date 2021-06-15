@@ -521,7 +521,7 @@ client.on('message', message => {
             if (cat.type == 'category'){
             //проверяем канал на тип категории
                 if (cat.permissionOverwrites.get(message.author.id) != null){ message.author.send('> Вы находитесь в админ-моде.'); return};
-                console.log(cat.permissionOverwrites.get(message.author.id));
+                console.log(cat.permissionOverwrites.get(message.author.id).allow);
                 cat.updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
                 //даем право читать сообщения в категории.
                 message.channel.parent.permissionOverwrites.get(message.author.id).delete();
