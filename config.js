@@ -19,6 +19,7 @@ module.exports.channelsID = {
     serverMsg: `838002676709064754`,
     logs: `838002959610675221`,
     bd: `838002825765322792`,
+    admin_claim: `854322030714421258`
 };
 
 module.exports.BLChannelsID = {
