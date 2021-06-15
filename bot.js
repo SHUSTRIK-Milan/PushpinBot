@@ -487,6 +487,7 @@ client.on('message', message => {
     if (comand(message).com == 'осмотреться' && !mb && !mg){
         message.delete();
         let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(2));
+        console.log(homePos);
 
         if (homePos != null && objects.join(', ') != ''){
             let objects = [];
