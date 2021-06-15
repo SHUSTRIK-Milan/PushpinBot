@@ -506,7 +506,7 @@ client.on('message', message => {
         let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
         console.log(homePos);
         //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
-        let argsObj = guild.channels.cache.get(comand(message,1).carg.slice(2).slice(0,-1));
+        let argsObj = guild.channels.cache.get(comand(message).arg.slice(2).slice(0,-1));
         if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase();
         if(argsObj == undefined) argsObj = comand(message).arg;
         //проверяю не канал ли аргумент, если нет, то просто беру написанное.
@@ -520,8 +520,7 @@ client.on('message', message => {
             //ищем каналы чье имя будет равно имени объекта пути
             if (cat.type == 'category'){
             //проверяем канал на тип категории
-                //if (cat.permissionOverwrites.get(message.author.id) != null){ message.author.send('> Вы находитесь в админ-моде.'); return};
-                console.log(cat.permissionOverwrites.get(message.author.id));
+                if (haveRole(message.member,'835630198199681026')){ message.author.send('> Вы находитесь в админ-моде.'); return};
                 cat.updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
                 //даем право читать сообщения в категории.
                 message.channel.parent.permissionOverwrites.get(message.author.id).delete();
