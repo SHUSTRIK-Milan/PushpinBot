@@ -670,7 +670,7 @@ client.on('message', message => {
         };
     };
 
-    if(comand(message).com == 'admin' && !mb && !mg){
+    if(comand(message).com == 'admin' && !mb && !mg && haveRole(message.member, '830061387849662515')){
         message.delete();
         if(haveRole(message.member, '835630198199681026')){
             removeRole(message.member, '835630198199681026');
@@ -680,7 +680,7 @@ client.on('message', message => {
         }
     };
 
-    if(comand(message).com == `@` && !mb && !mg){
+    if(comand(message).com == `@` && !mb && !mg && !haveRole(message.member, '830061387849662515')){
         message.delete();
         let staff = guild.members.cache.filter(member => haveRole(member, '830061387849662515') && member.presence.status != 'offline');
         console.log(staff.size);
