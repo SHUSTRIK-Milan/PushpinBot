@@ -697,8 +697,8 @@ client.on('message', message => {
         }else{
             message.author.send(`**Вы вызывали администратора** 👥\n> ${comand(message).arg}`);
             for(let worker of staff){
-                console.log(worker);
-                worker[1].send(`**${message.member.nickname} вызывал(а) администратора** 👥\n> ${comand(message).arg}`)
+                console.log(worker[1].presence.status);
+                //worker[1].send(`**${message.member.nickname} вызывал(а) администратора** 👥\n> ${comand(message).arg}`)
             }
         }
     };
