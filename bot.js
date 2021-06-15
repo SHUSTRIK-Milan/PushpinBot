@@ -536,10 +536,10 @@ client.on('message', message => {
                 sendLog(message,`Общее`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
             };
         }else if (walkway == null && Config.objects.find(st => st.name.toLowerCase() == argsObj.toLowerCase()) != null){
-            message.author.send(`${argsObj} не является соседней улицей с ${homePos.name}.`);
+            message.author.send(`${argsObj} не является соседним объектом с ${homePos.name}.`);
             sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
         }else{
-            message.author.send(`Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
+            message.author.send(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`);
             sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
         };
     };
