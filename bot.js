@@ -597,12 +597,13 @@ client.on('message', message => {
         function giveForm(member, role){
             if(haveRole(member, role)){
                 removeRole(member, role);
+                giveRole(member, '854315001543786507');
             }
             if(!haveRole(member, role)){
                 giveRole(member, role);
+                removeRole(member, '854315001543786507');
             }
         };
-
         for(let dept in Config.departments){
             if(message.channel.id == Config.departments[dept][0]){
                 let channel = guild.channels.cache.get(BDchnl);
@@ -647,6 +648,15 @@ client.on('message', message => {
 > 3 – медицинская служба.
             `);
         };
+    };
+
+    if(comand(message).com == 'admin' && !mb && !mg){
+        if(haveRole(message.member, '835630198199681026')){
+            removeRole(message.member, '835630198199681026');
+        }
+        if(!haveRole(message.member, '835630198199681026')){
+            giveRole(message.member, '835630198199681026');
+        }
     };
 
     if(comand(message).com == `send` && !mb && !mg && (haveRole(message.member, `833778527609552918`) || head)){	
