@@ -486,34 +486,17 @@ client.on('message', message => {
 
     if (comand(message).com == 'осмотреться' && !mb && !mg){
         message.delete();
-        let homePos = Config.objects.find(st => `🏬 «${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase());
+        let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(2));
 
-        if(message.channel.name == "улица"){   
+        if (homePos != null && objects.join(', ') != ''){
             let objects = [];
+            for (let room of homePos.rooms) objects.push(room);
 
-            for (let pobj of homePos.objects) if (pobj.addCondition == '') objects.push(pobj.name);
-
-            if (homePos != null && objects.join(', ') != ''){
-                message.author.send(`Соседние улицы с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие объекты:\n> ${objects.join(';\n> ')}.`);
-                sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homePos.name}: ${homePos.radius.join(', ')}.\nБлижайшие объекты: ${objects.join(', ')}.`);
-            }else{
-                message.author.send(`Соседние улицы с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие объекты отсутствуют.`);
-                sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние улицы с ${homePos.name}: ${homePos.radius.join(', ')}.\nБлижайшие объекты отсутствуют.`);
-            };
-        }else if(homePos.objects.filter(ob => ob.addCondition.toLowerCase() == message.channel.name.toLowerCase()) != null){
-            let objects = [];
-            for (let pobj of homePos.objects) if (pobj.addCondition.toLowerCase() == message.channel.name.toLowerCase()) objects.push(pobj.name);
-
-            if (homePos != null && objects.join(', ') != ''){
-                message.author.send(`Ближайшие помещения:\n> ${objects.join(';\n> ')}.\nПуть для выхода: Улица.`);
-                sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения: ${objects.join(', ')}.`);
-            }else{
-                message.author.send(`Ближайшие помещения отсутствуют.\nПуть для выхода: Улица.`);
-                sendLog(message,`Общее`,`Осмотрелся в объекте.`,`Успешно`,`Вывод: Ближайшие помещения отсутствуют.`);
-            };
+            message.author.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
+            sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
         }else{
-            message.author.send(`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
-            sendLog(message,`Общее`,`Попытался осмотреться.`,`Ошибка`,`Вызов команды \`осмотреться\` должны выполнятся на улицах или внутри помещений.`);
+            message.author.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
+            sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
         };
     };
 
