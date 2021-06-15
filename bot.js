@@ -488,6 +488,7 @@ client.on('message', message => {
         message.delete();
         let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(2));
         console.log(homePos);
+        console.log(message.channel.parent.name.toLowerCase().slice(2));
 
         if (homePos != null && objects.join(', ') != ''){
             let objects = [];
