@@ -488,9 +488,9 @@ client.on('message', message => {
         message.delete();
         let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
         console.log(homePos);
-        
+
         let objects = [];
-        for (let room of homePos.rooms) objects.push(room);
+        for (let room of homePos.rooms) objects.push(room.slice(0,1).toUpperCase()+room.slice(1));
 
         if (homePos != null && objects.join(', ') != ''){
             message.author.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
@@ -503,7 +503,7 @@ client.on('message', message => {
 
     if (comand(message).com == 'идти' && !mb && !mg){
         message.delete();
-        let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(2));
+        let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
         console.log(homePos);
         //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
         let argsObj = guild.channels.cache.get(comand(message,1).carg.slice(2).slice(0,-1));
