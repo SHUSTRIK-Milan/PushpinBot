@@ -632,6 +632,9 @@ client.on('message', message => {
 
     if(comand(message).com == `911` && !mb && !mg){
         message.delete();
+        let object = message.channel.parent.name.slice(4).slice(0,-1);
+        let room = message.channel.name;
+        let adres = `${object.slice(0,1).toUpperCase()+object.slice(1)} -> ${room.slice(0,1).toUpperCase()+room.slice(1)}`
         if(comand(message).sarg[0] == '1'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.fire[2]));
             if(staff.size == 0){
@@ -639,7 +642,7 @@ client.on('message', message => {
             }else{
                 message.author.send(`**Вы вызывали пожарную службу** 🔥\n> ${comand(message,1).carg}`);
                 for(let worker of staff){
-                    worker[1].send(`**${message.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${comand(message,1).carg}\n**Адрес:**\n> ${message.channel.parent.name} -> <#${message.channel.id}>`)
+                    worker[1].send(`**${message.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${comand(message,1).carg}\n**Адрес:**\n> ${adres}`)
                 }
             }
         }else if(comand(message).sarg[0] == '2'){
@@ -649,7 +652,7 @@ client.on('message', message => {
             }else{
                 message.author.send(`**Вы вызывали полицию** 🚔\n> ${comand(message,1).carg}`);
                 for(let worker of staff){
-                    worker[1].send(`**${message.member.nickname} вызывал(а) полицию** 🚔\n> ${comand(message,1).carg}\n**Адрес:**\n> ${message.channel.parent.name} -> <#${message.channel.id}>`)
+                    worker[1].send(`**${message.member.nickname} вызывал(а) полицию** 🚔\n> ${comand(message,1).carg}\n**Адрес:**\n> ${adres}`)
                 }
             }
         }else if(comand(message).sarg[0] == '3'){
@@ -659,7 +662,7 @@ client.on('message', message => {
             }else{
                 message.author.send(`**Вы вызывали медицинскую службу** ⚕️\n> ${comand(message,1).carg}`);
                 for(let worker of staff){
-                    worker[1].send(`**${message.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${comand(message,1).carg}\n**Адрес:**\n> ${message.channel.parent.name} -> <#${message.channel.id}>`)
+                    worker[1].send(`**${message.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${comand(message,1).carg}\n**Адрес:**\n> ${adres}`)
                 }
             }
         }else{
