@@ -639,7 +639,7 @@ client.on('message', message => {
             }else{
                 message.author.send(`**Вы вызывали пожарную службу** 🔥\n> ${comand(message,1).carg}`);
                 for(let worker of staff){
-                    worker[1].send(`**${message.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${comand(message,1).carg}\n**Адрес:**\n> ${message.channel.name} - ${message.channel.parent.name}`)
+                    worker[1].send(`**${message.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${comand(message,1).carg}\n**Адрес:**\n> ${message.channel.parent.name} -> <#${message.channel.id}>`)
                 }
             }
         }else if(comand(message).sarg[0] == '2'){
@@ -649,7 +649,7 @@ client.on('message', message => {
             }else{
                 message.author.send(`**Вы вызывали полицию** 🚔\n> ${comand(message,1).carg}`);
                 for(let worker of staff){
-                    worker[1].send(`**${message.member.nickname} вызывал(а) полицию** 🚔\n> ${comand(message,1).carg}\n**Адрес:**\n> ${message.channel.name} - ${message.channel.parent.name}`)
+                    worker[1].send(`**${message.member.nickname} вызывал(а) полицию** 🚔\n> ${comand(message,1).carg}\n**Адрес:**\n> ${message.channel.parent.name} -> <#${message.channel.id}>`)
                 }
             }
         }else if(comand(message).sarg[0] == '3'){
@@ -659,7 +659,7 @@ client.on('message', message => {
             }else{
                 message.author.send(`**Вы вызывали медицинскую службу** ⚕️\n> ${comand(message,1).carg}`);
                 for(let worker of staff){
-                    worker[1].send(`**${message.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${comand(message,1).carg}\n**Адрес:**\n> ${message.channel.name} - ${message.channel.parent.name}`)
+                    worker[1].send(`**${message.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${comand(message,1).carg}\n**Адрес:**\n> ${message.channel.parent.name} -> <#${message.channel.id}>`)
                 }
             }
         }else{
@@ -697,14 +697,14 @@ client.on('message', message => {
                     }],
                     fields: [{
                         name: `Местоположение:`,
-                        value: `${message.channel.name} - ${message.channel.parent.name}`
+                        value: `${message.channel.parent.name} -> <#${message.channel.id}>`
                     }],
                 }
             });
         }else{
             message.author.send(`**Вы вызывали администратора** 👥\n> ${comand(message).arg}`);
             for(let worker of staff){
-                worker[1].send(`**${message.member.nickname} вызывал(а) администратора** 👥\n> ${comand(message).arg}\n**Местоположение:**\n> ${message.channel.name} - ${message.channel.parent.name}`)
+                worker[1].send(`**${message.member.nickname} вызывал(а) администратора** 👥\n> ${comand(message).arg}\n**Местоположение:**\n> ${message.channel.parent.name} -> <#${message.channel.id}>`)
             }
         }
     };
