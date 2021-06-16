@@ -634,7 +634,7 @@ client.on('message', message => {
         message.delete();
         let object = message.channel.parent.name.slice(4).slice(0,-1);
         let room = message.channel.name;
-        let adres = `${object.slice(0,1).toUpperCase()+object.slice(1)} -> ${room.slice(0,1).toUpperCase()+room.slice(1)}`
+        let adres = `${object.slice(0,1).toUpperCase()+object.slice(1)}, ${room.slice(0,1).toUpperCase()+room.slice(1)}`
         if(comand(message).sarg[0] == '1'){
             let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.fire[2]));
             if(staff.size == 0){
