@@ -707,7 +707,7 @@ client.on('message', message => {
         sendLog(message,'РП','Вызвал 911 без доп. кода.','Успешно',`Вывод: **Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️`)
     };
 
-    if(comand(message).com == 'admin' && !mb && !mg && haveRole(message.member, '830061387849662515')){
+    if(comand(message).com == 'admin' && !mb && !mg && haveRole(message.member, '830061387849662515') || head){
         message.delete();
         if(haveRole(message.member, '835630198199681026')){
             removeRole(message.member, '835630198199681026');
@@ -721,7 +721,7 @@ client.on('message', message => {
 
     if(comand(message).com == `@` && !mb && !mg && !haveRole(message.member, '830061387849662515')){
         message.delete();
-        let staff = guild.members.cache.filter(member => haveRole(member, '830061387849662515') && member.presence.status != 'offline');
+        let staff = guild.members.cache.filter(member => (haveRole(member, '830061387849662515') || head) && member.presence.status != 'offline');
         console.log(staff.size);
         if(staff.size == 0){
             message.author.send(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`);
