@@ -143,7 +143,7 @@ function sendLog(message,cat,act,status,add){
             title: `[${cat}] ${act}`,
             fields: [{
                 name: `Допольнительно:`,
-                value: `${add}\n[<#${message.channel.id}>]`
+                value: `${add}\n[<#${message.channel.id}>, https://discord.com/channels/814795850885627964/${message.channel.id}/${message.id}]`
             }],
             
             timestamp: new Date()
@@ -498,7 +498,7 @@ async function Stats(message){
 };
 
 client.on('messageDelete', (message) => {
-    sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}\nhttps://discord.com/channels/814795850885627964/${message.channel.id}/${message.id}`)
+    sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
 });
 
 client.on('message', message => {
