@@ -149,8 +149,7 @@ function sendLog(message,cat,act,status,add){
             }
         });
         return;
-    }else if(Object.values(Config.logChannels).find(chl => chl == message.channel.id) == null &&
-    Object.values(Config.channelsID).find(chl => chl == message.channel.id) == null){
+    }else if(cat == 'РП'){
         guild.channels.cache.get(Config.channelsID.rp_logs).send({embed: {
             color: color,
             author: {
@@ -517,24 +516,22 @@ client.on('message', message => {
     if (comand(message).com == 'осмотреться' && !mb && !mg){
         message.delete();
         let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
-        console.log(homePos);
 
         let objects = [];
         for (let room of homePos.rooms) objects.push(room.slice(0,1).toUpperCase()+room.slice(1));
 
         if (homePos != null && objects.join(', ') != ''){
             message.author.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
-            sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
+            sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
         }else{
             message.author.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
-            sendLog(message,`Общее`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
+            sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
         };
     };
 
     if (comand(message).com == 'идти' && !mb && !mg){
         message.delete();
         let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
-        console.log(homePos);
         //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
         let argsObj = guild.channels.cache.get(comand(message).arg.slice(2).slice(0,-1));
         if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase();
@@ -542,8 +539,6 @@ client.on('message', message => {
         //проверяю не канал ли аргумент, если нет, то просто беру написанное.
         let walkway = homePos.radius.find(obj => obj.toLowerCase() == argsObj.toLowerCase());
         //ищу среди радиуса домашнего объекта тот объект, который был указан в аргументе.
-        console.log(argsObj);
-        console.log(walkway)
 
         if (walkway != null){
             let cat = guild.channels.cache.find(cat => cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
@@ -555,14 +550,14 @@ client.on('message', message => {
                 //даем право читать сообщения в категории.
                 message.channel.parent.permissionOverwrites.get(message.author.id).delete();
                 //удаляем право читать сообщения в прошлой категории
-                sendLog(message,`Общее`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
+                sendLog(message,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
             };
         }else if (walkway == null && Config.objects.find(st => st.name.toLowerCase() == argsObj.toLowerCase()) != null){
             message.author.send(`${argsObj} не является соседним объектом с ${homePos.name}.`);
-            sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
+            sendLog(message,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
         }else{
             message.author.send(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`);
-            sendLog(message,`Общее`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
+            sendLog(message,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
         };
     };
 
@@ -576,7 +571,7 @@ client.on('message', message => {
         GetStats().then(stats => {
             if (stats.length == 0){return};
             message.author.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))} 💰`);
-            sendLog(message,'Общее','Узнал свой баланс.','Успешно',`Вывод: Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))} 💰`);
+            sendLog(message,'РП','Узнал свой баланс.','Успешно',`Вывод: Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))} 💰`);
         });
     }
 
@@ -604,7 +599,7 @@ client.on('message', message => {
             if(user == gUser_user){return}
             if(gUser == undefined){
                 message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
-                sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
+                sendLog(message,'РП','Попробовал передать деньги.','Ошибка',`Вывод: Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
                 return;
             };
             if(isNaN(parseInt(money))){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); return};
@@ -616,7 +611,7 @@ client.on('message', message => {
             user_user.send(`> Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`);
             gUser_user.send(`> ${user_user.nickname} дал вам: ${moneyT.format(parseInt(money))}`);
 
-            sendLog(message,'Общее','Передал деньги.','Успешно',`Вывод: Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`)
+            sendLog(message,'РП','Передал деньги.','Успешно',`Вывод: Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`)
             return;
         };
         pay(comand(message));
