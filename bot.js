@@ -515,6 +515,67 @@ async function Stats(message){
     
 };
 
+async function pay(message){
+    stats = await GetStats();
+    if (stats.length == 0){return};
+
+    let moneyT = new Intl.NumberFormat("ru", {
+        style: "currency",
+        currency: "USD",
+        minimumSignificantDigits: 1
+    })
+
+    let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
+    let gUser = stats.find(stat => stat.user == comand(message).sarg[0]);
+    if (user.id == gUser.id){return};
+    let money = comand(message).sarg[1];
+
+    let user_user = message.member;
+    let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,''));
+    
+    if(user == undefined){return}
+    if(user == gUser_user){return}
+    if(gUser == undefined){
+        message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
+        sendLog(message,'РП','Попробовал передать деньги.','Ошибка',`Вывод: Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
+        return;
+    };
+    if(isNaN(parseInt(money))){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); return};
+    if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: У вас недостаточно средств.`); return};
+
+    EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
+    setTimeout(() => EditStats(gUser.id,`money`,`${parseInt(gUser.money) + parseInt(money)}`), 250);
+    
+    user_user.send(`> Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`);
+    gUser_user.send(`> ${user_user.nickname} дал вам: ${moneyT.format(parseInt(money))}`);
+
+    sendLog(message,'РП','Передал деньги.','Успешно',`Вывод: Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`)
+    return;
+};
+
+async function minusMoney(message, money){
+    stats = await GetStats();
+    if (stats.length == 0){return};
+
+    let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
+    if(user == undefined){return}
+
+    if(parseInt(user.money) < parseInt(money)){return false}
+    EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
+    return true;
+};
+
+async function plusMoney(message, money){
+    stats = await GetStats();
+    if (stats.length == 0){return};
+
+    let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
+    if(user == undefined){return false}
+
+    EditStats(user.id,`money`,`${parseInt(user.money) + parseInt(money)}`);
+    return true;
+};
+
 client.on('messageDelete', (message) => {
     sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
 });
@@ -597,46 +658,24 @@ client.on('message', message => {
 
     if(comand(message).com == `заплатить` && !mb && !mg ||
     comand(message).com == `платить` && !mb && !mg){
-        async function pay(com){
-            stats = await GetStats();
-            if (stats.length == 0){return};
-
-            let moneyT = new Intl.NumberFormat("ru", {
-                style: "currency",
-                currency: "USD",
-                minimumSignificantDigits: 1
-            })
-
-            let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
-            let gUser = stats.find(stat => stat.user == com.sarg[0]);
-            if (user.id == gUser.id){return};
-            let money = com.sarg[1];
-
-            let user_user = message.member;
-            let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,''));
-            
-            if(user == undefined){return}
-            if(user == gUser_user){return}
-            if(gUser == undefined){
-                message.author.send(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
-                sendLog(message,'РП','Попробовал передать деньги.','Ошибка',`Вывод: Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
-                return;
-            };
-            if(isNaN(parseInt(money))){ message.author.send(`> Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); return};
-            if(parseInt(user.money) < parseInt(money)){ message.author.send(`> У вас недостаточно средств.`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: У вас недостаточно средств.`); return};
-
-            EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
-            setTimeout(() => EditStats(gUser.id,`money`,`${parseInt(gUser.money) + parseInt(money)}`), 250);
-            
-            user_user.send(`> Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`);
-            gUser_user.send(`> ${user_user.nickname} дал вам: ${moneyT.format(parseInt(money))}`);
-
-            sendLog(message,'РП','Передал деньги.','Успешно',`Вывод: Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`)
-            return;
-        };
-        pay(comand(message));
+        pay(message);
         setTimeout(() => message.delete(), timeOfDelete);
     };
+
+    if(comand(message).com == `реклама` && !mb && !mg){
+        let moneyT = new Intl.NumberFormat("ru", {
+            style: "currency",
+            currency: "USD",
+            minimumSignificantDigits: 1
+        });
+        
+        if(minusMoney(message, 5) == true){
+            guild.channels.cache.get(Config.channelsID.adverts).send(`> Реклама от ${message.member.nickname} 📢\n${comand(message).arg}`)
+            message.author.send(`> Вы приобрели рекламу за ${moneyT.format(5)} 📢`);
+        }else if(minusMoney(message, 5) == false){
+            message.author.send(`> Вам не хватило денег на рекламу 📢`);
+        }
+    }
 
     if(comand(message).com == `форма` && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
