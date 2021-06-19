@@ -876,7 +876,9 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
         //Object.values(Config.channelsID).find(chl => chl == message.channel.id) != null){
         for (let [id, channel] of guild.channels.cache) {
-            console.log(channel.name);
+            if(Object.values(Config.channelsID).find(chl => chl == channel.id) == null && channel.type == 'category'){
+                console.log(channel.name);
+            }
         }
     }
 
