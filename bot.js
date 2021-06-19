@@ -522,7 +522,7 @@ client.on('messageDelete', (message) => {
 client.on('message', message => {
     let mb = message.author.bot;
     let mg = message.guild == undefined;
-    let head = haveRole(message.member, '837972218267828258')
+    let head = haveRole(message.member, '833226140755689483')
 
     if (!mb && !mg) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
