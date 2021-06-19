@@ -46,14 +46,15 @@ client.on('message', (message) => {
             message.channel.send('Write your Name')
             .then(() => {
                 message.channel.awaitMessages(filter, {
-                    max: 1,
+                    max: 2,
                     time: 5000,
                     errors: ['time'],
                 })
                 .then(message => {
-                    message.channel.send(`Your Name is: ${collected.first().content}`);
+                    msgs = message.map(message => message)
+                    msgs[0].channel.send(`Your Name is: ${msgs[0].content} ${msgs[1].content}`);
                 })
-                .catch(collected => {
+                .catch(() => {
                     message.channel.send('You didnt write your name');
                 });
             });
