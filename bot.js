@@ -711,10 +711,12 @@ client.on('message', message => {
         message.delete();
         if(haveRole(message.member, '835630198199681026')){
             removeRole(message.member, '835630198199681026');
+            message.channel.parent.updateOverwrite(message.member, {'VIEW_CHANNEL': true})
             sendLog(message,'РП','Вышел из админ-мода.','Успешно',` `)
         }
         if(!haveRole(message.member, '835630198199681026')){
             giveRole(message.member, '835630198199681026');
+            message.channel.parent.permissionOverwrites.get(message.author.id).delete();
             sendLog(message,'РП','Вошел в админ-мод.','Успешно',` `)
         }
     };
