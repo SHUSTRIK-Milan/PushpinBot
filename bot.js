@@ -8,6 +8,7 @@ const urlSteam = `https://steamcommunity.com/`;
 var guild;
 const BDchnl = Config.channelsID.bd;
 const dopBDmsg = `838003963412480070`;
+const timeOfDelete = 250;
 
 const SteamAPI = require('steamapi');
 var GitHub = require('github-api');
@@ -514,7 +515,7 @@ client.on('message', message => {
     };
 
     if (comand(message).com == 'осмотреться' && !mb && !mg){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
 
         let objects = [];
@@ -530,7 +531,7 @@ client.on('message', message => {
     };
 
     if (comand(message).com == 'идти' && !mb && !mg){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
         //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
         let argsObj = guild.channels.cache.get(comand(message).arg.slice(2).slice(0,-1));
@@ -563,7 +564,7 @@ client.on('message', message => {
     };
 
     if(comand(message).com == `баланс` && !mb && !mg){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         let moneyT = new Intl.NumberFormat("ru", {
             style: "currency",
             currency: "USD",
@@ -616,11 +617,11 @@ client.on('message', message => {
             return;
         };
         pay(comand(message));
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
     };
 
     if(comand(message).com == `форма` && !mb && !mg){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         function giveForm(member, role){
             if(haveRole(member, role)){
                 removeRole(member, role);
@@ -657,7 +658,7 @@ client.on('message', message => {
     };
 
     if(comand(message).com == `911` && !mb && !mg){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         let object = message.channel.parent.name.slice(4).slice(0,-1);
         let room = message.channel.name;
         let adres = `${object.slice(0,1).toUpperCase()+object.slice(1)}, ${room.slice(0,1).toUpperCase()+room.slice(1)}`
@@ -708,7 +709,7 @@ client.on('message', message => {
     };
 
     if(comand(message).com == 'admin' && !mb && !mg && (haveRole(message.member, '830061387849662515') || head)){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         if(haveRole(message.member, '835630198199681026')){
             removeRole(message.member, '835630198199681026');
             message.channel.parent.updateOverwrite(message.member, {'VIEW_CHANNEL': true})
@@ -722,7 +723,7 @@ client.on('message', message => {
     };
 
     if(comand(message).com == `@` && !mb && !mg && !haveRole(message.member, '830061387849662515')){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         let staff = guild.members.cache.filter(member => (haveRole(member, '830061387849662515') || head) && member.presence.status != 'offline');
         console.log(staff.size);
         if(staff.size == 0){
@@ -752,7 +753,7 @@ client.on('message', message => {
     };
 
     if(comand(message).com == `send` && !mb && !mg && (haveRole(message.member, `833778527609552918`) || head)){	
-        message.delete();	
+        setTimeout(() => message.delete(), timeOfDelete);	
         message.channel.send(`${comand(message).arg}`);	
     };
 
@@ -771,7 +772,7 @@ client.on('message', message => {
     
     if(comand(message).com == `edit` && !mg && (haveRole(message.member, `833778527609552918`) || head)
     || comand(message).com == `edit` && !mg && (haveRole(message.member, `822501730964078633`) || head)){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         message.channel.guild.channels.cache.find(id => id == `${comand(message).sarg[0]}`).messages.fetch(`${comand(message).sarg[1]}`)
         .then(msg =>{
 
@@ -787,7 +788,7 @@ client.on('message', message => {
     };
 
     if(comand(message).com == 'cbd' && message.author.id == `621917381681479693` && !mb && !mg){
-        message.delete()
+        setTimeout(() => message.delete(), timeOfDelete);
         let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
         channel.messages.fetch(dopBDmsg).then(oMsg => { //получаем сообщение доп бд
             let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
@@ -805,38 +806,38 @@ client.on('message', message => {
     };
 
     if(comand(message).com == 'cdbd' && message.author.id == `621917381681479693` && !mb && !mg){
-        message.delete()
+        setTimeout(() => message.delete(), timeOfDelete);
         message.channel.send(`!edit ${BDchnl} ${dopBDmsg} > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^838003797149220884^1`);
     };
 
     if(comand(message).com == `tbd` && haveRole(message.member,`822493460493500436`) && !mb && !mg){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         setTimeout(() => AddStats(`<@!${message.author.id}>`,25,'В розыске','Отсутствует',101), 1000);
     };
 
     if(comand(message).com == `ebd` && message.author.id == `621917381681479693` && !mb && !mg){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         EditStats(comand(message).sarg[0],comand(message).sarg[1], comand(message,2).carg)
     };
 
     if(comand(message).com == `delbd` && message.author.id == `621917381681479693` && !mb && !mg){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         delStats(comand(message).sarg[0])
     };
 
     if(comand(message).com == `gbd` && message.author.id == `621917381681479693` && !mb && !mg){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         GetStats().then(stats => console.log(stats));
     };
 
     if(comand(message).com == `cex` && message.author.id == `621917381681479693` && !mb && !mg){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         createEx(comand(message).sarg[0],comand(message).sarg[1],comand(message).sarg[2],comand(message,3).carg,message)
     };
 
     if(comand(message).com == `clore` && message.author.id == `621917381681479693` && !mb && !mg){
         createLore(comand(message).sarg[0],comand(message).sarg[1],comand(message,2).carg,message)
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
     };
 
     if(!mb && mg){
@@ -849,7 +850,7 @@ client.on('message', message => {
     }
 
     if(comand(message).com == `checkpos` && message.author.id == `621917381681479693` && !mb && !mg){
-        message.delete();
+        setTimeout(() => message.delete(), timeOfDelete);
         console.log(`1: ${message.channel.position}`);
         console.log(`2: ${message.channel.parent.position}`);
     }
