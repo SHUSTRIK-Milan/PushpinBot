@@ -728,12 +728,12 @@ client.on('message', message => {
 
     if(comand(message).com == 'admin' && !mb && !mg && (haveRole(message.member, '830061387849662515') || head)){
         setTimeout(() => message.delete(), timeOfDelete);
-        if(haveRole(message.member, '835630198199681026')){
+        if(haveRole(message.member, '835630198199681026') && Object.values(Config.channelsID).find(chl => chl == message.channel.id) == null){
             removeRole(message.member, '835630198199681026');
             message.channel.parent.updateOverwrite(message.member, {'VIEW_CHANNEL': true})
             sendLog(message,'РП','Вышел из админ-мода.','Успешно',` `)
         }
-        if(!haveRole(message.member, '835630198199681026')){
+        if(!haveRole(message.member, '835630198199681026') && Object.values(Config.channelsID).find(chl => chl == message.channel.id) == null){
             giveRole(message.member, '835630198199681026');
             message.channel.parent.permissionOverwrites.get(message.author.id).delete();
             sendLog(message,'РП','Вошел в админ-мод.','Успешно',` `)
