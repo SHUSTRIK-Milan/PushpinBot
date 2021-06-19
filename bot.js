@@ -833,7 +833,7 @@ client.on('message', message => {
         setTimeout(() => AddStats(`<@!${message.author.id}>`,25,'В розыске','Отсутствует',101), 1000);
     };
 
-    if(comand(message).com == `ebd` && message.author.id == `621917381681479693` && !mb && !mg){
+    if(comand(message).com == `ebd` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
         EditStats(comand(message).sarg[0],comand(message).sarg[1], comand(message,2).carg)
     };
