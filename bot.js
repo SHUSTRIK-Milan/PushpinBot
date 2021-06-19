@@ -465,6 +465,21 @@ async function Stats(message){
 Все прошло успешно! Напишите команду \`!рп\`, чтобы закончить настройку!
             `)
 
+            function verificate(){
+                AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfile)
+
+                guild.members.fetch(message.author.id).then(member =>{
+                    giveRole(member,`854315001543786507`); //citizen
+                    giveRole(member,`851059555499638825`); //rp-role
+                    giveRole(member,`836183994646921248`); //pushpin
+                    giveRole(member,`836269090996879387`); //user
+                    removeRole(member,`829423238169755658`); //ooc
+                });
+
+                sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
+                guild.channels.cache.get(`849709660579954748`).updateOverwrite(message.member,{'VIEW_CHANNEL': true});
+            };
+
             let filter = m => m.author.id === message.author.id
             function rpName(){
                 message.member.send('> Введите свое ролевое имя 👥')
@@ -477,18 +492,7 @@ async function Stats(message){
                     .then(message => {
                         msgs = message.map(message => message)
                         msgs[0].member.send(`> Вы установили свое ролевое имя. Сменить его вы можете только при помощи администратора 📌`);
-                        AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfile)
-
-                        guild.members.fetch(message.author.id).then(member =>{
-                            giveRole(member,`854315001543786507`); //citizen
-                            giveRole(member,`851059555499638825`); //rp-role
-                            giveRole(member,`836183994646921248`); //pushpin
-                            giveRole(member,`836269090996879387`); //user
-                            removeRole(member,`829423238169755658`); //ooc
-                        });
-
-                        sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
-                        guild.channels.cache.get(`849709660579954748`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
+                        verificate();
                     })
                     .catch(() => {
                         rpName()
