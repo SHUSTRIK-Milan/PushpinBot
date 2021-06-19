@@ -495,7 +495,7 @@ async function Stats(message){
                         verificate();
                     })
                     .catch(() => {
-                        rpName()
+                        message.author.send('test');
                     });
                 });
             };
