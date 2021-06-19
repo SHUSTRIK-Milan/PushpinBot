@@ -38,8 +38,8 @@ module.exports.discordTocens = {
 module.exports.objects = [
     {
         name: 'Черчель Стрит',
-        radius: ['Либерти',
-                'Бродвей',
+        radius: ['Бродвей',
+                'Либерти',
                 'Черчель Стрит 1',
                 'Черчель Стрит 2',
                 'Черчель Стрит 3',
