@@ -498,7 +498,7 @@ async function Stats(message){
 };
 
 client.on('messageDelete', (message) => {
-    sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
+    sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}\nhttps://discord.com/channels/814795850885627964/${message.channel.id}/${message.id}`)
 });
 
 client.on('message', message => {
