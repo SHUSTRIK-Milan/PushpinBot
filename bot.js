@@ -872,14 +872,19 @@ client.on('message', message => {
         console.log(`2: ${message.channel.parent.position}`);
     }
 
-    if(comand(message).com == `ban` && message.author.id == `621917381681479693` && !mb && !mg){
+    if(comand(message).com == `ban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
-        //Object.values(Config.channelsID).find(chl => chl == message.channel.id) != null){
-        for (let [id, channel] of guild.channels.cache) {
-            if(Object.values(Config.channelsID).find(chl => chl == channel.id) == null && channel.type == 'category'){
-                console.log(channel.name);
+
+        let userbanned = guild.members.cache.get(comand(message).sarg[0].slice(2).slice(0,-1));
+        if(userbanned != undefined){
+            let reason = comand(message, 1).carg;
+            console.log(reason);
+            for (let [id, channel] of guild.channels.cache) {
+                if(Object.values(Config.channelsID).find(chl => chl == channel.id) == null && channel.type == 'category'){
+                    //channel.parent.permissionOverwrites.get(message.author.id).delete()
+                }
             }
-        }
+        };
     }
 
 });
