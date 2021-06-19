@@ -151,7 +151,7 @@ function sendLog(message,cat,act,status,add){
         return;
     }else if(Object.values(Config.logChannels).find(chl => chl == message.channel.id) == null &&
     Object.values(Config.channelsID).find(chl => chl == message.channel.id) == null){
-        guild.channels.cache.get(Config.channelsID.logs).send({embed: {
+        guild.channels.cache.get(Config.channelsID.rp_logs).send({embed: {
             color: color,
             author: {
                 name: message.author.username,
