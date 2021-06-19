@@ -876,6 +876,8 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
 
         let userbanned = guild.members.cache.get(comand(message).sarg[0].slice(2).slice(0,-1));
+        console.log(comand(message).sarg[0].slice(2).slice(0,-1));
+        console.log(userbanned);
         if(userbanned != undefined){
             let reason = comand(message, 1).carg;
             console.log(reason);
