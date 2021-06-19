@@ -707,7 +707,7 @@ client.on('message', message => {
         sendLog(message,'РП','Вызвал 911 без доп. кода.','Успешно',`Вывод: **Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️`)
     };
 
-    if(comand(message).com == 'admin' && !mb && !mg && (haveRole(member, '830061387849662515') || head)){
+    if(comand(message).com == 'admin' && !mb && !mg && (haveRole(message.member, '830061387849662515') || head)){
         message.delete();
         if(haveRole(message.member, '835630198199681026')){
             removeRole(message.member, '835630198199681026');
