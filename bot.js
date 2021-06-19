@@ -425,13 +425,6 @@ async function Stats(message){
     var steamNick = `[PP] ${message.author.username}`.slice(0,32);
     if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) var steamProfile = await steam.resolve(comand(message).sarg[0]);
 
-    if (comand(message).com != `подтвердить`){
-        message.author.send(`
-> **Это к чему?** 🤖
-Извини, я робот и не понимаю к чему это сообщение. Если это шутка, то она очень смешная!
-        `)
-    }; //рандомное сообщение
-
     if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
         message.author.send(`
 > **Вы уже зарегистрированы** 📟
@@ -461,7 +454,8 @@ async function Stats(message){
         var steamProfileInfo = await steam.getUserSummary(steamProfile);
         if (steamProfileInfo.nickname == steamNick){
 
-            function verificate(){
+            function verificate(name){
+                guild.members.cache.get(message.author.id).setNickname(name);
                 AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfile)
 
                 guild.members.fetch(message.author.id).then(member =>{
@@ -482,7 +476,7 @@ async function Stats(message){
                 .then(() => {
                     message.channel.awaitMessages(filter, {
                         max: 1,
-                        time: 120000,
+                        time: 60000,
                         errors: ['time'],
                     })
                     .then(message => {
@@ -491,10 +485,10 @@ async function Stats(message){
 > **Успешно! Ваш аккаунт зарегистрирован** 🎉 Вы установили свое ролевое имя. Сменить его вы сможете только при помощи администратора.
 Все прошло успешно! Удачной игры на сервере!
                         `)
-                        verificate();
+                        verificate(msgs[0].content);
                     })
                     .catch(() => {
-                        message.author.send('test');
+                        rpName();
                     });
                 });
             };
