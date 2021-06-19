@@ -486,7 +486,7 @@ async function Stats(message){
                 .then(() => {
                     message.channel.awaitMessages(filter, {
                         max: 1,
-                        time: 1*60,
+                        time: 120,
                         errors: ['time'],
                     })
                     .then(message => {
