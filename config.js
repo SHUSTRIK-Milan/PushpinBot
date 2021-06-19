@@ -13,7 +13,7 @@ module.exports.channelsID = {
     generalRules: `837395238360055879`,
     generalTerm: `837395471877013595`,
     /////////Lore///////////////
-    lore: `837397940073922610`,
+    fast_access: `837397940073922610`,
     generalLore: `837398017325269002`,
     /////////Team-General/////////////
     serverMsg: `838002676709064754`,
