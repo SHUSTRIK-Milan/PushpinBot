@@ -742,7 +742,7 @@ client.on('message', message => {
 
     if(comand(message).com == `@` && !mb && !mg && !haveRole(message.member, '830061387849662515')){
         setTimeout(() => message.delete(), timeOfDelete);
-        let staff = guild.members.cache.filter(member => (haveRole(member, '830061387849662515') || head) && member.presence.status != 'offline');
+        let staff = guild.members.cache.filter(member => (haveRole(member, '830061387849662515') || haveRole(member, '833226140755689483')) && member.presence.status != 'offline');
         console.log(staff.size);
         if(staff.size == 0){
             message.author.send(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`);
