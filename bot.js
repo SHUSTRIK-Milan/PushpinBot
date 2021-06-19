@@ -477,29 +477,27 @@ async function Stats(message){
             };
 
             function rpName(){
-                
-            };
-
-            let filter = m => m.author.id === message.author.id
-            message.author.send('> Введите свое ролевое имя 👥')
-            .then(() => {
-                message.channel.awaitMessages(filter, {
-                    max: 1,
-                    time: 120,
-                    errors: ['time'],
-                })
-                .then(message => {
-                    msgs = message.map(message => message)
-                    msgs[0].author.send(`
+                let filter = m => m.author.id === message.author.id
+                message.author.send('> Введите свое ролевое имя 👥')
+                .then(() => {
+                    message.channel.awaitMessages(filter, {
+                        max: 1,
+                        time: 120000,
+                        errors: ['time'],
+                    })
+                    .then(message => {
+                        msgs = message.map(message => message)
+                        msgs[0].author.send(`
 > **Успешно! Ваш аккаунт зарегистрирован** 🎉 Вы установили свое ролевое имя. Сменить его вы сможете только при помощи администратора.
 Все прошло успешно! Удачной игры на сервере!
-        `)
-                    verificate();
-                })
-                .catch(() => {
-                    message.author.send('test');
+                        `)
+                        verificate();
+                    })
+                    .catch(() => {
+                        message.author.send('test');
+                    });
                 });
-            });
+            };
 
             rpName();
         }else if (steamProfileInfo.nickname != steamNick){
