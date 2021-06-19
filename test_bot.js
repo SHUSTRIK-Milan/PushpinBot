@@ -54,7 +54,7 @@ client.on('message', (message) => {
                 msgs = message.map(message => message)
                 msgs[0].author.send(`Your Name is: ${msgs[0].content} ${msgs[1].content}`);
             })
-            .catch(() => {
+            .catch(message => {
                 message.author.send('You didnt write your name');
             });
         });
