@@ -40,7 +40,25 @@ client.on('message', (message) => {
 
         message.channel.send( 'an apple a day keeps the doctor away', {files:[apple_img]})
     }
-    
+    if(message.channel.name == 'shust'){
+        if(message.content == 'тест' && !message.author.bot){
+            let filter = m => m.author.id === message.author.id
+            message.channel.send('Write your Name')
+            .then(() => {
+                message.channel.awaitMessages(filter, {
+                    max: 1,
+                    time: 5000,
+                    errors: ['time'],
+                })
+                .then(message => {
+                    message.channel.send(`Your Name is: ${collected.first().content}`);
+                })
+                .catch(collected => {
+                    message.channel.send('You didnt write your name');
+                });
+            });
+        }
+    };
 })
 
 client.login(Config.discordTocens.testBot);
