@@ -460,10 +460,6 @@ async function Stats(message){
     if (person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) == null){
         var steamProfileInfo = await steam.getUserSummary(steamProfile);
         if (steamProfileInfo.nickname == steamNick){
-            message.author.send(`
-> **Успешно! Ваш аккаунт зарегистрирован** 🎉
-Все прошло успешно! Установите ролевое имя перед тем как начать игру!
-            `)
 
             function verificate(){
                 AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfile)
@@ -491,7 +487,10 @@ async function Stats(message){
                     })
                     .then(message => {
                         msgs = message.map(message => message)
-                        msgs[0].author.send(`> Вы установили свое ролевое имя. Сменить его вы можете только при помощи администратора 📌`);
+                        msgs[0].author.send(`
+> **Успешно! Ваш аккаунт зарегистрирован** 🎉 Вы установили свое ролевое имя. Сменить его вы сможете только при помощи администратора.
+Все прошло успешно! Удачной игры на сервере!
+            `)
                         verificate();
                     })
                     .catch(() => {
