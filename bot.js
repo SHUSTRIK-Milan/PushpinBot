@@ -455,6 +455,7 @@ async function Stats(message){
         if (steamProfileInfo.nickname == steamNick){
 
             function verificate(name){
+                console.log(name);
                 guild.members.cache.get(message.author.id).setNickname(name);
                 AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfile)
 
@@ -875,7 +876,7 @@ client.on('message', message => {
     if(comand(message).com == `ban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
 
-        let userbanned = guild.members.cache.get(comand(message).sarg[0].slice(2).slice(0,-1));
+        let userbanned = guild.members.cache.get(comand(message).sarg[0].slice(3).slice(0,-1));
         console.log(comand(message).sarg[0].slice(3).slice(0,-1));
         console.log(userbanned);
         if(userbanned != undefined){
