@@ -881,11 +881,13 @@ client.on('message', message => {
             console.log(reason);
             for (let [id, channel] of guild.channels.cache) {
                 if(Object.values(Config.channelsID).find(chl => chl == channel.id) == null && channel.type == 'category'){
-                    channel.permissionOverwrites.get(userbanned.id).delete();
+                    if(channel.permissionOverwrites.get(userbanned.id) != undefined) channel.permissionOverwrites.get(userbanned.id).delete();
                     userbanned.send(`**Вы были забанены администратором ${message.author.tag}** 🔨\n> ${reason}`);
                 }
             }
         };
+
+        sendLog(message,'РП','Забанил игрока.','Успешно',`Вывод: **Вы были забанены администратором ${message.author.tag}** 🔨\n> ${reason}`)
     }
 
     if(comand(message).com == `unban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
@@ -898,6 +900,8 @@ client.on('message', message => {
             guild.channels.cache.get(`849709660579954748`).updateOverwrite(userunbanned,{'VIEW_CHANNEL': true});
             userunbanned.send(`**Вы были разбанены администратором ${message.author.tag}** 🔨\n> ${reason}`);
         };
+
+        sendLog(message,'РП','Разбанил игрока.','Успешно',`Вывод: **Вы были разбанены администратором ${message.author.tag}** 🔨\n> ${reason}`)
     }
 
 });
