@@ -22,13 +22,12 @@ module.exports.channelsID = {
     admin_claim: `854322030714421258`
 };
 
-module.exports.BLChannelsID = {
-    welcome: `822528060196388926`,
-    devblog: `837393627360788480`,
-    commits: `837393666527985694`,
-    serverMsg: `838002676709064754`,
-    logs: `838002959610675221`,
-    bd: `838002825765322792`,
+module.exports.logChannels = {
+    main: `837393382229409823`,
+    chatMain: `837393400121524259`,
+    qa: `837393416202878989`,
+    offers: `837393458435063886`,
+    voiceMain: `837397109463711744`
 };
 
 module.exports.discordTocens = {
