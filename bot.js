@@ -872,6 +872,14 @@ client.on('message', message => {
         console.log(`2: ${message.channel.parent.position}`);
     }
 
+    if(comand(message).com == `ban` && message.author.id == `621917381681479693` && !mb && !mg){
+        setTimeout(() => message.delete(), timeOfDelete);
+        //Object.values(Config.channelsID).find(chl => chl == message.channel.id) != null){
+        for (let [id, channel] of guild.channels.cache) {
+            console.log(channel.name);
+        }
+    }
+
 });
 
 client.login(process.env.BOT_TOKEN);
