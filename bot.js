@@ -670,15 +670,15 @@ client.on('message', message => {
             currency: "USD",
             minimumSignificantDigits: 1
         });
-        
-        console.log(minusMoney(message, 100));
 
-        if(minusMoney(message, 100) == true){
-            guild.channels.cache.get(Config.channelsID.adverts).send(`> Реклама от ${message.member.nickname} 📢\n${comand(message).arg}`)
-            message.author.send(`> Вы приобрели рекламу за ${moneyT.format(100)} 📢`);
-        }else if(minusMoney(message, 100) == false){
-            message.author.send(`> Вам не хватило денег на рекламу 📢`);
-        }
+        minusMoney(message, 100).then(succ =>{
+            if(succ == true){
+                guild.channels.cache.get(Config.channelsID.adverts).send(`> Реклама от ${message.member.nickname} 📢\n${comand(message).arg}`)
+                message.author.send(`> Вы приобрели рекламу за ${moneyT.format(100)} 📢`);
+            }else if(succ == false){
+                message.author.send(`> Вам не хватило денег на рекламу 📢`);
+            }
+        });
     }
 
     if(comand(message).com == `форма` && !mb && !mg && rpchannel){
