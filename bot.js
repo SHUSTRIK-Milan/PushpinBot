@@ -566,9 +566,9 @@ client.on('message', message => {
             if(cat != undefined || cat != null) if (cat.type == 'category'){
             //проверяем канал на тип категории
                 if (haveRole(message.member,'835630198199681026')){ message.author.send('> Вы находитесь в админ-моде.'); return};
-                cat.updateOverwrite(message.author, { 'VIEW_CHANNEL': true });
+                setTimeout(() => cat.updateOverwrite(message.author, { 'VIEW_CHANNEL': true }), timeOfDelete);
                 //даем право читать сообщения в категории.
-                message.channel.parent.permissionOverwrites.get(message.author.id).delete();
+                setTimeout(() => message.channel.parent.permissionOverwrites.get(message.author.id).delete(), timeOfDelete);
                 //удаляем право читать сообщения в прошлой категории
                 sendLog(message,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
             };

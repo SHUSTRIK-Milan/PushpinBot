@@ -230,6 +230,7 @@ module.exports.objects = [
                 'комната-2']
     },
 
+    
 
     {
         name: 'Либерти',
