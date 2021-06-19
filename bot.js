@@ -882,10 +882,10 @@ client.on('message', message => {
             for (let [id, channel] of guild.channels.cache) {
                 if(Object.values(Config.channelsID).find(chl => chl == channel.id) == null && channel.type == 'category'){
                     if(channel.permissionOverwrites.get(userbanned.id) != undefined) channel.permissionOverwrites.get(userbanned.id).delete();
-                    userbanned.send(`**Вы были забанены администратором ${message.author.tag}** 🔨\n> ${reason}`);
-                    sendLog(message,'РП','Забанил игрока.','Успешно',`Вывод: **Вы были забанены администратором ${message.author.tag}** 🔨\n> ${reason}`)
                 }
             }
+            userbanned.send(`**Вы были забанены администратором ${message.author.tag}** 🔨\n> ${reason}`);
+            sendLog(message,'РП','Забанил игрока.','Успешно',`Вывод: **Вы были забанены администратором ${message.author.tag}** 🔨\n> ${reason}`)
         };
     }
 
