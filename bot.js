@@ -125,10 +125,32 @@ function sendLog(message,cat,act,status,add){
     if (cat == 'Админ') color = 4105807;
     if (cat == 'Глобальное') color = 14560833;
     if (cat == 'Общее') color = 11645371;
+    if (cat == 'РП') color = 11382073;
 
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
 
-    if (Object.values(Config.BLChannelsID).find(chl => chl == message.channel.id) == null){
+    if (Object.values(Config.logChannels).find(chl => chl == message.channel.id) != null){
+        guild.channels.cache.get(Config.channelsID.logs).send({embed: {
+            color: color,
+            author: {
+                name: message.author.username,
+                icon_url: message.author.avatarURL()
+            },
+            thumbnail: {
+                url: img
+            },
+            title: `[${cat}] ${act}`,
+            fields: [{
+                name: `Допольнительно:`,
+                value: `${add}\n[<#${message.channel.id}>]`
+            }],
+            
+            timestamp: new Date()
+            }
+        });
+        return;
+    }else if(Object.values(Config.logChannels).find(chl => chl == message.channel.id) == null &&
+    Object.values(Config.channelsID).find(chl => chl == message.channel.id) == null){
         guild.channels.cache.get(Config.channelsID.logs).send({embed: {
             color: color,
             author: {
@@ -607,10 +629,12 @@ client.on('message', message => {
             if(haveRole(member, role)){
                 removeRole(member, role);
                 giveRole(member, '854315001543786507');
+                sendLog(message,'РП','Снял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(role).name}`)
             }
             if(!haveRole(member, role)){
                 giveRole(member, role);
                 removeRole(member, '854315001543786507');
+                sendLog(message,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(role).name}`)
             }
         };
         for(let dept in Config.departments){
@@ -624,6 +648,7 @@ client.on('message', message => {
                         giveForm(message.member, Config.departments[dept][2]);
                     }else{
                         message.author.send(`**Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
+                        sendLog(message,'РП','Попытался взять форму.','Ошибка',`Вывод: **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
                     };
                 });
             };
@@ -639,8 +664,10 @@ client.on('message', message => {
             let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.fire[2]));
             if(staff.size == 0){
                 message.author.send(`**На данный момент пожарные на службе отсутствуют** 🔥`);
+                sendLog(message,'РП','Вызвал пожарную службу.','Ошибка',`Вывод: **На данный момент пожарные на службе отсутствуют** 🔥`)
             }else{
                 message.author.send(`**Вы вызывали пожарную службу** 🔥\n> ${comand(message,1).carg}`);
+                sendLog(message,'РП','Вызвал пожарную службу.','Успешно',`Вывод: **Вы вызывали пожарную службу** 🔥\n> ${comand(message,1).carg}`)
                 for(let worker of staff){
                     worker[1].send(`**${message.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${comand(message,1).carg}\n**Адрес:**\n> ${adres}`)
                 }
@@ -649,8 +676,10 @@ client.on('message', message => {
             let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.police[2]));
             if(staff.size == 0){
                 message.author.send(`**На данный момент полицейские на службе отсутствуют** 🚔`);
+                sendLog(message,'РП','Вызвал полицию.','Ошибка',`Вывод: **На данный момент полицейские на службе отсутствуют** 🚔`)
             }else{
                 message.author.send(`**Вы вызывали полицию** 🚔\n> ${comand(message,1).carg}`);
+                sendLog(message,'РП','Вызвал полицию.','Успешно',`Вывод: **Вы вызывали полицию** 🚔\n> ${comand(message,1).carg}`)
                 for(let worker of staff){
                     worker[1].send(`**${message.member.nickname} вызывал(а) полицию** 🚔\n> ${comand(message,1).carg}\n**Адрес:**\n> ${adres}`)
                 }
@@ -659,8 +688,10 @@ client.on('message', message => {
             let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.med[2]));
             if(staff.size == 0){
                 message.author.send(`**На данный момент медики на службе отсутствуют** ⚕️`);
+                sendLog(message,'РП','Вызвал медицинскую службу.','Ошибка',`Вывод: **На данный момент медики на службе отсутствуют** ⚕️`)
             }else{
                 message.author.send(`**Вы вызывали медицинскую службу** ⚕️\n> ${comand(message,1).carg}`);
+                sendLog(message,'РП','Вызвал медицинскую службу.','Успешно',`Вывод: **Вы вызывали медицинскую службу** ⚕️\n> ${comand(message,1).carg}`)
                 for(let worker of staff){
                     worker[1].send(`**${message.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${comand(message,1).carg}\n**Адрес:**\n> ${adres}`)
                 }
@@ -672,15 +703,18 @@ client.on('message', message => {
 > 3 – медицинская служба.
             `);
         };
+        sendLog(message,'РП','Вызвал 911 без доп. кода.','Успешно',`Вывод: **Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️`)
     };
 
     if(comand(message).com == 'admin' && !mb && !mg && haveRole(message.member, '830061387849662515')){
         message.delete();
         if(haveRole(message.member, '835630198199681026')){
             removeRole(message.member, '835630198199681026');
+            sendLog(message,'РП','Вышел из админ-мода.','Успешно',` `)
         }
         if(!haveRole(message.member, '835630198199681026')){
             giveRole(message.member, '835630198199681026');
+            sendLog(message,'РП','Вошел в админ-мод.','Успешно',` `)
         }
     };
 
@@ -690,6 +724,7 @@ client.on('message', message => {
         console.log(staff.size);
         if(staff.size == 0){
             message.author.send(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`);
+            sendLog(message,'РП','Вызвал администратора.','Ошибка',`Вывод: **На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`)
             guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${message.author.tag} написал жалобу, но администраторов нет в сети:**`, {embed: {
                     thumbnail: {
                         url: message.author.displayAvatarURL()
@@ -706,6 +741,7 @@ client.on('message', message => {
             });
         }else{
             message.author.send(`**Вы вызывали администратора** 👥\n> ${comand(message).arg}`);
+            sendLog(message,'РП','Вызвал администратора.','Успешно',`Вывод: **Вы вызывали администратора** 👥\n> ${comand(message).arg}`)
             for(let worker of staff){
                 worker[1].send(`**${message.member.nickname} вызывал(а) администратора** 👥\n> ${comand(message).arg}\n**Местоположение:**\n> ${message.channel.parent.name} -> <#${message.channel.id}>`)
             }
