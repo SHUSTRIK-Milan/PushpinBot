@@ -858,11 +858,6 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
     };
 
-    if(!mb && mg){
-        console.log(message.member);
-        Stats(message);
-    };
-
     if(message.channel.id == Config.channelsID.commits && message.author.id != '822500483826450454' && !mg){
         createCom(message.embeds[0],message);
     }
