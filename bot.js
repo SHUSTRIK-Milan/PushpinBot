@@ -584,6 +584,7 @@ client.on('message', message => {
     let mb = message.author.bot;
     let mg = message.guild == undefined;
     let head = haveRole(message.member, '833226140755689483')
+    let rpchannel = Object.values(Config.channelsID).find(chl => chl == message.channel.id) == null;
 
     if (!mb && !mg) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
 
@@ -593,7 +594,7 @@ client.on('message', message => {
         console.log('Новое сообщение в offers')
     };
 
-    if (comand(message).com == 'осмотреться' && !mb && !mg){
+    if (comand(message).com == 'осмотреться' && !mb && !mg && rpchannel){
         setTimeout(() => message.delete(), timeOfDelete);
         let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
 
@@ -609,7 +610,7 @@ client.on('message', message => {
         };
     };
 
-    if (comand(message).com == 'идти' && !mb && !mg){
+    if (comand(message).com == 'идти' && !mb && !mg && rpchannel){
         setTimeout(() => message.delete(), timeOfDelete);
         let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
         //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
@@ -642,7 +643,7 @@ client.on('message', message => {
         };
     };
 
-    if(comand(message).com == `баланс` && !mb && !mg){
+    if(comand(message).com == `баланс` && !mb && !mg && rpchannel){
         setTimeout(() => message.delete(), timeOfDelete);
         let moneyT = new Intl.NumberFormat("ru", {
             style: "currency",
@@ -656,28 +657,31 @@ client.on('message', message => {
         });
     }
 
-    if(comand(message).com == `заплатить` && !mb && !mg ||
-    comand(message).com == `платить` && !mb && !mg){
+    if(comand(message).com == `заплатить` && !mb && !mg && rpchannel ||
+    comand(message).com == `платить` && !mb && !mg && rpchannel){
         pay(message);
         setTimeout(() => message.delete(), timeOfDelete);
     };
 
-    if(comand(message).com == `реклама` && !mb && !mg){
+    if(comand(message).com == `реклама` && !mb && !mg && rpchannel){
+        setTimeout(() => message.delete(), timeOfDelete);
         let moneyT = new Intl.NumberFormat("ru", {
             style: "currency",
             currency: "USD",
             minimumSignificantDigits: 1
         });
         
-        if(minusMoney(message, 5) == true){
+        console.log(minusMoney(message, 100));
+
+        if(minusMoney(message, 100) == true){
             guild.channels.cache.get(Config.channelsID.adverts).send(`> Реклама от ${message.member.nickname} 📢\n${comand(message).arg}`)
-            message.author.send(`> Вы приобрели рекламу за ${moneyT.format(5)} 📢`);
-        }else if(minusMoney(message, 5) == false){
+            message.author.send(`> Вы приобрели рекламу за ${moneyT.format(100)} 📢`);
+        }else if(minusMoney(message, 100) == false){
             message.author.send(`> Вам не хватило денег на рекламу 📢`);
         }
     }
 
-    if(comand(message).com == `форма` && !mb && !mg){
+    if(comand(message).com == `форма` && !mb && !mg && rpchannel){
         setTimeout(() => message.delete(), timeOfDelete);
         function giveForm(member, role){
             if(haveRole(member, role)){
@@ -714,7 +718,7 @@ client.on('message', message => {
         }
     };
 
-    if(comand(message).com == `911` && !mb && !mg){
+    if(comand(message).com == `911` && !mb && !mg && rpchannel){
         setTimeout(() => message.delete(), timeOfDelete);
         let object = message.channel.parent.name.slice(4).slice(0,-1);
         let room = message.channel.name;
@@ -765,7 +769,7 @@ client.on('message', message => {
         sendLog(message,'РП','Вызвал 911 без доп. кода.','Успешно',`Вывод: **Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️`)
     };
 
-    if(comand(message).com == 'admin' && !mb && !mg && (haveRole(message.member, '830061387849662515') || head) && Object.values(Config.channelsID).find(chl => chl == message.channel.id) == null){
+    if(comand(message).com == 'admin' && !mb && !mg && (haveRole(message.member, '830061387849662515') || head) && rpchannel){
         setTimeout(() => message.delete(), timeOfDelete);
         if(haveRole(message.member, '835630198199681026')){
             removeRole(message.member, '835630198199681026');
@@ -779,7 +783,7 @@ client.on('message', message => {
         }
     };
 
-    if(comand(message).com == `@` && !mb && !mg && !haveRole(message.member, '830061387849662515')){
+    if(comand(message).com == `@` && !mb && !mg && !haveRole(message.member, '830061387849662515') && rpchannel){
         setTimeout(() => message.delete(), timeOfDelete);
         let staff = guild.members.cache.filter(member => (haveRole(member, '830061387849662515') || haveRole(member, '833226140755689483')) && member.presence.status != 'offline');
         console.log(staff.size);
@@ -911,7 +915,7 @@ client.on('message', message => {
         console.log(`2: ${message.channel.parent.position}`);
     }
 
-    if(comand(message).com == `ban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
+    if(comand(message).com == `ban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg && rpchannel){
         setTimeout(() => message.delete(), timeOfDelete);
         let userbanned = guild.members.cache.get(comand(message).sarg[0].slice(3).slice(0,-1));
 
@@ -928,7 +932,7 @@ client.on('message', message => {
         };
     }
 
-    if(comand(message).com == `unban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
+    if(comand(message).com == `unban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg && rpchannel){
         setTimeout(() => message.delete(), timeOfDelete);
         let userunbanned = guild.members.cache.get(comand(message).sarg[0].slice(3).slice(0,-1));
 
