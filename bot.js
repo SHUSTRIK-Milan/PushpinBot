@@ -915,7 +915,7 @@ client.on('message', message => {
         console.log(`2: ${message.channel.parent.position}`);
     }
 
-    if(comand(message).com == `ban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg && rpchannel){
+    if(comand(message).com == `ban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
         let userbanned = guild.members.cache.get(comand(message).sarg[0].slice(3).slice(0,-1));
 
@@ -932,7 +932,7 @@ client.on('message', message => {
         };
     }
 
-    if(comand(message).com == `unban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg && rpchannel){
+    if(comand(message).com == `unban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg=){
         setTimeout(() => message.delete(), timeOfDelete);
         let userunbanned = guild.members.cache.get(comand(message).sarg[0].slice(3).slice(0,-1));
 
