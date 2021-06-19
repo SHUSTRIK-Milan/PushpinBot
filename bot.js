@@ -726,14 +726,14 @@ client.on('message', message => {
         sendLog(message,'РП','Вызвал 911 без доп. кода.','Успешно',`Вывод: **Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️`)
     };
 
-    if(comand(message).com == 'admin' && !mb && !mg && (haveRole(message.member, '830061387849662515') || head)){
+    if(comand(message).com == 'admin' && !mb && !mg && (haveRole(message.member, '830061387849662515') || head) && Object.values(Config.channelsID).find(chl => chl == message.channel.id) == null){
         setTimeout(() => message.delete(), timeOfDelete);
-        if(haveRole(message.member, '835630198199681026') && Object.values(Config.channelsID).find(chl => chl == message.channel.id) == null){
+        if(haveRole(message.member, '835630198199681026')){
             removeRole(message.member, '835630198199681026');
             message.channel.parent.updateOverwrite(message.member, {'VIEW_CHANNEL': true})
             sendLog(message,'РП','Вышел из админ-мода.','Успешно',` `)
         }
-        if(!haveRole(message.member, '835630198199681026') && Object.values(Config.channelsID).find(chl => chl == message.channel.id) == null){
+        if(!haveRole(message.member, '835630198199681026')){
             giveRole(message.member, '835630198199681026');
             message.channel.parent.permissionOverwrites.get(message.author.id).delete();
             sendLog(message,'РП','Вошел в админ-мод.','Успешно',` `)
