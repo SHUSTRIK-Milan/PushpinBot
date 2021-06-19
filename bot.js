@@ -480,8 +480,8 @@ async function Stats(message){
                 guild.channels.cache.get(`849709660579954748`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
             };
 
-            let filter = m => m.author.id === message.author.id
             function rpName(){
+                let filter = m => m.author.id === message.author.id
                 message.author.send('> Введите свое ролевое имя 👥')
                 .then(() => {
                     message.channel.awaitMessages(filter, {
