@@ -462,7 +462,7 @@ async function Stats(message){
         if (steamProfileInfo.nickname == steamNick){
             message.author.send(`
 > **Успешно! Ваш аккаунт зарегистрирован** 🎉
-Все прошло успешно! Напишите команду \`!рп\`, чтобы закончить настройку!
+Все прошло успешно! Установите ролевое имя перед тем как начать игру.!
             `)
 
             function verificate(){
@@ -477,12 +477,12 @@ async function Stats(message){
                 });
 
                 sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
-                guild.channels.cache.get(`849709660579954748`).updateOverwrite(message.member,{'VIEW_CHANNEL': true});
+                guild.channels.cache.get(`849709660579954748`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
             };
 
             let filter = m => m.author.id === message.author.id
             function rpName(){
-                message.member.send('> Введите свое ролевое имя 👥')
+                message.author.send('> Введите свое ролевое имя 👥')
                 .then(() => {
                     message.channel.awaitMessages(filter, {
                         max: 1,
@@ -491,7 +491,7 @@ async function Stats(message){
                     })
                     .then(message => {
                         msgs = message.map(message => message)
-                        msgs[0].member.send(`> Вы установили свое ролевое имя. Сменить его вы можете только при помощи администратора 📌`);
+                        msgs[0].author.send(`> Вы установили свое ролевое имя. Сменить его вы можете только при помощи администратора 📌`);
                         verificate();
                     })
                     .catch(() => {
