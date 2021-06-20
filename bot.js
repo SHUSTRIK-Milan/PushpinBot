@@ -528,6 +528,9 @@ async function pay(message){
 
     if (user == undefined) user = stats.find(stat => stat.user == `<@${message.author.id}>`);
     if (gUser == undefined) gUser = stats.find(stat => stat.user == `<@${comand(message).sarg[0].slice(3).slice(0,-1)}>`);
+
+    console.log(user);
+    console.log(gUser)
     
     if (user.id == gUser.id){return};
     let money = comand(message).sarg[1];
