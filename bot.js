@@ -1038,7 +1038,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-    if (interaction.data.name == "тест") {
+    if (interaction.data.name == "911") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
@@ -1295,7 +1295,7 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
-            name: "тест", 
+            name: "911", 
             description: "Вызвать экстренные службы",
             options: [
                 {
