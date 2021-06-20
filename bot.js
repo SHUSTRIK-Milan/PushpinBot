@@ -599,7 +599,7 @@ client.on('message', message => {
         if (!mb && !mg) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
     }
 
-    if(message.content == '	⠀' && message.author.bot){
+    if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), 100);
     }
 
@@ -989,17 +989,17 @@ client.on('ready', () => {
 });
 
 client.ws.on('INTERACTION_CREATE', async interaction => {
+    let channel = guild.channels.cache.get(interaction.channel_id)
 
     if (interaction.data.name == "осмотр") {
-        var view = "";
-        var answer = "Test"
+        var arg = "";
 
         if (interaction.data.options == undefined) {
             // опций нет
         } else {
             interaction.data.options.forEach((c) => {
                 if (c.name == "осмотр") {
-                    view = c.value;
+                    arg = c.value;
                 }
             });
         }
@@ -1007,18 +1007,18 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
         client.users.fetch(interaction.member.user.id)
             .then(user => {
-                /* let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
+                let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
 
                 let objects = [];
                 for (let room of homePos.rooms) objects.push(room.slice(0,1).toUpperCase()+room.slice(1));
 
                 if (homePos != null && objects.join(', ') != ''){
                     user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
-                    sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
+                    //sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
                 }else{
                     user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
-                    sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
-                }; */
+                    //sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
+                };
             })
             .catch(console.error);
 
@@ -1026,7 +1026,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             data: {
                 type: 4,
                 data: {
-                    content: '	⠀'
+                    content: '⠀'
                 }
             }
         });
