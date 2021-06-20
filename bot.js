@@ -599,7 +599,7 @@ client.on('message', message => {
         if (!mb && !mg) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
     }
 
-    if(message.content == ' ' && message.author.bot){
+    if(message.content == '	⠀' && message.author.bot){
         setTimeout(() => message.delete(), 100);
     }
 
@@ -1026,7 +1026,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             data: {
                 type: 4,
                 data: {
-                    content: ' '
+                    content: '	⠀'
                 }
             }
         });
