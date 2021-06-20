@@ -855,7 +855,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-    /* if (interaction.data.name == "баланс") {
+    if (interaction.data.name == "баланс") {
         var arg = "баланс";
         let msgDate = {author: user.user, channel: channel, content: arg};
         if (interaction.data.options == undefined) {
@@ -1038,7 +1038,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-    if (interaction.data.name == "sossssss") {
+    if (interaction.data.name == "экстр") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
@@ -1191,7 +1191,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             }
         });
-    } */
+    }
 });
 
 function checkIntegrations() {
@@ -1231,7 +1231,7 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-/*     client.interaction.createApplicationCommand({
+     client.interaction.createApplicationCommand({
             name: "баланс", 
             description: "Проверить свой баланс",
             options: []
@@ -1294,7 +1294,7 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
-            name: "", 
+            name: "экстр", 
             description: "Вызвать экстренные службы",
             options: [
                 {
@@ -1326,6 +1326,6 @@ function checkIntegrations() {
             options: []
         }, config.guild_id)
         .then()
-        .catch(console.error);  */
+        .catch(console.error);
 }
 
