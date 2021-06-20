@@ -1005,7 +1005,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 });
 
 function checkIntegrations() {
-    /* // удаление старых команд
+    // удаление старых команд
     client.interaction.getApplicationCommands()
         .then((d) => {
             d.forEach((r) => {
@@ -1017,7 +1017,7 @@ function checkIntegrations() {
                     .catch(console.log);
             })
         })
-        .catch(console.log); */
+        .catch(console.log);
 
     // регистрация новых
     client.interaction.createApplicationCommand({
@@ -1027,10 +1027,10 @@ function checkIntegrations() {
                 {
                     name: "осмотр",
                     description: "description",
-                    type: "3"
+                    type: "2"
                 }
             ]
-        }, config.guild_id)
+        })
         .then(console.log)
         .catch(console.error);
 
