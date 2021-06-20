@@ -755,7 +755,7 @@ client.interaction = new DiscordInteractions({
     publicKey: config.publicKey,
 });
 
-client.login(process.env.BOT_TOKEN);
+client.login(`ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.IZ48sMfH6u_a9RUpqRk6Ns1txTI`);
 
 client.on('ready', () => {
 	checkIntegrations();
@@ -802,7 +802,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-    if (interaction.data.name == "идти") {
+    /* if (interaction.data.name == "идти") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg};
         if (interaction.data.options == undefined) {
@@ -861,7 +861,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             interaction.data.options.forEach((c) => {
-                if (c.name == "осмотр") {
+                if (c.name == "") {
                     arg = c.value;
                 }
             });
@@ -1191,7 +1191,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             }
         });
-    }
+    } */
 });
 
 function checkIntegrations() {
@@ -1215,7 +1215,7 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
 
-    client.interaction.createApplicationCommand({
+    /* client.interaction.createApplicationCommand({
             name: "идти", 
             description: "Идти с одного объекта в другой",
             options: [
@@ -1324,5 +1324,5 @@ function checkIntegrations() {
             options: []
         }, config.guild_id)
         .then()
-        .catch(console.error);
+        .catch(console.error); */
 }
