@@ -1196,14 +1196,13 @@ client.on('ready', () => {
 
 function checkIntegrations() {
     // удаление старых команд
-    client.interaction.getApplicationCommands()
+    client.interaction
+        .getApplicationCommands()
         .then((d) => {
             d.forEach((r) => {
                 client.interaction
                     .deleteApplicationCommand(r.id, config.guild_id)
-                    .then(() => {
-                        // do nothing
-                    })
+                    .then(console.log)
                     .catch(console.log);
             })
         })
