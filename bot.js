@@ -1158,7 +1158,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-    if (interaction.data.name == "admin") {
+    if (interaction.data.name == "админ-мод") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
