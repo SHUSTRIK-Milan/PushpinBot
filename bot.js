@@ -599,6 +599,10 @@ client.on('message', message => {
         if (!mb && !mg) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
     }
 
+    if(message.content == '7○♂' && message.author.bot){
+        setTimeout(() => message.delete(), 100);
+    }
+
     if (message.channel.id == Config.channelsID.offers && !mb){
         message.react("👍");
         message.react("👎");
@@ -1008,7 +1012,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
-                type: 5,
+                type: 4,
+                data: {
+                    content: '7○♂'
+                }
             }
         });
     }
