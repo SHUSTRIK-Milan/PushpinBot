@@ -999,12 +999,17 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             });
         }
-        console.log(interaction.member.user.id)
+
+        client.users.fetch(interaction.member.user.id)
+            .then(user => {
+                user.send("Кусявка лох")
+            })
+            .catch(console.error);
+
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 2,
-                data: guild.members.cache.get(interaction.member.user.id).send("тест"),
-            },
+            }
         });
     }
 });
@@ -1032,7 +1037,7 @@ function checkIntegrations() {
                 {
                     name: "осмотр",
                     description: "description",
-                    type: "3"
+                    type: "2"
                 }
             ]
         }, config.guild_id)
