@@ -1278,7 +1278,7 @@ function checkIntegrations() {
             description: "Оповестить город",
             options: [
                 {
-                    name: "Текст",
+                    name: "Текс",
                     description: "description",
                     type: "3",
                     required: true
@@ -1312,7 +1312,7 @@ function checkIntegrations() {
             description: "Вызвать администратора",
             options: [
                 {
-                    name: "Текст",
+                    name: "Тек",
                     description: "description",
                     type: "3",
                     required: true
