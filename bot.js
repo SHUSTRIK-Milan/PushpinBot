@@ -1195,7 +1195,20 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 });
 
 function checkIntegrations() {
-    client.interaction.getApplicationCommands(config.guild_id).then(console.log)
+    client.interaction.getApplicationCommands(config.guild_id).then(console.log);
+    let comand = {
+        name: "911", 
+            description: "Вызвать экстренные службы",
+            options: [
+                {
+                    name: "код",
+                    description: "Код службы",
+                    type: "3"
+                },
+            ]
+    };
+
+    client.interaction.createApplicationCommand(comand, config.guild_id, "856222015480135791")
     // удаление старых команд
     /* client.interaction
         .getApplicationCommands(config.guild_id)
