@@ -991,6 +991,7 @@ client.on('ready', () => {
 client.ws.on('INTERACTION_CREATE', async interaction => {
     let channel = guild.channels.cache.get(interaction.channel_id)
     let msgDate = {author: user, channel: channel};
+    let rpchannel = Object.values(Config.channelsID).find(chl => chl == channel.id) == null;
 
     if (interaction.data.name == "осмотр") {
         var arg = "";
@@ -1004,7 +1005,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
         console.log(interaction);
 
-        client.users.fetch(interaction.member.user.id)
+        
+        if(rpchannel) client.users.fetch(interaction.member.user.id)
             .then(user => {
                 let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
 
