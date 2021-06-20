@@ -1237,7 +1237,7 @@ function checkIntegrations() {
             description: "Проверить свой баланс",
             options: []
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "заплатить", 
@@ -1257,7 +1257,7 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "реклама", 
@@ -1271,7 +1271,7 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "оповещение", 
@@ -1285,14 +1285,14 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "форма", 
             description: "Взять форму",
             options: []
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "911", 
@@ -1305,7 +1305,7 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "@", 
@@ -1319,14 +1319,14 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
     client.interaction.createApplicationCommand({
-            name: "админ-мод", 
+            name: "admin", 
             description: "Заступить на пост администратора",
             options: []
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
 }
 
