@@ -1051,7 +1051,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             interaction.data.options.forEach((c) => {
-                if (c.name == "[игрок] [сумма]") {
+                if (c.name == "игрок") {
+                    arg = c.value;
+                }
+                if (c.name == "сумма") {
                     arg = c.value;
                 }
             });
@@ -1133,10 +1136,17 @@ function checkIntegrations() {
             description: "Дать кому-то деньги",
             options: [
                 {
-                    name: "[игрок] [сумма]",
+                    name: "игрок",
                     description: "description",
-                    type: "3"
-                }
+                    type: "2",
+                    required: true
+                },
+                {
+                    name: "сумма",
+                    description: "description",
+                    type: "2",
+                    required: true
+                },
             ]
         }, config.guild_id)
         .then()
