@@ -1210,7 +1210,7 @@ function checkIntegrations() {
         .catch(console.log);
 
     // регистрация новых
-    client.interaction.createApplicationCommand({
+    /* client.interaction.createApplicationCommand({
             name: "осмотр", 
             description: "Осмотреться внутри объекта",
             options: []
@@ -1295,7 +1295,7 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
-            name: "sossssss", 
+            name: "", 
             description: "Вызвать экстренные службы",
             options: [
                 {
@@ -1327,6 +1327,6 @@ function checkIntegrations() {
             options: []
         }, config.guild_id)
         .then()
-        .catch(console.error);
+        .catch(console.error); */
 }
 
