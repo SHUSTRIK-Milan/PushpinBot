@@ -994,9 +994,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     if (interaction.data.name == "осмотр") {
         var arg = "";
-
         if (interaction.data.options == undefined) {
-            // опций нет
         } else {
             interaction.data.options.forEach((c) => {
                 if (c.name == "осмотр") {
