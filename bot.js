@@ -599,7 +599,7 @@ client.on('message', message => {
         if (!mb && !mg) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
     }
 
-    if(message.content == '7○♂' && message.author.bot){
+    if(message.content == ' ' && message.author.bot){
         setTimeout(() => message.delete(), 100);
     }
 
@@ -1003,10 +1003,22 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             });
         }
+        console.log(interaction);
 
         client.users.fetch(interaction.member.user.id)
             .then(user => {
-                user.send("Кусявка лох")
+                /* let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
+
+                let objects = [];
+                for (let room of homePos.rooms) objects.push(room.slice(0,1).toUpperCase()+room.slice(1));
+
+                if (homePos != null && objects.join(', ') != ''){
+                    user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
+                    sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
+                }else{
+                    user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
+                    sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
+                }; */
             })
             .catch(console.error);
 
@@ -1014,7 +1026,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             data: {
                 type: 4,
                 data: {
-                    content: '7○♂'
+                    content: ' '
                 }
             }
         });
@@ -1048,7 +1060,7 @@ function checkIntegrations() {
                 }
             ]
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
 
     client.interaction.createApplicationCommand({
@@ -1062,7 +1074,7 @@ function checkIntegrations() {
                 }
             ]
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
 }
 
