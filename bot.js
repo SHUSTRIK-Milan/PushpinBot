@@ -533,7 +533,7 @@ async function pay(message){
     let money = comand(message).sarg[1];
 
     let user_user = message.member;
-    let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@>]/g,''));
+    let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,''));
     
     if(user == undefined){return}
     if(user == gUser_user){return}
