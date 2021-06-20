@@ -1000,11 +1000,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             });
         }
         console.log(interaction.member.user.id)
-        guild.members.cache.get(interaction.member.user.id).send('Тест')
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 2,
-                data: interaction.member.send("тест"),
+                data: guild.members.cache.get(interaction.member.user.id).send("тест"),
             },
         });
     }
@@ -1033,10 +1032,10 @@ function checkIntegrations() {
                 {
                     name: "осмотр",
                     description: "description",
-                    type: "2"
+                    type: "3"
                 }
             ]
-        })
+        }, config.guild_id)
         .then(console.log)
         .catch(console.error);
 
