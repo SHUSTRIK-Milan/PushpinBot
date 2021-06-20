@@ -21,7 +21,6 @@ var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot');
 
 client.on('ready', () => {
     console.log(`${client.user.tag} готов!`);
-    checkIntegrations();
     guild = client.guilds.cache.get('814795850885627964');
 
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
@@ -758,9 +757,9 @@ client.interaction = new DiscordInteractions({
 
 client.login(process.env.BOT_TOKEN);
 
-/* client.on('ready', () => {
+client.on('ready', () => {
 	checkIntegrations();
-}); */
+});
 
 client.ws.on('INTERACTION_CREATE', async interaction => {
     let channel = guild.channels.cache.get(interaction.channel_id);
