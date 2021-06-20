@@ -1288,20 +1288,6 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
-            name: "оповещение", 
-            description: "Оповестить город",
-            options: [
-                {
-                    name: "Текст",
-                    description: "description",
-                    type: "3",
-                    required: true
-                },
-            ]
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-    client.interaction.createApplicationCommand({
             name: "форма", 
             description: "Взять форму",
             options: []
