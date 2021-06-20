@@ -1003,17 +1003,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         guild.members.cache.get(interaction.member.user.id).send('Тест')
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
-                type: 4,
-                data: {
-                    embeds: [
-                        {
-                            color: 0x000000,
-                            title: view,
-                            description: answer
-                        }
-                    ]
-                }
-            }
+                type: 2,
+                data: interaction.member.send("тест"),
+            },
         });
     }
 });
