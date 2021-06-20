@@ -1215,7 +1215,7 @@ function checkIntegrations() {
             description: "Осмотреться внутри объекта",
             options: []
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
 
     client.interaction.createApplicationCommand({
@@ -1230,14 +1230,14 @@ function checkIntegrations() {
                 }
             ]
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "баланс", 
             description: "Проверить свой баланс",
             options: []
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "заплатить", 
@@ -1257,7 +1257,7 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "реклама", 
@@ -1271,7 +1271,7 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "оповещение", 
@@ -1285,14 +1285,14 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "форма", 
             description: "Взять форму",
             options: []
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "тест", 
@@ -1319,14 +1319,14 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "admin", 
             description: "Заступить на пост администратора",
             options: []
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
 }
 
