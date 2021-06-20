@@ -609,57 +609,6 @@ client.on('message', message => {
         console.log('Новое сообщение в offers')
     };
 
-    if (comand(message).com == 'осмотреться' && !mb && !mg && rpchannel ||
-    comand(message).com == 'осмотреть' && !mb && !mg && rpchannel ||
-    comand(message).com == 'осмотр' && !mb && !mg && rpchannel){
-        setTimeout(() => message.delete(), timeOfDelete);
-        let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
-
-        let objects = [];
-        for (let room of homePos.rooms) objects.push(room.slice(0,1).toUpperCase()+room.slice(1));
-
-        if (homePos != null && objects.join(', ') != ''){
-            message.author.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
-            sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
-        }else{
-            message.author.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
-            sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
-        };
-    };
-
-    if (comand(message).com == 'идти' && !mb && !mg && rpchannel){
-        setTimeout(() => message.delete(), timeOfDelete);
-        let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
-        //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
-        let argsObj = guild.channels.cache.get(comand(message).arg.slice(2).slice(0,-1));
-        if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase().split('-').join(' ');
-        if(argsObj == undefined) argsObj = comand(message).arg;
-        console.log(argsObj);
-        //проверяю не канал ли аргумент, если нет, то просто беру написанное.
-        let walkway = homePos.radius.find(obj => obj.toLowerCase() == argsObj.toLowerCase());
-        //ищу среди радиуса домашнего объекта тот объект, который был указан в аргументе.
-
-        if (walkway != null){
-            let cat = guild.channels.cache.find(cat => cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
-            //ищем каналы чье имя будет равно имени объекта пути
-            if(cat != undefined || cat != null) if (cat.type == 'category'){
-            //проверяем канал на тип категории
-                if (haveRole(message.member,'835630198199681026')){ message.author.send('> Вы находитесь в админ-моде.'); return};
-                setTimeout(() => cat.updateOverwrite(message.author, { 'VIEW_CHANNEL': true }), timeOfDelete);
-                //даем право читать сообщения в категории.
-                setTimeout(() => message.channel.parent.permissionOverwrites.get(message.author.id).delete(), timeOfDelete);
-                //удаляем право читать сообщения в прошлой категории
-                sendLog(message,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
-            };
-        }else if (walkway == null && Config.objects.find(st => st.name.toLowerCase() == argsObj.toLowerCase()) != null){
-            message.author.send(`${argsObj} не является соседним объектом с ${homePos.name}.`);
-            sendLog(message,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
-        }else{
-            message.author.send(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`);
-            sendLog(message,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
-        };
-    };
-
     if(comand(message).com == `баланс` && !mb && !mg && rpchannel){
         setTimeout(() => message.delete(), timeOfDelete);
         let moneyT = new Intl.NumberFormat("ru", {
@@ -1030,6 +979,59 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
+    if (interaction.data.name == "идти") {
+        var arg = "";
+        if (interaction.data.options == undefined) {
+        } else {
+            interaction.data.options.forEach((c) => {
+                if (c.name == "идти") {
+                    arg = c.value;
+                }
+            });
+        }
+        console.log(interaction);
+
+        if(rpchannel){
+            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
+            //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
+            let argsObj = guild.channels.cache.get(arg.slice(2).slice(0,-1));
+            if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase().split('-').join(' ');
+            if(argsObj == undefined) argsObj = arg;
+            console.log(argsObj);
+            //проверяю не канал ли аргумент, если нет, то просто беру написанное.
+            let walkway = homePos.radius.find(obj => obj.toLowerCase() == argsObj.toLowerCase());
+            //ищу среди радиуса домашнего объекта тот объект, который был указан в аргументе.
+
+            if (walkway != null){
+                let cat = guild.channels.cache.find(cat => cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
+                //ищем каналы чье имя будет равно имени объекта пути
+                if(cat != undefined || cat != null) if (cat.type == 'category'){
+                //проверяем канал на тип категории
+                    if (haveRole(user,'835630198199681026')){ user.send('> Вы находитесь в админ-моде.'); return};
+                    setTimeout(() => cat.updateOverwrite(user, { 'VIEW_CHANNEL': true }), timeOfDelete);
+                    //даем право читать сообщения в категории.
+                    setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete);
+                    //удаляем право читать сообщения в прошлой категории
+                    sendLog(msgDate,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
+                };
+            }else if (walkway == null && Config.objects.find(st => st.name.toLowerCase() == argsObj.toLowerCase()) != null){
+                user.send(`${argsObj} не является соседним объектом с ${homePos.name}.`);
+                sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
+            }else{
+                user.author.send(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`);
+                sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
+            };
+        };
+
+        client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                    content: '⠀'
+                }
+            }
+        });
+    }
 });
 
 function checkIntegrations() {
@@ -1067,7 +1069,7 @@ function checkIntegrations() {
             description: "Идти с одного объекта в другой",
             options: [
                 {
-                    name: "walk",
+                    name: "идти",
                     description: "description",
                     type: "3"
                 }
