@@ -948,7 +948,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         } else {
             interaction.data.options.forEach((c) => {
-                if (c.name == "осмотр") {
+                if (c.name == "⠀") {
                     arg = c.value;
                 }
             });
@@ -984,7 +984,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         } else {
             interaction.data.options.forEach((c) => {
-                if (c.name == "идти") {
+                if (c.name == "путь") {
                     arg = c.value;
                 }
             });
@@ -1055,7 +1055,7 @@ function checkIntegrations() {
             description: "Осмотреться внутри объекта",
             options: [
                 {
-                    name: "осмотр",
+                    name: "⠀",
                     description: "description",
                     type: "3"
                 }
@@ -1069,7 +1069,7 @@ function checkIntegrations() {
             description: "Идти с одного объекта в другой",
             options: [
                 {
-                    name: "идти",
+                    name: "путь",
                     description: "description",
                     type: "3"
                 }
