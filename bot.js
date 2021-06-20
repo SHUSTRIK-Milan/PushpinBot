@@ -1008,7 +1008,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
-                type: 2,
+                type: 3,
             }
         });
     }
