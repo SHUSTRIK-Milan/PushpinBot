@@ -599,7 +599,7 @@ client.on('message', message => {
     }
 
     if(message.content == '⠀' && message.author.bot){
-        setTimeout(() => message.delete(), 50);
+        setTimeout(() => message.delete(), 100);
     }
 
     if (message.channel.id == Config.channelsID.offers && !mb){
