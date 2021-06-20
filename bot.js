@@ -608,36 +608,6 @@ client.on('message', message => {
         console.log('Новое сообщение в offers')
     };
 
-    if(comand(message).com == `@` && !mb && !mg && !haveRole(message.member, '830061387849662515') && rpchannel){
-        setTimeout(() => message.delete(), timeOfDelete);
-        let staff = guild.members.cache.filter(member => (haveRole(member, '830061387849662515') || haveRole(member, '833226140755689483')) && member.presence.status != 'offline');
-        console.log(staff.size);
-        if(staff.size == 0){
-            message.author.send(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`);
-            sendLog(message,'РП','Попытался вызвать администратора.','Ошибка',`Вывод: **На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`)
-            guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${message.author.tag} написал жалобу, но администраторов нет в сети:**`, {embed: {
-                    thumbnail: {
-                        url: message.author.displayAvatarURL()
-                    },
-                    fields: [{
-                        name: `Текст жалобы:`,
-                        value: `${comand(message).arg}`
-                    }],
-                    fields: [{
-                        name: `Местоположение:`,
-                        value: `${message.channel.parent.name} -> <#${message.channel.id}>`
-                    }],
-                }
-            });
-        }else{
-            message.author.send(`**Вы вызывали администратора** 👥\n> ${comand(message).arg}`);
-            sendLog(message,'РП','Вызвал администратора.','Успешно',`Вывод: **Вы вызывали администратора** 👥\n> ${comand(message).arg}`)
-            for(let worker of staff){
-                worker[1].send(`**${message.member.nickname} вызывал(а) администратора** 👥\n> ${comand(message).arg}\n**Местоположение:**\n> ${message.channel.parent.name} -> <#${message.channel.id}>`)
-            }
-        }
-    };
-
     if(comand(message).com == `send` && !mb && !mg && (haveRole(message.member, `833778527609552918`) || head)){	
         setTimeout(() => message.delete(), timeOfDelete);	
         message.channel.send(`${comand(message).arg}`);	
