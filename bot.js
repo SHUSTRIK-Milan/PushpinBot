@@ -841,7 +841,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 user.send(`${argsObj} не является соседним объектом с ${homePos.name}.`);
                 sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
             }else{
-                user.author.send(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`);
+                user.send(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`);
                 sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
             };
         };
