@@ -20,7 +20,7 @@ var gitA = new GitHub({
 var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot');
 
 client.on('ready', () => {
-    console.log(`${client.user.tag} ready!`);
+    console.log(`${client.user.tag} готов!`);
     guild = client.guilds.cache.get('814795850885627964');
 
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
