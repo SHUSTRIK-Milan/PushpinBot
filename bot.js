@@ -988,7 +988,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     if (interaction.data.name == "осмотр") {
         var view = "";
-        var answer = "pong!"
+        var answer = "Test"
 
         if (interaction.data.options == undefined) {
             // опций нет
@@ -1001,6 +1001,20 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
         console.log(interaction.member.user.id)
         guild.members.cache.get(interaction.member.user.id).send('Тест')
+        client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                    embeds: [
+                        {
+                            color: 0x000000,
+                            title: view,
+                            description: answer
+                        }
+                    ]
+                }
+            }
+        });
     }
 });
 
