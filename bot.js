@@ -1132,7 +1132,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         },
                         fields: [{
                             name: `Текст жалобы:`,
-                            value: `${comand(msgDate).arg}`
+                            value: `${arg}`
                         }],
                         fields: [{
                             name: `Местоположение:`,
@@ -1141,10 +1141,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     }
                 });
             }else{
-                msgDate.author.send(`**Вы вызывали администратора** 👥\n> ${comand(msgDate).arg}`);
-                sendLog(msgDate,'РП','Вызвал администратора.','Успешно',`Вывод: **Вы вызывали администратора** 👥\n> ${comand(msgDate).arg}`)
+                msgDate.author.send(`**Вы вызывали администратора** 👥\n> ${arg}`);
+                sendLog(msgDate,'РП','Вызвал администратора.','Успешно',`Вывод: **Вы вызывали администратора** 👥\n> ${arg}`)
                 for(let worker of staff){
-                    worker[1].send(`**${msgDate.member.nickname} вызывал(а) администратора** 👥\n> ${comand(msgDate).arg}\n**Местоположение:**\n> ${channel.parent.name} -> <#${channel.id}>`)
+                    worker[1].send(`**${msgDate.member.nickname} вызывал(а) администратора** 👥\n> ${arg}\n**Местоположение:**\n> ${channel.parent.name} -> <#${channel.id}>`)
                 }
             }
         };
