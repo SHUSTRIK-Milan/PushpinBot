@@ -999,8 +999,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             });
         }
-        interaction.user.send('тест');
-        console.log(interaction.user)
+        console.log(interaction)
     }
 });
 
