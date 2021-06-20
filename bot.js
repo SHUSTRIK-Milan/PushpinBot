@@ -948,7 +948,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         } else {
             interaction.data.options.forEach((c) => {
-                if (c.name == "⠀") {
+                if (c.name == "осмотр") {
                     arg = c.value;
                 }
             });
@@ -1055,7 +1055,7 @@ function checkIntegrations() {
             description: "Осмотреться внутри объекта",
             options: [
                 {
-                    name: "⠀",
+                    name: "осмотр",
                     description: "description",
                     type: "3"
                 }
