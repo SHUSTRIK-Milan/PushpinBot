@@ -1045,22 +1045,23 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         });
     }
     if (interaction.data.name == "заплатить") {
-        var arg = "";
+        var userDate = '';
+        var money = '';
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         }else{
             interaction.data.options.forEach((c) => {
                 if (c.name == "игрок") {
-                    arg = c.value;
+                    userDate = c.value;
                 }
                 if (c.name == "сумма") {
-                    arg = c.value;
+                    money = c.value;
                 }
             });
         }
     
         if(rpchannel){
-            pay(msgDate);
+            pay(msgDate, userDate, money);
         };
     
         client.api.interactions(interaction.id, interaction.token).callback.post({
