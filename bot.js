@@ -588,9 +588,14 @@ client.on('message', message => {
     let mg = message.guild == undefined;
     let head = haveRole(message.member, '833226140755689483')
     let rpchannel = Object.values(Config.channelsID).find(chl => chl == message.channel.id) == null;
-
-    if (!mb && !mg) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
-
+    
+    if (Object.values(Config.logChannels).find(chl => chl == message.channel.id) != null){
+        if (!mb && !mg) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
+    }
+    if (Object.values(Config.logChannels).find(chl => chl == message.channel.id) == null){
+        if (!mb && !mg) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
+    }
+    
     if (message.channel.id == Config.channelsID.offers && !mb){
         message.react("👍");
         message.react("👎");
