@@ -940,7 +940,7 @@ client.on('ready', () => {
 client.ws.on('INTERACTION_CREATE', async interaction => {
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
-    let msgDate = {author: user, channel: channel};
+    let msgDate = {author: user.user, channel: channel};
     let rpchannel = Object.values(Config.channelsID).find(chl => chl == channel.id) == null;
 
     if (interaction.data.name == "осмотр") {
