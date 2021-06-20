@@ -1037,7 +1037,7 @@ function checkIntegrations() {
                 {
                     name: "осмотр",
                     description: "description",
-                    type: "2"
+                    type: "3"
                 }
             ]
         }, config.guild_id)
