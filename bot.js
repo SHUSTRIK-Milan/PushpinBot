@@ -1094,13 +1094,7 @@ function checkIntegrations() {
     client.interaction.createApplicationCommand({
             name: "осмотр", 
             description: "Осмотреться внутри объекта",
-            options: [
-                {
-                    name: "осмотр",
-                    description: "description",
-                    type: "3"
-                }
-            ]
+            options: []
         }, config.guild_id)
         .then()
         .catch(console.error);
@@ -1112,7 +1106,8 @@ function checkIntegrations() {
                 {
                     name: "путь",
                     description: "description",
-                    type: "3"
+                    type: "3",
+                    required: true
                 }
             ]
         }, config.guild_id)
@@ -1121,13 +1116,7 @@ function checkIntegrations() {
     client.interaction.createApplicationCommand({
             name: "баланс", 
             description: "Проверить свой баланс",
-            options: [
-                {
-                    name: "баланс",
-                    description: "description",
-                    type: "3"
-                }
-            ]
+            options: []
         }, config.guild_id)
         .then()
         .catch(console.error);
