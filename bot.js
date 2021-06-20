@@ -1196,13 +1196,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
 function checkIntegrations() {
     // удаление старых команд
-    client.interaction
-        .getApplicationCommands()
+    client.interaction.getApplicationCommands()
         .then((d) => {
             d.forEach((r) => {
-                client.interaction
-                    .deleteApplicationCommand(r.id, config.guild_id)
-                    .then(console.log)
+                client.interaction.deleteApplicationCommand(r.id, config.guild_id)
+                    .then(console.log(r.id))
                     .catch(console.log);
             })
         })
