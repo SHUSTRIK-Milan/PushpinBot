@@ -743,7 +743,7 @@ client.on('message', message => {
 });
 
 const config = {
-    token: `ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.IZ48sMfH6u_a9RUpqRk6Ns1txTI`,
+    token: process.env.BOT_TOKEN,
     publicKey : "0e6a87c0f53052a2025917df52069144195fea4b82e32cb43619d65d1c278a97",
     applicationId: "822500483826450454",
     guild_id: "814795850885627964"
@@ -754,8 +754,6 @@ client.interaction = new DiscordInteractions({
     authToken: config.token,
     publicKey: config.publicKey,
 });
-
-client.login(`ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.IZ48sMfH6u_a9RUpqRk6Ns1txTI`);
 
 client.on('ready', () => {
 	checkIntegrations();
@@ -1039,7 +1037,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-    if (interaction.data.name == "экстр") {
+    if (interaction.data.name == "911") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
@@ -1196,6 +1194,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 });
 
 function checkIntegrations() {
+    client.interaction.getApplicationCommands(config.guild_id).then(console.log)
     // удаление старых команд
     /* client.interaction
         .getApplicationCommands(config.guild_id)
@@ -1210,15 +1209,15 @@ function checkIntegrations() {
         .catch(console.log); */
 
     // регистрация новых
-    await client.interaction.createApplicationCommand({
+    /* setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "осмотр", 
             description: "Осмотреться внутри объекта",
             options: []
         }, config.guild_id)
         .then()
         .catch(console.error);
-
-    await client.interaction.createApplicationCommand({
+    }, 200);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "идти", 
             description: "Идти с одного объекта в другой",
             options: [
@@ -1230,16 +1229,18 @@ function checkIntegrations() {
                 }
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
-     await client.interaction.createApplicationCommand({
+    }, 200);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "баланс", 
             description: "Проверить свой баланс",
             options: []
         }, config.guild_id)
         .then()
         .catch(console.error);
-    await client.interaction.createApplicationCommand({
+    }, 200);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "заплатить", 
             description: "Дать кому-то деньги",
             options: [
@@ -1257,9 +1258,10 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
-    await client.interaction.createApplicationCommand({
+    }, 200);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "реклама", 
             description: "Опубликовать рекламу за 100$",
             options: [
@@ -1271,9 +1273,10 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
-    await client.interaction.createApplicationCommand({
+    }, 120000);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "оповещение", 
             description: "Оповестить город",
             options: [
@@ -1285,16 +1288,18 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
-    await client.interaction.createApplicationCommand({
+    }, 10000);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "форма", 
             description: "Взять форму",
             options: []
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
-    await client.interaction.createApplicationCommand({
+    }, 80000);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "911", 
             description: "Вызвать экстренные службы",
             options: [
@@ -1305,10 +1310,11 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
-    await client.interaction.createApplicationCommand({
-            name: "@", 
+    }, 60000);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "admincall", 
             description: "Вызвать администратора",
             options: [
                 {
@@ -1319,13 +1325,17 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
-    await client.interaction.createApplicationCommand({
+    }, 40000);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "admin", 
             description: "Заступить на пост администратора",
             options: []
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
+    }, 22000); */
 }
+
+client.login(process.env.BOT_TOKEN);
