@@ -1138,13 +1138,13 @@ function checkIntegrations() {
                 {
                     name: "игрок",
                     description: "description",
-                    type: "2",
+                    type: "3",
                     required: true
                 },
                 {
                     name: "сумма",
                     description: "description",
-                    type: "2",
+                    type: "3",
                     required: true
                 },
             ]
