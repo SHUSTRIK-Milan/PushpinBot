@@ -1229,7 +1229,7 @@ function checkIntegrations() {
                 }
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
      client.interaction.createApplicationCommand({
             name: "баланс", 
