@@ -129,25 +129,27 @@ function sendLog(message,cat,act,status,add){
     if (cat == 'РП') color = 11382073;
 
     if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
-
-    guild.channels.cache.get(Config.channelsID.logs).send({embed: {
-        color: color,
-        author: {
-            name: message.author.username,
-            icon_url: message.author.avatarURL()
-        },
-        thumbnail: {
-            url: img
-        },
-        title: `[${cat}] ${act}`,
-        fields: [{
-            name: `Допольнительно:`,
-            value: `${add}\n[<#${message.channel.id}>, https://discord.com/channels/814795850885627964/${message.channel.id}/${message.id}]`
-        }],
-        
-        timestamp: new Date()
-        }
-    });
+    
+    if(cat != 'РП'){
+        guild.channels.cache.get(Config.channelsID.logs).send({embed: {
+            color: color,
+            author: {
+                name: message.author.username,
+                icon_url: message.author.avatarURL()
+            },
+            thumbnail: {
+                url: img
+            },
+            title: `[${cat}] ${act}`,
+            fields: [{
+                name: `Допольнительно:`,
+                value: `${add}\n[<#${message.channel.id}>, https://discord.com/channels/814795850885627964/${message.channel.id}/${message.id}]`
+            }],
+            
+            timestamp: new Date()
+            }
+        });
+    };
     if(cat == 'РП'){
         guild.channels.cache.get(Config.channelsID.rp_logs).send({embed: {
             color: color,
@@ -595,7 +597,7 @@ client.on('message', message => {
     if (Object.values(Config.logChannels).find(chl => chl == message.channel.id) == null){
         if (!mb && !mg) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
     }
-    
+
     if (message.channel.id == Config.channelsID.offers && !mb){
         message.react("👍");
         message.react("👎");
