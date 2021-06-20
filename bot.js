@@ -609,26 +609,6 @@ client.on('message', message => {
         console.log('Новое сообщение в offers')
     };
 
-    if(comand(message).com == `баланс` && !mb && !mg && rpchannel){
-        setTimeout(() => message.delete(), timeOfDelete);
-        let moneyT = new Intl.NumberFormat("ru", {
-            style: "currency",
-            currency: "USD",
-            minimumSignificantDigits: 1
-        })
-        GetStats().then(stats => {
-            if (stats.length == 0){return};
-            message.author.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))} 💰`);
-            sendLog(message,'РП','Узнал свой баланс.','Успешно',`Вывод: Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))} 💰`);
-        });
-    }
-
-    if(comand(message).com == `заплатить` && !mb && !mg && rpchannel ||
-    comand(message).com == `платить` && !mb && !mg && rpchannel){
-        pay(message);
-        setTimeout(() => message.delete(), timeOfDelete);
-    };
-
     if(comand(message).com == `реклама` && !mb && !mg && rpchannel){
         setTimeout(() => message.delete(), timeOfDelete);
         let moneyT = new Intl.NumberFormat("ru", {
@@ -940,11 +920,11 @@ client.on('ready', () => {
 client.ws.on('INTERACTION_CREATE', async interaction => {
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
-    let msgDate = {author: user.user, channel: channel};
     let rpchannel = Object.values(Config.channelsID).find(chl => chl == channel.id) == null;
 
     if (interaction.data.name == "осмотр") {
         var arg = "";
+        let msgDate = {author: user.user, channel: channel, content: arg};
         if (interaction.data.options == undefined) {
         } else {
             interaction.data.options.forEach((c) => {
@@ -953,7 +933,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             });
         }
-        console.log(interaction);
 
         if(rpchannel){
             let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
@@ -981,6 +960,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
     if (interaction.data.name == "идти") {
         var arg = "";
+        let msgDate = {author: user.user, channel: channel, content: arg};
         if (interaction.data.options == undefined) {
         } else {
             interaction.data.options.forEach((c) => {
@@ -989,7 +969,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             });
         }
-        console.log(interaction);
 
         if(rpchannel){
             let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
@@ -1023,6 +1002,65 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             };
         };
 
+        client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                    content: '⠀'
+                }
+            }
+        });
+    }
+    if (interaction.data.name == "баланс") {
+        var arg = "баланс";
+        let msgDate = {author: user.user, channel: channel, content: arg};
+        if (interaction.data.options == undefined) {
+        }else{
+            interaction.data.options.forEach((c) => {
+                if (c.name == "осмотр") {
+                    arg = c.value;
+                }
+            });
+        }
+    
+        if(rpchannel){
+            let moneyT = new Intl.NumberFormat("ru", {
+                style: "currency",
+                currency: "USD",
+                minimumSignificantDigits: 1
+            })
+            GetStats().then(stats => {
+                if (stats.length == 0){return};
+                user.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${user.id}>`).money))} 💰`);
+                sendLog(msgDate,'РП','Узнал свой баланс.','Успешно',`Вывод: Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${user.id}>`).money))} 💰`);
+            });
+        };
+    
+        client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                    content: '⠀'
+                }
+            }
+        });
+    }
+    if (interaction.data.name == "заплатить") {
+        var arg = "";
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if (interaction.data.options == undefined) {
+        }else{
+            interaction.data.options.forEach((c) => {
+                if (c.name == "[игрок] [сумма]") {
+                    arg = c.value;
+                }
+            });
+        }
+    
+        if(rpchannel){
+            pay(msgDate);
+        };
+    
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 4,
@@ -1077,5 +1115,32 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
+    client.interaction.createApplicationCommand({
+            name: "баланс", 
+            description: "Проверить свой баланс",
+            options: [
+                {
+                    name: "баланс",
+                    description: "description",
+                    type: "3"
+                }
+            ]
+        }, config.guild_id)
+        .then()
+        .catch(console.error);
+    client.interaction.createApplicationCommand({
+            name: "заплатить", 
+            description: "Дать кому-то деньги",
+            options: [
+                {
+                    name: "[игрок] [сумма]",
+                    description: "description",
+                    type: "3"
+                }
+            ]
+        }, config.guild_id)
+        .then()
+        .catch(console.error);
+    
 }
 
