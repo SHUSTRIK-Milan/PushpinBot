@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 const Config = require('./config');
 const client = new Discord.Client();
-const {DiscordInteractions} = require("slash-commands");
 const prefix = '!';
 const BDpref = '^';
 const urlSteam = `https://steamcommunity.com/`;
@@ -20,7 +19,7 @@ var gitA = new GitHub({
 var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot');
 
 client.on('ready', () => {
-    console.log(`${client.user.tag} готов!`);
+    console.log(`${client.user.tag} ready!`);
     guild = client.guilds.cache.get('814795850885627964');
 
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
@@ -516,7 +515,7 @@ async function Stats(message){
     
 };
 
-async function pay(message, userDate, money){
+async function pay(message){
     stats = await GetStats();
     if (stats.length == 0){return};
 
@@ -527,13 +526,14 @@ async function pay(message, userDate, money){
     })
 
     let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
-    let gUser = stats.find(stat => stat.user == userDate);
-    if(gUser == undefined) gUser = stats.find(stat => stat.user == `<@!${userDate.slice(2).slice(0,-1)}>`);
+    let gUser = stats.find(stat => stat.user == comand(message).sarg[0]);
+    if(gUser == undefined) gUser = stats.find(stat => stat.user == `<@!${comand(message).sarg[0].slice(2).slice(0,-1)}>`);
 
-    console.log(userDate);
+    console.log(comand(message).sarg[0]);
     console.log(gUser)
     
     if (user.id == gUser.id){return};
+    let money = comand(message).sarg[1];
 
     let user_user = message.member;
     let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,''));
@@ -598,14 +598,236 @@ client.on('message', message => {
         if (!mb && !mg) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
     }
 
-    if(message.content == '⠀' && message.author.bot){
-        setTimeout(() => message.delete(), 50);
-    }
-
     if (message.channel.id == Config.channelsID.offers && !mb){
         message.react("👍");
         message.react("👎");
         console.log('Новое сообщение в offers')
+    };
+
+    if (comand(message).com == 'осмотреться' && !mb && !mg && rpchannel ||
+    comand(message).com == 'осмотреть' && !mb && !mg && rpchannel ||
+    comand(message).com == 'осмотр' && !mb && !mg && rpchannel){
+        setTimeout(() => message.delete(), timeOfDelete);
+        let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
+
+        let objects = [];
+        for (let room of homePos.rooms) objects.push(room.slice(0,1).toUpperCase()+room.slice(1));
+
+        if (homePos != null && objects.join(', ') != ''){
+            message.author.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
+            sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
+        }else{
+            message.author.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
+            sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
+        };
+    };
+
+    if (comand(message).com == 'идти' && !mb && !mg && rpchannel){
+        setTimeout(() => message.delete(), timeOfDelete);
+        let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
+        //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
+        let argsObj = guild.channels.cache.get(comand(message).arg.slice(2).slice(0,-1));
+        if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase().split('-').join(' ');
+        if(argsObj == undefined) argsObj = comand(message).arg;
+        console.log(argsObj);
+        //проверяю не канал ли аргумент, если нет, то просто беру написанное.
+        let walkway = homePos.radius.find(obj => obj.toLowerCase() == argsObj.toLowerCase());
+        //ищу среди радиуса домашнего объекта тот объект, который был указан в аргументе.
+
+        if (walkway != null){
+            let cat = guild.channels.cache.find(cat => cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
+            //ищем каналы чье имя будет равно имени объекта пути
+            if(cat != undefined || cat != null) if (cat.type == 'category'){
+            //проверяем канал на тип категории
+                if (haveRole(message.member,'835630198199681026')){ message.author.send('> Вы находитесь в админ-моде.'); return};
+                setTimeout(() => cat.updateOverwrite(message.author, { 'VIEW_CHANNEL': true }), timeOfDelete);
+                //даем право читать сообщения в категории.
+                setTimeout(() => message.channel.parent.permissionOverwrites.get(message.author.id).delete(), timeOfDelete);
+                //удаляем право читать сообщения в прошлой категории
+                sendLog(message,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
+            };
+        }else if (walkway == null && Config.objects.find(st => st.name.toLowerCase() == argsObj.toLowerCase()) != null){
+            message.author.send(`${argsObj} не является соседним объектом с ${homePos.name}.`);
+            sendLog(message,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
+        }else{
+            message.author.send(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`);
+            sendLog(message,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
+        };
+    };
+
+    if(comand(message).com == `баланс` && !mb && !mg && rpchannel){
+        setTimeout(() => message.delete(), timeOfDelete);
+        let moneyT = new Intl.NumberFormat("ru", {
+            style: "currency",
+            currency: "USD",
+            minimumSignificantDigits: 1
+        })
+        GetStats().then(stats => {
+            if (stats.length == 0){return};
+            message.author.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))} 💰`);
+            sendLog(message,'РП','Узнал свой баланс.','Успешно',`Вывод: Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${message.author.id}>`).money))} 💰`);
+        });
+    }
+
+    if(comand(message).com == `заплатить` && !mb && !mg && rpchannel ||
+    comand(message).com == `платить` && !mb && !mg && rpchannel){
+        pay(message);
+        setTimeout(() => message.delete(), timeOfDelete);
+    };
+
+    if(comand(message).com == `реклама` && !mb && !mg && rpchannel){
+        setTimeout(() => message.delete(), timeOfDelete);
+        let moneyT = new Intl.NumberFormat("ru", {
+            style: "currency",
+            currency: "USD",
+            minimumSignificantDigits: 1
+        });
+
+        minusMoney(message, 100).then(succ =>{
+            if(succ == true){
+                guild.channels.cache.get(Config.channelsID.adverts).send(`> Реклама от ${message.member.nickname} 📢\n${comand(message).arg}`)
+                message.author.send(`> Вы приобрели рекламу за ${moneyT.format(100)} 📢`);
+            }else if(succ == false){
+                message.author.send(`> Вам не хватило денег на рекламу 📢`);
+            }
+        });
+    };
+
+    if(comand(message).com == `оповещение` && !mb && !mg && rpchannel && haveRole(`852668893821665320`)){
+        setTimeout(() => message.delete(), timeOfDelete);
+        guild.channels.cache.get(Config.channelsID.adverts).send(`> Оповещение от мэрии города 🎙️\n${comand(message).arg}`)
+    }
+
+    if(comand(message).com == `форма` && !mb && !mg && rpchannel){
+        setTimeout(() => message.delete(), timeOfDelete);
+        function giveForm(member, role){
+            if(haveRole(member, role)){
+                removeRole(member, role);
+                giveRole(member, '854315001543786507');
+                sendLog(message,'РП','Снял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(role).name}`)
+            }
+            if(!haveRole(member, role)){
+                if(!haveRole(member, `854315001543786507`)){
+                    message.author.send(`**Вы не можете взять несколько форм организаций** 🗂️`);
+                    sendLog(message,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: **Вы не можете взять несколько форм организаций** 🗂️`)
+                    return;
+                }
+                giveRole(member, role);
+                removeRole(member, '854315001543786507');
+                sendLog(message,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(role).name}`)
+            }
+        };
+        for(let dept in Config.departments){
+            if(message.channel.id == Config.departments[dept][0]){
+                let channel = guild.channels.cache.get(BDchnl);
+                channel.messages.fetch(Config.departments[dept][1]).then(oMsg => {
+                    let nMsg = oMsg.content.split('\n');
+                    nMsg.splice(0,1);
+    
+                    if(nMsg.find(member => member == message.member.id) != null){
+                        giveForm(message.member, Config.departments[dept][2]);
+                    }else{
+                        message.author.send(`**Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
+                        sendLog(message,'РП','Попытался взять форму.','Ошибка',`Вывод: **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
+                    };
+                });
+            };
+        }
+    };
+
+    if(comand(message).com == `911` && !mb && !mg && rpchannel){
+        setTimeout(() => message.delete(), timeOfDelete);
+        let object = message.channel.parent.name.slice(4).slice(0,-1);
+        let room = message.channel.name;
+        let adres = `${object.slice(0,1).toUpperCase()+object.slice(1)}, ${room.slice(0,1).toUpperCase()+room.slice(1)}`
+        if(comand(message).sarg[0] == '1'){
+            let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.fire[2]));
+            if(staff.size == 0){
+                message.author.send(`**На данный момент пожарные на службе отсутствуют** 🔥`);
+                sendLog(message,'РП','Попытался вызвать пожарную службу.','Ошибка',`Вывод: **На данный момент пожарные на службе отсутствуют** 🔥`)
+            }else{
+                message.author.send(`**Вы вызывали пожарную службу** 🔥\n> ${comand(message,1).carg}`);
+                sendLog(message,'РП','Вызвал пожарную службу.','Успешно',`Вывод: **Вы вызывали пожарную службу** 🔥\n> ${comand(message,1).carg}`)
+                for(let worker of staff){
+                    worker[1].send(`**${message.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${comand(message,1).carg}\n**Адрес:**\n> ${adres}`)
+                }
+            }
+        }else if(comand(message).sarg[0] == '2'){
+            let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.police[2]));
+            if(staff.size == 0){
+                message.author.send(`**На данный момент полицейские на службе отсутствуют** 🚔`);
+                sendLog(message,'РП','Попытался вызвать полицию.','Ошибка',`Вывод: **На данный момент полицейские на службе отсутствуют** 🚔`)
+            }else{
+                message.author.send(`**Вы вызывали полицию** 🚔\n> ${comand(message,1).carg}`);
+                sendLog(message,'РП','Вызвал полицию.','Успешно',`Вывод: **Вы вызывали полицию** 🚔\n> ${comand(message,1).carg}`)
+                for(let worker of staff){
+                    worker[1].send(`**${message.member.nickname} вызывал(а) полицию** 🚔\n> ${comand(message,1).carg}\n**Адрес:**\n> ${adres}`)
+                }
+            }
+        }else if(comand(message).sarg[0] == '3'){
+            let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.med[2]));
+            if(staff.size == 0){
+                message.author.send(`**На данный момент медики на службе отсутствуют** ⚕️`);
+                sendLog(message,'РП','Попытался вызвать медицинскую службу.','Ошибка',`Вывод: **На данный момент медики на службе отсутствуют** ⚕️`)
+            }else{
+                message.author.send(`**Вы вызывали медицинскую службу** ⚕️\n> ${comand(message,1).carg}`);
+                sendLog(message,'РП','Вызвал медицинскую службу.','Успешно',`Вывод: **Вы вызывали медицинскую службу** ⚕️\n> ${comand(message,1).carg}`)
+                for(let worker of staff){
+                    worker[1].send(`**${message.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${comand(message,1).carg}\n**Адрес:**\n> ${adres}`)
+                }
+            }
+        }else{
+            message.author.send(`**Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️
+> 1 – пожарная служба.
+> 2 – полиция.
+> 3 – медицинская служба.
+            `);
+        };
+        sendLog(message,'РП','Вызвал 911 без доп. кода.','Успешно',`Вывод: **Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️`)
+    };
+
+    if(comand(message).com == 'admin' && !mb && !mg && (haveRole(message.member, '830061387849662515') || head) && rpchannel){
+        setTimeout(() => message.delete(), timeOfDelete);
+        if(haveRole(message.member, '835630198199681026')){
+            removeRole(message.member, '835630198199681026');
+            message.channel.parent.updateOverwrite(message.member, {'VIEW_CHANNEL': true})
+            sendLog(message,'РП','Вышел из админ-мода.','Успешно',` `)
+        }
+        if(!haveRole(message.member, '835630198199681026')){
+            giveRole(message.member, '835630198199681026');
+            message.channel.parent.permissionOverwrites.get(message.author.id).delete();
+            sendLog(message,'РП','Вошел в админ-мод.','Успешно',` `)
+        }
+    };
+
+    if(comand(message).com == `@` && !mb && !mg && !haveRole(message.member, '830061387849662515') && rpchannel){
+        setTimeout(() => message.delete(), timeOfDelete);
+        let staff = guild.members.cache.filter(member => (haveRole(member, '830061387849662515') || haveRole(member, '833226140755689483')) && member.presence.status != 'offline');
+        console.log(staff.size);
+        if(staff.size == 0){
+            message.author.send(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`);
+            sendLog(message,'РП','Попытался вызвать администратора.','Ошибка',`Вывод: **На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`)
+            guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${message.author.tag} написал жалобу, но администраторов нет в сети:**`, {embed: {
+                    thumbnail: {
+                        url: message.author.displayAvatarURL()
+                    },
+                    fields: [{
+                        name: `Текст жалобы:`,
+                        value: `${comand(message).arg}`
+                    }],
+                    fields: [{
+                        name: `Местоположение:`,
+                        value: `${message.channel.parent.name} -> <#${message.channel.id}>`
+                    }],
+                }
+            });
+        }else{
+            message.author.send(`**Вы вызывали администратора** 👥\n> ${comand(message).arg}`);
+            sendLog(message,'РП','Вызвал администратора.','Успешно',`Вывод: **Вы вызывали администратора** 👥\n> ${comand(message).arg}`)
+            for(let worker of staff){
+                worker[1].send(`**${message.member.nickname} вызывал(а) администратора** 👥\n> ${comand(message).arg}\n**Местоположение:**\n> ${message.channel.parent.name} -> <#${message.channel.id}>`)
+            }
+        }
     };
 
     if(comand(message).com == `send` && !mb && !mg && (haveRole(message.member, `833778527609552918`) || head)){	
@@ -742,591 +964,4 @@ client.on('message', message => {
 
 });
 
-const config = {
-    token: `ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.IZ48sMfH6u_a9RUpqRk6Ns1txTI`,
-    publicKey : "0e6a87c0f53052a2025917df52069144195fea4b82e32cb43619d65d1c278a97",
-    applicationId: "822500483826450454",
-    guild_id: "814795850885627964"
-};
-
-client.interaction = new DiscordInteractions({
-    applicationId: config.applicationId,
-    authToken: config.token,
-    publicKey: config.publicKey,
-});
-
-client.login(`ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.IZ48sMfH6u_a9RUpqRk6Ns1txTI`);
-
-client.on('ready', () => {
-	checkIntegrations();
-});
-
-client.ws.on('INTERACTION_CREATE', async interaction => {
-    let channel = guild.channels.cache.get(interaction.channel_id);
-    let user = await guild.members.fetch(interaction.member.user.id);
-    let rpchannel = Object.values(Config.channelsID).find(chl => chl == channel.id) == null;
-
-    if (interaction.data.name == "осмотр") {
-        var arg = "";
-        let msgDate = {author: user.user, channel: channel, content: arg};
-        if (interaction.data.options == undefined) {
-        } else {
-            interaction.data.options.forEach((c) => {
-                if (c.name == "осмотр") {
-                    arg = c.value;
-                }
-            });
-        }
-
-        if(rpchannel){
-            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
-
-            let objects = [];
-            for (let room of homePos.rooms) objects.push(room.slice(0,1).toUpperCase()+room.slice(1));
-
-            if (homePos != null && objects.join(', ') != ''){
-                user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
-                sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
-            }else{
-                user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
-                sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
-            };
-        };
-
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
-    }
-    if (interaction.data.name == "идти") {
-        var arg = "";
-        let msgDate = {author: user.user, channel: channel, content: arg};
-        if (interaction.data.options == undefined) {
-        } else {
-            interaction.data.options.forEach((c) => {
-                if (c.name == "путь") {
-                    arg = c.value;
-                }
-            });
-        }
-
-        if(rpchannel){
-            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
-            //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
-            let argsObj = guild.channels.cache.get(arg.slice(2).slice(0,-1));
-            if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase().split('-').join(' ');
-            if(argsObj == undefined) argsObj = arg;
-            console.log(argsObj);
-            //проверяю не канал ли аргумент, если нет, то просто беру написанное.
-            let walkway = homePos.radius.find(obj => obj.toLowerCase() == argsObj.toLowerCase());
-            //ищу среди радиуса домашнего объекта тот объект, который был указан в аргументе.
-
-            if (walkway != null){
-                let cat = guild.channels.cache.find(cat => cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
-                //ищем каналы чье имя будет равно имени объекта пути
-                if(cat != undefined || cat != null) if (cat.type == 'category'){
-                //проверяем канал на тип категории
-                    if (haveRole(user,'835630198199681026')){ user.send('> Вы находитесь в админ-моде.'); return};
-                    setTimeout(() => cat.updateOverwrite(user, { 'VIEW_CHANNEL': true }), timeOfDelete);
-                    //даем право читать сообщения в категории.
-                    setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete);
-                    //удаляем право читать сообщения в прошлой категории
-                    sendLog(msgDate,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
-                };
-            }else if (walkway == null && Config.objects.find(st => st.name.toLowerCase() == argsObj.toLowerCase()) != null){
-                user.send(`${argsObj} не является соседним объектом с ${homePos.name}.`);
-                sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
-            }else{
-                user.author.send(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`);
-                sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
-            };
-        };
-
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
-    }
-    if (interaction.data.name == "баланс") {
-        var arg = "баланс";
-        let msgDate = {author: user.user, channel: channel, content: arg};
-        if (interaction.data.options == undefined) {
-        }else{
-            interaction.data.options.forEach((c) => {
-                if (c.name == "осмотр") {
-                    arg = c.value;
-                }
-            });
-        }
-    
-        if(rpchannel){
-            let moneyT = new Intl.NumberFormat("ru", {
-                style: "currency",
-                currency: "USD",
-                minimumSignificantDigits: 1
-            })
-            GetStats().then(stats => {
-                if (stats.length == 0){return};
-                user.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${user.id}>`).money))} 💰`);
-                sendLog(msgDate,'РП','Узнал свой баланс.','Успешно',`Вывод: Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${user.id}>`).money))} 💰`);
-            });
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
-    }
-    if (interaction.data.name == "заплатить") {
-        var userDate = '';
-        var money = '';
-        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
-        if (interaction.data.options == undefined) {
-        }else{
-            interaction.data.options.forEach((c) => {
-                if (c.name == "игрок") {
-                    userDate = c.value;
-                }
-                if (c.name == "сумма") {
-                    money = c.value;
-                }
-            });
-        }
-    
-        if(rpchannel){
-            pay(msgDate, userDate, money);
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
-    }
-    if (interaction.data.name == "реклама") {
-        var arg = "";
-        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
-        if (interaction.data.options == undefined) {
-        }else{
-            interaction.data.options.forEach((c) => {
-                if (c.name == "текст") {
-                    arg = c.value;
-                }
-            });
-        }
-    
-        if(rpchannel){
-            let moneyT = new Intl.NumberFormat("ru", {
-                style: "currency",
-                currency: "USD",
-                minimumSignificantDigits: 1
-            });
-            
-            minusMoney(msgDate, 100).then(succ =>{
-                if(succ == true){
-                    guild.channels.cache.get(Config.channelsID.adverts).send(`> Реклама от ${msgDate.member.nickname} 📢\n${arg}`)
-                    msgDate.author.send(`> Вы приобрели рекламу за ${moneyT.format(100)} 📢`);
-                }else if(succ == false){
-                    msgDate.author.send(`> Вам не хватило денег на рекламу 📢`);
-                }
-            });
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
-    }
-    if (interaction.data.name == "оповещение") {
-        var arg = "";
-        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
-        if (interaction.data.options == undefined) {
-        }else{
-            interaction.data.options.forEach((c) => {
-                if (c.name == "текст") {
-                    arg = c.value;
-                }
-            });
-        }
-    
-        if(rpchannel && haveRole(msgDate.member, `852668893821665320`)){
-            guild.channels.cache.get(Config.channelsID.adverts).send(`> Оповещение от мэрии города 🎙️\n${arg}`)
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
-    }
-    if (interaction.data.name == "форма") {
-        var arg = "";
-        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
-        if (interaction.data.options == undefined) {
-        }else{
-            interaction.data.options.forEach((c) => {
-                if (c.name == "") {
-                    arg = c.value;
-                }
-            });
-        }
-    
-        if(rpchannel){
-            function giveForm(member, role){
-                if(haveRole(member, role)){
-                    removeRole(member, role);
-                    giveRole(member, '854315001543786507');
-                    sendLog(message,'РП','Снял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(role).name}`)
-                }
-                if(!haveRole(member, role)){
-                    if(!haveRole(member, `854315001543786507`)){
-                        message.author.send(`**Вы не можете взять несколько форм организаций** 🗂️`);
-                        sendLog(message,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: **Вы не можете взять несколько форм организаций** 🗂️`)
-                        return;
-                    }
-                    giveRole(member, role);
-                    removeRole(member, '854315001543786507');
-                    sendLog(message,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(role).name}`)
-                }
-            };
-            for(let dept in Config.departments){
-                if(channel.id == Config.departments[dept][0]){
-                    let channel = guild.channels.cache.get(BDchnl);
-                    channel.messages.fetch(Config.departments[dept][1]).then(oMsg => {
-                        let nMsg = oMsg.content.split('\n');
-                        nMsg.splice(0,1);
-        
-                        if(nMsg.find(member => member == msgDate.member.id) != null){
-                            giveForm(msgDate.member, Config.departments[dept][2]);
-                        }else{
-                            msgDate.author.send(`**Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
-                            sendLog(msgDate,'РП','Попытался взять форму.','Ошибка',`Вывод: **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
-                        };
-                    });
-                };
-            }
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
-    }
-    if (interaction.data.name == "экстр") {
-        var arg = "";
-        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
-        if (interaction.data.options == undefined) {
-        }else{
-            interaction.data.options.forEach((c) => {
-                if (c.name == "код") {
-                    arg = c.value;
-                }
-            });
-        }
-    
-        if(rpchannel){
-            let object = channel.parent.name.slice(4).slice(0,-1);
-            let room = channel.name;
-            let adres = `${object.slice(0,1).toUpperCase()+object.slice(1)}, ${room.slice(0,1).toUpperCase()+room.slice(1)}`
-            if(arg == '1'){
-                let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.fire[2]));
-                if(staff.size == 0){
-                    msgDate.author.send(`**На данный момент пожарные на службе отсутствуют** 🔥`);
-                    sendLog(msgDate,'РП','Попытался вызвать пожарную службу.','Ошибка',`Вывод: **На данный момент пожарные на службе отсутствуют** 🔥`)
-                }else{
-                    msgDate.author.send(`**Вы вызывали пожарную службу** 🔥\n> ${comand(msgDate,1).carg}`);
-                    sendLog(msgDate,'РП','Вызвал пожарную службу.','Успешно',`Вывод: **Вы вызывали пожарную службу** 🔥\n> ${comand(msgDate,1).carg}`)
-                    for(let worker of staff){
-                        worker[1].send(`**${msgDate.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${comand(msgDate,1).carg}\n**Адрес:**\n> ${adres}`)
-                    }
-                }
-            }else if(arg == '2'){
-                let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.police[2]));
-                if(staff.size == 0){
-                    msgDate.author.send(`**На данный момент полицейские на службе отсутствуют** 🚔`);
-                    sendLog(msgDate,'РП','Попытался вызвать полицию.','Ошибка',`Вывод: **На данный момент полицейские на службе отсутствуют** 🚔`)
-                }else{
-                    msgDate.author.send(`**Вы вызывали полицию** 🚔\n> ${comand(msgDate,1).carg}`);
-                    sendLog(msgDate,'РП','Вызвал полицию.','Успешно',`Вывод: **Вы вызывали полицию** 🚔\n> ${comand(msgDate,1).carg}`)
-                    for(let worker of staff){
-                        worker[1].send(`**${msgDate.member.nickname} вызывал(а) полицию** 🚔\n> ${comand(msgDate,1).carg}\n**Адрес:**\n> ${adres}`)
-                    }
-                }
-            }else if(arg == '3'){
-                let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.med[2]));
-                if(staff.size == 0){
-                    msgDate.author.send(`**На данный момент медики на службе отсутствуют** ⚕️`);
-                    sendLog(msgDate,'РП','Попытался вызвать медицинскую службу.','Ошибка',`Вывод: **На данный момент медики на службе отсутствуют** ⚕️`)
-                }else{
-                    msgDate.author.send(`**Вы вызывали медицинскую службу** ⚕️\n> ${comand(msgDate,1).carg}`);
-                    sendLog(msgDate,'РП','Вызвал медицинскую службу.','Успешно',`Вывод: **Вы вызывали медицинскую службу** ⚕️\n> ${comand(msgDate,1).carg}`)
-                    for(let worker of staff){
-                        worker[1].send(`**${msgDate.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${comand(msgDate,1).carg}\n**Адрес:**\n> ${adres}`)
-                    }
-                }
-            }else{
-                msgDate.author.send(`**Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️
-> 1 – пожарная служба.
-> 2 – полиция.
-> 3 – медицинская служба.
-                `);
-            };
-            sendLog(msgDate,'РП','Вызвал 911 без доп. кода.','Успешно',`Вывод: **Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️`)
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
-    }
-    if (interaction.data.name == "admincall") {
-        var arg = "";
-        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
-        if (interaction.data.options == undefined) {
-        }else{
-            interaction.data.options.forEach((c) => {
-                if (c.name == "текст") {
-                    arg = c.value;
-                }
-            });
-        }
-    
-        if(rpchannel && !haveRole(msgDate.member, '830061387849662515')){
-            let staff = guild.members.cache.filter(member => (haveRole(member, '830061387849662515') || haveRole(member, '833226140755689483')) && member.presence.status != 'offline');
-            if(staff.size == 0){
-                msgDate.author.send(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`);
-                sendLog(msgDate,'РП','Попытался вызвать администратора.','Ошибка',`Вывод: **На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`)
-                guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${msgDate.author.tag} написал жалобу, но администраторов нет в сети:**`, {embed: {
-                        thumbnail: {
-                            url: msgDate.author.displayAvatarURL()
-                        },
-                        fields: [{
-                            name: `Текст жалобы:`,
-                            value: `${arg}`
-                        }],
-                        fields: [{
-                            name: `Местоположение:`,
-                            value: `${channel.parent.name} -> <#${channel.id}>`
-                        }],
-                    }
-                });
-            }else{
-                msgDate.author.send(`**Вы вызывали администратора** 👥\n> ${arg}`);
-                sendLog(msgDate,'РП','Вызвал администратора.','Успешно',`Вывод: **Вы вызывали администратора** 👥\n> ${arg}`)
-                for(let worker of staff){
-                    worker[1].send(`**${msgDate.member.nickname} вызывал(а) администратора** 👥\n> ${arg}\n**Местоположение:**\n> ${channel.parent.name} -> <#${channel.id}>`)
-                }
-            }
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
-    }
-    if (interaction.data.name == "admin") {
-        var arg = "";
-        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
-        if (interaction.data.options == undefined) {
-        }else{
-            interaction.data.options.forEach((c) => {
-                if (c.name == "") {
-                    arg = c.value;
-                }
-            });
-        }
-    
-        if(rpchannel && (haveRole(msgDate.member, '830061387849662515') || head)){
-            if(haveRole(msgDate.member, '835630198199681026')){
-                removeRole(msgDate.member, '835630198199681026');
-                channel.parent.updateOverwrite(msgDate.member, {'VIEW_CHANNEL': true})
-                sendLog(msgDate,'РП','Вышел из админ-мода.','Успешно',` `)
-            }
-            if(!haveRole(msgDate.member, '835630198199681026')){
-                giveRole(msgDate.member, '835630198199681026');
-                channel.parent.permissionOverwrites.get(msgDate.author.id).delete();
-                sendLog(msgDate,'РП','Вошел в админ-мод.','Успешно',` `)
-            }
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
-    }
-});
-
-function checkIntegrations() {
-    // удаление старых команд
-    client.interaction
-        .getApplicationCommands()
-        .then(d => {
-            console.log(d)
-            d.forEach((r) => {
-                client.interaction
-                    .deleteApplicationCommand(r.id, config.guild_id)
-                    .then(console.log)
-                    .catch(console.log);
-            })
-        })
-        .catch(console.log);
-
-    // регистрация новых
-    client.interaction.createApplicationCommand({
-            name: "осмотр", 
-            description: "Осмотреться внутри объекта",
-            options: []
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-
-    client.interaction.createApplicationCommand({
-            name: "идти", 
-            description: "Идти с одного объекта в другой",
-            options: [
-                {
-                    name: "путь",
-                    description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
-                    type: "3",
-                    required: true
-                }
-            ]
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-     client.interaction.createApplicationCommand({
-            name: "баланс", 
-            description: "Проверить свой баланс",
-            options: []
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-    client.interaction.createApplicationCommand({
-            name: "заплатить", 
-            description: "Дать кому-то деньги",
-            options: [
-                {
-                    name: "игрок",
-                    description: "Игрок, которому вы собираетесь передать деньги",
-                    type: "3",
-                    required: true
-                },
-                {
-                    name: "сумма",
-                    description: "Сумма денег",
-                    type: "3",
-                    required: true
-                },
-            ]
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-    client.interaction.createApplicationCommand({
-            name: "реклама", 
-            description: "Опубликовать рекламу за 100$",
-            options: [
-                {
-                    name: "текст",
-                    description: "Текст рекламы",
-                    type: "3",
-                    required: true
-                },
-            ]
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-    client.interaction.createApplicationCommand({
-            name: "оповещение", 
-            description: "Оповестить город",
-            options: [
-                {
-                    name: "текст",
-                    description: "Текст оповещения",
-                    type: "3",
-                    required: true
-                },
-            ]
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-    client.interaction.createApplicationCommand({
-            name: "форма", 
-            description: "Взять форму",
-            options: []
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-    client.interaction.createApplicationCommand({
-            name: "экстр", 
-            description: "Вызвать экстренные службы",
-            options: [
-                {
-                    name: "код",
-                    description: "Код службы",
-                    type: "3"
-                },
-            ]
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-    client.interaction.createApplicationCommand({
-            name: "admincall", 
-            description: "Вызвать администратора",
-            options: [
-                {
-                    name: "текст",
-                    description: "Текст жалобы",
-                    type: "3",
-                    required: true
-                },
-            ]
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-    client.interaction.createApplicationCommand({
-            name: "admin", 
-            description: "Заступить на пост администратора",
-            options: []
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-}
-
+client.login(process.env.BOT_TOKEN);
