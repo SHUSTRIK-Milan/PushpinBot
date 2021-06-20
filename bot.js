@@ -769,7 +769,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     if (interaction.data.name == "осмотр") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg};
-        if (interaction.data.options == undefined) {
+        if (interaction.data.options == undefined){
+            
         } else {
             interaction.data.options.forEach((c) => {
                 if (c.name == "осмотр") {
@@ -1196,10 +1197,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
 function checkIntegrations() {
     // удаление старых команд
-    client.interaction
-        .getApplicationCommands()
+    /* client.interaction
+        .getApplicationCommands(config.guild_id)
         .then(d => {
-            console.log(d)
             d.forEach((r) => {
                 client.interaction
                     .deleteApplicationCommand(r.id, config.guild_id)
@@ -1207,18 +1207,18 @@ function checkIntegrations() {
                     .catch(console.log);
             })
         })
-        .catch(console.log);
+        .catch(console.log); */
 
     // регистрация новых
-    client.interaction.createApplicationCommand({
+    await client.interaction.createApplicationCommand({
             name: "осмотр", 
             description: "Осмотреться внутри объекта",
             options: []
         }, config.guild_id)
-        .then(d => client.interaction.deleteApplicationCommand(d.id, config.guild_id))
+        .then()
         .catch(console.error);
 
-    client.interaction.createApplicationCommand({
+    await client.interaction.createApplicationCommand({
             name: "идти", 
             description: "Идти с одного объекта в другой",
             options: [
@@ -1230,16 +1230,16 @@ function checkIntegrations() {
                 }
             ]
         }, config.guild_id)
-        .then(d => client.interaction.deleteApplicationCommand(d.id, config.guild_id))
+        .then()
         .catch(console.error);
-     client.interaction.createApplicationCommand({
+     await client.interaction.createApplicationCommand({
             name: "баланс", 
             description: "Проверить свой баланс",
             options: []
         }, config.guild_id)
         .then()
         .catch(console.error);
-    client.interaction.createApplicationCommand({
+    await client.interaction.createApplicationCommand({
             name: "заплатить", 
             description: "Дать кому-то деньги",
             options: [
@@ -1259,7 +1259,7 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    client.interaction.createApplicationCommand({
+    await client.interaction.createApplicationCommand({
             name: "реклама", 
             description: "Опубликовать рекламу за 100$",
             options: [
@@ -1273,7 +1273,7 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    client.interaction.createApplicationCommand({
+    await client.interaction.createApplicationCommand({
             name: "оповещение", 
             description: "Оповестить город",
             options: [
@@ -1287,15 +1287,15 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    client.interaction.createApplicationCommand({
+    await client.interaction.createApplicationCommand({
             name: "форма", 
             description: "Взять форму",
             options: []
         }, config.guild_id)
         .then()
         .catch(console.error);
-    client.interaction.createApplicationCommand({
-            name: "экстр", 
+    await client.interaction.createApplicationCommand({
+            name: "911", 
             description: "Вызвать экстренные службы",
             options: [
                 {
@@ -1307,8 +1307,8 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    client.interaction.createApplicationCommand({
-            name: "admincall", 
+    await client.interaction.createApplicationCommand({
+            name: "@", 
             description: "Вызвать администратора",
             options: [
                 {
@@ -1321,7 +1321,7 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    client.interaction.createApplicationCommand({
+    await client.interaction.createApplicationCommand({
             name: "admin", 
             description: "Заступить на пост администратора",
             options: []
