@@ -525,11 +525,16 @@ async function pay(message){
 
     let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
     let gUser = stats.find(stat => stat.user == comand(message).sarg[0]);
+
+    if (user == undefined) user = stats.find(stat => stat.user == `<@${message.author.id}>`);
+    if (gUser == undefined) gUser = stats.find(stat => stat.user == `<@${comand(message).sarg[0].slice(3).slice(0,-1)}>`);
+    
     if (user.id == gUser.id){return};
     let money = comand(message).sarg[1];
 
     let user_user = message.member;
     let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,''));
+    if(gUser_user == undefined) gUser_user = guild.members.cache.get(gUser.user.replace(/[<@>]/g,''));
     
     if(user == undefined){return}
     if(user == gUser_user){return}
