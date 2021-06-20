@@ -743,7 +743,7 @@ client.on('message', message => {
 });
 
 const config = {
-    token: process.env.BOT_TOKEN,
+    token: `ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.IZ48sMfH6u_a9RUpqRk6Ns1txTI`,
     publicKey : "0e6a87c0f53052a2025917df52069144195fea4b82e32cb43619d65d1c278a97",
     applicationId: "822500483826450454",
     guild_id: "814795850885627964"
@@ -802,7 +802,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-    /* if (interaction.data.name == "идти") {
+    if (interaction.data.name == "идти") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg};
         if (interaction.data.options == undefined) {
@@ -861,7 +861,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             interaction.data.options.forEach((c) => {
-                if (c.name == "") {
+                if (c.name == "осмотр") {
                     arg = c.value;
                 }
             });
@@ -1038,7 +1038,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-    if (interaction.data.name == "экстренно") {
+    if (interaction.data.name == "экстр") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
@@ -1191,16 +1191,19 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             }
         });
-    } */
+    }
 });
 
 function checkIntegrations() {
     // удаление старых команд
-    client.interaction.getApplicationCommands()
-        .then((d) => {
+    client.interaction
+        .getApplicationCommands()
+        .then(d => {
+            console.log(d)
             d.forEach((r) => {
-                client.interaction.deleteApplicationCommand(r.id, config.guild_id)
-                    .then(console.log(r.id))
+                client.interaction
+                    .deleteApplicationCommand(r.id, config.guild_id)
+                    .then(console.log)
                     .catch(console.log);
             })
         })
@@ -1215,7 +1218,7 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
 
-    /* client.interaction.createApplicationCommand({
+    client.interaction.createApplicationCommand({
             name: "идти", 
             description: "Идти с одного объекта в другой",
             options: [
@@ -1227,7 +1230,7 @@ function checkIntegrations() {
                 }
             ]
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
      client.interaction.createApplicationCommand({
             name: "баланс", 
@@ -1292,7 +1295,7 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
-            name: "экстренно", 
+            name: "экстр", 
             description: "Вызвать экстренные службы",
             options: [
                 {
@@ -1302,7 +1305,7 @@ function checkIntegrations() {
                 },
             ]
         }, config.guild_id)
-        .then(console.log)
+        .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "admincall", 
@@ -1324,5 +1327,6 @@ function checkIntegrations() {
             options: []
         }, config.guild_id)
         .then()
-        .catch(console.error); */
+        .catch(console.error);
 }
+
