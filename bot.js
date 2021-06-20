@@ -597,7 +597,9 @@ client.on('message', message => {
         console.log('Новое сообщение в offers')
     };
 
-    if (comand(message).com == 'осмотреться' && !mb && !mg && rpchannel){
+    if (comand(message).com == 'осмотреться' && !mb && !mg && rpchannel ||
+    comand(message).com == 'осмотреть' && !mb && !mg && rpchannel ||
+    comand(message).com == 'осмотр' && !mb && !mg && rpchannel){
         setTimeout(() => message.delete(), timeOfDelete);
         let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
 
@@ -682,6 +684,11 @@ client.on('message', message => {
                 message.author.send(`> Вам не хватило денег на рекламу 📢`);
             }
         });
+    };
+
+    if(comand(message).com == `оповещение` && !mb && !mg && rpchannel && haveRole(`852668893821665320`)){
+        setTimeout(() => message.delete(), timeOfDelete);
+        guild.channels.cache.get(Config.channelsID.adverts).send(`> Оповещение от мэрии города 🎙️\n${comand(message).arg}`)
     }
 
     if(comand(message).com == `форма` && !mb && !mg && rpchannel){
