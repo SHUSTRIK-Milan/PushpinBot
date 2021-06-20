@@ -994,14 +994,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             // опций нет
         } else {
             interaction.data.options.forEach((c) => {
-                if (c.name == "view") {
+                if (c.name == "осмотр") {
                     view = c.value;
                 }
             });
-            interaction.user.send('Тест');
         }
-
-        
+        interaction.user.send('тест');
+        console.log(interaction.user)
     }
 });
 
@@ -1026,7 +1025,7 @@ function checkIntegrations() {
             description: "Осмотреться внутри объекта",
             options: [
                 {
-                    name: "view",
+                    name: "осмотр",
                     description: "description",
                     type: "3"
                 }
