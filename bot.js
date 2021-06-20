@@ -21,6 +21,7 @@ var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot');
 
 client.on('ready', () => {
     console.log(`${client.user.tag} готов!`);
+    checkIntegrations();
     guild = client.guilds.cache.get('814795850885627964');
 
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
@@ -757,9 +758,9 @@ client.interaction = new DiscordInteractions({
 
 client.login(process.env.BOT_TOKEN);
 
-client.on('ready', () => {
+/* client.on('ready', () => {
 	checkIntegrations();
-});
+}); */
 
 client.ws.on('INTERACTION_CREATE', async interaction => {
     let channel = guild.channels.cache.get(interaction.channel_id);
@@ -802,7 +803,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-/*     if (interaction.data.name == "идти") {
+    if (interaction.data.name == "идти") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg};
         if (interaction.data.options == undefined) {
@@ -1191,7 +1192,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             }
         });
-    } */
+    }
 });
 
 function checkIntegrations() {
@@ -1215,7 +1216,7 @@ function checkIntegrations() {
             description: "Осмотреться внутри объекта",
             options: []
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
 
     client.interaction.createApplicationCommand({
@@ -1230,7 +1231,7 @@ function checkIntegrations() {
                 }
             ]
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
     client.interaction.createApplicationCommand({
             name: "баланс", 
