@@ -524,7 +524,8 @@ async function pay(message){
     })
 
     let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
-    let gUser = stats.find(stat => stat.user == `<@!${comand(message).sarg[0].slice(2).slice(0,-1)}>`);
+    let gUser = stats.find(stat => stat.user == comand(message).sarg[0]);
+    if(gUser == undefined) gUser = stats.find(stat => stat.user == `<@!${comand(message).sarg[0].slice(2).slice(0,-1)}>`);
 
     console.log(comand(message).sarg[0]);
     console.log(gUser)
