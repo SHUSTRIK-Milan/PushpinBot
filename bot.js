@@ -802,7 +802,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-    if (interaction.data.name == "идти") {
+/*     if (interaction.data.name == "идти") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg};
         if (interaction.data.options == undefined) {
@@ -1191,7 +1191,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             }
         });
-    }
+    } */
 });
 
 function checkIntegrations() {
