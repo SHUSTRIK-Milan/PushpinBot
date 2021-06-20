@@ -1038,7 +1038,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-    if (interaction.data.name == "911") {
+    if (interaction.data.name == "sos") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
@@ -1109,7 +1109,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-    if (interaction.data.name == "@") {
+    if (interaction.data.name == "admincall") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
@@ -1158,7 +1158,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
-    if (interaction.data.name == "админ-мод") {
+    if (interaction.data.name == "admin") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
@@ -1295,7 +1295,7 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
-            name: "911", 
+            name: "sos", 
             description: "Вызвать экстренные службы",
             options: [
                 {
@@ -1308,7 +1308,7 @@ function checkIntegrations() {
         .then(console.log)
         .catch(console.error);
     client.interaction.createApplicationCommand({
-            name: "@", 
+            name: "admincall", 
             description: "Вызвать администратора",
             options: [
                 {
