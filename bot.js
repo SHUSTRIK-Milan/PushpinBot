@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const Config = require('./config');
 const client = new Discord.Client();
+const {DiscordInteractions} = require("slash-commands");
 const prefix = '!';
 const BDpref = '^';
 const urlSteam = `https://steamcommunity.com/`;
@@ -964,4 +965,88 @@ client.on('message', message => {
 
 });
 
+const config = {
+    token: process.env.BOT_TOKEN,
+    publicKey : "0e6a87c0f53052a2025917df52069144195fea4b82e32cb43619d65d1c278a97",
+    applicationId: "822500483826450454",
+    guild_id: "814795850885627964"
+};
+
+client.interaction = new DiscordInteractions({
+    applicationId: config.applicationId,
+    authToken: config.token,
+    publicKey: config.publicKey,
+});
+
 client.login(process.env.BOT_TOKEN);
+
+client.on('ready', () => {
+	checkIntegrations();
+});
+
+client.ws.on('INTERACTION_CREATE', async interaction => {
+
+    if (interaction.data.name == "осмотр") {
+        var view = "";
+        var answer = "pong!"
+
+        if (interaction.data.options == undefined) {
+            // опций нет
+        } else {
+            interaction.data.options.forEach((c) => {
+                if (c.name == "view") {
+                    view = c.value;
+                }
+            });
+            interaction.user.send('Тест');
+        }
+
+        
+    }
+});
+
+function checkIntegrations() {
+    // удаление старых команд
+    client.interaction.getApplicationCommands()
+        .then((d) => {
+            d.forEach((r) => {
+                client.interaction
+                    .deleteApplicationCommand(r.id, config.guild_id)
+                    .then(() => {
+                        // do nothing
+                    })
+                    .catch(console.log);
+            })
+        })
+        .catch(console.log);
+
+    // регистрация новых
+    client.interaction.createApplicationCommand({
+            name: "осмотр", 
+            description: "Осмотреться внутри объекта",
+            options: [
+                {
+                    name: "view",
+                    description: "description",
+                    type: "3"
+                }
+            ]
+        }, config.guild_id)
+        .then(console.log)
+        .catch(console.error);
+
+    client.interaction.createApplicationCommand({
+            name: "идти", 
+            description: "Идти с одного объекта в другой",
+            options: [
+                {
+                    name: "walk",
+                    description: "description",
+                    type: "3"
+                }
+            ]
+        }, config.guild_id)
+        .then(console.log)
+        .catch(console.error);
+}
+
