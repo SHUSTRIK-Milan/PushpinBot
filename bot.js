@@ -808,7 +808,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         } else {
             interaction.data.options.forEach((c) => {
-                if (c.name == "Путь") {
+                if (c.name == "путь") {
                     arg = c.value;
                 }
             });
@@ -896,10 +896,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             interaction.data.options.forEach((c) => {
-                if (c.name == "Игрок") {
+                if (c.name == "игрок") {
                     userDate = c.value;
                 }
-                if (c.name == "Сумма") {
+                if (c.name == "сумма") {
                     money = c.value;
                 }
             });
@@ -924,7 +924,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             interaction.data.options.forEach((c) => {
-                if (c.name == "Текст") {
+                if (c.name == "текст") {
                     arg = c.value;
                 }
             });
@@ -962,7 +962,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             interaction.data.options.forEach((c) => {
-                if (c.name == "Текст") {
+                if (c.name == "текст") {
                     arg = c.value;
                 }
             });
@@ -1044,7 +1044,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             interaction.data.options.forEach((c) => {
-                if (c.name == "Код службы") {
+                if (c.name == "код") {
                     arg = c.value;
                 }
             });
@@ -1115,7 +1115,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             interaction.data.options.forEach((c) => {
-                if (c.name == "Текст") {
+                if (c.name == "текст") {
                     arg = c.value;
                 }
             });
@@ -1223,8 +1223,8 @@ function checkIntegrations() {
             description: "Идти с одного объекта в другой",
             options: [
                 {
-                    name: "Путь",
-                    description: "description",
+                    name: "путь",
+                    description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
                     type: "3",
                     required: true
                 }
@@ -1244,14 +1244,14 @@ function checkIntegrations() {
             description: "Дать кому-то деньги",
             options: [
                 {
-                    name: "Игрок",
-                    description: "description",
+                    name: "игрок",
+                    description: "Игрок, которому вы собираетесь передать деньги",
                     type: "3",
                     required: true
                 },
                 {
-                    name: "Сумма",
-                    description: "description",
+                    name: "сумма",
+                    description: "Сумма денег",
                     type: "3",
                     required: true
                 },
@@ -1264,8 +1264,8 @@ function checkIntegrations() {
             description: "Опубликовать рекламу за 100$",
             options: [
                 {
-                    name: "Текст",
-                    description: "description",
+                    name: "текст",
+                    description: "Текст рекламы",
                     type: "3",
                     required: true
                 },
@@ -1278,8 +1278,8 @@ function checkIntegrations() {
             description: "Оповестить город",
             options: [
                 {
-                    name: "Текс",
-                    description: "description",
+                    name: "текст",
+                    description: "Текст оповещения",
                     type: "3",
                     required: true
                 },
@@ -1299,8 +1299,8 @@ function checkIntegrations() {
             description: "Вызвать экстренные службы",
             options: [
                 {
-                    name: "Код службы",
-                    description: "description",
+                    name: "код",
+                    description: "Код службы",
                     type: "3"
                 },
             ]
@@ -1312,8 +1312,8 @@ function checkIntegrations() {
             description: "Вызвать администратора",
             options: [
                 {
-                    name: "Тек",
-                    description: "description",
+                    name: "текст",
+                    description: "Текст жалобы",
                     type: "3",
                     required: true
                 },
