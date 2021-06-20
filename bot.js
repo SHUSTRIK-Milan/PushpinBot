@@ -999,8 +999,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             });
         }
-        interaction.member.user.send('тест');
-        console.log(interaction.member.user)
+        console.log(interaction.member.user.id)
+        guild.members.cache.get(interaction.member.user.id).send('Тест')
     }
 });
 
