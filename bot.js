@@ -600,7 +600,7 @@ client.on('message', message => {
     }
 
     if(message.content == '⠀' && message.author.bot){
-        setTimeout(() => message.delete(), 100);
+        setTimeout(() => message.delete(), 50);
     }
 
     if (message.channel.id == Config.channelsID.offers && !mb){
@@ -990,6 +990,7 @@ client.on('ready', () => {
 
 client.ws.on('INTERACTION_CREATE', async interaction => {
     let channel = guild.channels.cache.get(interaction.channel_id)
+    let msgDate = {author: user, channel: channel};
 
     if (interaction.data.name == "осмотр") {
         var arg = "";
@@ -1014,10 +1015,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
                 if (homePos != null && objects.join(', ') != ''){
                     user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
-                    //sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
+                    sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
                 }else{
                     user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
-                    //sendLog(message,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
+                    sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
                 };
             })
             .catch(console.error);
