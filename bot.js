@@ -1121,7 +1121,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             });
         }
     
-        if(rpchannel && (!haveRole(msgDate.member, '830061387849662515') || !head)){
+        if(rpchannel && !haveRole(msgDate.member, '830061387849662515')){
             let staff = guild.members.cache.filter(member => (haveRole(member, '830061387849662515') || haveRole(member, '833226140755689483')) && member.presence.status != 'offline');
             if(staff.size == 0){
                 msgDate.author.send(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`);
@@ -1336,7 +1336,7 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     client.interaction.createApplicationCommand({
-            name: "admin", 
+            name: "админ-мод", 
             description: "Заступить на пост администратора",
             options: []
         }, config.guild_id)
