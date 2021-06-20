@@ -992,7 +992,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         console.log(interaction);
 
         if(rpchannel){
-            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == message.channel.parent.name.toLowerCase().slice(3));
+            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
             //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
             let argsObj = guild.channels.cache.get(arg.slice(2).slice(0,-1));
             if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase().split('-').join(' ');
