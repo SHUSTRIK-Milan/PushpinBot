@@ -989,7 +989,8 @@ client.on('ready', () => {
 });
 
 client.ws.on('INTERACTION_CREATE', async interaction => {
-    let channel = guild.channels.cache.get(interaction.channel_id)
+    let channel = guild.channels.cache.get(interaction.channel_id);
+    let user = await client.users.fetch(interaction.member.user.id);
     let msgDate = {author: user, channel: channel};
     let rpchannel = Object.values(Config.channelsID).find(chl => chl == channel.id) == null;
 
@@ -1005,23 +1006,20 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
         console.log(interaction);
 
-        
-        if(rpchannel) client.users.fetch(interaction.member.user.id)
-            .then(user => {
-                let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
+        if(rpchannel){
+            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
 
-                let objects = [];
-                for (let room of homePos.rooms) objects.push(room.slice(0,1).toUpperCase()+room.slice(1));
+            let objects = [];
+            for (let room of homePos.rooms) objects.push(room.slice(0,1).toUpperCase()+room.slice(1));
 
-                if (homePos != null && objects.join(', ') != ''){
-                    user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
-                    sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
-                }else{
-                    user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
-                    sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
-                };
-            })
-            .catch(console.error);
+            if (homePos != null && objects.join(', ') != ''){
+                user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
+                sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
+            }else{
+                user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
+                sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
+            };
+        };
 
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
