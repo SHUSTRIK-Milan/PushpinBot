@@ -516,7 +516,7 @@ async function Stats(message){
     
 };
 
-async function pay(message){
+async function pay(message, userDate, money){
     stats = await GetStats();
     if (stats.length == 0){return};
 
@@ -527,14 +527,13 @@ async function pay(message){
     })
 
     let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
-    let gUser = stats.find(stat => stat.user == comand(message).sarg[0]);
-    if(gUser == undefined) gUser = stats.find(stat => stat.user == `<@!${comand(message).sarg[0].slice(2).slice(0,-1)}>`);
+    let gUser = stats.find(stat => stat.user == userDate);
+    if(gUser == undefined) gUser = stats.find(stat => stat.user == `<@!${userDate.slice(2).slice(0,-1)}>`);
 
-    console.log(comand(message).sarg[0]);
+    console.log(userDate);
     console.log(gUser)
     
     if (user.id == gUser.id){return};
-    let money = comand(message).sarg[1];
 
     let user_user = message.member;
     let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,''));
