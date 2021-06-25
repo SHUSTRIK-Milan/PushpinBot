@@ -454,6 +454,7 @@ async function Stats(message){
 
     if (person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) == null){
         var steamProfileInfo = await steam.getUserSummary(steamProfile);
+        console.log(steamProfileInfo)
         if (steamProfileInfo.nickname == steamNick){
 
             function verificate(name){
