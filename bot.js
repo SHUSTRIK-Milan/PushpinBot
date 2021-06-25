@@ -599,11 +599,11 @@ client.on('message', message => {
     let rpchannels = Object.values(Config.channelsID).filter(chl => chl == message.channel.id);
     
     if (Object.values(Config.logChannels).find(chl => chl == message.channel.id) != null){
-        if (!mb && !mg) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
+        setTimeout(() => {if (!mb && !mg) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)}, 300);
     }
     let logChannel = Object.values(Config.logChannels).find(chl => chl == message.channel.id)
     if (logChannel == null){
-        if (!mb && !mg && rpchannels.find(chnl == logChannel) == null) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
+        setTimeout(() => {if (!mb && !mg && rpchannels.find(chnl == logChannel) == null) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)}, 300);
     }
 
     if(message.content == '⠀' && message.author.bot){
