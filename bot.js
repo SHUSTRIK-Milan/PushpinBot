@@ -455,10 +455,9 @@ async function Stats(message){
         try{
             var steamProfileInfo = await steam.getUserSummary(steamProfile);
             if (steamProfileInfo.nickname == steamNick){
-
                 function verificate(name){
                     guild.members.cache.get(message.author.id).setNickname(name);
-                    AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfile)
+                    AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfileInfo.steamID)
 
                     guild.members.fetch(message.author.id).then(member =>{
                         giveRole(member,`854315001543786507`); //citizen
