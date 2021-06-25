@@ -156,7 +156,7 @@ function sendLog(message,cat,act,status,add){
             }
         });
     };
-    if(cat == 'РП'){
+    if(cat == 'РП' || cat == 'Глобальное'){
         guild.channels.cache.get(Config.channelsID.rp_logs).send({embed: {
             color: color,
             author: {
@@ -596,6 +596,10 @@ async function plusMoney(message, money){
 client.on('messageDelete', (message) => {
     sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
 });
+
+client.on('messageUpdate', (messageOld, messageNew) =>{
+    sendLog(messageNew, 'Глобальное', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
+})
 
 client.on('message', message => {
     let mb = message.author.bot;
