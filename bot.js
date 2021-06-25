@@ -425,7 +425,6 @@ async function Stats(message){
     var steamProfile;
     var steamNick = `[PP] ${message.author.username}`.slice(0,32);
     if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) steamProfile = await steam.resolve(comand(message).sarg[0]);
-    console.log(steamProfile)
 
     if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
         message.author.send(`
@@ -454,59 +453,66 @@ async function Stats(message){
 
     if (person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) == null){
         var steamProfileInfo = await steam.getUserSummary(steamProfile);
-        console.log(steamProfileInfo)
-        if (steamProfileInfo.nickname == steamNick){
+        try{
+            if (steamProfileInfo.nickname == steamNick){
 
-            function verificate(name){
-                guild.members.cache.get(message.author.id).setNickname(name);
-                AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfile)
+                function verificate(name){
+                    guild.members.cache.get(message.author.id).setNickname(name);
+                    AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfile)
 
-                guild.members.fetch(message.author.id).then(member =>{
-                    giveRole(member,`854315001543786507`); //citizen
-                    giveRole(member,`851059555499638825`); //rp-role
-                    giveRole(member,`836183994646921248`); //pushpin
-                    giveRole(member,`836269090996879387`); //user
-                    removeRole(member,`829423238169755658`); //ooc
-                });
+                    guild.members.fetch(message.author.id).then(member =>{
+                        giveRole(member,`854315001543786507`); //citizen
+                        giveRole(member,`851059555499638825`); //rp-role
+                        giveRole(member,`836183994646921248`); //pushpin
+                        giveRole(member,`836269090996879387`); //user
+                        removeRole(member,`829423238169755658`); //ooc
+                    });
 
-                sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
-                guild.channels.cache.get(`849709660579954748`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
-            };
+                    sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
+                    guild.channels.cache.get(`849709660579954748`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
+                };
 
-            function rpName(){
-                let filter = m => m.author.id === message.author.id
-                message.author.send('> Введите свое ролевое имя 👥')
-                .then(() => {
-                    message.channel.awaitMessages(filter, {
-                        max: 1,
-                        time: 60000,
-                        errors: ['time'],
-                    })
-                    .then(message => {
-                        msgs = message.map(message => message)
-                        msgs[0].author.send(`
+                function rpName(){
+                    let filter = m => m.author.id === message.author.id
+                    message.author.send('> Введите свое ролевое имя 👥')
+                    .then(() => {
+                        message.channel.awaitMessages(filter, {
+                            max: 1,
+                            time: 60000,
+                            errors: ['time'],
+                        })
+                        .then(message => {
+                            msgs = message.map(message => message)
+                            msgs[0].author.send(`
 > **Успешно! Ваш аккаунт зарегистрирован** 🎉 Вы установили свое ролевое имя. Сменить его вы сможете только при помощи администратора.
 Все прошло успешно! Удачной игры на сервере!
-                        `)
-                        verificate(msgs[0].content);
-                    })
-                    .catch(() => {
-                        rpName();
+                            `)
+                            verificate(msgs[0].content);
+                        })
+                        .catch(() => {
+                            rpName();
+                        });
                     });
-                });
-            };
+                };
 
-            rpName();
-        }else if (steamProfileInfo.nickname != steamNick){
-            message.author.send(`
+                rpName();
+            }else if (steamProfileInfo.nickname != steamNick){
+                message.author.send(`
 > **Измените имя** 📝
 Чтобы успешно завершить аутентификацию временно измените имя своего !стим-профиля! на \`${steamNick}\` и повторите попытку, !дополнив команду! ссылкой на свой стим-профиль. 
-            `)
-        }else{
-            message.author.send(`
+                `)
+            }else{
+                message.author.send(`
 > **Возникла ошибка** 🔏
 Возникла непредвиденная ошибка. Обратитесь к администрации проекта.
-            `);
+                `);
+                sendLog(message,'Глобальное','Попытался(-ась) подтвердить свой аккаунт.', 'Ошибка', `SteamID: ${steamProfile}`)
+            }
+        }catch{
+            message.author.send(`
+> **Возникла ошибка** 🔏
+SteamAPI не сумел найти ваш аккаунт, а поэтому мы просим вас выставить индивидуальный аунтификатор вашего профиля (личную ссылку, которую возможно установить в настройках вашего профиля во вкладке основное).
+                `);
             sendLog(message,'Глобальное','Попытался(-ась) подтвердить свой аккаунт.', 'Ошибка', `SteamID: ${steamProfile}`)
         }
     }else if(person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) != null){
