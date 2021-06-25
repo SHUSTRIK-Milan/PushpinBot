@@ -1222,6 +1222,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
     
         if(rpchannel){
+            sendLog(msgDate,'РП','Использовал шанс.','Успешно',`Вывод: Шанс: ${roll()} из 100`)
             client.api.interactions(interaction.id, interaction.token).callback.post({
                 data: {
                     type: 4,
