@@ -452,8 +452,8 @@ async function Stats(message){
     }; //информационная справка при отправке команды "подтвердить"
 
     if (person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) == null){
-        var steamProfileInfo = await steam.getUserSummary(steamProfile);
         try{
+            var steamProfileInfo = await steam.getUserSummary(steamProfile);
             if (steamProfileInfo.nickname == steamNick){
 
                 function verificate(name){
