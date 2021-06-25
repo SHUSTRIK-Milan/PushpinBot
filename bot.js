@@ -603,7 +603,7 @@ client.on('message', message => {
     }
     let logChannel = Object.values(Config.logChannels).find(chl => chl == message.channel.id)
     if (logChannel == null){
-        setTimeout(() => {if (!mb && !mg && rpchannels.find(chnl == logChannel) == null) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)}, 1000);
+        setTimeout(() => {if (!mb && !mg && rpchannels.find(chl => chl == logChannel) == null) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)}, 1000);
     }
 
     if(message.content == '⠀' && message.author.bot){
