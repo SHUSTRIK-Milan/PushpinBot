@@ -424,7 +424,8 @@ async function Stats(message){
     var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`);
     var steamProfile;
     var steamNick = `[PP] ${message.author.username}`.slice(0,32);
-    if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) var steamProfile = await steam.resolve(comand(message).sarg[0]);
+    if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) steamProfile = await steam.resolve(comand(message).sarg[0]);
+    console.log(steamProfile)
 
     if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
         message.author.send(`
