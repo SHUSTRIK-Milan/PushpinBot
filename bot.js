@@ -983,6 +983,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     
         if(rpchannel && haveRole(msgDate.member, `852668893821665320`)){
             guild.channels.cache.get(Config.channelsID.adverts).send(`> Оповещение от мэрии города 🎙️\n${arg}`)
+            sendLog(msgDate,'РП','Оповестил город.','Успешно',`> Оповещение от мэрии города 🎙️\n${arg}`)
         };
     
         client.api.interactions(interaction.id, interaction.token).callback.post({
