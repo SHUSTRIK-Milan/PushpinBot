@@ -118,6 +118,11 @@ function removeRole(member, roleId){
     member.roles.remove(roleId, `Удалил роль под ID: ${roleId}.`).catch(console.error);
 };
 
+function roll(){
+    let rand = 0 - 0.5 + Math.random() * (100 - 0 + 1);
+    return Math.round(rand);
+}
+
 function sendLog(message,cat,act,status,add){
     let img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
@@ -1204,6 +1209,38 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         });
     }
+    if (interaction.data.name == "шанс") {
+        var arg = "";
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if (interaction.data.options == undefined) {
+        }else{
+            interaction.data.options.forEach((c) => {
+                if (c.name == "") {
+                    arg = c.value;
+                }
+            });
+        }
+    
+        if(rpchannel){
+            client.api.interactions(interaction.id, interaction.token).callback.post({
+                data: {
+                    type: 4,
+                    data: {
+                        content: '⠀'
+                    }
+                }
+            });
+        }else{
+            client.api.interactions(interaction.id, interaction.token).callback.post({
+                data: {
+                    type: 4,
+                    data: {
+                        content: `Шанс: ${roll()} из 100`
+                    }
+                }
+            });
+        }
+    }
 });
 
 function checkIntegrations() {
@@ -1224,6 +1261,15 @@ function checkIntegrations() {
                 },
             ]
     };
+
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "шанс", 
+            description: "Шанс (случайное число от 0 до 100)",
+            options: []
+        }, config.guild_id)
+        .then()
+        .catch(console.error);
+    }, 200);
 
     //client.interaction.createApplicationCommand(comand, config.guild_id, "856222015480135791")
     // удаление старых команд
