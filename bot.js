@@ -596,13 +596,14 @@ client.on('message', message => {
     let mb = message.author.bot;
     let mg = message.guild == undefined;
     let head = haveRole(message.member, '833226140755689483')
-    let rpchannel = Object.values(Config.channelsID).find(chl => chl == message.channel.id) == null;
+    let rpchannels = Object.values(Config.channelsID).filter(chl => chl == message.channel.id);
     
     if (Object.values(Config.logChannels).find(chl => chl == message.channel.id) != null){
         if (!mb && !mg) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
     }
-    if (Object.values(Config.logChannels).find(chl => chl == message.channel.id) == null){
-        if (!mb && !mg) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
+    let logChannel = Object.values(Config.logChannels).find(chl => chl == message.channel.id)
+    if (logChannel == null){
+        if (!mb && !mg && rpchannels.find(chnl == logChannel) == null) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`);
     }
 
     if(message.content == '⠀' && message.author.bot){
