@@ -1262,14 +1262,14 @@ function checkIntegrations() {
             ]
     };
 
-    setTimeout(() =>{client.interaction.createApplicationCommand({
+    /* setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "шанс", 
             description: "Шанс (случайное число от 0 до 100)",
             options: []
         }, config.guild_id)
         .then()
         .catch(console.error);
-    }, 200);
+    }, 200); */
 
     //client.interaction.createApplicationCommand(comand, config.guild_id, "856222015480135791")
     // удаление старых команд
