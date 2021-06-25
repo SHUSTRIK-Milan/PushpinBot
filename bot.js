@@ -1226,7 +1226,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 data: {
                     type: 4,
                     data: {
-                        content: '⠀'
+                        content: `Шанс: ${roll()} из 100`
                     }
                 }
             });
@@ -1235,7 +1235,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 data: {
                     type: 4,
                     data: {
-                        content: `Шанс: ${roll()} из 100`
+                        content: '⠀'
                     }
                 }
             });
