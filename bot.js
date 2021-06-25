@@ -1262,15 +1262,6 @@ function checkIntegrations() {
             ]
     };
 
-    /* setTimeout(() =>{client.interaction.createApplicationCommand({
-            name: "шанс", 
-            description: "Шанс (случайное число от 0 до 100)",
-            options: []
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-    }, 200); */
-
     //client.interaction.createApplicationCommand(comand, config.guild_id, "856222015480135791")
     // удаление старых команд
     /* client.interaction
@@ -1412,7 +1403,15 @@ function checkIntegrations() {
         }, config.guild_id)
         .then(console.log)
         .catch(console.error);
-    }, 22000); */
+    }, 22000); 
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "шанс", 
+            description: "Шанс (случайное число от 0 до 100)",
+            options: []
+        }, config.guild_id)
+        .then()
+        .catch(console.error);
+    }, 200);*/
 }
 
 client.login(process.env.BOT_TOKEN);
