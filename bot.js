@@ -606,14 +606,10 @@ client.on('message', message => {
     let mg = message.guild == undefined;
     let head = haveRole(message.member, '833226140755689483')
     let rpchannels = Object.values(Config.channelsID).filter(chl => chl != Config.channelsID);
+    console.log(rpchannels)
     
-    if (Object.values(Config.logChannels).find(chl => chl == message.channel.id) != null){
-        setTimeout(() => {if (!mb && !mg) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)}, 1000);
-    }
-    let logChannel = Object.values(Config.logChannels).find(chl => chl == message.channel.id)
-    if (logChannel == null){
-        setTimeout(() => {if (!mb && !mg && rpchannels.find(chl => chl == message.channel.id) == null) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)}, 1000);
-    }
+    sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
+    sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
 
     if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), 100);
