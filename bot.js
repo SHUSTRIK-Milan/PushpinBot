@@ -610,8 +610,8 @@ client.on('messageUpdate', (messageOld, messageNew) =>{
     rpchannel = rpChannels.find(channel => channel == messageNew.channel.id) != null;
     let mb = messageNew.author.bot;
     let mg = messageNew.guild == undefined;
-    if(!mb && !mg && rpchannel) sendLog(messageNew, 'Общее', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
-    if(!mb && !mg && !rpchannel) sendLog(messageNew, 'РП', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
+    if(!mb && !mg && rpchannel) sendLog(messageNew, 'РП', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
+    if(!mb && !mg && !rpchannel) sendLog(messageNew, 'Общее', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
     
 })
 
@@ -621,8 +621,8 @@ client.on('message', message => {
     let head = haveRole(message.member, '833226140755689483');
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
     console.log(rpchannel)
-    if(!mb && !mg && rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
-    if(!mb && !mg && !rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
+    if(!mb && !mg && rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
+    if(!mb && !mg && !rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
 
     if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), 100);
