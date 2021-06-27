@@ -610,7 +610,7 @@ client.on('message', message => {
     
     console.log(allChannels)
     let rpchannels = [];
-    for(let channel in allChannels) console.log(channel);
+    for(let channel of allChannels) if(Object.values(Config.channelsID).find(chl => chl == channel) == null) rpchannels.push(channel);
     console.log(rpchannels)
     
     /* sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
