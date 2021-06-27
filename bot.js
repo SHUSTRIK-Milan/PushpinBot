@@ -7,6 +7,7 @@ const BDpref = '^';
 const urlSteam = `https://steamcommunity.com/`;
 
 var guild;
+let allChannels = [];
 const BDchnl = Config.channelsID.bd;
 const dopBDmsg = `838003963412480070`;
 const timeOfDelete = 250;
@@ -22,7 +23,6 @@ var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot');
 client.on('ready', () => {
     console.log(`${client.user.tag} готов!`);
     guild = client.guilds.cache.get('814795850885627964');
-    let allChannels = [];
     for(let channel of guild.channels.cache) allChannels.push(channel.id)
 
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
