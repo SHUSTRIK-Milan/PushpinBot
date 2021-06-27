@@ -27,7 +27,6 @@ client.on('ready', () => {
     guild = client.guilds.cache.get('814795850885627964');
     for(let channel of guild.channels.cache) allChannels.push(channel[0])
     for(let channel of allChannels) if(Object.values(Config.channelsID).find(chl => chl == channel) == null) rpChannels.push(channel);
-    rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
 
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
@@ -600,11 +599,13 @@ async function plusMoney(message, money){
 };
 
 client.on('messageDelete', (message) => {
+    rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
     if(!mb && !mg && rpchannel) sendLog(message,'РП',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
     if(!mb && !mg && !rpchannel) sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
 });
 
-client.on('messageUpdate', (messageOld, messageNew) =>{       
+client.on('messageUpdate', (messageOld, messageNew) =>{    
+    rpchannel = rpChannels.find(channel => channel == messageNew.channel.id) != null;   
     if(!mb && !mg && rpchannel) sendLog(messageNew, 'Общее', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
     if(!mb && !mg && !rpchannel) sendLog(messageNew, 'РП', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
     
@@ -614,7 +615,7 @@ client.on('message', message => {
     let mb = message.author.bot;
     let mg = message.guild == undefined;
     let head = haveRole(message.member, '833226140755689483');
-    
+    rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
     if(!mb && !mg && rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
     if(!mb && !mg && !rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
 
@@ -783,6 +784,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
     let head = haveRole(user, '833226140755689483')
+    rpchannel = rpChannels.find(channel => channel == channel.id) != null;
 
     if (interaction.data.name == "осмотр") {
         var arg = "";
