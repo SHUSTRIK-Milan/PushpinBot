@@ -22,6 +22,8 @@ var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot');
 client.on('ready', () => {
     console.log(`${client.user.tag} готов!`);
     guild = client.guilds.cache.get('814795850885627964');
+    let allChannels = [];
+    for(let channel of guild.channels.cache) allChannels.push(channel.id)
 
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
@@ -604,9 +606,12 @@ client.on('messageUpdate', (messageOld, messageNew) =>{
 client.on('message', message => {
     let mb = message.author.bot;
     let mg = message.guild == undefined;
-    let head = haveRole(message.member, '833226140755689483')
-    let rpchannels = Object.values(Config.channelsID).filter(chl => chl != Config.channelsID);
-    console.log(rpchannels)
+    let head = haveRole(message.member, '833226140755689483');
+    
+    console.log(allChannels)
+    let rpchannels = [];
+    for(let channel of Config.channelsID) Object.values(Config.channelsID).find(chl => chl != channel);
+    //console.log(rpchannels)
     
     sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
     sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
