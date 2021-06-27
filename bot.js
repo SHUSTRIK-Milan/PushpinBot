@@ -7,7 +7,9 @@ const BDpref = '^';
 const urlSteam = `https://steamcommunity.com/`;
 
 var guild;
-let allChannels = [];
+var allChannels = [];
+var rpChannels = [];
+var rpchannel;
 const BDchnl = Config.channelsID.bd;
 const dopBDmsg = `838003963412480070`;
 const timeOfDelete = 250;
@@ -24,6 +26,8 @@ client.on('ready', () => {
     console.log(`${client.user.tag} готов!`);
     guild = client.guilds.cache.get('814795850885627964');
     for(let channel of guild.channels.cache) allChannels.push(channel[0])
+    for(let channel of allChannels) if(Object.values(Config.channelsID).find(chl => chl == channel) == null) rpChannels.push(channel);
+    rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
 
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
@@ -158,7 +162,7 @@ function sendLog(message,cat,act,status,add){
             }
         });
     };
-    if(cat == 'РП' || cat == 'Глобальное'){
+    if(cat == 'РП'){
         guild.channels.cache.get(Config.channelsID.rp_logs).send({embed: {
             color: color,
             author: {
@@ -596,11 +600,14 @@ async function plusMoney(message, money){
 };
 
 client.on('messageDelete', (message) => {
-    sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
+    if(!mb && !mg && rpchannel) sendLog(message,'РП',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
+    if(!mb && !mg && !rpchannel) sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
 });
 
-client.on('messageUpdate', (messageOld, messageNew) =>{
-    sendLog(messageNew, 'Глобальное', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
+client.on('messageUpdate', (messageOld, messageNew) =>{       
+    if(!mb && !mg && rpchannel) sendLog(messageNew, 'Общее', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
+    if(!mb && !mg && !rpchannel) sendLog(messageNew, 'РП', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
+    
 })
 
 client.on('message', message => {
@@ -608,13 +615,8 @@ client.on('message', message => {
     let mg = message.guild == undefined;
     let head = haveRole(message.member, '833226140755689483');
     
-    console.log(allChannels)
-    let rpchannels = [];
-    for(let channel of allChannels) if(Object.values(Config.channelsID).find(chl => chl == channel) == null) rpchannels.push(channel);
-    console.log(rpchannels)
-    
-    /* sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
-    sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`) */
+    if(!mb && !mg && rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
+    if(!mb && !mg && !rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
 
     if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), 100);
@@ -780,7 +782,6 @@ client.on('ready', () => {
 client.ws.on('INTERACTION_CREATE', async interaction => {
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
-    let rpchannel = Object.values(Config.channelsID).find(chl => chl == channel.id) == null;
     let head = haveRole(user, '833226140755689483')
 
     if (interaction.data.name == "осмотр") {
