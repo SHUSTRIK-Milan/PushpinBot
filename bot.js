@@ -620,6 +620,7 @@ client.on('message', message => {
     let mg = message.guild == undefined;
     let head = haveRole(message.member, '833226140755689483');
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
+    console.log(rpchannel)
     if(!mb && !mg && rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
     if(!mb && !mg && !rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
 
