@@ -613,8 +613,8 @@ client.on('message', message => {
     for(let channel of Config.channelsID) Object.values(Config.channelsID).find(chl => chl != channel);
     //console.log(rpchannels)
     
-    sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
-    sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
+    /* sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
+    sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`) */
 
     if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), 100);
