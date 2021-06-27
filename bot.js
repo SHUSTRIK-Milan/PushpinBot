@@ -790,6 +790,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     let user = await guild.members.fetch(interaction.member.user.id);
     let head = haveRole(user, '833226140755689483')
     rpchannel = rpChannels.find(channel => channel == channel.id) != null;
+    console.log(rpchannel)
 
     if (interaction.data.name == "осмотр") {
         var arg = "";
