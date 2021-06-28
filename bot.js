@@ -1234,14 +1234,7 @@ function checkIntegrations() {
     let ComandWalk = {
         name: "идти", 
             description: "Идти с одного объекта в другой",
-            options: [
-                {
-                    name: "путь",
-                    description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
-                    required: true,
-                    options: StreetsOfComandWalkFunc()
-                }
-            ]
+            options: StreetsOfComandWalkFunc()
     };
     client.interaction.createApplicationCommand(ComandWalk, config.guild_id, "856221764605313104")
 
