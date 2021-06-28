@@ -1248,8 +1248,8 @@ function checkIntegrations() {
                 description: "Код службы",
                 type: "1",
                 options: [
-                    { name: 'Черчель-Стрит', description: 'Улица', type: '1' },
-                    { name: 'Черчель-Стрит-1', description: 'Улица', type: '1' }
+                    { name: 'черчель-стрит', description: 'Улица', type: '1' },
+                    { name: 'черчель-стрит-1', description: 'Улица', type: '1' }
                 ]
             }
         ]
