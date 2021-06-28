@@ -794,6 +794,28 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
     console.log(`Тест: ${rpchannel}`)
 
+    function sendNullMessage(){
+        client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                    content: '⠀'
+                }
+            }
+        });
+    }
+
+    function sendGlobalMessage(content){
+        client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                    content: content
+                }
+            }
+        });
+    }
+
     function sendLocalMessage(content){
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
@@ -827,21 +849,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if (homePos != null && objects.join(', ') != ''){
                 user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
+                sendLocalMessage()
                 sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
             }else{
                 user.send(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
                 sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
             };
-        };
-
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
+        }else{
+            sendNullMessage()
+        }
     }
     if (interaction.data.name == "идти") {
         var arg = "";
@@ -885,16 +901,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 user.send(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`);
                 sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
             };
-        };
-
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
+        }else{
+            sendNullMessage()
+        }
     }
     if (interaction.data.name == "баланс") {
         var arg = "баланс";
@@ -919,16 +928,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 user.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${user.id}>`).money))} 💰`);
                 sendLog(msgDate,'РП','Узнал свой баланс.','Успешно',`Вывод: Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${user.id}>`).money))} 💰`);
             });
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
+        }else{
+            sendNullMessage()
+        }
     }
     if (interaction.data.name == "заплатить") {
         var userDate = '';
@@ -948,16 +950,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     
         if(rpchannel){
             pay(msgDate, userDate, money);
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
+        }else{
+            sendNullMessage()
+        }
     }
     if (interaction.data.name == "реклама") {
         var arg = "";
@@ -988,16 +983,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     sendLog(msgDate,'РП','Попытался приобрести рекламу.','Ошибка',`Вывод: > Вам не хватило денег на рекламу 📢`)
                 }
             });
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
+        }else{
+            sendNullMessage()
+        }
     }
     if (interaction.data.name == "оповещение") {
         var arg = "";
@@ -1014,16 +1002,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(rpchannel && haveRole(msgDate.member, `852668893821665320`)){
             guild.channels.cache.get(Config.channelsID.adverts).send(`> Оповещение от мэрии города 🎙️\n${arg}`)
             sendLog(msgDate,'РП','Оповестил город.','Успешно',`Вывод: > Оповещение от мэрии города 🎙️\n${arg}`)
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
+        }else{
+            sendNullMessage()
+        }
     }
     if (interaction.data.name == "форма") {
         var arg = "";
@@ -1071,16 +1052,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     });
                 };
             }
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
+        }else{
+            sendNullMessage()
+        }
     }
     if (interaction.data.name == "911") {
         var arg = "";
@@ -1132,41 +1106,18 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     msgDate.author.send(`**На данный момент медики на службе отсутствуют** ⚕️`);
                     sendLog(msgDate,'РП','Попытался вызвать медицинскую службу.','Ошибка',`Вывод: **На данный момент медики на службе отсутствуют** ⚕️`)
                 }else{
-                    client.api.interactions(interaction.id, interaction.token).callback.post({
-                        data: {
-                            type: 4,
-                            data: {
-                                content: `**Вы вызывали медицинскую службу** ⚕️\n> ${text}`,
-                                flags: 64
-                            }
-                        }
-                    });
+                    sendLocalMessage(`**Вы вызывали медицинскую службу** ⚕️\n> ${text}`)
                     sendLog(msgDate,'РП','Вызвал медицинскую службу.','Успешно',`Вывод: **Вы вызывали медицинскую службу** ⚕️\n> ${text}`)
                     for(let worker of staff){
                         worker[1].send(`**${msgDate.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${text}\n**Адрес:**\n> ${adres}`)
                     }
                 }
             }else{
-                client.api.interactions(interaction.id, interaction.token).callback.post({
-                    data: {
-                        type: 4,
-                        data: {
-                            content: `**Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️\n> 1 – пожарная служба.\n> 2 – полиция.\n> 3 – медицинская служба.`,
-                            flags: 64
-                        }
-                    }
-                });
+                sendLocalMessage(`**Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️\n> 1 – пожарная служба.\n> 2 – полиция.\n> 3 – медицинская служба.`)
                 sendLog(msgDate,'РП','Вызвал 911 без доп. кода.','Успешно',`Вывод: **Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️`)
             };
         }else{
-            client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 4,
-                    data: {
-                        content: '⠀'
-                    }
-                }
-            });
+            sendNullMessage()
         }
     }
     if (interaction.data.name == "admincall") {
@@ -1208,14 +1159,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             }
         }else{
-            client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 4,
-                    data: {
-                        content: '⠀'
-                    }
-                }
-            });
+            sendNullMessage()
         }
     }
     if (interaction.data.name == "admin") {
@@ -1241,16 +1185,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 channel.parent.permissionOverwrites.get(msgDate.author.id).delete();
                 sendLog(msgDate,'РП','Вошел в админ-мод.','Успешно',` `)
             }
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: '⠀'
-                }
-            }
-        });
+        }else{
+            sendNullMessage()
+        }
     }
     if (interaction.data.name == "шанс") {
         var arg = "";
@@ -1266,23 +1203,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     
         if(rpchannel){
             sendLog(msgDate,'РП','Использовал шанс.','Успешно',`Вывод: Шанс: ${roll()} из 100`)
-            client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 4,
-                    data: {
-                        content: `Шанс: ${roll()} из 100`
-                    }
-                }
-            });
+            sendGlobalMessage(`Шанс: ${roll()} из 100`)
         }else{
-            client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 4,
-                    data: {
-                        content: '⠀'
-                    }
-                }
-            });
+            sendNullMessage()
         }
     }
 });
