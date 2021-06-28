@@ -1216,23 +1216,19 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
 function checkIntegrations() {
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
-    function StreetsOfComandWalk(name, type) {
-        this.name = name;
-        this.type = type;
-    };
 
     function StreetsOfComandWalkFunc() {
         let t = []
         for(let object in Config.objects){
-            t.push(new StreetsOfComandWalk(Config.objects[object].name, 3))
+            t.push({name: Config.objects[object].name, type: 3})
         }
         return t
     }
 
-    let t = {
+    let t = [{
         t: 'test',
         test: StreetsOfComandWalkFunc()
-    }
+    }]
 
     console.log(t)
 
