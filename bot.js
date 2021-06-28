@@ -1190,7 +1190,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 sendLog(msgDate,'РП','Вошел в админ-мод.','Успешно',` `)
             }
         }
-        
+
         sendNullMessage()
     }
     if (interaction.data.name == "шанс") {
@@ -1216,19 +1216,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
 function checkIntegrations() {
     let comand = {
-        name: "911", 
-        description: "Вызвать экстренные службы",
+        name: "идти", 
+        description: "Идти с одного объекта в другой",
         options: [
             {
-                name: "код",
-                description: "Код службы",
-                type: "4"
-            },
-            {
-                name: "текст",
-                description: "Текст сообщения для экстренных служб",
-                type: "3"
-            },
+                name: "путь",
+                description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
+                type: "7",
+                required: true
+            }
         ]
     };
 
