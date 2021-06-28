@@ -903,9 +903,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 sendLocalMessage(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`)
                 sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
             };
-        }else{
-            sendNullMessage()
         }
+        
+        sendNullMessage()
     }
     if (interaction.data.name == "баланс") {
         var arg = "баланс";
@@ -1190,6 +1190,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 sendLog(msgDate,'РП','Вошел в админ-мод.','Успешно',` `)
             }
         }
+        
         sendNullMessage()
     }
     if (interaction.data.name == "шанс") {
