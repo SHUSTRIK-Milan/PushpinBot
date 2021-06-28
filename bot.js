@@ -1229,7 +1229,7 @@ async function checkIntegrations() {
                     description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
                     type: 2,
                     required: true,
-                    options: t
+                    options: [{name: 'Черчель Стрит 1', type: 1}]
                 }
             ]
         };
