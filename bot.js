@@ -1218,7 +1218,7 @@ async function checkIntegrations() {
     function StreetsOfComandWalkFunc() {
         let t = []
         for(let object in Config.objects){
-            t.push({name: Config.objects[object].name, type: 3})
+            t.push({name: Config.objects[object].name, type: 1})
         }
         return t
     }
@@ -1231,13 +1231,15 @@ async function checkIntegrations() {
     console.log(t)
 
     let walk = {
-        name: "Идти с одного объекта в другой", 
-        description: "Тест",
+        name: "идти", 
+        description: "Идти с одного объекта в другой",
         options: [
             {
                 name: "путь",
                 description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
+                type: 2,
                 required: true,
+                options: StreetsOfComandWalkFunc()
             }
         ]
     };
