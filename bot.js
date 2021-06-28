@@ -1184,15 +1184,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(rpchannel && !haveRole(msgDate.member, '830061387849662515')){
             let staff = guild.members.cache.filter(member => (haveRole(member, '830061387849662515') || haveRole(member, '833226140755689483')) && member.presence.status != 'offline');
             if(staff.size == 0){
-                client.api.interactions(interaction.id, interaction.token).callback.post({
-                    data: {
-                        type: 4,
-                        data: {
-                            content: `**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`,
-                            flags: 64
-                        }
-                    }
-                });
+                sendLocalMessage(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`)
                 sendLog(msgDate,'РП','Попытался вызвать администратора.','Ошибка',`Вывод: **На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`)
                 guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${msgDate.author.tag} написал жалобу, но администраторов нет в сети:**`, {embed: {
                         thumbnail: {
