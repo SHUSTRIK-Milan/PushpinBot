@@ -1243,7 +1243,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             sendLog(msgDate,'РП','Использовал шанс.','Успешно',`Вывод: Шанс: ${roll()} из 100`)
             client.api.interactions(interaction.id, interaction.token).callback.post({
                 data: {
-                    type: 4,
+                    type: 2,
                     data: {
                         content: `Шанс: ${roll()} из 100`
                     }
