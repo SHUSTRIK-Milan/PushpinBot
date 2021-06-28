@@ -1236,7 +1236,6 @@ function checkIntegrations() {
                 {
                     name: "путь",
                     description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
-                    type: "2",
                     required: true,
                     options: StreetsOfComandWalkFunc()
                 }
