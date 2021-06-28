@@ -1224,7 +1224,7 @@ function checkIntegrations() {
     function StreetsOfComandWalkFunc() {
         let t = []
         for(let object in Config.objects){
-            t.push(new StreetsOfComandWalk(objects[object].name, 3))
+            t.push(new StreetsOfComandWalk(Config.objects[object].name, 3))
         }
         return t
     }
