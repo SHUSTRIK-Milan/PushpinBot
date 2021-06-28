@@ -870,7 +870,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
         if(rpchannel){
             let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
-            if(homePos.name == arg){return}
+            if(homePos.name == arg){sendLocalMessage(`Вы уже находитесь на этом объекте.`); return}
             //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
             let argsObj = arg
             console.log(argsObj);
