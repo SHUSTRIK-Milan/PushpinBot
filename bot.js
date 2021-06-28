@@ -1247,13 +1247,15 @@ function checkIntegrations() {
             {
                 name: "путь",
                 description: "Код службы",
-                type: "3"
-            },
-            {
-                name: "текст",
-                description: "Текст сообщения для экстренных служб",
-                type: "3"
-            },
+                type: "2",
+                options: [
+                    {
+                        name: "тест",
+                        description: "test",
+                        type: 1,
+                    }
+                ]
+            }
         ]
     };
 
