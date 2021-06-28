@@ -886,7 +886,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 //ищем каналы чье имя будет равно имени объекта пути
                 if(cat != undefined || cat != null) if (cat.type == 'category'){
                 //проверяем канал на тип категории
-                    if (haveRole(user,'835630198199681026')){ user.send('> Вы находитесь в админ-моде.'); return};
+                    if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
                     setTimeout(() => cat.updateOverwrite(user, { 'VIEW_CHANNEL': true }), timeOfDelete);
                     //даем право читать сообщения в категории.
                     setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete);
@@ -894,10 +894,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     sendLog(msgDate,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
                 };
             }else if (walkway == null && Config.objects.find(st => st.name.toLowerCase() == argsObj.toLowerCase()) != null){
-                user.send(`${argsObj} не является соседним объектом с ${homePos.name}.`);
+                sendLocalMessage(`${argsObj} не является соседним объектом с ${homePos.name}.`)
                 sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
             }else{
-                user.send(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`);
+                sendLocalMessage(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`)
                 sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
             };
         }else{
