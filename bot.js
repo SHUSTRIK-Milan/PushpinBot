@@ -1232,7 +1232,7 @@ function checkIntegrations() {
 
     console.log(t)
 
-    let ComandWalk = {
+    let walk = {
         name: "идти", 
             description: "Идти с одного объекта в другой",
             options: [
@@ -1243,7 +1243,7 @@ function checkIntegrations() {
                 }
             ]
     };
-    client.interaction.createApplicationCommand(ComandWalk, config.guild_id, "856221764605313104")
+    client.interaction.createApplicationCommand(walk, config.guild_id, "856221764605313104")
 
     let comand = {
         name: "911", 
