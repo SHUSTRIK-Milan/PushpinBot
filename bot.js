@@ -798,29 +798,29 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     console.log(`Тест: ${rpchannel}`)
 
     function sendNullMessage(){
-        client.api.interactions(interaction.id, interaction.token).callback.post({
+        setTimeout(() =>{client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 4,
                 data: {
                     content: '⠀'
                 }
             }
-        });
+        })}, timeOfDelete)
     }
 
     function sendGlobalMessage(content){
-        client.api.interactions(interaction.id, interaction.token).callback.post({
+        setTimeout(() =>{client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 4,
                 data: {
                     content: content
                 }
             }
-        });
+        })}, timeOfDelete)
     }
 
     function sendLocalMessage(content){
-        client.api.interactions(interaction.id, interaction.token).callback.post({
+        setTimeout(() =>{client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 4,
                 data: {
@@ -828,7 +828,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     flags: 64
                 }
             }
-        });
+        })}, timeOfDelete)
     }
 
     if (interaction.data.name == "осмотр") {
@@ -1190,7 +1190,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 sendLog(msgDate,'РП','Вошел в админ-мод.','Успешно',` `)
             }
         }
-        setTimeout(() =>sendNullMessage(), timeOfDelete)
+        sendNullMessage()
     }
     if (interaction.data.name == "шанс") {
         var arg = "";
