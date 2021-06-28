@@ -1216,6 +1216,34 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
 function checkIntegrations() {
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
+    function StreetsOfComandWalk(name, type) {
+        this.name = name;
+        this.type = type;
+    };
+
+    function StreetsOfComandWalkFunc() {
+        let t = []
+        for(let object in objects){
+            t.push(new StreetsOfComandWalk(objects[object].name, 3))
+        }
+        return t
+    }
+
+    let ComandWalk = {
+        name: "идти", 
+            description: "Идти с одного объекта в другой",
+            options: [
+                {
+                    name: "путь",
+                    description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
+                    type: "2",
+                    required: true,
+                    options: StreetsOfComandWalkFunc()
+                }
+            ]
+    };
+    client.interaction.createApplicationCommand(ComandWalk, config.guild_id, "856221764605313104")
+
     let comand = {
         name: "911", 
             description: "Вызвать экстренные службы",
