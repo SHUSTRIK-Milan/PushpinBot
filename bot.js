@@ -1238,7 +1238,7 @@ async function checkIntegrations() {
     console.log(StreetsOfComandWalkFunc())
 
     await client.interaction
-        .createApplicationCommand(walk, config.guild_id, "856221764605313104")
+        .createApplicationCommand(StreetsOfComandWalkFunc(), config.guild_id, "856221764605313104")
         .then(console.log)
 
     let comand = {
