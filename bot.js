@@ -866,15 +866,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         } else {
             arg = interaction.data.options[0].value
-            console.log(arg)
         }
 
         if(rpchannel){
             let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
+            if(homePos.name == arg){return}
             //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
-            let argsObj = guild.channels.cache.get(arg);
-            if(argsObj != undefined) argsObj = argsObj.name.slice(4).slice(0,-1).toLowerCase().split('-').join(' ');
-            if(argsObj == undefined) argsObj = arg;
+            let argsObj = arg
             console.log(argsObj);
             //проверяю не канал ли аргумент, если нет, то просто беру написанное.
             let walkway = homePos.radius.find(obj => obj.toLowerCase() == argsObj.toLowerCase());
