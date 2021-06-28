@@ -629,7 +629,7 @@ client.on('message', message => {
     if(!mb && !mg && !rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
 
     if(message.content == '⠀' && message.author.bot){
-        setTimeout(() => message.delete(), 100);
+        setTimeout(() => message.delete(), timeOfDelete);
     }
 
     if (message.channel.id == Config.channelsID.offers && !mb){
@@ -1217,25 +1217,23 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 function checkIntegrations() {
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
     let comand = {
-        name: "заплатить", 
-            description: "Дать кому-то деньги",
+        name: "911", 
+            description: "Вызвать экстренные службы",
             options: [
                 {
-                    name: "игрок",
-                    description: "Игрок, которому вы собираетесь передать деньги",
-                    type: "6",
-                    required: true
+                    name: "код",
+                    description: "Код службы",
+                    type: "4"
                 },
                 {
-                    name: "сумма",
-                    description: "Сумма денег",
-                    type: "4",
-                    required: true
+                    name: "текст",
+                    description: "Текст сообщения для экстренных служб",
+                    type: "3"
                 },
             ]
     };
 
-    //client.interaction.createApplicationCommand(comand, config.guild_id, "856221764181819453")
+    client.interaction.createApplicationCommand(comand, config.guild_id, "856221764181819453")
     // удаление старых команд
     /* client.interaction
         .getApplicationCommands(config.guild_id)
@@ -1288,13 +1286,13 @@ function checkIntegrations() {
                 {
                     name: "игрок",
                     description: "Игрок, которому вы собираетесь передать деньги",
-                    type: "3",
+                    type: "6",
                     required: true
                 },
                 {
                     name: "сумма",
                     description: "Сумма денег",
-                    type: "3",
+                    type: "4",
                     required: true
                 },
             ]
