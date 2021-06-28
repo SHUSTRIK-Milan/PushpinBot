@@ -1241,7 +1241,28 @@ function checkIntegrations() {
     let walk = {
         name: "идти", 
         description: "Идти с одного объекта в другой",
-        options: [cherchel]
+        options: [{
+            name: "черчель-стрит",
+            type: "3",
+            choices: [
+                {
+                    name: "Черчель Стрит 1",
+                    value: "cherchel_1"
+                },
+                {
+                    name: "Черчель Стрит 2",
+                    value: "cherchel_2"
+                },
+                {
+                    name: "Черчель Стрит 3",
+                    value: "cherchel_3"
+                },
+                {
+                    name: "Черчель Стрит 4",
+                    value: "cherchel_4"
+                },
+            ]
+        }]
     };
 
     client.interaction.createApplicationCommand(walk, config.guild_id, "856221764605313104").then(console.log)
