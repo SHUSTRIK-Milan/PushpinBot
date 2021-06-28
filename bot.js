@@ -1224,7 +1224,7 @@ function checkIntegrations() {
     } */
 
     let walk = {
-        name: "идти", 
+        /* name: "идти", 
         description: "Идти с одного объекта в другой",
         options: [
             {
@@ -1240,6 +1240,20 @@ function checkIntegrations() {
                     }
                 ]
             }
+        ] */
+        name: "идти", 
+        description: "Идти с одного объекта в другой",
+        options: [
+            {
+                name: "путь",
+                description: "Код службы",
+                type: "3"
+            },
+            {
+                name: "текст",
+                description: "Текст сообщения для экстренных служб",
+                type: "3"
+            },
         ]
     };
 
