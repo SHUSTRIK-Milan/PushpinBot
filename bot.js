@@ -795,7 +795,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     let head = haveRole(user, '833226140755689483')
     console.log(channel.name)
     rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
-    console.log(`Тест: ${rpchannel}`)
 
     function sendNullMessage(){
         setTimeout(() =>{client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -866,12 +865,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg};
         if (interaction.data.options == undefined) {
         } else {
-            console.log(interaction.data.options)
-            interaction.data.options.forEach((c) => {
-                if (c.name == "путь") {
-                    arg = c.value;
-                }
-            });
+            arg = interaction.data.options[0].value
+            print(arg)
         }
 
         if(rpchannel){
