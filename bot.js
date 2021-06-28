@@ -867,7 +867,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         } else {
             interaction.data.options.forEach((c) => {
-                if (c.name == "нетест") {
+                if (c.name == "путь") {
                     arg = c.value;
                 }
             });
@@ -1232,10 +1232,10 @@ function checkIntegrations() {
 
     let walk = {
         name: "идти", 
-            description: "Идти с одного объекта в другой",
+            description: "Тест",
             options: [
                 {
-                    name: "нетест",
+                    name: "путь",
                     description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
                     required: true,
                 }
