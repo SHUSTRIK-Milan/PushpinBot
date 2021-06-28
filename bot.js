@@ -1242,9 +1242,9 @@ function checkIntegrations() {
         name: "идти", 
         description: "Идти с одного объекта в другой",
         options: [{
-            name: "черчель",
+            name: "черчель-стрит",
             type: "3",
-            choices: [
+            choices: [/* 
                 {
                     name: "Черчель Стрит 1",
                     value: "cherchel_1"
@@ -1260,7 +1260,7 @@ function checkIntegrations() {
                 {
                     name: "Черчель Стрит 4",
                     value: "cherchel_4"
-                },
+                }, */
             ]
         }]
     };
