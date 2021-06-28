@@ -867,7 +867,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         } else {
             interaction.data.options.forEach((c) => {
-                if (c.name == "путь") {
+                if (c.name == "нетест") {
                     arg = c.value;
                 }
             });
