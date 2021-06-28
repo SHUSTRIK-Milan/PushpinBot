@@ -1242,23 +1242,26 @@ function checkIntegrations() {
         name: "идти", 
         description: "Идти с одного объекта в другой",
         options: [{
-            name: "animal",
-            description: "The type of animal",
+            name: "черчель-стрит",
+            description: "Перемещения по Черчель-Стрит",
             type: "3",
-            required: true,
             choices: [
                 {
-                    name: "Dog",
-                    value: "animal_dog"
+                    name: "Черчель Стрит 1",
+                    value: "cherchel_1"
                 },
                 {
-                    name: "Cat",
-                    value: "animal_cat"
+                    name: "Черчель Стрит 2",
+                    value: "cherchel_2"
                 },
                 {
-                    name: "Penguin",
-                    value: "animal_penguin"
-                }
+                    name: "Черчель Стрит 3",
+                    value: "cherchel_3"
+                },
+                {
+                    name: "Черчель Стрит 4",
+                    value: "cherchel_4"
+                },
             ]
         }]
     };
