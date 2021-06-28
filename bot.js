@@ -1217,23 +1217,24 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 function checkIntegrations() {
     let cherchel = {
         name: "черчель-стрит",
+        description: "Перемещения по Черчель-Стрит",
         type: "3",
         choices: [
             {
                 name: "Черчель Стрит 1",
-                value: "cherchel_1"
+                value: "Черчель Стрит 1"
             },
             {
                 name: "Черчель Стрит 2",
-                value: "cherchel_2"
+                value: "Черчель Стрит 2"
             },
             {
                 name: "Черчель Стрит 3",
-                value: "cherchel_3"
+                value: "Черчель Стрит 3"
             },
             {
                 name: "Черчель Стрит 4",
-                value: "cherchel_4"
+                value: "Черчель Стрит 4"
             },
         ]
     }
@@ -1241,29 +1242,14 @@ function checkIntegrations() {
     let walk = {
         name: "идти", 
         description: "Идти с одного объекта в другой",
-        options: [{
-            name: "черчель-стрит",
-            description: "Перемещения по Черчель-Стрит",
-            type: "3",
-            choices: [
-                {
-                    name: "Черчель Стрит 1",
-                    value: "cherchel_1"
-                },
-                {
-                    name: "Черчель Стрит 2",
-                    value: "cherchel_2"
-                },
-                {
-                    name: "Черчель Стрит 3",
-                    value: "cherchel_3"
-                },
-                {
-                    name: "Черчель Стрит 4",
-                    value: "cherchel_4"
-                },
-            ]
-        }]
+        options: [
+            {
+                name: "черчель-стрит",
+                description: "Перемещения по Черчель-Стрит",
+                type: "1",
+                options: [cherchel]
+            }
+        ]
     };
 
     client.interaction.createApplicationCommand(walk, config.guild_id, "856221764605313104").then(console.log)
