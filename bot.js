@@ -805,7 +805,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     content: '⠀'
                 }
             }
-        })}, timeOfDelete)
+        })}, 125)
     }
 
     function sendGlobalMessage(content){
@@ -816,7 +816,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     content: content
                 }
             }
-        })}, timeOfDelete)
+        })}, 125)
     }
 
     function sendLocalMessage(content){
@@ -828,7 +828,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     flags: 64
                 }
             }
-        })}, timeOfDelete)
+        })}, 125)
     }
 
     if (interaction.data.name == "осмотр") {
@@ -892,7 +892,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
                     setTimeout(() => cat.updateOverwrite(user, { 'VIEW_CHANNEL': true }), timeOfDelete);
                     //даем право читать сообщения в категории.
-                    setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete);
+                    setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete*2);
                     //удаляем право читать сообщения в прошлой категории
                     sendLog(msgDate,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
                 };
