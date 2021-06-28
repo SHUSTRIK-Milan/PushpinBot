@@ -794,6 +794,18 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
     console.log(`Тест: ${rpchannel}`)
 
+    function sendLocalMessage(content){
+        client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 4,
+                data: {
+                    content: content,
+                    flags: 64
+                }
+            }
+        });
+    }
+
     if (interaction.data.name == "осмотр") {
         var arg = "";
         let msgDate = {author: user.user, channel: channel, content: arg};
@@ -1120,30 +1132,42 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     msgDate.author.send(`**На данный момент медики на службе отсутствуют** ⚕️`);
                     sendLog(msgDate,'РП','Попытался вызвать медицинскую службу.','Ошибка',`Вывод: **На данный момент медики на службе отсутствуют** ⚕️`)
                 }else{
-                    msgDate.author.send(`**Вы вызывали медицинскую службу** ⚕️\n> ${text}`);
+                    client.api.interactions(interaction.id, interaction.token).callback.post({
+                        data: {
+                            type: 4,
+                            data: {
+                                content: `**Вы вызывали медицинскую службу** ⚕️\n> ${text}`,
+                                flags: 64
+                            }
+                        }
+                    });
                     sendLog(msgDate,'РП','Вызвал медицинскую службу.','Успешно',`Вывод: **Вы вызывали медицинскую службу** ⚕️\n> ${text}`)
                     for(let worker of staff){
                         worker[1].send(`**${msgDate.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${text}\n**Адрес:**\n> ${adres}`)
                     }
                 }
             }else{
-                msgDate.author.send(`**Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️
-> 1 – пожарная служба.
-> 2 – полиция.
-> 3 – медицинская служба.
-                `);
+                client.api.interactions(interaction.id, interaction.token).callback.post({
+                    data: {
+                        type: 4,
+                        data: {
+                            content: `**Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️\n> 1 – пожарная служба.\n> 2 – полиция.\n> 3 – медицинская служба.`,
+                            flags: 64
+                        }
+                    }
+                });
+                sendLog(msgDate,'РП','Вызвал 911 без доп. кода.','Успешно',`Вывод: **Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️`)
             };
-            sendLog(msgDate,'РП','Вызвал 911 без доп. кода.','Успешно',`Вывод: **Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️`)
-        };
-    
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
+        }else{
+            client.api.interactions(interaction.id, interaction.token).callback.post({
                 data: {
-                    content: '⠀'
+                    type: 4,
+                    data: {
+                        content: '⠀'
+                    }
                 }
-            }
-        });
+            });
+        }
     }
     if (interaction.data.name == "admincall") {
         var arg = "";
@@ -1185,15 +1209,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     }
                 });
             }else{
-                client.api.interactions(interaction.id, interaction.token).callback.post({
-                    data: {
-                        type: 4,
-                        data: {
-                            content: `**Вы вызывали администратора** 👥\n> ${arg}`,
-                            flags: 64
-                        }
-                    }
-                });
+                sendLocalMessage(`**Вы вызывали администратора** 👥\n> ${arg}`)
                 sendLog(msgDate,'РП','Вызвал администратора.','Успешно',`Вывод: **Вы вызывали администратора** 👥\n> ${arg}`)
                 for(let worker of staff){
                     worker[1].send(`**${msgDate.member.nickname} вызывал(а) администратора** 👥\n> ${arg}\n**Местоположение:**\n> ${channel.parent.name} -> <#${channel.id}>`)
