@@ -1210,9 +1210,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
 function checkIntegrations() {
     let cherchel = {
-        name: "черчель-стрит",
+        name: "путь",
         description: "Перемещения по Черчель-Стрит",
         type: "3",
+        required: true,
         choices: [
             {
                 name: "Черчель Стрит",
@@ -1258,9 +1259,10 @@ function checkIntegrations() {
     }
 
     let brodvey = {
-        name: "бродвей",
+        name: "путь",
         description: "Перемещения по Бродвею",
         type: "3",
+        required: true,
         choices: [
             {
                 name: "Бродвей",
@@ -1322,9 +1324,10 @@ function checkIntegrations() {
     }
 
     let liberti = {
-        name: "либерти",
+        name: "путь",
         description: "Перемещения по Либерти",
         type: "3",
+        required: true,
         choices: [
             {
                 name: "Либерти",
@@ -1364,7 +1367,26 @@ function checkIntegrations() {
     let walk = {
         name: "идти", 
         description: "Идти с одного объекта в другой",
-        options: [cherchel, brodvey, liberti]
+        options: [
+            {
+                name: "черчель-стрит",
+                description: "Черчель-Стрит",
+                type: "1",
+                options: [cherchel]
+            },
+            {
+                name: "бродвей",
+                description: "Бродвей",
+                type: "1",
+                options: [brodvey]
+            },
+            {
+                name: "либерти",
+                description: "Либерти",
+                type: "1",
+                options: [liberti]
+            },
+        ]
     };
 
     client.interaction.createApplicationCommand(walk, config.guild_id, "856221764605313104").then(console.log)
