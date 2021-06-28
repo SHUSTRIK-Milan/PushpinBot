@@ -866,6 +866,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg};
         if (interaction.data.options == undefined) {
         } else {
+            console.log(interaction.data.options)
             interaction.data.options.forEach((c) => {
                 if (c.name == "путь") {
                     arg = c.value;
@@ -1239,18 +1240,34 @@ function checkIntegrations() {
         ]
     }
 
+    let brodvey = {
+        name: "черчель-стрит",
+        description: "Перемещения по Черчель-Стрит",
+        type: "3",
+        choices: [
+            {
+                name: "Черчель Стрит 1",
+                value: "Черчель Стрит 1"
+            },
+            {
+                name: "Черчель Стрит 2",
+                value: "Черчель Стрит 2"
+            },
+            {
+                name: "Черчель Стрит 3",
+                value: "Черчель Стрит 3"
+            },
+            {
+                name: "Черчель Стрит 4",
+                value: "Черчель Стрит 4"
+            },
+        ]
+    }
+
     let walk = {
         name: "идти", 
         description: "Идти с одного объекта в другой",
-        options: [
-            {
-                name: "на",
-                description: "Перемещения по Черчель-Стрит",
-                type: "1",
-                required: true,
-                options: [cherchel]
-            }
-        ]
+        options: [cherchel]
     };
 
     client.interaction.createApplicationCommand(walk, config.guild_id, "856221764605313104").then(console.log)
