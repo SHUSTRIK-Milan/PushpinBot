@@ -1221,19 +1221,19 @@ function checkIntegrations() {
         choices: [
             {
                 name: "Черчель Стрит 1",
-                value: "черчель_стрит_1"
+                value: "cherchel_1"
             },
             {
                 name: "Черчель Стрит 2",
-                value: "черчель_стрит_2"
+                value: "cherchel_2"
             },
             {
                 name: "Черчель Стрит 3",
-                value: "черчель_стрит_3"
+                value: "cherchel_3"
             },
             {
                 name: "Черчель Стрит 4",
-                value: "черчель_стрит_4"
+                value: "cherchel_4"
             },
         ]
     }
