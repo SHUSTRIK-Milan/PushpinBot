@@ -1218,7 +1218,7 @@ function checkIntegrations() {
     function StreetsOfComandWalkFunc() {
         let t = []
         for(let object in Config.objects){
-            t.push({name: Config.objects[object].name, type: "1"})
+            t.push({name: Config.objects[object].name, description: "Улица", type: "1"})
         }
         return t
     }
