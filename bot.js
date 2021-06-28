@@ -1242,7 +1242,7 @@ function checkIntegrations() {
         name: "идти", 
         description: "Идти с одного объекта в другой",
         options: [{
-            name: "черчель-стрит",
+            name: "черчель",
             type: "3",
             choices: [
                 {
