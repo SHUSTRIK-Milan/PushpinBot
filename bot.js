@@ -1220,24 +1220,23 @@ async function checkIntegrations() {
         for(let object in Config.objects){
             t.push({name: Config.objects[object].name, type: 1})
         }
-        return t
+        return {
+            name: "идти", 
+            description: "Идти с одного объекта в другой",
+            options: [
+                {
+                    name: "путь",
+                    description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
+                    type: 2,
+                    required: true,
+                    options: t
+                }
+            ]
+        };
     }
-    
+
     console.log(StreetsOfComandWalkFunc())
 
-    let walk = {
-        name: "идти", 
-        description: "Идти с одного объекта в другой",
-        options: [
-            {
-                name: "путь",
-                description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
-                type: 2,
-                required: true,
-                options: StreetsOfComandWalkFunc()
-            }
-        ]
-    };
     await client.interaction
         .createApplicationCommand(walk, config.guild_id, "856221764605313104")
         .then(console.log)
