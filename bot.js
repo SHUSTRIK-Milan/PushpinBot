@@ -546,6 +546,7 @@ async function pay(message, userDate, money){
     let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
     let gUser = stats.find(stat => stat.user == userDate);
     if(gUser == undefined) gUser = stats.find(stat => stat.user == `<@!${userDate.slice(2).slice(0,-1)}>`);
+    if(gUser == undefined) return;
 
     console.log(userDate);
     console.log(gUser)
@@ -1299,7 +1300,7 @@ function checkIntegrations() {
             ]
     };
 
-    client.interaction.createApplicationCommand(comand, config.guild_id, "856221764181819453")
+    //client.interaction.createApplicationCommand(comand, config.guild_id, "856221764181819453")
     // удаление старых команд
     /* client.interaction
         .getApplicationCommands(config.guild_id)
