@@ -1249,9 +1249,17 @@ function checkIntegrations() {
                 description: "Код службы",
                 type: "2",
                 options: [
-                    { name: 'Черчель Стрит', description: 'Улица', type: '1' },
-                    { name: 'Черчель Стрит 1', description: 'Улица', type: '1' },
-                  ]
+                    {
+                        name: 'Черчель Стрит',
+                        description: 'Улица',
+                        type: '1'
+                    },
+                    {
+                        name: 'Черчель Стрит 1',
+                        description: 'Улица',
+                        type: '1'
+                    },
+                ]
             }
         ]
     };
