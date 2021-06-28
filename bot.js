@@ -1231,11 +1231,11 @@ async function checkIntegrations() {
     console.log(t)
 
     let walk = {
-        name: "идти", 
+        name: "Идти с одного объекта в другой", 
         description: "Тест",
         options: [
             {
-                name: "Идти с одного объекта в другой",
+                name: "путь",
                 description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
                 required: true,
             }
