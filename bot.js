@@ -1220,25 +1220,25 @@ function checkIntegrations() {
         for(let object in Config.objects){
             t.push({name: Config.objects[object].name, description: "Улица", type: "1"})
         }
-        return t
+        console.log(t)
+        let walk = {
+            name: "идти", 
+            description: "Идти с одного объекта в другой",
+            options: [
+                {
+                    name: "путь",
+                    description: "Код службы",
+                    type: "2",
+                    options: t
+                }
+            ]
+        };
+        client.interaction
+            .createApplicationCommand(walk, config.guild_id, "856221764605313104")
+            .then(console.log)
     }
 
-    let walk = {
-        name: "идти", 
-        description: "Идти с одного объекта в другой",
-        options: [
-            {
-                name: "путь",
-                description: "Код службы",
-                type: "2",
-                options: StreetsOfComandWalkFunc()
-            }
-        ]
-    };
-
-    client.interaction
-        .createApplicationCommand(walk, config.guild_id, "856221764605313104")
-        .then(console.log)
+    StreetsOfComandWalkFunc()
 
     let comand = {
         name: "911", 
