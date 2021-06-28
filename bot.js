@@ -1216,25 +1216,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
 function checkIntegrations() {
     function StreetsOfComandWalkFunc() {
-        let t = []
-        for(let object in Config.objects){
-            t.push({name: Config.objects[object].name.split(" ").join('-').toLowerCase(), description: "Улица", type: "1"})
-        }
-        console.log(t)
         let walk = {
             name: "идти", 
             description: "Идти с одного объекта в другой",
             options: [
                 {
                     name: "путь",
-                    description: "Код службы",
-                    type: "2",
-                    options: [{ name: 'черчель-стрит', description: 'Улица', type: '1' },
-                    { name: 'черчель-стрит-1', description: 'Улица', type: '1' },
-                    { name: 'черчель-стрит-2', description: 'Улица', type: '1' },
-                    { name: 'черчель-стрит-3', description: 'Улица', type: '1' },
-                    { name: 'черчель-стрит-4', description: 'Улица', type: '1' },
-                    { name: 'черчель-стрит-5-пд', description: 'Улица', type: '1' }]
+                    description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
+                    type: "3",
+                    required: true
                 }
             ]
         };
