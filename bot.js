@@ -1214,7 +1214,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
 });
 
-function checkIntegrations() {
+async function checkIntegrations() {
     function StreetsOfComandWalkFunc() {
         let t = []
         for(let object in Config.objects){
