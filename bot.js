@@ -1395,6 +1395,11 @@ function checkIntegrations() {
                     description: "Код службы",
                     type: "3"
                 },
+                {
+                    name: "текст",
+                    description: "Текст сообщения для экстренных служб",
+                    type: "3"
+                },
             ]
         }, config.guild_id)
         .then(console.log)
