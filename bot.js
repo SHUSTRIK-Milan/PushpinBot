@@ -1244,9 +1244,10 @@ function checkIntegrations() {
         description: "Идти с одного объекта в другой",
         options: [
             {
-                name: "черчель-стрит",
+                name: "на",
                 description: "Перемещения по Черчель-Стрит",
                 type: "1",
+                required: true,
                 options: [cherchel]
             }
         ]
