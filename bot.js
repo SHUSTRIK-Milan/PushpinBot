@@ -943,8 +943,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             interaction.data.options.forEach((c) => {
                 if (c.name == "игрок") {
-                    console.log(userDate)
                     userDate = c.value;
+                    console.log(userDate)
                 }
                 if (c.name == "сумма") {
                     money = c.value;
