@@ -1237,7 +1237,7 @@ function checkIntegrations() {
             description: "Идти с одного объекта в другой",
             options: [
                 {
-                    name: "путь",
+                    name: "тест",
                     description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
                     required: true,
                     options: StreetsOfComandWalkFunc()
