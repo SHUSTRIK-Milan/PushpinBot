@@ -1222,13 +1222,8 @@ async function checkIntegrations() {
         }
         return t
     }
-
-    let t = [{
-        t: 'test',
-        test: StreetsOfComandWalkFunc()
-    }]
-
-    console.log(t)
+    
+    console.log(StreetsOfComandWalkFunc())
 
     let walk = {
         name: "идти", 
