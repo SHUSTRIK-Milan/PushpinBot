@@ -470,11 +470,11 @@ async function Stats(message){
                     AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfileInfo.steamID)
 
                     guild.members.fetch(message.author.id).then(member =>{
-                        giveRole(member,`854315001543786507`); //citizen
-                        giveRole(member,`851059555499638825`); //rp-role
-                        giveRole(member,`836183994646921248`); //pushpin
-                        giveRole(member,`836269090996879387`); //user
-                        removeRole(member,`829423238169755658`); //ooc
+                        setTimeout(() => giveRole(member,`854315001543786507`), timeOfDelete); //citizen
+                        setTimeout(() => giveRole(member,`851059555499638825`), timeOfDelete); //rp-role
+                        setTimeout(() => giveRole(member,`836183994646921248`), timeOfDelete); //pushpin
+                        setTimeout(() => giveRole(member,`836269090996879387`), timeOfDelete); //user
+                        setTimeout(() => removeRole(member,`829423238169755658`), timeOfDelete); //ooc
                     });
 
                     sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
