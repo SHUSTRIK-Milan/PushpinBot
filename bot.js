@@ -1236,7 +1236,9 @@ function checkIntegrations() {
             description: "Идти с одного объекта в другой",
             options: StreetsOfComandWalkFunc()
     };
-    client.interaction.createApplicationCommand(ComandWalk, config.guild_id, "856221764605313104")
+    client.interaction.createApplicationCommand(
+        {name: "идти", description: "Идти с одного объекта в другой", options: StreetsOfComandWalkFunc()},
+        config.guild_id, "856221764605313104")
 
     let comand = {
         name: "911", 
