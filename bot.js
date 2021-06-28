@@ -1223,8 +1223,6 @@ function checkIntegrations() {
         return 
     } */
 
-    console.log(StreetsOfComandWalkFunc())
-
     let walk = {
         name: "идти", 
         description: "Идти с одного объекта в другой",
