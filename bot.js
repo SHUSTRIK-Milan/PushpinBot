@@ -1229,16 +1229,26 @@ function checkIntegrations() {
         return t
     }
 
-    console.log(StreetsOfComandWalkFunc())
+    let t = {
+        t: 'test',
+        test: StreetsOfComandWalkFunc()
+    }
+
+    console.log(t)
 
     let ComandWalk = {
         name: "идти", 
             description: "Идти с одного объекта в другой",
-            options: StreetsOfComandWalkFunc()
+            options: [
+                {
+                    name: "путь",
+                    description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
+                    required: true,
+                    options: StreetsOfComandWalkFunc()
+                }
+            ]
     };
-    client.interaction.createApplicationCommand(
-        {name: "идти", description: "Идти с одного объекта в другой", options: StreetsOfComandWalkFunc()},
-        config.guild_id, "856221764605313104")
+    client.interaction.createApplicationCommand(ComandWalk, config.guild_id, "856221764605313104")
 
     let comand = {
         name: "911", 
