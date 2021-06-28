@@ -1190,7 +1190,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 sendLog(msgDate,'РП','Вошел в админ-мод.','Успешно',` `)
             }
         }
-        sendNullMessage()
+        setTimeout(() =>sendNullMessage(), timeOfDelete)
     }
     if (interaction.data.name == "шанс") {
         var arg = "";
