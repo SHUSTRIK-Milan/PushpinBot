@@ -979,10 +979,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             minusMoney(msgDate, 100).then(succ =>{
                 if(succ == true){
                     guild.channels.cache.get(Config.channelsID.adverts).send(`> Реклама от ${msgDate.member.nickname} 📢\n${arg}`)
-                    msgDate.author.send(`> Вы приобрели рекламу за ${moneyT.format(100)} 📢`);
+                    sendLocalMessage(`> Вы приобрели рекламу за ${moneyT.format(100)} 📢`);
                     sendLog(msgDate,'РП','Приобрел рекламу.','Успешно',`Вывод: > Реклама от ${msgDate.member.nickname} 📢\n${arg}\n> Вы приобрели рекламу за ${moneyT.format(100)} 📢`)
                 }else if(succ == false){
-                    msgDate.author.send(`> Вам не хватило денег на рекламу 📢`);
+                    sendLocalMessage(`> Вам не хватило денег на рекламу 📢`);
                     sendLog(msgDate,'РП','Попытался приобрести рекламу.','Ошибка',`Вывод: > Вам не хватило денег на рекламу 📢`)
                 }
             });
@@ -1003,6 +1003,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
     
         if(rpchannel && haveRole(msgDate.member, `852668893821665320`)){
+            sendLocalMessage(`> Вы оповестили от мэрии города 🎙️\n${arg}`)
             guild.channels.cache.get(Config.channelsID.adverts).send(`> Оповещение от мэрии города 🎙️\n${arg}`)
             sendLog(msgDate,'РП','Оповестил город.','Успешно',`Вывод: > Оповещение от мэрии города 🎙️\n${arg}`)
         }else{
