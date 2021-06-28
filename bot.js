@@ -1240,7 +1240,6 @@ function checkIntegrations() {
                     name: "тест",
                     description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
                     required: true,
-                    options: StreetsOfComandWalkFunc()
                 }
             ]
     };
