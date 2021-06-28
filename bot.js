@@ -878,7 +878,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
             let argsObj = guild.channels.cache.get(arg);
             if(argsObj != undefined) argsObj = argsObj.name.slice(4).slice(0,-1).toLowerCase().split('-').join(' ');
-            if(argsObj == undefined){sendLocalMessage(`> Используйте канал объекта для перемещения`); return}
+            if(argsObj == undefined) argsObj = arg;
             console.log(argsObj);
             //проверяю не канал ли аргумент, если нет, то просто беру написанное.
             let walkway = homePos.radius.find(obj => obj.toLowerCase() == argsObj.toLowerCase());
@@ -1215,20 +1215,44 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 });
 
 function checkIntegrations() {
-    let comand = {
+    let cherchel = {
+        name: "черчель-стрит",
+        type: "3",
+        choices: [
+            {
+                name: "Черчель Стрит 1",
+                value: "Черчель Стрит 1"
+            },
+            {
+                name: "Черчель Стрит 2",
+                value: "Черчель Стрит 2"
+            },
+            {
+                name: "Черчель Стрит 3",
+                value: "Черчель Стрит 3"
+            },
+            {
+                name: "Черчель Стрит 4",
+                value: "Черчель Стрит 4"
+            },
+        ]
+    }
+
+    let walk = {
         name: "идти", 
         description: "Идти с одного объекта в другой",
         options: [
             {
                 name: "путь",
                 description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
-                type: "7",
-                required: true
+                type: "2",
+                required: true,
+                options: [cherchel]
             }
         ]
     };
 
-    client.interaction.createApplicationCommand(comand, config.guild_id, "856221764605313104")
+    client.interaction.createApplicationCommand(walk, config.guild_id, "856221764605313104")
     // удаление старых команд
     /* client.interaction
         .getApplicationCommands(config.guild_id)
