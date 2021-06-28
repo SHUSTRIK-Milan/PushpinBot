@@ -1215,32 +1215,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 });
 
 function checkIntegrations() {
-    /* function StreetsOfComandWalkFunc() {
+    function StreetsOfComandWalkFunc() {
         let t = []
         for(let object in Config.objects){
-            t.push({name: Config.objects[object].name, type: 1})
+            t.push({name: Config.objects[object].name, type: "1"})
         }
-        return 
-    } */
+        return t
+    }
 
     let walk = {
-        /* name: "идти", 
-        description: "Идти с одного объекта в другой",
-        options: [
-            {
-                name: "путь",
-                description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
-                type: 2,
-                required: true,
-                options: [
-                    {
-                        name: 'Черчель Стрит 1',
-                        description: "Код службы",
-                        type: 1
-                    }
-                ]
-            }
-        ] */
         name: "идти", 
         description: "Идти с одного объекта в другой",
         options: [
@@ -1248,13 +1231,7 @@ function checkIntegrations() {
                 name: "путь",
                 description: "Код службы",
                 type: "2",
-                options: [
-                    {
-                        name: "тест",
-                        description: "test",
-                        type: 1,
-                    }
-                ]
+                options: StreetsOfComandWalkFunc()
             }
         ]
     };
