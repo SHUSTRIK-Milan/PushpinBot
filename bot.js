@@ -1189,10 +1189,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 channel.parent.permissionOverwrites.get(msgDate.author.id).delete();
                 sendLog(msgDate,'РП','Вошел в админ-мод.','Успешно',` `)
             }
-            sendNullMessage()
-        }else{
-            sendNullMessage()
         }
+        sendNullMessage()
     }
     if (interaction.data.name == "шанс") {
         var arg = "";
