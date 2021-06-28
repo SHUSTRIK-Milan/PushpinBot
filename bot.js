@@ -924,7 +924,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             })
             GetStats().then(stats => {
                 if (stats.length == 0){return};
-                user.send(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${user.id}>`).money))} 💰`);
+                sendLocalMessage(`Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${user.id}>`).money))} 💰`)
                 sendLog(msgDate,'РП','Узнал свой баланс.','Успешно',`Вывод: Текущий баланс: ${moneyT.format(parseInt(stats.find(stat => stat.user == `<@!${user.id}>`).money))} 💰`);
             });
         }else{
