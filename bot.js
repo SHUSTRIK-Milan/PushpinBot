@@ -1241,15 +1241,7 @@ function checkIntegrations() {
     let walk = {
         name: "идти", 
         description: "Идти с одного объекта в другой",
-        options: [
-            {
-                name: "путь",
-                description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
-                type: "2",
-                required: true,
-                options: [cherchel]
-            }
-        ]
+        options: [cherchel]
     };
 
     client.interaction.createApplicationCommand(walk, config.guild_id, "856221764605313104").then(console.log)
