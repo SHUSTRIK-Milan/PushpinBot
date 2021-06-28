@@ -1214,31 +1214,39 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
 });
 
-async function checkIntegrations() {
-    function StreetsOfComandWalkFunc() {
+function checkIntegrations() {
+    /* function StreetsOfComandWalkFunc() {
         let t = []
         for(let object in Config.objects){
             t.push({name: Config.objects[object].name, type: 1})
         }
-        return {
-            name: "идти", 
-            description: "Идти с одного объекта в другой",
-            options: [
-                {
-                    name: "путь",
-                    description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
-                    type: 2,
-                    required: true,
-                    options: [{name: 'Черчель Стрит 1', description: "Код службы", type: 1}]
-                }
-            ]
-        };
-    }
+        return 
+    } */
 
     console.log(StreetsOfComandWalkFunc())
 
-    await client.interaction
-        .createApplicationCommand(StreetsOfComandWalkFunc(), config.guild_id, "856221764605313104")
+    let walk = {
+        name: "идти", 
+        description: "Идти с одного объекта в другой",
+        options: [
+            {
+                name: "путь",
+                description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
+                type: 2,
+                required: true,
+                options: [
+                    {
+                        name: 'Черчель Стрит 1',
+                        description: "Код службы",
+                        type: 1
+                    }
+                ]
+            }
+        ]
+    };
+
+    client.interaction
+        .createApplicationCommand(walk, config.guild_id, "856221764605313104")
         .then(console.log)
 
     let comand = {
