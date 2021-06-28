@@ -1232,32 +1232,34 @@ function checkIntegrations() {
 
     let walk = {
         name: "идти", 
-            description: "Тест",
-            options: [
-                {
-                    name: "путь",
-                    description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
-                    required: true,
-                }
-            ]
+        description: "Тест",
+        options: [
+            {
+                name: "Идти с одного объекта в другой",
+                description: "Путь, куда вы хотите пойти. Можно использовать упоминание канала.",
+                required: true,
+            }
+        ]
     };
-    client.interaction.createApplicationCommand(walk, config.guild_id, "856221764605313104")
+    await client.interaction
+        .createApplicationCommand(walk, config.guild_id, "856221764605313104")
+        .then(console.log)
 
     let comand = {
         name: "911", 
-            description: "Вызвать экстренные службы",
-            options: [
-                {
-                    name: "код",
-                    description: "Код службы",
-                    type: "4"
-                },
-                {
-                    name: "текст",
-                    description: "Текст сообщения для экстренных служб",
-                    type: "3"
-                },
-            ]
+        description: "Вызвать экстренные службы",
+        options: [
+            {
+                name: "код",
+                description: "Код службы",
+                type: "4"
+            },
+            {
+                name: "текст",
+                description: "Текст сообщения для экстренных служб",
+                type: "3"
+            },
+        ]
     };
 
     //client.interaction.createApplicationCommand(comand, config.guild_id, "856222015480135791")
