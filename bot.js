@@ -865,6 +865,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg};
         if (interaction.data.options == undefined) {
         } else {
+            console.log(interaction.data.options)
             arg = interaction.data.options[0].value
         }
 
