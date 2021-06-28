@@ -1215,8 +1215,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 });
 
 function checkIntegrations() {
-    client.interaction.getApplicationCommands(config.guild_id).then(console.log);
-
     function StreetsOfComandWalkFunc() {
         let t = []
         for(let object in Config.objects){
@@ -1425,6 +1423,7 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     }, 200);
+    client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
 
 client.login(process.env.BOT_TOKEN);
