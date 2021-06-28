@@ -1215,7 +1215,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 });
 
 function checkIntegrations() {
-    function StreetsOfComandWalkFunc() {
+    /* function StreetsOfComandWalkFunc() {
         let t = []
         for(let object in Config.objects){
             t.push({name: Config.objects[object].name, description: "Улица", type: "1"})
@@ -1238,7 +1238,72 @@ function checkIntegrations() {
             .then(console.log)
     }
 
-    StreetsOfComandWalkFunc()
+    StreetsOfComandWalkFunc() */
+
+    let walk = {
+        name: "идти", 
+        description: "Идти с одного объекта в другой",
+        options: [
+            {
+                name: "путь",
+                description: "Код службы",
+                type: "2",
+                options: [
+                    { name: 'Черчель Стрит', description: 'Улица', type: '1' },
+                    { name: 'Черчель Стрит 1', description: 'Улица', type: '1' },
+                    { name: 'Черчель Стрит 2', description: 'Улица', type: '1' },
+                    { name: 'Черчель Стрит 3', description: 'Улица', type: '1' },
+                    { name: 'Черчель Стрит 4', description: 'Улица', type: '1' },
+                    { name: 'Черчель Стрит 5 ПД', description: 'Улица', type: '1' },
+                    {
+                      name: 'Черчель Стрит 5 ПД рабочая зона',
+                      description: 'Улица',
+                      type: '1'
+                    },
+                    {
+                      name: 'Черчель Стрит 5 ПД комнаты экипировки',
+                      description: 'Улица',
+                      type: '1'
+                    },
+                    { name: 'Черчель Стрит 5 ПД кпз', description: 'Улица', type: '1' },
+                    {
+                      name: 'Черчель Стрит 5 ПД кабинет капитана',
+                      description: 'Улица',
+                      type: '1'
+                    },
+                    { name: 'Бродвей', description: 'Улица', type: '1' },
+                    { name: 'Бродвей парк', description: 'Улица', type: '1' },
+                    { name: 'Бродвей подземные пути', description: 'Улица', type: '1' },
+                    { name: 'Бродвей 1 1 этаж', description: 'Улица', type: '1' },
+                    { name: 'Бродвей 1 1 этаж 1 кв', description: 'Улица', type: '1' },
+                    { name: 'Бродвей 1 1 этаж 2 кв', description: 'Улица', type: '1' },
+                    { name: 'Бродвей 1 1 этаж 3 кв', description: 'Улица', type: '1' },
+                    { name: 'Бродвей 1 2 этаж', description: 'Улица', type: '1' },
+                    { name: 'Бродвей 1 2 этаж 4 кв', description: 'Улица', type: '1' },
+                    { name: 'Бродвей 1 2 этаж 5 кв', description: 'Улица', type: '1' },
+                    { name: 'Бродвей площадка', description: 'Улица', type: '1' },
+                    { name: 'Бродвей 2 мэрия', description: 'Улица', type: '1' },
+                    { name: 'Бродвей 2 мэрия персонал', description: 'Улица', type: '1' },
+                    {
+                      name: 'Бродвей 2 мэрия кабинет мэра',
+                      description: 'Улица',
+                      type: '1'
+                    },
+                    { name: 'Либерти', description: 'Улица', type: '1' },
+                    { name: 'Либерти 1', description: 'Улица', type: '1' },
+                    { name: 'Либерти 1 1 кв', description: 'Улица', type: '1' },
+                    { name: 'Либерти 1 2 кв', description: 'Улица', type: '1' },
+                    { name: 'Либерти 1 3 кв', description: 'Улица', type: '1' },
+                    { name: 'Либерти 1 4 кв', description: 'Улица', type: '1' },
+                    { name: 'Либерти 2 заброшка', description: 'Улица', type: '1' },
+                    { name: 'Либерти 3', description: 'Улица', type: '1' }
+                  ]
+            }
+        ]
+    };
+    client.interaction
+        .createApplicationCommand(walk, config.guild_id, "856221764605313104")
+        .then(console.log)
 
     let comand = {
         name: "911", 
