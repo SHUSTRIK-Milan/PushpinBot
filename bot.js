@@ -1238,7 +1238,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if(rpchannel){
                 //sendEditMessage(client, interaction, text)
-                axios.patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`, { content: 'New content' })
+                axios.patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${client.interaction.token}/messages/@original`, { content: 'New content' })
                     .then(function (response) {
                         console.log(response);
                     })
