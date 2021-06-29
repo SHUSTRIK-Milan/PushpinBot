@@ -1227,6 +1227,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
     if (interaction.data.name == "me") {
         console.log(interaction)
+        console.log(interaction.data)
+        console.log(interaction.data.options)
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         }else{
