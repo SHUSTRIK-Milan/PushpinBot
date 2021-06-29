@@ -1237,7 +1237,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
 
             if(rpchannel){
-                sendEditMessage(client, interaction, text)
+                //sendEditMessage(client, interaction, text)
+                axios.patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`, {content: text})
             }else{
                 sendNullMessage()
             }
