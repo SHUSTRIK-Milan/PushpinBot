@@ -866,7 +866,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         } else {
             console.log(interaction.data.options[0])
-            //arg = interaction.data.options[0].options[0].value
+            arg = interaction.data.options[0].value
         }
 
         if(rpchannel){
