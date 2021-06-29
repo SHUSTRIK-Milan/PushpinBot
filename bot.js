@@ -1240,14 +1240,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
 
             if(rpchannel){
-                //sendEditMessage(client, interaction, text)
-                axios.get(`https://discord.com/api/v8/applications/${config.applicationId}/commands`)
-                    .then(function (response) {
-                        console.log(response);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
+                sendEditMessage(client, interaction, text)
             }else{
                 sendNullMessage()
             }
