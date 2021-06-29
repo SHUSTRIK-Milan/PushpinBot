@@ -834,7 +834,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let channelG = await client.channels.resolve(interaction.channel_id);
         let data = typeof content === 'object' ? { embeds: [ content ] } : { content: content };
         return axios
-            .patch(`https://discord.com/api/v8/webhooks/${interaction.id}/${interaction.token}/messages/@original`, data)
+            .patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`, data)
             .then((answer) => {
                 console.log(answer)
                 //return channelG.messages.fetch(answer.data.id)
