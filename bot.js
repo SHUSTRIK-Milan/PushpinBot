@@ -793,7 +793,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
     let head = haveRole(user, '833226140755689483')
-    console.log(channel.name)
+    console.log(interaction)
     rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
 
     function sendNullMessage(){
