@@ -1226,6 +1226,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
     }
     if (interaction.data.name == "me") {
+        console.log(interaction)
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         }else{
@@ -1238,13 +1239,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if(rpchannel){
                 //sendEditMessage(client, interaction, text)
-                axios.patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`, { content: 'New content' })
+                /* axios.patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/${}`, { content: 'New content' })
                     .then(function (response) {
                         console.log(response);
                     })
                     .catch(function (error) {
                         console.log(error);
-                    })
+                    }) */
             }else{
                 sendNullMessage()
             }
