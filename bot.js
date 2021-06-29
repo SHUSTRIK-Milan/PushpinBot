@@ -830,16 +830,19 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
     }
 
-    async function sendEditMessage(client, interaction, content){
-        let channelG = await client.channels.resolve(interaction.channel_id);
-        let data = typeof content === 'object' ? { embeds: [ content ] } : { content: content };
+    const sendEditMessage = async (client, interaction, response) => {
+        // Set the data as embed if reponse is an embed object else as content
+        const data = typeof response === 'object' ? { embeds: [ response ] } : { content: response };
+        // Get the channel object by channel id:
+        const channel = await client.channels.resolve(interaction.channel_id);
+        // Edit the original interaction response:
         return axios
-            .patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`, data)
+            .patch(`https://discord.com/api/v8/webhooks/${appId}/${interaction.token}/messages/@original`, data)
             .then((answer) => {
-                console.log(answer)
-                //return channelG.messages.fetch(answer.data.id)
+                // Return the message object:
+                return channel.messages.fetch(answer.data.id)
             })
-    }
+    };
 
     if (interaction.data.name == "осмотр") {
         var arg = "";
