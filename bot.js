@@ -873,8 +873,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
             //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
             let argsObj = guild.channels.cache.get(arg.slice(2).slice(0,-1))
-            console.log(argsObj)
-            console.log(argsObj.name.slice(1).slice(0,-1).toLowerCase().split('-').join(' '))
             if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase().split('-').join(' ');
             if(argsObj == undefined){sendLocalMessage("Используйте # для быстрого доступа из категории \`❌ Fast Access.\`"); return};
             if(homePos.name == argsObj){sendLocalMessage(`Вы уже находитесь на этом объекте.`); return}
