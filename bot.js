@@ -797,29 +797,29 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
 
     function sendNullMessage(){
-        setTimeout(() =>{client.api.interactions(interaction.id, interaction.token).callback.post({
+        client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 4,
                 data: {
                     content: '⠀'
                 }
             }
-        })}, 125)
+        })
     }
 
     function sendGlobalMessage(content){
-        setTimeout(() =>{client.api.interactions(interaction.id, interaction.token).callback.post({
+        client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 4,
                 data: {
                     content: content
                 }
             }
-        })}, 125)
+        })
     }
 
     function sendLocalMessage(content){
-        setTimeout(() =>{client.api.interactions(interaction.id, interaction.token).callback.post({
+        client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 4,
                 data: {
@@ -827,7 +827,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     flags: 64
                 }
             }
-        })}, 125)
+        })
     }
 
     if (interaction.data.name == "осмотр") {
