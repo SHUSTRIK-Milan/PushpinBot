@@ -1241,7 +1241,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if(rpchannel){
                 //sendEditMessage(client, interaction, text)
-                axios.delete(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/${}`, { content: 'New content' })
+                axios.delete(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`)
                     .then(function (response) {
                         console.log(response);
                     })
