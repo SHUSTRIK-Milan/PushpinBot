@@ -837,7 +837,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             .patch(`https://discord.com/api/v8/webhooks/${interaction.id}/${interaction.token}/messages/@original`, data)
             .then((answer) => {
                 console.log(answer)
-                return channelG.messages.fetch(answer.data.id)
+                //return channelG.messages.fetch(answer.data.id)
             })
     }
 
