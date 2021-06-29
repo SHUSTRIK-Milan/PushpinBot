@@ -887,7 +887,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 if(cat != undefined || cat != null) if (cat.type == 'category'){
                 //проверяем канал на тип категории
                     if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
-                    setTimeout(() => {cat.updateOverwrite(user, { 'VIEW_CHANNEL': true }); sendNullMessage()}, timeOfDelete);
+                    sendNullMessage()
+                    setTimeout(() => {cat.updateOverwrite(user, { 'VIEW_CHANNEL': true })}, timeOfDelete);
                     //даем право читать сообщения в категории.
                     setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete*3);
                     //удаляем право читать сообщения в прошлой категории
