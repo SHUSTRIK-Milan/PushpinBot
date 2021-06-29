@@ -831,8 +831,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
 
     function sendEditMessage(content){
+        client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5,
+            },
+        })
         return axios
-            .patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`, { content: content })
+            .patch(`https://discord.com/api/v8/webhooks/${interaction.id}/${interaction.token}/messages/@original`, { content: content })
             .then((answer) => {
                 console.log(answer)
                 return channel.messages.fetch(answer.data.id)
