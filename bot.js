@@ -834,6 +834,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         return axios
             .patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`, { content: content })
             .then((answer) => {
+                console.log(answer)
                 return channel.messages.fetch(answer.data.id)
             }
     }
