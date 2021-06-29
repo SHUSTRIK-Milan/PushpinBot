@@ -28,6 +28,10 @@ client.on('ready', () => {
     for(let channel of guild.channels.cache) allChannels.push(channel[0])
     for(let channel of allChannels) if(Object.values(Config.channelsID).find(chl => chl == channel) == null) rpChannels.push(channel);
 
+    for(let object in Config.objects){
+        guild.channels.create(`«${Config.objects[object].name}»`, {type: "text", parent: "859436063159091251"})
+    }
+
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
     let onlinemember = member - offlinemember - 2;
@@ -865,8 +869,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg};
         if (interaction.data.options == undefined) {
         } else {
-            console.log(interaction.data.options[0].options[0].value)
-            arg = interaction.data.options[0].options[0].value
+            console.log(interaction.data.options[0])
+            //arg = interaction.data.options[0].options[0].value
         }
 
         if(rpchannel){
@@ -1210,183 +1214,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 });
 
 function checkIntegrations() {
-    let cherchel = {
-        name: "путь",
-        description: "Перемещения по Черчель-Стрит",
-        type: "3",
-        required: true,
-        choices: [
-            {
-                name: "Черчель Стрит",
-                value: "Черчель Стрит"
-            },
-            {
-                name: "Черчель Стрит 1",
-                value: "Черчель Стрит 1"
-            },
-            {
-                name: "Черчель Стрит 2",
-                value: "Черчель Стрит 2"
-            },
-            {
-                name: "Черчель Стрит 3",
-                value: "Черчель Стрит 3"
-            },
-            {
-                name: "Черчель Стрит 4",
-                value: "Черчель Стрит 4"
-            },
-            {
-                name: "Полицейский Департамент",
-                value: "Полицейский Департамент"
-            },
-            {
-                name: "Рабочая зона",
-                value: "Рабочая зона"
-            },
-            {
-                name: "Комнаты экипировки",
-                value: "Комнаты экипировки"
-            },
-            {
-                name: "КПЗ",
-                value: "КПЗ"
-            },
-            {
-                name: "Кабинет капитана",
-                value: "Кабинет капитана"
-            },
-        ]
-    }
-
-    let brodvey = {
-        name: "путь",
-        description: "Перемещения по Бродвею",
-        type: "3",
-        required: true,
-        choices: [
-            {
-                name: "Бродвей",
-                value: "Бродвей"
-            },
-            {
-                name: "Парк",
-                value: "Парк"
-            },
-            {
-                name: "Площадка",
-                value: "Площадка"
-            },
-            {
-                name: "Подземные пути",
-                value: "Подземные пути"
-            },
-            {
-                name: "Бродвей 1",
-                value: "Бродвей 1"
-            },
-            {
-                name: "1 квартира",
-                value: "1 квартира"
-            },
-            {
-                name: "2 квартира",
-                value: "2 квартира"
-            },
-            {
-                name: "3 квартира",
-                value: "3 квартира"
-            },
-            {
-                name: "2 этаж",
-                value: "2 этаж"
-            },
-            {
-                name: "4 квартира",
-                value: "4 квартира"
-            },
-            {
-                name: "5 квартира",
-                value: "5 квартира"
-            },
-            {
-                name: "Мэрия",
-                value: "Мэрия"
-            },
-            {
-                name: "Комната персонала",
-                value: "Комната персонала"
-            },
-            {
-                name: "Кабинет мэра",
-                value: "Кабинет мэра"
-            },
-        ]
-    }
-
-    let liberti = {
-        name: "путь",
-        description: "Перемещения по Либерти",
-        type: "3",
-        required: true,
-        choices: [
-            {
-                name: "Либерти",
-                value: "Либерти"
-            },
-            {
-                name: "Либерти 1",
-                value: "Либерти 1"
-            },
-            {
-                name: '1 квартира',
-                value: '1 квартира',
-            },
-            {
-                name: '2 квартира',
-                value: '2 квартира',
-            },
-            {
-                name: '3 квартира',
-                value: '3 квартира',
-            },
-            {
-                name: '4 квартира',
-                value: '4 квартира',
-            },
-            {
-                name: 'Заброшка',
-                value: 'Заброшка',
-            },
-            {
-                name: 'Либерти 3',
-                value: 'Либерти 3',
-            },
-        ]
-    }
-
     let walk = {
         name: "идти", 
         description: "Идти с одного объекта в другой",
         options: [
             {
-                name: "черчель-стрит",
-                description: "Черчель-Стрит",
-                type: "1",
-                options: [cherchel]
-            },
-            {
-                name: "бродвей",
-                description: "Бродвей",
-                type: "1",
-                options: [brodvey]
-            },
-            {
-                name: "либерти",
-                description: "Либерти",
-                type: "1",
-                options: [liberti]
-            },
+                name: "путь",
+                description: "Путь для перемещения. Используйте # для быстрого доступа.",
+                type: "7"
+            }
         ]
     };
 

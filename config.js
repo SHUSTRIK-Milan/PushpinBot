@@ -23,8 +23,7 @@ module.exports.channelsID = {
     generalRules: `837395238360055879`,
     generalTerm: `837395471877013595`,
     /////////Lore///////////////
-    fast_access: `837397940073922610`,
-    generalLore: `837398017325269002`,
+    fast_access: `859436063159091251`,
     /////////Team-Other/////////////
     team_other: `837393532808986625`,
     serverMsg: `838002676709064754`,
