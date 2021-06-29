@@ -885,9 +885,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 if(cat != undefined || cat != null) if (cat.type == 'category'){
                 //проверяем канал на тип категории
                     if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
-                    setTimeout(() => cat.updateOverwrite(user, { 'VIEW_CHANNEL': true }), timeOfDelete);
+                    setTimeout(() => {cat.updateOverwrite(user, { 'VIEW_CHANNEL': true }); sendNullMessage()}, timeOfDelete);
                     //даем право читать сообщения в категории.
-                    setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete*2);
+                    setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete*3);
                     //удаляем право читать сообщения в прошлой категории
                     sendLog(msgDate,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
                 };
@@ -898,9 +898,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 sendLocalMessage(`Вероятнее всего объекта ${argsObj} нет, либо вы ввели его неправильно.`)
                 sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: Вероятнее всего улицы ${argsObj} нет, либо вы ввели ее неправильно.`);
             };
+        }else{
+            sendNullMessage()
         }
-        
-        sendNullMessage()
     }
     if (interaction.data.name == "баланс") {
         var arg = "баланс";
