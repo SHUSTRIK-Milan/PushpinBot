@@ -837,7 +837,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 console.log(answer)
                 return channel.messages.fetch(answer.data.id)
             }) */
-        axios.patch(`https://discord.com/api/v8/webhooks/${interaction.id}/${interaction.token}/messages/@original`, { content: content }).then(console.log)
+        axios.patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`, { content: content }).then(console.log)
     }
 
     if (interaction.data.name == "осмотр") {
