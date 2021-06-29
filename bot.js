@@ -28,10 +28,6 @@ client.on('ready', () => {
     for(let channel of guild.channels.cache) allChannels.push(channel[0])
     for(let channel of allChannels) if(Object.values(Config.channelsID).find(chl => chl == channel) == null) rpChannels.push(channel);
 
-    for(let object in Config.objects){
-        guild.channels.create(`«${Config.objects[object].name}»`, {type: "text", parent: "859436063159091251"})
-    }
-
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
     let onlinemember = member - offlinemember - 2;
