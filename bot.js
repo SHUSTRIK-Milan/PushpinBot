@@ -1241,13 +1241,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if(rpchannel){
                 //sendEditMessage(client, interaction, text)
-                axios.delete(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`)
-                    .then(function (response) {
-                        console.log(response);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
+                url = "https://discord.com/api/v8/interactions/<interaction_id>/<interaction_token>/callback"
+
+                json = {
+                    "type": 4,
+                    "data": {
+                        "content": "Congrats on sending your command!"
+                    }
+                }
+                r = requests.post(url, json=json)
             }else{
                 sendNullMessage()
             }
