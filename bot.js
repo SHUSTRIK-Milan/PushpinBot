@@ -836,7 +836,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             .then((answer) => {
                 console.log(answer)
                 return channel.messages.fetch(answer.data.id)
-            }
+            })
     }
 
     if (interaction.data.name == "осмотр") {
