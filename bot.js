@@ -1178,16 +1178,14 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     
         if(rpchannel && (haveRole(msgDate.member, '830061387849662515') || head)){
             if(haveRole(msgDate.member, '835630198199681026')){
-                sendNullMessage().then(() => {
-                    setTimeout(() => {removeRole(msgDate.member, '835630198199681026'); channel.parent.updateOverwrite(msgDate.member, {'VIEW_CHANNEL': true})}, timeOfDelete);
-                    sendLog(msgDate,'РП','Вышел из админ-мода.','Успешно',` `)
-                })
+                sendNullMessage()
+                setTimeout(() => {removeRole(msgDate.member, '835630198199681026'); channel.parent.updateOverwrite(msgDate.member, {'VIEW_CHANNEL': true})}, timeOfDelete*2);
+                sendLog(msgDate,'РП','Вышел из админ-мода.','Успешно',` `)
             }
             if(!haveRole(msgDate.member, '835630198199681026')){
-                sendNullMessage().then(() => {
-                    setTimeout(() => {giveRole(msgDate.member, '835630198199681026'); channel.parent.permissionOverwrites.get(msgDate.author.id).delete()}, timeOfDelete);
-                    sendLog(msgDate,'РП','Вошел в админ-мод.','Успешно',` `)
-                })
+                sendNullMessage()
+                setTimeout(() => {giveRole(msgDate.member, '835630198199681026'); channel.parent.permissionOverwrites.get(msgDate.author.id).delete()}, timeOfDelete*2);
+                sendLog(msgDate,'РП','Вошел в админ-мод.','Успешно',` `)
             }
         }else{
            sendNullMessage()
