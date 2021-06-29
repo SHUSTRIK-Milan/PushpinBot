@@ -871,9 +871,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
         if(rpchannel){
             let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3));
-            if(homePos.name == arg){sendLocalMessage(`Вы уже находитесь на этом объекте.`); return}
             //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
-            let argsObj = arg
+            let argsObj = guild.channels.get(arg.slice(2).slice(0,-1))
+            if(argsObj != undefined) argsObj = argsObj.name.slice(4).slice(0,-1).toLowerCase().split('-').join(' ');
+            if(argsObj == undefined) argsObj = arg;
+            if(homePos.name == argsObj){sendLocalMessage(`Вы уже находитесь на этом объекте.`); return}
             console.log(argsObj);
             //проверяю не канал ли аргумент, если нет, то просто беру написанное.
             let walkway = homePos.radius.find(obj => obj.toLowerCase() == argsObj.toLowerCase());
@@ -1216,8 +1218,8 @@ function checkIntegrations() {
         options: [
             {
                 name: "путь",
-                description: "Путь для перемещения. Используйте # для быстрого доступа.",
-                type: "7"
+                description: "Путь для перемещения. Используйте # для быстрого доступа из категории \`❌ Fast Access.\`",
+                type: "3"
             }
         ]
     };
