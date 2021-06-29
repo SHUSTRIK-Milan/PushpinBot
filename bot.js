@@ -831,14 +831,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
 
     function sendEditMessage(content){
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 7,
-                data: {
-                    content: content,
-                }
-            }
-        })
+        return axios
+            .patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`, { content: content })
+            .then((answer) => {
+                return channel.messages.fetch(answer.data.id)
     }
 
     if (interaction.data.name == "осмотр") {
