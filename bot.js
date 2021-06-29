@@ -1043,6 +1043,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         nMsg.splice(0,1);
         
                         if(nMsg.find(member => member == msgDate.member.id) != null){
+                            sendLocalMessage(`> Вы взяли форму`) 
                             giveForm(msgDate.member, Config.departments[dept][2]);
                         }else{
                             sendLocalMessage(`**Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
@@ -1175,18 +1176,17 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     
         if(rpchannel && (haveRole(msgDate.member, '830061387849662515') || head)){
             if(haveRole(msgDate.member, '835630198199681026')){
-                removeRole(msgDate.member, '835630198199681026');
-                channel.parent.updateOverwrite(msgDate.member, {'VIEW_CHANNEL': true})
+                setTimeout(() => {removeRole(msgDate.member, '835630198199681026'); channel.parent.updateOverwrite(msgDate.member, {'VIEW_CHANNEL': true}); sendNullMessage()}, timeOfDelete);
                 sendLog(msgDate,'РП','Вышел из админ-мода.','Успешно',` `)
             }
             if(!haveRole(msgDate.member, '835630198199681026')){
-                giveRole(msgDate.member, '835630198199681026');
-                channel.parent.permissionOverwrites.get(msgDate.author.id).delete();
+                
+                setTimeout(() => {giveRole(msgDate.member, '835630198199681026'); channel.parent.permissionOverwrites.get(msgDate.author.id).delete(); sendNullMessage()}, timeOfDelete);
                 sendLog(msgDate,'РП','Вошел в админ-мод.','Успешно',` `)
             }
+        }else{
+           sendNullMessage()
         }
-
-        sendNullMessage()
     }
     if (interaction.data.name == "шанс") {
         var arg = "";
