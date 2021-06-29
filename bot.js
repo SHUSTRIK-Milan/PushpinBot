@@ -831,7 +831,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
 
     function sendEditMessage(content){
-        const data = typeof response === 'object' ? { embeds: [ response ] } : { content: content };
+        const data = typeof content === 'object' ? { embeds: [ content ] } : { content: content };
 
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
