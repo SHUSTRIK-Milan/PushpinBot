@@ -830,13 +830,14 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
     }
 
-    async function sendEditMessage(content){
-        const data = typeof content === 'object' ? { embeds: [ content ] } : { content: content };
+    async function sendEditMessage(client, interaction, content){
+        let channelG = await client.channels.resolve(interaction.channel_id);
+        let data = typeof content === 'object' ? { embeds: [ content ] } : { content: content };
         return axios
             .patch(`https://discord.com/api/v8/webhooks/${interaction.id}/${interaction.token}/messages/@original`, data)
             .then((answer) => {
                 console.log(answer)
-                return channel.messages.fetch(answer.data.id)
+                return channelG.messages.fetch(answer.data.id)
             })
     }
 
@@ -1233,7 +1234,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
 
             if(rpchannel){
-                sendEditMessage(text)
+                sendEditMessage(client, interaction, text)
             }else{
                 sendNullMessage()
             }
