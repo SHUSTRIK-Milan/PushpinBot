@@ -1180,8 +1180,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 sendLog(msgDate,'РП','Вышел из админ-мода.','Успешно',` `)
             }
             if(!haveRole(msgDate.member, '835630198199681026')){
-                
-                setTimeout(() => {giveRole(msgDate.member, '835630198199681026'); channel.parent.permissionOverwrites.get(msgDate.author.id).delete(); sendNullMessage()}, timeOfDelete);
+                sendNullMessage()
+                setTimeout(() => {giveRole(msgDate.member, '835630198199681026'); channel.parent.permissionOverwrites.get(msgDate.author.id).delete(}, timeOfDelete);
                 sendLog(msgDate,'РП','Вошел в админ-мод.','Успешно',` `)
             }
         }else{
