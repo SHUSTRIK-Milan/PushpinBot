@@ -793,7 +793,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
     let head = haveRole(user, '833226140755689483')
-    console.log(interaction)
     rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
 
     function sendNullMessage(){
@@ -1225,10 +1224,14 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
-            var userG = interaction.data.options[1].value
+            var text = `*${arg}*`
+            if (interaction.data.options[1] != undefined){
+                var userG = interaction.data.options[1].value
+                var text = `*${arg}* - <@!${userG}>`
+            }
 
             if(rpchannel){
-                sendEditMessage(`*${arg}* - <@!${userG}>`)
+                sendEditMessage(text)
             }else{
                 sendNullMessage()
             }
