@@ -1542,7 +1542,7 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    }, 200); */
+    }, 200);
     setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "время", 
             description: "Узнать текущее время",
@@ -1550,7 +1550,7 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    }, 200);
+    }, 200); */
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
