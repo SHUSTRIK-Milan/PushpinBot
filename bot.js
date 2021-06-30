@@ -1416,7 +1416,7 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     }, 200);*/
-    setTimeout(() =>{client.interaction.createApplicationCommand({
+    /* setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "карты", 
             description: "Вытащить карту из колоды",
             options: []
@@ -1519,7 +1519,7 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    }, 200);
+    }, 200); */
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
