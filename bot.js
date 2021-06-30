@@ -1271,7 +1271,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(rpchannel){
             var today = new Date();
-            sendLocalMessage(`> Текущее время 🕐\n${today.getUTCHours() + 3}:${today.getUTCMinutes()}:${today.getUTCSeconds()}`)
+            sendLocalMessage(`Текущее время 🕐\n> ${today.getUTCHours() + 3}:${today.getUTCMinutes()}:${today.getUTCSeconds()}`)
+            sendLog(msgDate, 'РП', 'Узнал время.', 'Успешно', `Вывод: Текущее время 🕐\n> ${today.getUTCHours() + 3}:${today.getUTCMinutes()}:${today.getUTCSeconds()}`)
         }else{
             sendNullMessage()
         }
