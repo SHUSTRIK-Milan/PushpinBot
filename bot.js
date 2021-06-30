@@ -439,20 +439,6 @@ async function Stats(message){
 
     if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) steamProfile = await steam.resolve(comand(message).sarg[0]);
 
-    if (steamProfile != null){
-        steamProfileInfo = await steam.getUserSummary(steamProfile);
-        var steamNick = `[PP] ${steamProfileInfo.nickname}`.slice(0,19);
-        let n = steamNick.split("")
-
-        for(var h = 0; h <= n.length; h++){
-            if (n[h] == " " && (n[h+1] == " " || n[h+1] == null)){
-                n.splice(h, 1)
-            }
-        }
-
-        steamNick = n.join('')
-    }
-
     if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
         message.author.send(`
 > **Вы уже зарегистрированы** 📟
@@ -481,6 +467,17 @@ async function Stats(message){
     if (person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) == null){
         try{
             steamProfileInfo = await steam.getUserSummary(steamProfile);
+            var steamNick = `[PP] ${steamProfileInfo.nickname}`.slice(0,19);
+            let n = steamNick.split("")
+
+            for(var h = 0; h <= n.length; h++){
+                if (n[h] == " " && (n[h+1] == " " || n[h+1] == null)){
+                    n.splice(h, 1)
+                }
+            }
+
+            steamNick = n.join('')
+
             if (steamProfileInfo.nickname == steamNick){
                 function verificate(name){
                     guild.members.cache.get(message.author.id).setNickname(name);
