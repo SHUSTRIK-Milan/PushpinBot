@@ -794,6 +794,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
     let head = haveRole(user, '833226140755689483')
+    let rpCreator = haveRole(user, '856092976702816287')
     rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
 
     function sendNullMessage(){
@@ -1191,7 +1192,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             });
         }
     
-        if(rpchannel && (haveRole(msgDate.member, '830061387849662515') || head)){
+        if(rpchannel && (haveRole(msgDate.member, '830061387849662515') || head || rpCreator)){
             if(haveRole(msgDate.member, '835630198199681026')){
                 sendNullMessage()
                 setTimeout(() => {removeRole(msgDate.member, '835630198199681026'); channel.parent.updateOverwrite(msgDate.member, {'VIEW_CHANNEL': true})}, timeOfDelete*2);
