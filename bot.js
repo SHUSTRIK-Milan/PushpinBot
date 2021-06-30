@@ -509,7 +509,7 @@ async function Stats(message){
                         })
                         .then(message => {
                             msgs = message.map(message => message)
-                            if(msgs[0].content.length <= 32 && typeof(msgs[0].content) == 'string'){
+                            if(msgs[0].content.length <= 32 && typeof(msgs[0].content) == 'string' && (msgs[0].content != " " || msgs[0].content != "")){
                                 msgs[0].author.send(`
 > **Успешно! Ваш аккаунт зарегистрирован** 🎉 Вы установили свое ролевое имя. Сменить его вы сможете только при помощи администратора.
 Все прошло успешно! Удачной игры на сервере!
