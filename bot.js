@@ -434,7 +434,7 @@ async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`);
     var steamProfile;
-    var steamNick = `[PP] ${message.author.username}`.slice(0,32);
+    var steamNick = `[PP] ${message.author.username}`.slice(0,19);
     if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) steamProfile = await steam.resolve(comand(message).sarg[0]);
 
     if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
