@@ -509,11 +509,15 @@ async function Stats(message){
                         })
                         .then(message => {
                             msgs = message.map(message => message)
-                            msgs[0].author.send(`
+                            if(msgs[0].content.length <= 32 && typeof(msgs[0].content) == 'string'){
+                                msgs[0].author.send(`
 > **Успешно! Ваш аккаунт зарегистрирован** 🎉 Вы установили свое ролевое имя. Сменить его вы сможете только при помощи администратора.
 Все прошло успешно! Удачной игры на сервере!
-                            `)
-                            verificate(msgs[0].content);
+                                `)
+                                verificate(msgs[0].content);
+                            }else{
+                                rpName();
+                            }
                         })
                         .catch(() => {
                             rpName();
