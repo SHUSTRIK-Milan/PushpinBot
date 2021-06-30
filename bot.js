@@ -1060,7 +1060,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         let nMsg = oMsg.content.split('\n');
                         nMsg.splice(0,1);
         
-                        if(nMsg.find(member => member == msgDate.member.id) != null){
+                        if(nMsg.find(member => member.split('-')[0] == msgDate.member.id) != null){
                             giveForm(msgDate.member, Config.departments[dept][2]);
                         }else{
                             sendLocalMessage(`> **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
