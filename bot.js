@@ -554,6 +554,29 @@ SteamAPI не сумел найти ваш аккаунт, а поэтому м�
     
 };
 
+async function minusMoney(member, money){
+    stats = await GetStats();
+    if (stats.length == 0){return};
+
+    let user = stats.find(stat => stat.user == `<@!${member.id}>`);
+    if(user == undefined){return}
+
+    if(parseInt(user.money) < parseInt(money)){return false}
+    EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
+    return true;
+};
+
+async function plusMoney(member, money){
+    stats = await GetStats();
+    if (stats.length == 0){return};
+
+    let user = stats.find(stat => stat.user == `<@!${member.id}>`);
+    if(user == undefined){return false}
+
+    EditStats(user.id,`money`,`${parseInt(user.money) + parseInt(money)}`);
+    return true;
+};
+
 async function pay(message, userDate, money, functionSend){
     stats = await GetStats();
     if (stats.length == 0){return};
@@ -572,16 +595,14 @@ async function pay(message, userDate, money, functionSend){
         return;
     };
 
-    console.log(userDate);
+    console.log(user);
     console.log(gUser)
     
     if (user.id == gUser.id){return};
 
     let user_user = message.member;
-    let gUser_user = guild.members.cache.get(gUser.user.replace(/[<@!>]/g,''));
-    
-    if(user == undefined){return}
-    if(user == gUser_user){return}
+    let gUser_user = guild.members.cache.get(userDate);
+
     if(gUser == undefined){
         functionSend(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
         sendLog(message,'РП','Попробовал передать деньги.','Ошибка',`Вывод: Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
@@ -590,37 +611,14 @@ async function pay(message, userDate, money, functionSend){
     if(isNaN(parseInt(money))){ functionSend(`> Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); return};
     if(parseInt(user.money) < parseInt(money)){ functionSend(`> У вас недостаточно средств.`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: У вас недостаточно средств.`); return};
 
-    EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
-    setTimeout(() => EditStats(gUser.id,`money`,`${parseInt(gUser.money) + parseInt(money)}`), 250);
+    minusMoney(user_user, money)
+    setTimeout(() => plusMoney(gUser_user, money), 250);
     
     functionSend(`> Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`);
     gUser_user.send(`> ${user_user.nickname} дал вам: ${moneyT.format(parseInt(money))}`);
 
     sendLog(message,'РП','Передал деньги.','Успешно',`Вывод: Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`)
     return;
-};
-
-async function minusMoney(message, money){
-    stats = await GetStats();
-    if (stats.length == 0){return};
-
-    let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
-    if(user == undefined){return}
-
-    if(parseInt(user.money) < parseInt(money)){return false}
-    EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
-    return true;
-};
-
-async function plusMoney(message, money){
-    stats = await GetStats();
-    if (stats.length == 0){return};
-
-    let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
-    if(user == undefined){return false}
-
-    EditStats(user.id,`money`,`${parseInt(user.money) + parseInt(money)}`);
-    return true;
 };
 
 client.on('messageDelete', (message) => {
@@ -1008,7 +1006,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 minimumSignificantDigits: 1
             });
             
-            minusMoney(msgDate, 100).then(succ =>{
+            minusMoney(msgDate.member, 100).then(succ =>{
                 if(succ == true){
                     guild.channels.cache.get(Config.channelsID.adverts).send(`> Реклама от ${msgDate.member.nickname} 📢\n${arg}`)
                     sendLocalMessage(`> Вы приобрели рекламу за ${moneyT.format(100)} 📢`);
