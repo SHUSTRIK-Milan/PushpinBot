@@ -434,8 +434,11 @@ async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`);
     var steamProfile;
-    var steamNick = `[PP] ${message.author.username}`.slice(0,19);
+
     if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) steamProfile = await steam.resolve(comand(message).sarg[0]);
+
+    var steamProfileInfo = await steam.getUserSummary(steamProfile);
+    var steamNick = `[PP] ${steamProfileInfo.nickname}`.slice(0,19);
 
     if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
         message.author.send(`
@@ -446,7 +449,7 @@ async function Stats(message){
         message.author.send(`
 > **Процесс регистрации** 📚
 Привет! Я PushPin бот, а вы пользователь, желающий пройти верификацию. Всё верно? Если так, то давайте начнём.
-> **Для начала !повторите команду!, дополнив её ссылкой на свой стим-профиль** 📬
+> **Для начала **повторите команду**, дополнив её ссылкой на свой стим-профиль** 📬
 Ссылка на стим-профиль получается очень просто. Вам достаточно повторять действия, отмеченные на этой справке.
         `,{
             files: [{
@@ -464,7 +467,6 @@ async function Stats(message){
 
     if (person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) == null){
         try{
-            var steamProfileInfo = await steam.getUserSummary(steamProfile);
             if (steamProfileInfo.nickname == steamNick){
                 function verificate(name){
                     guild.members.cache.get(message.author.id).setNickname(name);
@@ -509,7 +511,7 @@ async function Stats(message){
             }else if (steamProfileInfo.nickname != steamNick){
                 message.author.send(`
 > **Измените имя** 📝
-Чтобы успешно завершить аутентификацию временно измените имя своего !стим-профиля! на \`${steamNick}\` и повторите попытку, !дополнив команду! ссылкой на свой стим-профиль. 
+Чтобы успешно завершить аутентификацию временно измените имя своего **стим-профиля** на \`${steamNick}\` и повторите попытку. 
                 `)
             }else{
                 message.author.send(`
