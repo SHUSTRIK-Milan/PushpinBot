@@ -611,8 +611,8 @@ async function pay(message, userDate, money, functionSend){
     if(isNaN(parseInt(money))){ functionSend(`> Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); return};
     if(parseInt(user.money) < parseInt(money)){ functionSend(`> У вас недостаточно средств.`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: У вас недостаточно средств.`); return};
 
-    setTimeout(() => minusMoney(user_user, money), 250);
-    setTimeout(() => plusMoney(gUser_user, money), 500);
+    setTimeout(() => minusMoney(user_user, money), 500);
+    setTimeout(() => plusMoney(gUser_user, money), 1000);
     
     functionSend(`> Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`);
     gUser_user.send(`> ${user_user.nickname} дал вам: ${moneyT.format(parseInt(money))}`);
