@@ -442,6 +442,7 @@ async function Stats(message){
     if (steamProfile != null){
         steamProfileInfo = await steam.getUserSummary(steamProfile);
         var steamNick = `[PP] ${steamProfileInfo.nickname}`.slice(0,19);
+        if (steamNick.slice(steamNick.length-1, steamNick.length) == " ") steamNick.slice(0,steamNick.length-1)
     }
 
     if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
