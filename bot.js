@@ -1267,6 +1267,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         }
     }
+    if (interaction.data.name == "время") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if(rpchannel){
+            var today = new Date();
+            sendLocalMessage(`> Текущее время 🕐\n${today.getUTCHours() + 3}:${today.getUTCMinutes()}:${today.getUTCSeconds()}`)
+        }else{
+            sendNullMessage()
+        }
+    }
 });
 
 function checkIntegrations() {
@@ -1541,6 +1550,14 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     }, 200); */
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "время", 
+            description: "Узнать текущее время",
+            options: []
+        }, config.guild_id)
+        .then()
+        .catch(console.error);
+    }, 200);
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
