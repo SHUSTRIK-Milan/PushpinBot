@@ -440,8 +440,7 @@ async function Stats(message){
     if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) steamProfile = await steam.resolve(comand(message).sarg[0]);
 
     if (steamProfile != null){
-        steamProfileInfo = await steam.getUserSummary(steamProfile);
-        var steamNick = `[PP] ${steamProfileInfo.nickname}`.slice(0,19);
+        var steamNick = `[PP] ${message.author.username}`.slice(0,19);
         let n = steamNick.split("")
 
         for(var h = 0; h <= n.length; h++){
