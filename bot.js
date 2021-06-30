@@ -651,12 +651,6 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
     }
 
-    if (message.channel.id == Config.channelsID.offers && !mb){
-        message.react("👍");
-        message.react("👎");
-        console.log('Новое сообщение в offers')
-    };
-
     if(comand(message).com == `send` && !mb && !mg && (haveRole(message.member, `833778527609552918`) || head)){	
         setTimeout(() => message.delete(), timeOfDelete);	
         message.channel.send(`${comand(message).arg}`);	
