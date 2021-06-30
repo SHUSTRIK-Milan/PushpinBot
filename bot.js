@@ -434,11 +434,15 @@ async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`);
     var steamProfile;
+    var steamProfileInfo
+    var steamNick
 
     if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) steamProfile = await steam.resolve(comand(message).sarg[0]);
 
-    var steamProfileInfo = await steam.getUserSummary(steamProfile);
-    var steamNick = `[PP] ${steamProfileInfo.nickname}`.slice(0,19);
+    if (steamProfile != null){
+        steamProfileInfo = await steam.getUserSummary(steamProfile);
+        var steamNick = `[PP] ${steamProfileInfo.nickname}`.slice(0,19);
+    }
 
     if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
         message.author.send(`
