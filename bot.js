@@ -804,7 +804,7 @@ client.on('message', message => {
             }, timeOfDelete*5)
         }catch(error){console.log(error)} */
         for(let t of guild.channels.cache){
-            console.log(t)
+            console.log(t[1].name)
         }
     }
 
