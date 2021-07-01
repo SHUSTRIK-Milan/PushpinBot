@@ -644,11 +644,11 @@ client.on('message', message => {
     let rpCreator = haveRole(message.member, '856092976702816287')
 
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
-    setTimeout(() =>{
+    //setTimeout(() =>{
         console.log(rpchannel)
         if(!mb && !mg && rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
         if(!mb && !mg && !rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
-    }, timeOfDelete)
+    //}, timeOfDelete)
 
     if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), timeOfDelete);
