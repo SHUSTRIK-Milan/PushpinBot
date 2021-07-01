@@ -789,9 +789,8 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
         let channel
         for(channelID of allChannels){
-            channel = guild.channels.cache.get(channelID).then(() => {
-                if(channel.parentID == Config.channelsID.fast_access){channel.delete()}
-            })
+            channel = guild.channels.cache.get(channelID)
+            if(channel.parentID == Config.channelsID.fast_access){channel.delete()}
         }
         setTimeout(() =>{
             for(object of Config.objects){
