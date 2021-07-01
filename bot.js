@@ -791,13 +791,16 @@ client.on('message', message => {
         try{
             for(let channelID of allChannels){
                 channel = guild.channels.cache.get(channelID)
+                console.log(channel.name)
                 if(channel != undefined){
                     if(channel.parentID == Config.channelsID.fast_access){channel.delete()}
                 }
             }
             setTimeout(() =>{
-                for(let object of Config.objects){
-                    guild.channels.create(object.name, {type: 'text', topic: object.id, parent: Config.channelsID.fast_access})
+                if(channel != undefined){
+                    for(let object of Config.objects){
+                        guild.channels.create(object.name, {type: 'text', topic: object.id, parent: Config.channelsID.fast_access})
+                    }
                 }
             }, timeOfDelete*5)
         }catch(error){console.log(error)}
