@@ -789,16 +789,16 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
         let channel
         try{
-            for(channelID of allChannels){
+            for(let channelID of allChannels){
                 channel = guild.channels.cache.get(channelID)
                 if(channel.parentID == Config.channelsID.fast_access){channel.delete()}
             }
             setTimeout(() =>{
-                for(object of Config.objects){
+                for(let object of Config.objects){
                     guild.channels.create(object.name, {type: 'text', topic: object.id, parent: Config.channelsID.fast_access})
                 }
             }, timeOfDelete*5)
-        }catch{}
+        }catch(error){console.log(error)}
     }
 
 });
