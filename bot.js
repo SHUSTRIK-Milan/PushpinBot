@@ -685,7 +685,9 @@ client.on('message', message => {
     };
 
     if(comand(message).com == `checkm` && message.author.id == `621917381681479693` && !mb && !mg){
+        setTimeout(() => message.delete(), timeOfDelete);
         console.log(comand(message));
+        console.log(rpchannel)
     };
 
     if(comand(message).com == 'cbd' && message.author.id == `621917381681479693` && !mb && !mg){
