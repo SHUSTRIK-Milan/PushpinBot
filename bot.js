@@ -794,10 +794,8 @@ client.on('message', message => {
                 }
             }
             setTimeout(() =>{
-                if(guild.channels.cache.get(channelID) != undefined){
-                    for(let object of Config.objects){
-                        guild.channels.create(object.name, {type: 'text', topic: object.id, parent: Config.channelsID.fast_access})
-                    }
+                for(let object of Config.objects){
+                    guild.channels.create(object.name, {type: 'text', topic: object.id, parent: Config.channelsID.fast_access})
                 }
             }, timeOfDelete*5)
         }catch(error){console.log(error)}
