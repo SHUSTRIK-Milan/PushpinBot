@@ -807,11 +807,10 @@ client.on('message', message => {
 
     if(comand(message).com == `refreshIDobj` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
-        let channel
         try{
             for(let object of Config.objects){
                 for(let room of object.rooms){
-                    guild.channels.cache.find(channel => channel[1].type == 'text' && channel[1].name == room && channel[1].parent.name.slice(4).slice(0,-1).toLowerCase() == object.name.toLowerCase()).setTopic(object.id)
+                    guild.channels.cache.find(channel => channel.type == 'text' && channel.name == room && channel.parent.name.slice(4).slice(0,-1).toLowerCase() == object.name.toLowerCase()).setTopic(object.id)
                 }
             }
         }catch(error){console.log(error)}
