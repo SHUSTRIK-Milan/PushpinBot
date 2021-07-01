@@ -28,7 +28,7 @@ client.on('ready', () => {
     guild = client.guilds.cache.get('814795850885627964');
     for(let channel of guild.channels.cache) allChannels.push(channel[0])
     for(let channel of allChannels) if(Object.values(Config.channelsID).find(chl => chl == channel) == null) rpChannels.push(channel);
-    for(let t of allChannels){ console.log(guild.channels.cache.get(t).name)}
+    for(let t of rpChannels){ console.log(guild.channels.cache.get(t).name)}
     
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
@@ -787,18 +787,25 @@ client.on('message', message => {
 
     if(comand(message).com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
+        /* let channel
         try{
             for(let channelID of allChannels){
-                if(guild.channels.cache.get(channelID) != undefined){
-                    if(guild.channels.cache.get(channelID).parentID == Config.channelsID.fast_access){guild.channels.cache.get(channelID).delete()}
+                channel = guild.channels.cache.get(channelID)
+                if(channel != undefined){
+                    if(channel.parentID == Config.channelsID.fast_access){channel.delete()}
                 }
             }
             setTimeout(() =>{
-                for(let object of Config.objects){
-                    guild.channels.create(object.name, {type: 'text', topic: object.id, parent: Config.channelsID.fast_access})
+                if(channel != undefined){
+                    for(let object of Config.objects){
+                        guild.channels.create(object.name, {type: 'text', topic: object.id, parent: Config.channelsID.fast_access})
+                    }
                 }
             }, timeOfDelete*5)
-        }catch(error){console.log(error)}
+        }catch(error){console.log(error)} */
+        for(let t of guild.channels.cache){
+            console.log(t)
+        }
     }
 
 });
