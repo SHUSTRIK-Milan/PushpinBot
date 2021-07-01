@@ -817,7 +817,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     let user = await guild.members.fetch(interaction.member.user.id);
     let head = haveRole(user, '833226140755689483')
     let rpCreator = haveRole(user, '856092976702816287')
-    rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
+    let rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
 
     function sendNullMessage(){
         client.api.interactions(interaction.id, interaction.token).callback.post({
