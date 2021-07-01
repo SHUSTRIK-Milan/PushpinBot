@@ -643,7 +643,7 @@ client.on('message', message => {
     let mb = message.author.bot;
     let mg = message.guild == undefined;
     let head = haveRole(message.member, '833226140755689483');
-    let rpCreator = haveRole(user, '856092976702816287')
+    let rpCreator = haveRole(message.member, '856092976702816287')
 
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
     if(!mb && !mg && rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
