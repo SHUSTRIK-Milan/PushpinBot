@@ -28,7 +28,7 @@ client.on('ready', () => {
     guild = client.guilds.cache.get('814795850885627964');
     for(let channel of guild.channels.cache) allChannels.push(channel[0])
     for(let channel of allChannels) if(Object.values(Config.channelsID).find(chl => chl == channel) == null) rpChannels.push(channel);
-    for(let t of rpChannels){ console.log(guild.channels.get(t).name)}
+    for(let t of rpChannels){ console.log(guild.channels.cache.get(t).name)}
     
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
