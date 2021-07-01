@@ -788,15 +788,17 @@ client.on('message', message => {
     if(comand(message).com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
         let channel
-        for(channelID of allChannels){
-            channel = guild.channels.cache.get(channelID)
-            if(channel.parentID == Config.channelsID.fast_access){channel.delete()}
-        }
-        setTimeout(() =>{
-            for(object of Config.objects){
-                guild.channels.create(object.name, {type: 'text', topic: object.id, parent: Config.channelsID.fast_access})
+        try{
+            for(channelID of allChannels){
+                channel = guild.channels.cache.get(channelID)
+                if(channel.parentID == Config.channelsID.fast_access){channel.delete()}
             }
-        }, timeOfDelete*5)
+            setTimeout(() =>{
+                for(object of Config.objects){
+                    guild.channels.create(object.name, {type: 'text', topic: object.id, parent: Config.channelsID.fast_access})
+                }
+            }, timeOfDelete*5)
+        }catch{}
     }
 
 });
