@@ -28,7 +28,8 @@ client.on('ready', () => {
     guild = client.guilds.cache.get('814795850885627964');
     for(let channel of guild.channels.cache) allChannels.push(channel[0])
     for(let channel of allChannels) if(Object.values(Config.channelsID).find(chl => chl == channel) == null) rpChannels.push(channel);
-
+    for(let t of rpChannels){ console.log(t)}
+    
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
     let onlinemember = member - offlinemember - 2;
@@ -642,8 +643,9 @@ client.on('message', message => {
     let mb = message.author.bot;
     let mg = message.guild == undefined;
     let head = haveRole(message.member, '833226140755689483');
+    let rpCreator = haveRole(user, '856092976702816287')
+
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
-    console.log(rpchannel)
     if(!mb && !mg && rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
     if(!mb && !mg && !rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
 
@@ -781,6 +783,11 @@ client.on('message', message => {
             userunbanned.send(`**Вы были разбанены администратором ${message.author.tag}** 🔨\n> ${reason}`);
             sendLog(message,'РП','Разбанил игрока.','Успешно',`Вывод: **Вы были разбанены администратором ${message.author.tag}** 🔨\n> ${reason}`)
         };
+    }
+
+    if(comand(message).com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || ) && !mb && !mg){
+        setTimeout(() => message.delete(), timeOfDelete);
+        guild.channels.cache.get(Config.channelsID.)
     }
 
 });

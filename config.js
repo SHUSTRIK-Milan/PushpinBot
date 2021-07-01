@@ -42,12 +42,28 @@ module.exports.logChannels = {
 };
 
 module.exports.discordTocens = {
-    testBot: `ODQwMjMwNTMxNjYwNTEzMjgw.YJVLqQ.Lr7HGn01gH50OUcHrHr4Rl-BpSM`
+	testBot: `ODQwMjMwNTMxNjYwNTEzMjgw.YJVLqQ.Lr7HGn01gH50OUcHrHr4Rl-BpSM`
 };
+
+module.exports.globalObjects = [
+	{
+		name: 'Черчель Стрит',
+		id: '1'
+	},
+	{
+		name: 'Бродвей',
+		id: '2'
+	},
+	{
+		name: 'Либерти',
+		id: '3'
+	},
+]
 
 module.exports.objects = [
     {
         name: 'Черчель Стрит',
+		id: '1',
         radius: ['Бродвей',
                 'Либерти',
                 'Черчель Стрит 1',
@@ -62,30 +78,35 @@ module.exports.objects = [
     },
     {
         name: 'Черчель Стрит 1',
+		id: '1',
         radius: ['Черчель Стрит'],
         rooms: ['комната-1',
                 'комната-2']
     },
     {
         name: 'Черчель Стрит 2',
+		id: '1',
         radius: ['Черчель Стрит'],
         rooms: ['комната-1',
                 'комната-2']
     },
     {
         name: 'Черчель Стрит 3',
+		id: '1',
         radius: ['Черчель Стрит'],
         rooms: ['комната-1',
                 'комната-2']
     },
     {
         name: 'Черчель Стрит 4',
+		id: '1',
         radius: ['Черчель Стрит'],
         rooms: ['комната-1',
                 'комната-2']
     },
     {
         name: 'Полицейский Департамент',
+		id: '1',
         radius: ['Черчель Стрит',
                  'Рабочая зона'],
         rooms: ['главный-холл',
@@ -93,6 +114,7 @@ module.exports.objects = [
     },
     {
         name: 'Рабочая зона',
+		id: '1',
         radius: ['Полицейский Департамент',
                  'Комнаты экипировки',
                  'КПЗ',
@@ -104,6 +126,7 @@ module.exports.objects = [
     },
     {
         name: 'Комнаты экипировки',
+		id: '1',
         radius: ['Рабочая зона'],
         rooms: ['экипировка-пожарных',
                 'экипировка-полиции',
@@ -111,6 +134,7 @@ module.exports.objects = [
     },
     {
         name: 'КПЗ',
+		id: '1',
         radius: ['Рабочая зона'],
         rooms: ['холл',
                 'камера-1',
@@ -120,6 +144,7 @@ module.exports.objects = [
     },
     {
         name: 'Кабинет капитана',
+		id: '1',
         radius: ['Рабочая зона'],
         rooms: ['комната-1',
                 'комната-2']
@@ -129,6 +154,7 @@ module.exports.objects = [
 
     {
         name: 'Бродвей',
+		id: '2',
         radius: ['Черчель Стрит',
                 'Парк',
                 'Площадка',
@@ -139,6 +165,7 @@ module.exports.objects = [
     },
     {
         name: 'Парк',
+		id: '2',
         radius: ['Бродвей'],
         rooms: ['парк-северная-часть',
                 'парк-восточная-часть',
@@ -147,6 +174,7 @@ module.exports.objects = [
     },
     {
         name: 'Площадка',
+		id: '2',
         radius: ['Бродвей',
                 'Подземные пути'],
         rooms: ['турники-и-тренажеры',
@@ -155,6 +183,7 @@ module.exports.objects = [
     },
     {
         name: 'Подземные пути',
+		id: '2',
         radius: ['Площадка',
                 'Заброшка'],
         rooms: ['туннель',
@@ -163,6 +192,7 @@ module.exports.objects = [
     },
     {
         name: 'Бродвей 1',
+		id: '2',
         radius: ['Бродвей',
                 '1 квартира',
                 '2 квартира',
@@ -172,6 +202,7 @@ module.exports.objects = [
     },
     {
         name: '1 квартира',
+		id: '2',
         radius: ['Бродвей 1'],
         rooms: ['прихожая',
                 'ванная',
@@ -180,6 +211,7 @@ module.exports.objects = [
     },
     {
         name: '2 квартира',
+		id: '2',
         radius: ['Бродвей 1'],
         rooms: ['прихожая',
                 'ванная',
@@ -189,6 +221,7 @@ module.exports.objects = [
     },
     {
         name: '3 квартира',
+		id: '2',
         radius: ['Бродвей 1'],
         rooms: ['прихожая',
                 'ванная',
@@ -199,6 +232,7 @@ module.exports.objects = [
     },
     {
         name: '2 этаж',
+		id: '2',
         radius: ['Бродвей 1',
                 '4 квартира',
                 '5 квартира'],
@@ -207,6 +241,7 @@ module.exports.objects = [
     },
     {
         name: '4 квартира',
+		id: '2',
         radius: ['2 этаж'],
         rooms: ['прихожая',
                 'ванная',
@@ -215,6 +250,7 @@ module.exports.objects = [
     },
     {
         name: '5 квартира',
+		id: '2',
         radius: ['2 этаж'],
         rooms: ['прихожая',
                 'ванная',
@@ -224,6 +260,7 @@ module.exports.objects = [
     },
     {
         name: 'Мэрия',
+		id: '2',
         radius: ['Бродвей',
                 'Комната персонала'],
         rooms: ['главный-холл',
@@ -231,6 +268,7 @@ module.exports.objects = [
     },
     {
         name: 'Комната персонала',
+		id: '2',
         radius: ['Мэрия',
                 'Кабинет мэра'],
         rooms: ['раздевалка',
@@ -239,6 +277,7 @@ module.exports.objects = [
     },
     {
         name: 'Кабинет мэра',
+		id: '2',
         radius: ['Комната персонала'],
         rooms: ['комната-1',
                 'комната-2']
@@ -248,6 +287,7 @@ module.exports.objects = [
 
     {
         name: 'Либерти',
+		id: '3',
         radius: ['Черчель Стрит',
                 'Либерти 1',
                 'Заброшка',
@@ -258,6 +298,7 @@ module.exports.objects = [
     },
     {
         name: 'Либерти 1',
+		id: '3',
         radius: ['Либерти',
                 '1 квартира',
                 '2 квартира',
@@ -269,30 +310,35 @@ module.exports.objects = [
     },
     {
         name: '1 квартира',
+		id: '3',
         radius: ['Либерти 1'],
         rooms: ['комната-1',
                 'комната-2']
     },
     {
         name: '2 квартира',
+		id: '3',
         radius: ['Либерти 1'],
         rooms: ['комната-1',
                 'комната-2']
     },
     {
         name: '3 квартира',
+		id: '3',
         radius: ['Либерти 1'],
         rooms: ['комната-1',
                 'комната-2']
     },
     {
         name: '4 квартира',
+		id: '3',
         radius: ['Либерти 1'],
         rooms: ['комната-1',
                 'комната-2']
     },
     {
         name: 'Заброшка',
+		id: '3',
         radius: ['Либерти',
                 'Подземные пути'],
         rooms: ['главный-зал',
@@ -301,6 +347,7 @@ module.exports.objects = [
     },
     {
         name: 'Либерти 3',
+		id: '3',
         radius: ['Либерти'],
         rooms: ['комната-1',
                 'комната-2']
