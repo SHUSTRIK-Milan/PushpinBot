@@ -790,7 +790,7 @@ client.on('message', message => {
         try{
             for(let channelID of allChannels){
                 if(guild.channels.cache.get(channelID) != undefined){
-                    if(guild.channels.cache.get(channelID).parentID == Config.channelsID.fast_access){channel.delete()}
+                    if(guild.channels.cache.get(channelID).parentID == Config.channelsID.fast_access){guild.channels.cache.get(channelID).delete()}
                 }
             }
             setTimeout(() =>{
