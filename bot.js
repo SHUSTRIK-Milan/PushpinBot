@@ -645,6 +645,7 @@ client.on('message', message => {
 
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
     setTimeout(() =>{
+        console.log(rpchannel)
         if(!mb && !mg && rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
         if(!mb && !mg && !rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
     }, timeOfDelete)
