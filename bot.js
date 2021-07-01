@@ -785,10 +785,10 @@ client.on('message', message => {
         };
     }
 
-    if(comand(message).com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || ) && !mb && !mg){
+    /* if(comand(message).com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || ) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
         guild.channels.cache.get(Config.channelsID.)
-    }
+    } */
 
 });
 
