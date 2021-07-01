@@ -140,8 +140,6 @@ function sendLog(message,cat,act,status,add){
     if (cat == 'Глобальное') color = 14560833;
     if (cat == 'Общее') color = 11645371;
     if (cat == 'РП') color = 11382073;
-
-    if (add.slice(0,1) == prefix) act = 'Воспользовался командой.';
     
     if(cat != 'РП'){
         guild.channels.cache.get(Config.channelsID.logs).send({embed: {
@@ -646,8 +644,10 @@ client.on('message', message => {
     let rpCreator = haveRole(message.member, '856092976702816287')
 
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
-    if(!mb && !mg && rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
-    if(!mb && !mg && !rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
+    setTimeout(() =>{
+        if(!mb && !mg && rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
+        if(!mb && !mg && !rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
+    }, timeOfDelete)
 
     if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), timeOfDelete);
