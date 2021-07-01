@@ -789,7 +789,7 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
         for(channelID of allChannels){
             let channel = guild.channels.cache.get(channelID)
-            if(channel.parentID == Config.fast_access){console.log(channel.name)}
+            if(channel.parentID == Config.channelsID.fast_access){console.log(channel.name)}
         }
     }
 
