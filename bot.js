@@ -644,11 +644,8 @@ client.on('message', message => {
     let rpCreator = haveRole(message.member, '856092976702816287')
 
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
-    //setTimeout(() =>{
-        console.log(rpchannel)
-        if(!mb && !mg && rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
-        if(!mb && !mg && !rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
-    //}, timeOfDelete)
+    if(!mb && !mg && rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
+    if(!mb && !mg && !rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
 
     if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), timeOfDelete);
@@ -792,7 +789,7 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
         for(channelID of allChannels){
             let channel = guild.channels.cache.get(channelID)
-            if(channel.parentID == Config.fast_access) console.log(channel.name)
+            if(channel.parentID == Config.fast_access){console.log(channel.name)}
         }
     }
 
