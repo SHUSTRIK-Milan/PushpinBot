@@ -893,7 +893,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
 
         if(rpchannel){
-            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3) && st.id == channelFA.topic);
+            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3) && st.id == channel.topic);
             console.log(homePos)
 
             let objects = [];
