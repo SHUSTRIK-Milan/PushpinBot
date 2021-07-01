@@ -788,10 +788,13 @@ client.on('message', message => {
         };
     }
 
-    /* if(comand(message).com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || ) && !mb && !mg){
+    if(comand(message).com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
-        guild.channels.cache.get(Config.channelsID.)
-    } */
+        for(channelID of allChannels){
+            let channel = guild.channels.cache.get(channelID)
+            if(channel.parentID == Config.fast_access) console.log(channel.name)
+        }
+    }
 
 });
 
