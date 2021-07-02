@@ -812,13 +812,14 @@ client.on('message', message => {
         let ids
         for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
         try{
-            for(let goID = 3; goID >= 0; goID--){
+            for(let goID = 3; goID > 0; goID--){
                 let objs = objectsRefr.filter(obj => obj.id == goID)
                 for(let obj of objs){
                     let channels = channelsRefr.filter(channel => channel.parent.name.toLowerCase().slice(4,-1) == obj.name)
                     for(let channel of channels){
                         channel.setTopic(`${goID}`)
                     }
+                    objectsRefr.splice(objectsRefr.indexOf(obj), 1)
                 }
             }
         }catch(error){console.log(error)}
