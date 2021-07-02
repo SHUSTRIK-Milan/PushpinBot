@@ -809,20 +809,15 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
         let objectsRefr = Config.objects
         let channelsRefr = []
-        let ids
+        let channelsOBJ = []
         for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
         try{
-            for(let goID = 3; goID > 0; goID--){
-                let objs = objectsRefr.filter(obj => obj.id == goID)
-                for(let obj of objs){
-                    let channels = channelsRefr.filter(channel => channel.parent.name.toLowerCase().slice(4,-1) == obj.name)
-                    for(let channel of channels){
-                        channel.setTopic(`${goID}`)
-                        channelsRefr.splice(channelsRefr.indexOf(channel), 1)
-                    }
-                    objectsRefr.splice(channelsRefr.indexOf(obj), 1)
+            for(let obj of objectsRefr){
+                for(let room of obj.rooms){
+                    let channel = channelsRefr.find(channel => channel.name.toLowerCase() == room.toLowerCase() && channel.parent.name.toLowerCase().slice(4,-1) == obj.name.toLowerCase() && channelsOBJ.find(chnl => channel.id != chnl) == null)
+                    channelsOBJ.push(channel.id)
+                    channel.setTopic(obj.id)
                 }
-                
             }
         }catch(error){console.log(error)}
     }
