@@ -810,17 +810,14 @@ client.on('message', message => {
         let objectsRefr = Config.objects
         let channelsRefr = []
         for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
-        let t = 0
         try{
-            for(let t = 0; t <= objectsRefr.length-1; t++){
-                console.log(objectsRefr[t])
-                for(let r = 0; r <= objectsRefr[t].rooms.length-1; r++){
-                    let roomInChannels = channelsRefr.find(channel => channel.type == 'text' && channel.parent.name.slice(4,-1).toLowerCase() == objectsRefr[t].name.toLowerCase() && objectsRefr[t].rooms.find(room => room == channel.name) != null)
-                    if(roomInChannels != undefined){
-                        console.log(`${objectsRefr[t].name} - ${roomInChannels.name}`)
-                    }
+            for(let object of objectsRefr){
+                let rooms = []
+                for(let room of object.rooms){
+                    let channelRoom = channelsRefr.find(channel => channel.name.toLowerCase() == room && channel.parent.name.toLowerCase().slice(4,-1) == object.name.toLowerCase())
+                    rooms.push(channelRoom)
                 }
-                objectsRefr.splice(t, 1)
+                console.log(`${object.name} - ${channelRoom.join(', ')}`)
             }
         }catch(error){console.log(error)}
     }
