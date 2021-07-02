@@ -13,7 +13,7 @@ var rpChannels = [];
 var rpchannel;
 const BDchnl = Config.channelsID.bd;
 const dopBDmsg = `838003963412480070`;
-const timeOfDelete = 250;
+const timeOfDelete = 350;
 
 const SteamAPI = require('steamapi');
 var GitHub = require('github-api');
@@ -807,15 +807,12 @@ client.on('message', message => {
 
     if(comand(message).com == `refreshIDobj` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
-        let objectsRefr = Config.objects
         let channelsRefr = []
-        let channelsOBJ = []
         for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
         try{
-            for(let obj of objectsRefr){
+            for(let obj of Config.objects){
                 for(let room of obj.rooms){
-                    let channel = channelsRefr.find(channel => channel.name.toLowerCase() == room.toLowerCase() && channel.parent.name.toLowerCase().slice(4,-1) == obj.name.toLowerCase() && channelsOBJ.find(chnl => channel.id != chnl) == null)
-                    channelsOBJ.push(channel.id)
+                    let channel = channelsRefr.find(channel => channel.name.toLowerCase() == room.toLowerCase() && channel.parent.id == obj.cId)
                     channel.setTopic(obj.id)
                 }
             }
