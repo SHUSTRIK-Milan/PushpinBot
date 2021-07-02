@@ -807,15 +807,16 @@ client.on('message', message => {
 
     if(comand(message).com == `refreshIDobj` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
+        let objectsRefr = Config.objects
         let channelsRefr = []
         for(let channel of guild.channels.cache) channelsRefr.push(channel[1])
         try{
-            for(let object of Config.objects){
+            for(let object of objectsRefr){
                 for(let room of object.rooms){
                     let roomInChannels = channelsRefr.find(channel => channel.type == 'text' && channel.name == room && channel.parent.name.slice(4).slice(0,-1).toLowerCase() == object.name.toLowerCase())
                     if(roomInChannels != undefined){
                         roomInChannels.setTopic(object.id)
-                        channelsRefr.shift()
+                        objectsRefr.shift()
                     }
                 }
             }
