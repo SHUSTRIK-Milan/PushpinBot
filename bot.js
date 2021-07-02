@@ -813,7 +813,7 @@ client.on('message', message => {
         let t = 0
         try{
             for(let t = 0; t <= objectsRefr.length; t++){
-                let object = objectsRefr[t]
+                console.log(objectsRefr[t])
                 for(let r = 0; r <= object.rooms.length; r++){
                     let roomInChannels = channelsRefr.find(channel => channel.type == 'text' && channel.parent.name.slice(4,-1).toLowerCase() == object.name.toLowerCase() && object.rooms.find(room => room == channel.name) != null)
                     if(roomInChannels != undefined){
