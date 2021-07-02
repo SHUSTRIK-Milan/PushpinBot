@@ -812,9 +812,9 @@ client.on('message', message => {
         for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
         let t = 0
         try{
-            for(let t = 0; t <= objectsRefr.length; t++){
+            for(let t = 0; t <= objectsRefr.length-1; t++){
                 console.log(objectsRefr[t])
-                for(let r = 0; r <= objectsRefr[t].rooms.length; r++){
+                for(let r = 0; r <= objectsRefr[t].rooms.length-1; r++){
                     let roomInChannels = channelsRefr.find(channel => channel.type == 'text' && channel.parent.name.slice(4,-1).toLowerCase() == objectsRefr[t].name.toLowerCase() && objectsRefr[t].rooms.find(room => room == channel.name) != null)
                     if(roomInChannels != undefined){
                         roomInChannels.setTopic('test')
