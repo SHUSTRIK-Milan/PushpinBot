@@ -272,8 +272,6 @@ async function createCom(embd, message){
             fields: [],
             timestamp: new Date()
         }});
-    }else{
-        message.delete()
     }
     return;
 };
