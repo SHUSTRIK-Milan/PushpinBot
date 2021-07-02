@@ -797,8 +797,8 @@ client.on('message', message => {
             }
             setTimeout(() =>{
                 if(channel != undefined){
-                    for(let object of Config.objects){
-                        guild.channels.create(`«${object.name}»`, {type: 'text', topic: object.id, parent: Config.channelsID.fast_access})
+                    for(let obj of Config.objects){
+                        guild.channels.create(`«${obj.name}»`, {type: 'text', topic: `${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`, parent: Config.channelsID.fast_access})
                     }
                 }
             }, timeOfDelete*5)
@@ -813,7 +813,7 @@ client.on('message', message => {
             for(let obj of Config.objects){
                 for(let room of obj.rooms){
                     let channel = channelsRefr.find(channel => channel.name.toLowerCase() == room.toLowerCase() && channel.parent.id == obj.cId)
-                    channel.setTopic(obj.id)
+                    channel.setTopic(`${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`)
                 }
             }
         }catch(error){console.log(error)}
@@ -907,7 +907,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
 
         if(rpchannel){
-            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3) && st.id == channel.topic);
+            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3) && st.id == channel.topic.split('-')[0]);
             console.log(homePos)
 
             let objects = [];
@@ -937,7 +937,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             let argsObj = guild.channels.cache.get(arg.slice(2).slice(0,-1))
             let channelFA = argsObj
             //принимаю аргументы
-            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3) && st.id == channel.topic);
+            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3) && st.id == channel.topic.split('-')[0]);
             console.log(homePos)
             //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
             if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase().split('-').join(' ');
@@ -948,7 +948,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             //ищу среди радиуса домашнего объекта тот объект, который был указан в аргументе.
 
             if (walkway != null){
-                let cat = guild.channels.cache.find(cat => cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
+                let cat = guild.channels.cache.find(cat => cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase() && channelFA.topic.split('-')[0] == channel.topic.split('-')[0]);
                 //ищем каналы чье имя будет равно имени объекта пути
                 if(cat != undefined || cat != null) if (cat.type == 'category'){
                 //проверяем канал на тип категории
