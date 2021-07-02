@@ -820,7 +820,6 @@ client.on('message', message => {
                         channel.setTopic(`${goID}`)
                     }
                 }
-                objectsRefr.splice(0, 1)
             }
         }catch(error){console.log(error)}
     }
