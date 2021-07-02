@@ -812,16 +812,14 @@ client.on('message', message => {
         for(let channel of guild.channels.cache) channelsRefr.push(channel[1])
         let t = 0
         try{
-            for(let object of objectsRefr){
+            for(let t = 0; t <= objectsRefr.length; t++){
                 for(let room of objectsRefr[t].rooms){
-                    let roomInChannels = channelsRefr.find(channel => channel.type == 'text' && channel.name == room && channel.parent.name.slice(4).slice(0,-1).toLowerCase() == objectsRefr[t].name.toLowerCase())
+                    let cat = channelsRefr.find(channel => channel.type == 'text' && channel.parent.name.slice(4,-1).toLowerCase() == objectsRefr[t].name.toLowerCase() && channel.name == objectsRefr[t].room)
                     if(roomInChannels != undefined){
                         roomInChannels.setTopic('test')
-                        channelsRefr.shift()
                     }
                 }
                 objectsRefr.splice(t, 1)
-                t += 1
             }
         }catch(error){console.log(error)}
     }
