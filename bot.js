@@ -813,7 +813,7 @@ client.on('message', message => {
         for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
         try{
             for(let goID = 1; goID <= Config.globalObjects.length; goID++){
-                objs = objectsRefr.filter(obj => obj.id == goID)
+                let objs = objectsRefr.filter(obj => obj.id == goID)
                 for(let obj of objs){
                     let channels = channelsRefr.filter(channel => channel.parent.name.toLowerCase().slice(4,-1) == obj.name)
                     for(let channel of channels){
