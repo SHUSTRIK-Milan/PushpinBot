@@ -817,7 +817,7 @@ client.on('message', message => {
                     let channelRoom = channelsRefr.find(channel => channel.name.toLowerCase() == room && channel.parent.name.toLowerCase().slice(4,-1) == object.name.toLowerCase())
                     rooms.push(channelRoom)
                 }
-                console.log(`${object.name} - ${channelRoom.join(', ')}`)
+                console.log(`${object.name} - ${rooms.join(', ')}`)
             }
         }catch(error){console.log(error)}
     }
