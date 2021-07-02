@@ -809,7 +809,7 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
         let objectsRefr = Config.objects
         let channelsRefr = []
-        for(let channel of guild.channels.cache) channelsRefr.push(channel[1])
+        for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
         let t = 0
         try{
             for(let t = 0; t <= objectsRefr.length; t++){
