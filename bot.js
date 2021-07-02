@@ -817,7 +817,7 @@ client.on('message', message => {
                     let roomInChannels = channelsRefr.find(channel => channel.type == 'text' && channel.name == room && channel.parent.name.slice(4).slice(0,-1).toLowerCase() == objectsRefr[t].name.toLowerCase())
                     if(roomInChannels != undefined){
                         roomInChannels.setTopic('test')
-                        roomInChannels.shift()
+                        channelsRefr.shift()
                     }
                 }
                 objectsRefr.shift()
