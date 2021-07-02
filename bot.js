@@ -165,7 +165,7 @@ function sendLog(message,cat,act,status,add){
         guild.channels.cache.get(Config.channelsID.rp_logs).send({embed: {
             color: color,
             author: {
-                name: message.author.username,
+                name: `${message.author.username} - ${message.member.nickname}`,
                 icon_url: message.author.avatarURL()
             },
             thumbnail: {
