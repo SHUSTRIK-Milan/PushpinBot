@@ -814,14 +814,13 @@ client.on('message', message => {
         try{
             for(let goID = 3; goID > 0; goID--){
                 let objs = objectsRefr.filter(obj => obj.id == goID)
-                console.log(objs)
                 for(let obj of objs){
                     let channels = channelsRefr.filter(channel => channel.parent.name.toLowerCase().slice(4,-1) == obj.name)
                     for(let channel of channels){
                         channel.setTopic(`${goID}`)
                         channelsRefr.splice(channelsRefr.indexOf(channel), 1)
                     }
-                    objectsRefr.splice(objectsRefr.indexOf(obj), 1)
+                    objectsRefr.splice(0, 1)
                 }
             }
         }catch(error){console.log(error)}
