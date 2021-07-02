@@ -821,7 +821,6 @@ client.on('message', message => {
                     }
                 }
                 console.log(`${object.name} - ${rooms.join(', ')}`)
-                objectsRefr.shift()
             }
         }catch(error){console.log(error)}
     }
