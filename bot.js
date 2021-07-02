@@ -821,7 +821,7 @@ client.on('message', message => {
                     }
                 }
                 objectsRefr.shift()
-                let t = t + 1
+                t += 1
             }
         }catch(error){console.log(error)}
     }
