@@ -951,16 +951,19 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
                 //ищем каналы чье имя будет равно имени объекта пути
                 
-                if(cat != undefined) let catId = guild.channels.cache.find(channel => channel.parent.id == cat.id).topic.split('-')[0]; if (catId == channelFA.topic.split('-')[0]){
-                //проверяем канал на тип категории
-                    if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
-                    sendNullMessage()
-                    setTimeout(() => {cat.updateOverwrite(user, { 'VIEW_CHANNEL': true })}, timeOfDelete);
-                    //даем право читать сообщения в категории.
-                    setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete*3);
-                    //удаляем право читать сообщения в прошлой категории
-                    sendLog(msgDate,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
-                };
+                if(cat != undefined){
+                    let catId = guild.channels.cache.find(channel => channel.parent.id == cat.id).topic.split('-')[0]
+                    if (catId == channelFA.topic.split('-')[0]){
+                    //проверяем канал на тип категории
+                        if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
+                        sendNullMessage()
+                        setTimeout(() => {cat.updateOverwrite(user, { 'VIEW_CHANNEL': true })}, timeOfDelete);
+                        //даем право читать сообщения в категории.
+                        setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete*3);
+                        //удаляем право читать сообщения в прошлой категории
+                        sendLog(msgDate,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
+                    };
+                }
             }else if (walkway == null && Config.objects.find(st => st.name.toLowerCase() == argsObj.toLowerCase()) != null){
                 sendLocalMessage(`${argsObj} не является соседним объектом с ${homePos.name}.`)
                 sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
