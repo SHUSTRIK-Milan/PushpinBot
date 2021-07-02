@@ -814,6 +814,7 @@ client.on('message', message => {
         try{
             for(let goID = 3; goID > 0; goID--){
                 let objs = objectsRefr.filter(obj => obj.id == goID)
+                console.log(objs)
                 for(let obj of objs){
                     let channels = channelsRefr.filter(channel => channel.parent.name.toLowerCase().slice(4,-1) == obj.name)
                     for(let channel of channels){
