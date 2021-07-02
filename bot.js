@@ -952,7 +952,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 //ищем каналы чье имя будет равно имени объекта пути
                 
                 if(cat != undefined){
-                    let catId = guild.channels.cache.find(channel => channel.parentId == cat.id)//.topic.split('-')[0]
+                    console.log(cat)
+                    let catId = guild.channels.cache.find(channel => channel.parentID == cat.id)//.topic.split('-')[0]
                     console.log(catId)
                     if (catId == channelFA.topic.split('-')[0]){
                     //проверяем канал на тип категории
