@@ -940,7 +940,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             let argsObj = guild.channels.cache.get(arg.slice(2).slice(0,-1))
             let channelFA = argsObj
             //принимаю аргументы
-            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3) && st.id == channelFA.topic);
+            let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3) && st.id == channel.topic);
             console.log(homePos)
             //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
             if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase().split('-').join(' ');
