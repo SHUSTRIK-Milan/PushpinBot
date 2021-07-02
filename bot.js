@@ -815,7 +815,7 @@ client.on('message', message => {
             for(let t = 0; t <= objectsRefr.length; t++){
                 console.log(objectsRefr[t])
                 for(let r = 0; r <= objectsRefr[t].rooms.length; r++){
-                    let roomInChannels = channelsRefr.find(channel => channel.type == 'text' && channel.parent.name.slice(4,-1).toLowerCase() == object.name.toLowerCase() && object.rooms.find(room => room == channel.name) != null)
+                    let roomInChannels = channelsRefr.find(channel => channel.type == 'text' && channel.parent.name.slice(4,-1).toLowerCase() == objectsRefr[t].name.toLowerCase() && objectsRefr[t].rooms.find(room => room == channel.name) != null)
                     if(roomInChannels != undefined){
                         roomInChannels.setTopic('test')
                     }
