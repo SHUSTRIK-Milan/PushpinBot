@@ -809,18 +809,17 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
         let objectsRefr = Config.objects
         let channelsRefr = []
+        let ids
         for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
         try{
-            for(let object of objectsRefr){
-                let rooms = []
-                for(let room of object.rooms){
-                    let channelRoom = channelsRefr.find(channel => channel.name.toLowerCase() == room && channel.parent.name.toLowerCase().slice(4,-1) == object.name.toLowerCase())
-                    if(channelRoom != undefined){
-                        channelRoom.setTopic(object.id)
-                        rooms.push(channelRoom.name)
+            for(let goID = 1; goID <= globalObjects.length; goID++){
+                objs = objectsRefr.filter(obj => obj.id == goID)
+                for(let obj of objs){
+                    let channels = channelsRefr.filter(channel => channel.parent.name.toLowerCase().slice(4,-1) == obj.name)
+                    for(let channel of channels){
+                        channel.setTopic(`${goID}`)
                     }
                 }
-                console.log(`${object.name} - ${rooms.join(', ')}`)
             }
         }catch(error){console.log(error)}
     }
