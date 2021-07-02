@@ -18,6 +18,7 @@ module.exports.channelsID = {
     characters: `858323732686962710`,
     organization_and_formation: `858325435392983050`,
     adverts: `855926564226596865`,
+    global_do: `860540156716515378`,
     /////////Project Rules//////
     projectRules: `837395201726742528`,
     generalRules: `837395238360055879`,

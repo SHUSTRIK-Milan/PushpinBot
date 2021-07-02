@@ -948,7 +948,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             //ищу среди радиуса домашнего объекта тот объект, который был указан в аргументе.
 
             if (walkway != null){
-                let cat = guild.channels.cache.find(cat => cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase() && channelFA.topic.split('-')[0] == channel.topic.split('-')[0]);
+                let cat = guild.channels.cache.find(cat => cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase() && channelFA.topic.split('-')[0] == cat.topic.split('-')[0]);
                 //ищем каналы чье имя будет равно имени объекта пути
                 if(cat != undefined || cat != null) if (cat.type == 'category'){
                 //проверяем канал на тип категории
