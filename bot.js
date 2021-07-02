@@ -820,7 +820,7 @@ client.on('message', message => {
                         channelsRefr.shift()
                     }
                 }
-                objectsRefr.shift()
+                objectsRefr[t].shift()
                 t += 1
             }
         }catch(error){console.log(error)}
