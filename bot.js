@@ -950,8 +950,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             if (walkway != null){
                 let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
                 //ищем каналы чье имя будет равно имени объекта пути
-                let catId = guild.channels.cache.find(channel => channel.parent.id == cat.id).topic.split('-')[0]
-                if(cat != undefined) if (catId == channelFA.topic.split('-')[0]){
+                
+                if(cat != undefined) let catId = guild.channels.cache.find(channel => channel.parent.id == cat.id).topic.split('-')[0]; if (catId == channelFA.topic.split('-')[0]){
                 //проверяем канал на тип категории
                     if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
                     sendNullMessage()
