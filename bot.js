@@ -818,9 +818,7 @@ client.on('message', message => {
                     let channels = channelsRefr.filter(channel => channel.parent.name.toLowerCase().slice(4,-1) == obj.name)
                     for(let channel of channels){
                         channel.setTopic(`${goID}`)
-                        channelsRefr.splice(channelsRefr.indexOf(channel), 1)
                     }
-                    objectsRefr.splice(0, 1)
                 }
             }
         }catch(error){console.log(error)}
