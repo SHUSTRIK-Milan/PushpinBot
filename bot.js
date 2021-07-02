@@ -819,7 +819,7 @@ client.on('message', message => {
                     for(let channel of channels){
                         channel.setTopic(`${goID}`)
                     }
-                    objs.splice(objs.indexOf(obj), 1)
+                    objs.splice(0, 1)
                 }
             }
         }catch(error){console.log(error)}
