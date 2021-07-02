@@ -815,7 +815,10 @@ client.on('message', message => {
                 let rooms = []
                 for(let room of object.rooms){
                     let channelRoom = channelsRefr.find(channel => channel.name.toLowerCase() == room && channel.parent.name.toLowerCase().slice(4,-1) == object.name.toLowerCase())
-                    rooms.push(channelRoom.name)
+                    if(channelRoom != undefined){
+                        channelRoom.setTopic(object.id)
+                        rooms.push(channelRoom.name)
+                    }
                 }
                 console.log(`${object.name} - ${rooms.join(', ')}`)
             }
