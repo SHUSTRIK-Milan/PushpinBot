@@ -786,6 +786,13 @@ client.on('message', message => {
     if(comand(message).com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
         let channel
+        let specialChannel = [
+            {id: guild.roles.everyone, deny: 'VIEW_CHANNEL'},
+            {id: `833226140755689483`, allow: 'VIEW_CHANNEL'},
+            {id: `833227050550296576`, allow: 'VIEW_CHANNEL'},
+            {id: `830061387849662515`, allow: 'VIEW_CHANNEL'},
+            {id: `856092976702816287`, allow: 'VIEW_CHANNEL'},
+        ]
         try{
             for(let channelID of guild.channels.cache){
                 channel = guild.channels.cache.get(channelID[0])
@@ -796,8 +803,12 @@ client.on('message', message => {
             setTimeout(() =>{
                 if(channel != undefined){
                     for(let obj of Config.objects){
-                        guild.channels.create(`«${obj.name}»`, {type: 'text', topic: `${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`, parent: Config.channelsID.fast_access})
-                    }
+                        if(obj.open){
+                            guild.channels.create(`«${obj.name}»`, {type: 'text', topic: `${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`, parent: Config.channelsID.fast_access})
+                        }else if(!obj.open){
+                            guild.channels.create(`«${obj.name}»`, {type: 'text', topic: `${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`, parent: Config.channelsID.fast_access, permissionOverwrites: specialChannel})
+                        }
+                    } 
                 }
             }, timeOfDelete*5)
         }catch(error){console.log(error)}
@@ -914,10 +925,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             if (homePos != null && objects.join(', ') != ''){
                 sendLocalMessage(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`)
                 sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
-            }else{
+            }else if(homePos != null && objects.join(', ') == '' && homePos.radius != []){
                 sendLocalMessage(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`)
                 sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
-            };
+            }else{
+                sendLocalMessage(`Соседние объекты с ${homePos.name}:\n> Ближайшие выходы отсутствуют.\nБлижайшие комнаты отсутствуют.`)
+                sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
+            }
         }else{
             sendNullMessage()
         }
@@ -1312,9 +1326,57 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             sendNullMessage()
         }
     }
+
+    if (interaction.data.name == "tp") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        let userTp = interaction.data.options[0].value
+        let locate = interaction.data.options[1].value
+
+        if(rpchannel){
+            for (let [id, channel] of guild.channels.cache){
+                if(channel.permissionOverwrites.get(userTp) != undefined && Config.objects.find(obj => obj.cId == id) != undefined) channel.permissionOverwrites.get(userTp).delete();
+            }
+        }else{
+            sendNullMessage()
+        }
+    }
 });
 
 function checkIntegrations() {
+    let standartPerm = [
+        {
+            id: `833226140755689483`,
+            type: 1,
+            permission: true
+        },
+        {
+            id: `833227050550296576`,
+            type: 1,
+            permission: true
+        },
+    ]
+    let adminPerm = [
+        {
+            id: `830061387849662515`,
+            type: 1,
+            permission: true
+        },
+    ]
+    let rpPerm = [
+        {
+            id: `856092976702816287`,
+            type: 1,
+            permission: true
+        },
+    ]
+    let mayorPerm = [
+        {
+            id: `852668893821665320`,
+            type: 1,
+            permission: true
+        },
+    ]
+
     let walk = {
         name: "идти", 
         description: "Идти с одного объекта в другой",
@@ -1594,6 +1656,27 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     }, 200); */
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "tp", 
+            description: "Телепортировать игрока в локацию",
+            options: [
+                {
+                    name: "человек",
+                    description: "Человек, которому это направлено",
+                    type: "6"
+                },
+                {
+                    name: "локация",
+                    description: "Локация, куда нужно телепортировать игрока",
+                    type: "3",
+                    required: true
+                },
+            ],
+            permissions: standartPerm.concat(adminPerm).concat(rpPerm)
+        }, config.guild_id)
+        .then()
+        .catch(console.error);
+    }, 200);
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
