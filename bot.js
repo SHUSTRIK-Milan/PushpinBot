@@ -1418,12 +1418,12 @@ function checkIntegrations() {
         })
         .catch(console.log); */
     
-    let perm = [
+    /* let perm = [
         {
             id: FIRST_COMMAND_ID,
             permissions: standartPerm.concat(adminPerm).concat(rpPerm)
         } 
-    ]
+    ] */
 
     //axios.put(`https://discord.com/api/v8/applications/${config.applicationId}/guilds/${config.guild_id}/commands/permissions`, perm)
 
