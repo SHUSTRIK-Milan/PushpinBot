@@ -1698,7 +1698,7 @@ function checkIntegrations() {
             ],
             default_permission: false,
         }
-    axios.post(`https://discord.com/api/v8/applications/${config.applicationId}/guilds/${config.guild_id}/commands`, json)
+    axios.post(`https://discord.com/api/v8/applications/${config.applicationId}/guilds/${config.guild_id}/commands`, json).then(h => console.log(h))
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
