@@ -1684,6 +1684,20 @@ function checkIntegrations() {
         data: {
             name: "tp", 
             description: "Телепортировать игрока в локацию",
+            options: [
+                {
+                    name: "человек",
+                    description: "Человек, которому это направлено",
+                    type: "6"
+                },
+                {
+                    name: "локация",
+                    description: "Локация, куда нужно телепортировать игрока",
+                    type: "3",
+                    required: true
+                },
+            ],
+            default_permission: false,
         }
     }
     client.api.applications(config.applicationId).guilds(config.guild_id).commands.post(json);
