@@ -1681,10 +1681,11 @@ function checkIntegrations() {
         .catch(console.error);
     }, 200); */
     let json = {
-            "name": "tp", 
-            "description": "Телепортировать игрока в локацию",
-            
+        data: {
+            name: "tp", 
+            description: "Телепортировать игрока в локацию",
         }
+    }
     client.api.applications(config.applicationId).guilds(config.guild_id).commands.post(json);
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
