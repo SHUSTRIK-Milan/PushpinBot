@@ -1335,7 +1335,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let locate = interaction.data.options[1].value
         let position
 
-        if(rpchannel){
+        if(rpchannel && (haveRole(msgDate.member, '830061387849662515') || head || rpCreator)){
             if(guild.channels.cache.get(locate.slice(2,-1)) != undefined){
                 position = guild.channels.cache.get(locate.slice(2,-1)).name.slice(1, -1).toLowerCase().split('-').join(' ');
 
