@@ -964,7 +964,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 //ищем каналы чье имя будет равно имени объекта пути
                 
                 if(cats != undefined) for(let [id, cat] of cats){
-                    let catId = guild.channels.cache.find(channel => channel.parentID == cat.id).topic.split('-')[0]
+                    let catId = Config.objects.find(obj => obj.cId == cat.id).id
                     if (catId == channelFA.topic.split('-')[0] && catId == homePos.id){
                     //проверяем канал на тип категории
                         if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
