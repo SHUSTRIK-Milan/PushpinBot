@@ -968,7 +968,16 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 
                 if(cats.length != 0) for(let [id, cat] of cats){
                     let catId = Config.objects.find(obj => obj.cId == cat.id).id
-                    if (catId == channelFA.topic.split('-')[0] && catId == homePos.id){
+                    if (catId == channelFA.topic.split('-')[0] && Config.globalObjects(obj => obj.name.toLowerCase() == walkway.toLowerCase())){
+                    //проверяем канал на тип категории
+                        if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
+                        sendNullMessage()
+                        setTimeout(() => {cat.updateOverwrite(user, { 'VIEW_CHANNEL': true })}, timeOfDelete);
+                        //даем право читать сообщения в категории.
+                        setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete*3);
+                        //удаляем право читать сообщения в прошлой категории
+                        sendLog(msgDate,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
+                    }else if (catId == channelFA.topic.split('-')[0] && catId == homePos.id){
                     //проверяем канал на тип категории
                         if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
                         sendNullMessage()
