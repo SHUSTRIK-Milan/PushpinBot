@@ -1696,7 +1696,7 @@ function checkIntegrations() {
                     required: true
                 },
             ],
-            default_permission: false,
+            default: false,
         }, config.guild_id)
         .then()
         .catch(console.error);
