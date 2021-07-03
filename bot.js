@@ -1692,6 +1692,7 @@ function checkIntegrations() {
             ]
     }, config.guild_id) */
 
+    client.interaction.deleteApplicationCommand("860921858281832448")
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
 
