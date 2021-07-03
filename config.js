@@ -426,7 +426,7 @@ module.exports.objects = [
         cId: '860929195135729674',
         open: false,
         radius: [],
-        rooms: []
+        rooms: ['тест']
     },
 ];
 
