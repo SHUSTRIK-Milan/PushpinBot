@@ -1422,7 +1422,7 @@ function checkIntegrations() {
                     {
                         name: "пожарные",
                         value: "3"
-                    
+                    }
                 ]
             },
             {
