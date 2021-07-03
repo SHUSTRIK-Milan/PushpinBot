@@ -963,7 +963,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 let cats = guild.channels.cache.filter(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
                 //ищем каналы чье имя будет равно имени объекта пути
                 
-                if(cats != undefined) for(let [id, cat] of cats){
+                if(cats.length != 0) for(let [id, cat] of cats){
                     let catId = Config.objects.find(obj => obj.cId == cat.id).id
                     if (catId == channelFA.topic.split('-')[0] && catId == homePos.id){
                     //проверяем канал на тип категории
@@ -1337,12 +1337,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(rpchannel && (haveRole(msgDate.member, '830061387849662515') || head || rpCreator)){
             if(guild.channels.cache.get(locate.slice(2,-1)) != undefined){
                 let channelFA = guild.channels.cache.get(locate.slice(2,-1))
-                let position = guild.channels.cache.get(locate.slice(2,-1)).name.slice(1, -1).toLowerCase().split('-').join(' ');
+                let position = channelFA.name.slice(1, -1).toLowerCase().split('-').join(' ');
 
                 let cats = guild.channels.cache.filter(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${position}»`.toLowerCase());
                 //ищем каналы чье имя будет равно имени объекта пути
                 
-                if(cats != undefined) for(let [id, cat] of cats){
+                if(cats.length != 0) for(let [id, cat] of cats){
                     let catId = Config.objects.find(obj => obj.cId == cat.id).id
                     if (catId == channelFA.topic.split('-')[0]){
                         for (let [id, channel] of guild.channels.cache){
@@ -1353,7 +1353,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         sendLocalMessage(`Объект ${argsObj} отсутствует.`)
                     }
                 }else{sendNullMessage()}
-            }
+            }else{sendNullMessage()}
         }else{
             sendNullMessage()
         }
