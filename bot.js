@@ -1672,7 +1672,7 @@ function checkIntegrations() {
         .catch(console.error);
     }, 200); */
     
-    client.interaction.deleteApplicationCommand(`860915012003430420`)
+    client.interaction.deleteApplicationCommand(`860915012003430420`, config.guild_id)
     client.interaction.createApplicationCommand({
         name: "tp", 
             description: "Телепортировать игрока в локацию",
