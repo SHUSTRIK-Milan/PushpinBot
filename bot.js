@@ -1692,7 +1692,9 @@ function checkIntegrations() {
         }
     }
     let perm = {
-        permissions: standartPerm.concat(adminPerm).concat(rpPerm)
+        data: {
+            permissions: standartPerm.concat(adminPerm).concat(rpPerm)
+        } 
     }
     client.api.applications(config.applicationId).guilds(config.guild_id).commands.permissions.put(perm)
 
