@@ -1395,7 +1395,7 @@ function checkIntegrations() {
         },
     ]
 
-    let command = {
+    /* let command = {
         name: "tp", 
         description: "Телепортировать игрока в локацию",
         options: [
@@ -1414,8 +1414,8 @@ function checkIntegrations() {
         ]
     };
 
-    client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log)
-    
+    client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log) */
+
     // удаление старых команд
     /* client.interaction
         .getApplicationCommands(config.guild_id)
@@ -1684,23 +1684,23 @@ function checkIntegrations() {
     }, 200);
     client.interaction.createApplicationCommand({
         name: "tp", 
-            description: "Телепортировать игрока в локацию",
-            options: [
-                {
-                    name: "локация",
-                    description: "Локация, куда нужно телепортироваться",
-                    type: "3",
-                    required: true
-                },
-                {
-                    name: "человек",
-                    description: "Человек, которому это направлено",
-                    type: "6"
-                },
-            ]
+        description: "Телепортировать игрока в локацию",
+        options: [
+            {
+                name: "локация",
+                description: "Локация, куда нужно телепортироваться",
+                type: "3",
+                required: true
+            },
+            {
+                name: "человек",
+                description: "Человек, которому это направлено",
+                type: "6",
+                required: true
+            },
+        ]
     }, config.guild_id) */
 
-    client.interaction.deleteApplicationCommand("860921858281832448")
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
 

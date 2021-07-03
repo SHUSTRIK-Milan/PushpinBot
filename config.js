@@ -423,7 +423,7 @@ module.exports.objects = [
     {
         name: 'Тест',
 		id: '3',
-        cId: '855584292485595166',
+        cId: '860929195135729674',
         open: false,
         radius: [],
         rooms: []
