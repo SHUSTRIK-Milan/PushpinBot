@@ -960,10 +960,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             //ищу среди радиуса домашнего объекта тот объект, который был указан в аргументе.
 
             if (walkway != null){
-                let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
+                let cats = guild.channels.cache.filter(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
                 //ищем каналы чье имя будет равно имени объекта пути
                 
-                if(cat != undefined){
+                if(cats != undefined) for(let cat of cats){
                     let catId = guild.channels.cache.find(channel => channel.parentID == cat.id).topic.split('-')[0]
                     console.log(catId)
                     if (catId == channelFA.topic.split('-')[0]){
@@ -975,7 +975,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete*3);
                         //удаляем право читать сообщения в прошлой категории
                         sendLog(msgDate,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
-                    };
+                    }else{
+                        sendLocalMessage(`${argsObj} не является соседним объектом с ${homePos.name}.`)
+                        sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
+                    }
                 }
             }else if (walkway == null && Config.objects.find(st => st.name.toLowerCase() == argsObj.toLowerCase()) != null){
                 sendLocalMessage(`${argsObj} не является соседним объектом с ${homePos.name}.`)
@@ -1331,10 +1334,23 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         let userTp = interaction.data.options[0].value
         let locate = interaction.data.options[1].value
+        let position
 
         if(rpchannel){
-            for (let [id, channel] of guild.channels.cache){
-                if(channel.permissionOverwrites.get(userTp) != undefined && Config.objects.find(obj => obj.cId == id) != undefined) channel.permissionOverwrites.get(userTp).delete();
+            if(guild.channels.cache.get(locate.slice(2,-1)) != undefined){
+                position = guild.channels.cache.get(locate.slice(2,-1)).name.slice(1, -1).toLowerCase().split('-').join(' ');
+
+                let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${position}»`.toLowerCase());
+                    
+                if(cat != undefined){
+                    let catId = guild.channels.cache.find(channel => channel.parentID == cat.id).topic.split('-')[0]
+                    if (catId == guild.channels.cache.get(locate.slice(2,-1)).topic.split('-')[0]){
+
+                    }
+                }
+                for (let [id, channel] of guild.channels.cache){
+                    if(channel.permissionOverwrites.get(userTp) != undefined && Config.objects.find(obj => obj.cId == id) != undefined) channel.permissionOverwrites.get(userTp).delete();
+                }
             }
         }else{
             sendNullMessage()
