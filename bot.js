@@ -1154,14 +1154,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         }else{
-            interaction.data.options.forEach((c) => {
-                if (c.name == "код") {
-                    arg = c.value;
-                }
-                if (c.name == "текст") {
-                    text = c.value;
-                }
-            });
+            console.log(interaction.data.options)
         }
     
         if(rpchannel){
@@ -1400,26 +1393,39 @@ function checkIntegrations() {
         },
     ]
 
-    /* let command = {
-        name: "tp", 
-        description: "Телепортировать игрока в локацию",
+    let command = {
+        name: "911", 
+        description: "Вызвать экстренные службы",
         options: [
             {
-                name: "локация",
-                description: "Локация, куда нужно телепортироваться",
+                name: "код",
+                description: "Код службы",
                 type: "3",
-                required: true
+                choices: [
+                    {
+                        name: "полиция",
+                        value: "1"
+                    },
+                    {
+                        name: "медики",
+                        value: "2"
+                    },
+                    {
+                        name: "пожарные",
+                        value: "3"
+                    
+                ]
             },
             {
-                name: "человек",
-                description: "Человек, которому это направлено",
-                type: "6",
-                required: true
+                name: "текст",
+                description: "Текст сообщения для экстренных служб",
+                type: "3"
             },
         ]
     };
 
-    client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log) */
+
+    client.interaction.createApplicationCommand(command, config.guild_id, "856222015480135791").then(console.log) */
 
     // удаление старых команд
     /* client.interaction
