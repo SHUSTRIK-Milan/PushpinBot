@@ -1680,7 +1680,7 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     }, 200); */
-    client.interaction.createApplicationCommand({
+    let json = {
             name: "tp", 
             description: "Телепортировать игрока в локацию",
             options: [
@@ -1696,10 +1696,9 @@ function checkIntegrations() {
                     required: true
                 },
             ],
-            default: false,
-        }, config.guild_id)
-        .then(console.log)
-        .catch(console.error);
+            default_permission: false,
+        }
+    axios.post(`https://discord.com/api/v8/applications/${config.applicationId}/guilds/${config.guild_id}/commands`, json)
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
