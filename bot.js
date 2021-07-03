@@ -1691,7 +1691,6 @@ function checkIntegrations() {
             default_permission: false,
         }
     }
-    client.api.applications(config.applicationId).guilds(config.guild_id).commands.post(json);
     let perm = {
         data: {
             permissions: standartPerm.concat(adminPerm).concat(rpPerm)
