@@ -1434,7 +1434,7 @@ function checkIntegrations() {
     };
 
 
-    client.interaction.createApplicationCommand(command, config.guild_id, "856222015480135791").then(console.log) */
+    client.interaction.createApplicationCommand(command, config.guild_id, "856222015480135791").then(console.log)
 
     // удаление старых команд
     /* client.interaction
