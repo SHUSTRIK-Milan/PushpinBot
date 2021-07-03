@@ -961,6 +961,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if (walkway != null){
                 let cats = guild.channels.cache.filter(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
+                console.log(cats)
                 //ищем каналы чье имя будет равно имени объекта пути
                 
                 if(cats != undefined) for(let cat of cats){
@@ -979,6 +980,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     }else{
                         sendLocalMessage(`${argsObj} не является соседним объектом с ${homePos.name}.`)
                         sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
+                        sendNullMessage()
                     }
                 }
             }else if (walkway == null && Config.objects.find(st => st.name.toLowerCase() == argsObj.toLowerCase()) != null){
