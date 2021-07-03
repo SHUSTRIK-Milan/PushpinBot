@@ -1417,15 +1417,6 @@ function checkIntegrations() {
             })
         })
         .catch(console.log); */
-    
-    /* let perm = [
-        {
-            id: FIRST_COMMAND_ID,
-            permissions: standartPerm.concat(adminPerm).concat(rpPerm)
-        } 
-    ] */
-
-    //axios.put(`https://discord.com/api/v8/applications/${config.applicationId}/guilds/${config.guild_id}/commands/permissions`, perm)
 
     // регистрация новых
     /* setTimeout(() =>{client.interaction.createApplicationCommand({
@@ -1701,6 +1692,12 @@ function checkIntegrations() {
         }
     }
     client.api.applications(config.applicationId).guilds(config.guild_id).commands.post(json);
+    let perm = {
+        data: {
+            permissions: standartPerm.concat(adminPerm).concat(rpPerm)
+        } 
+    }
+    client.api.applications(config.applicationId).guilds(config.guild_id).commands.permissions.put(perm)
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
