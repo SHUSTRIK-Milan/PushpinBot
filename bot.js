@@ -1395,7 +1395,7 @@ function checkIntegrations() {
         },
     ]
 
-    /* let command = {
+    let command = {
         name: "tp", 
         description: "Телепортировать игрока в локацию",
         options: [
@@ -1414,7 +1414,7 @@ function checkIntegrations() {
         ]
     };
 
-    client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log) */
+    client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log)
 
     // удаление старых команд
     /* client.interaction
