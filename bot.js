@@ -1685,13 +1685,7 @@ function checkIntegrations() {
             "description": "Телепортировать игрока в локацию",
             
         }
-    axios.post(`https://discord.com/api/v8/applications/${config.applicationId}/guilds/${config.guild_id}/commands`, json)
-    /* client.api.applications(client.user.id).guilds('699722023508770836').commands.post({
-        data: {
-            name: "hello",
-            description: "Replies with Hello World!"
-        }
-    }); */
+    client.api.applications(client.user.id).guilds('699722023508770836').commands.post(json);
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
