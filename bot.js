@@ -1671,9 +1671,10 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     }, 200); */
-    let json = {
-        data: {
-            name: "tp", 
+    
+    client.interaction.deleteApplicationCommand(`860915012003430420`)
+    client.interaction.createApplicationCommand({
+        name: "tp", 
             description: "Телепортировать игрока в локацию",
             options: [
                 {
@@ -1687,23 +1688,8 @@ function checkIntegrations() {
                     description: "Человек, которому это направлено",
                     type: "6"
                 },
-            ],
-            default_permission: false,
-        }
-    }
-    let perm = {
-        data: {
-            id: `860915012003430420`,
-            permissions: [{
-                id: `833226140755689483`,
-                type: 1,
-                permission: true
-            }],
-        } 
-    }
-    console.log(perm)
-    client.api.applications(config.applicationId).guilds(config.guild_id).commands.permissions.put(perm)
-
+            ]
+    })
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
 
