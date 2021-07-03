@@ -1333,23 +1333,26 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         let userTp = interaction.data.options[0].value
         let locate = interaction.data.options[1].value
-        let position
 
         if(rpchannel && (haveRole(msgDate.member, '830061387849662515') || head || rpCreator)){
             if(guild.channels.cache.get(locate.slice(2,-1)) != undefined){
-                position = guild.channels.cache.get(locate.slice(2,-1)).name.slice(1, -1).toLowerCase().split('-').join(' ');
+                let channelFA = guild.channels.cache.get(locate.slice(2,-1))
+                let position = guild.channels.cache.get(locate.slice(2,-1)).name.slice(1, -1).toLowerCase().split('-').join(' ');
 
-                let cat = guild.channels.cache.find(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${position}»`.toLowerCase());
-                    
-                if(cat != undefined){
-                    let catId = guild.channels.cache.find(channel => channel.parentID == cat.id).topic.split('-')[0]
-                    if (catId == guild.channels.cache.get(locate.slice(2,-1)).topic.split('-')[0]){
-
+                let cats = guild.channels.cache.filter(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${position}»`.toLowerCase());
+                //ищем каналы чье имя будет равно имени объекта пути
+                
+                if(cats != undefined) for(let [id, cat] of cats){
+                    let catId = Config.objects.find(obj => obj.cId == cat.id).id
+                    if (catId == channelFA.topic.split('-')[0]){
+                        for (let [id, channel] of guild.channels.cache){
+                            if(channel.permissionOverwrites.get(userTp) != undefined && Config.objects.find(obj => obj.cId == id) != undefined) channel.permissionOverwrites.get(userTp).delete();
+                        }
+                        guild.channels.cache.get(cat.id).updateOverwrite(userTp ,{'VIEW_CHANNEL': true});
+                    }else if (catId == channelFA.topic.split('-')[0]){
+                        sendLocalMessage(`Объект ${argsObj} отсутствует.`)
                     }
-                }
-                for (let [id, channel] of guild.channels.cache){
-                    if(channel.permissionOverwrites.get(userTp) != undefined && Config.objects.find(obj => obj.cId == id) != undefined) channel.permissionOverwrites.get(userTp).delete();
-                }
+                }else{sendNullMessage()}
             }
         }else{
             sendNullMessage()
@@ -1670,9 +1673,7 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    }, 200); */
-    client.interaction.deleteApplicationCommand("856147134780407829")
-    client.interaction.deleteApplicationCommand("860921858281832448")
+    }, 200);
     client.interaction.createApplicationCommand({
         name: "tp", 
             description: "Телепортировать игрока в локацию",
@@ -1689,8 +1690,8 @@ function checkIntegrations() {
                     type: "6"
                 },
             ]
-    }, config.guild_id)
-    client.interaction.getApplicationCommands().then(console.log);
+    }, config.guild_id) */
+
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
 
