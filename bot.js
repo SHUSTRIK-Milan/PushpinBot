@@ -1680,7 +1680,7 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     }, 200); */
-    setTimeout(() =>{client.interaction.createApplicationCommand({
+    client.interaction.createApplicationCommand({
             name: "tp", 
             description: "Телепортировать игрока в локацию",
             options: [
@@ -1700,7 +1700,6 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    }, 200);
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
