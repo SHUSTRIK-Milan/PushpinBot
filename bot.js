@@ -961,7 +961,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if (walkway != null){
                 let cats = guild.channels.cache.filter(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${walkway}»`.toLowerCase());
-                console.log(cats)
                 //ищем каналы чье имя будет равно имени объекта пути
                 
                 if(cats != undefined) for(let [id, cat] of cats){
