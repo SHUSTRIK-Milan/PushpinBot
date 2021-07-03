@@ -1681,24 +1681,24 @@ function checkIntegrations() {
         .catch(console.error);
     }, 200); */
     let json = {
-            name: "tp", 
-            description: "Телепортировать игрока в локацию",
-            options: [
+            "name": "tp", 
+            "description": "Телепортировать игрока в локацию",
+            "options": [
                 {
-                    name: "человек",
-                    description: "Человек, которому это направлено",
-                    type: "6"
+                    "name": "человек",
+                    "description": "Человек, которому это направлено",
+                    "type": "6"
                 },
                 {
-                    name: "локация",
-                    description: "Локация, куда нужно телепортировать игрока",
-                    type: "3",
-                    required: true
+                    "name": "локация",
+                    "description": "Локация, куда нужно телепортировать игрока",
+                    "type": "3",
+                    "required": true
                 },
             ],
-            default_permission: false,
+            "default_permission": false,
         }
-    axios.post(`https://discord.com/api/v8/applications/${config.applicationId}/guilds/${config.guild_id}/commands`, json).then(h => console.log(h))
+    axios.post(`https://discord.com/api/v8/applications/${config.applicationId}/guilds/${config.guild_id}/commands`, json)
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
