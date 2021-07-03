@@ -965,8 +965,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 //ищем каналы чье имя будет равно имени объекта пути
                 
                 if(cats != undefined) for(let [id, cat] of cats){
-                    let catId = guild.channels.cache.find(channel => channel.parentID == cat.id)
-                    console.log(catId)
+                    let catId = guild.channels.cache.find(channel => channel.parentID == cat.id).topic.split('-')[0]
                     if (catId == channelFA.topic.split('-')[0]){
                     //проверяем канал на тип категории
                         if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
@@ -981,7 +980,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
                         sendNullMessage()
                     }
-                }
+                }else{sendNullMessage()}
             }else if (walkway == null && Config.objects.find(st => st.name.toLowerCase() == argsObj.toLowerCase()) != null){
                 sendLocalMessage(`${argsObj} не является соседним объектом с ${homePos.name}.`)
                 sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
