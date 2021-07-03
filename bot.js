@@ -928,6 +928,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }else if(homePos != null && objects.join(', ') == '' && homePos.radius != []){
                 sendLocalMessage(`Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`)
                 sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
+            }else if(homePos != null && objects.join(', ') != '' && homePos.radius == []){
+                sendLocalMessage(`Соседние объекты с ${homePos.name}:\n> Ближайшие выходы отсутствуют.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`)
+                sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты:\n> ${objects.join(';\n> ')}.`);
             }else{
                 sendLocalMessage(`Соседние объекты с ${homePos.name}:\n> Ближайшие выходы отсутствуют.\nБлижайшие комнаты отсутствуют.`)
                 sendLog(msgDate,`РП`,`Осмотрелся на улице.`,`Успешно`,`Вывод: Соседние объекты с ${homePos.name}:\n> ${homePos.radius.join(';\n> ')}.\nБлижайшие комнаты отсутствуют.`);
@@ -1349,7 +1352,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         setTimeout(() =>{for (let [id, channel] of guild.channels.cache){
                             if(channel.permissionOverwrites.get(userTp) != undefined && Config.objects.find(obj => obj.cId == id) != undefined) channel.permissionOverwrites.get(userTp).delete();
                         }}, timeOfDelete*3);
-                        
+
                         sendLocalMessage(`Игрок успешно телепортирован.`)
                     }else if (catId == channelFA.topic.split('-')[0]){
                         sendLocalMessage(`Объект ${argsObj} отсутствует.`)
