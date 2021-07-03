@@ -1697,6 +1697,7 @@ function checkIntegrations() {
             permissions: standartPerm.concat(adminPerm).concat(rpPerm)
         } 
     }
+    console.log(perm)
     client.api.applications(config.applicationId).guilds(config.guild_id).commands.permissions.put(perm)
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
