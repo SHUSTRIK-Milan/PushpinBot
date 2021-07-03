@@ -1685,7 +1685,7 @@ function checkIntegrations() {
             "description": "Телепортировать игрока в локацию",
             
         }
-    client.api.applications(client.user.id).guilds('699722023508770836').commands.post(json);
+    client.api.applications(config.applicationId).guilds(config.guild_id).commands.post(json);
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
