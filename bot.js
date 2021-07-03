@@ -975,10 +975,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         setTimeout(() => channel.parent.permissionOverwrites.get(user.id).delete(), timeOfDelete*3);
                         //удаляем право читать сообщения в прошлой категории
                         sendLog(msgDate,`РП`,`Пошел.`,`Успешно`,`Перешел с ${homePos.name} на ${walkway}.`);
-                    }else{
-                        sendLocalMessage(`${argsObj} не является соседним объектом с ${homePos.name}.`)
-                        sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: ${argsObj} не является соседней улицей с ${homePos.name}.`);
-                        sendNullMessage()
                     }
                 }else{sendNullMessage()}
             }else if (walkway == null && Config.objects.find(st => st.name.toLowerCase() == argsObj.toLowerCase()) != null){
