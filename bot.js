@@ -1671,7 +1671,8 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     }, 200); */
-    
+    client.interaction.deleteApplicationCommand("856147134780407829")
+    client.interaction.deleteApplicationCommand("860921858281832448")
     client.interaction.createApplicationCommand({
         name: "tp", 
             description: "Телепортировать игрока в локацию",
