@@ -1693,6 +1693,7 @@ function checkIntegrations() {
     }
     let perm = {
         data: {
+            id: `860915012003430420`,
             permissions: standartPerm.concat(adminPerm).concat(rpPerm)
         } 
     }
