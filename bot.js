@@ -964,8 +964,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 console.log(cats)
                 //ищем каналы чье имя будет равно имени объекта пути
                 
-                if(cats != undefined) for(let cat of cats){
-                    console.log(cat.id)
+                if(cats != undefined) for(let [id, cat] of cats){
                     let catId = guild.channels.cache.find(channel => channel.parentID == cat.id)
                     console.log(catId)
                     if (catId == channelFA.topic.split('-')[0]){
@@ -1396,7 +1395,7 @@ function checkIntegrations() {
         },
     ]
 
-    let walk = {
+    /* let walk = {
         name: "идти", 
         description: "Идти с одного объекта в другой",
         options: [
@@ -1408,7 +1407,7 @@ function checkIntegrations() {
         ]
     };
 
-    client.interaction.createApplicationCommand(walk, config.guild_id, "856221764605313104").then(console.log)
+    client.interaction.createApplicationCommand(walk, config.guild_id, "856221764605313104").then(console.log) */
     // удаление старых команд
     /* client.interaction
         .getApplicationCommands(config.guild_id)
