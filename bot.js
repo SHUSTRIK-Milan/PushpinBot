@@ -1698,7 +1698,7 @@ function checkIntegrations() {
             ],
             default: false,
         }, config.guild_id)
-        .then()
+        .then(console.log)
         .catch(console.error);
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
