@@ -1345,10 +1345,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 if(cats.length != 0) for(let [id, cat] of cats){
                     let catId = Config.objects.find(obj => obj.cId == cat.id).id
                     if (catId == channelFA.topic.split('-')[0]){
-                        for (let [id, channel] of guild.channels.cache){
+                        setTimeout(() => guild.channels.cache.get(cat.id).updateOverwrite(userTp ,{'VIEW_CHANNEL': true}), timeOfDelete);
+                        setTimeout(() =>{for (let [id, channel] of guild.channels.cache){
                             if(channel.permissionOverwrites.get(userTp) != undefined && Config.objects.find(obj => obj.cId == id) != undefined) channel.permissionOverwrites.get(userTp).delete();
-                        }
-                        guild.channels.cache.get(cat.id).updateOverwrite(userTp ,{'VIEW_CHANNEL': true});
+                        }}, timeOfDelete*3);
+                        
+                        sendLocalMessage(`Игрок успешно телепортирован.`)
                     }else if (catId == channelFA.topic.split('-')[0]){
                         sendLocalMessage(`Объект ${argsObj} отсутствует.`)
                     }
