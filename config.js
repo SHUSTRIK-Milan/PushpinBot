@@ -417,17 +417,6 @@ module.exports.objects = [
         rooms: ['комната-1',
                 'комната-2']
     },
-
-
-
-    {
-        name: 'Тест',
-		id: '3',
-        cId: '860929195135729674',
-        open: false,
-        radius: [],
-        rooms: ['тест']
-    },
 ];
 
 module.exports.departments = {
