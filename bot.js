@@ -904,7 +904,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     if (interaction.data.name == "осмотр") {
         var arg = "";
-        let msgDate = {author: user.user, channel: channel, content: arg};
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined){
             
         } else {
@@ -938,7 +938,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
     if (interaction.data.name == "идти") {
         var arg = "";
-        let msgDate = {author: user.user, channel: channel, content: arg};
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         } else {
             console.log(interaction.data.options[0])
@@ -964,7 +964,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 //ищем каналы чье имя будет равно имени объекта пути
                 
                 if(cats != undefined) for(let cat of cats){
-                    //let catId = guild.channels.cache.find(channel => channel.parentID == cat.id).topic.split('-')[0]
+                    console.log(cat.id)
                     let catId = guild.channels.cache.find(channel => channel.parentID == cat.id)
                     console.log(catId)
                     if (catId == channelFA.topic.split('-')[0]){
@@ -994,7 +994,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
     if (interaction.data.name == "баланс") {
         var arg = "баланс";
-        let msgDate = {author: user.user, channel: channel, content: arg};
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         }else{
             interaction.data.options.forEach((c) => {
