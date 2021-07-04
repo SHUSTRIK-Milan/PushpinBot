@@ -890,11 +890,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
 
     async function sendEditMessage(text){
-        let data = {'content': 'text'}
-        let url = `https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`
-        console.log(url)
-        let dat = await axios.patch(url, data, null)
-        console.log(dat)
+        client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({data: {
+            content: text
+        }})
     };
 
     if (interaction.data.name == "осмотр") {
