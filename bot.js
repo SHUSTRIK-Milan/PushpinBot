@@ -892,10 +892,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let data = {content: text}
         let url = `https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`
         let dat = await axios.patch(url, data, null)
-            .then((answer) => {
-                // Return the message object:
-                return channel.messages.fetch(answer.data.id)
-            })
     };
 
     if (interaction.data.name == "осмотр") {
