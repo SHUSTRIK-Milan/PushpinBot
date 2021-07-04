@@ -1415,15 +1415,15 @@ function checkIntegrations() {
                 required: true,
                 choices: [
                     {
-                        name: "полиция",
+                        name: "пожарная служба",
                         value: "1"
                     },
                     {
-                        name: "медики",
+                        name: "полиция",
                         value: "2"
                     },
                     {
-                        name: "пожарные",
+                        name: "медицинская служба",
                         value: "3"
                     }
                 ]
