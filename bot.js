@@ -891,7 +891,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     async function sendEditMessage(text){
         client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({data: {
-            content: text
+            content: 'hello world!'
         }})
     };
 
