@@ -1739,26 +1739,25 @@ function checkIntegrations() {
             },
         ]
     }, config.guild_id) */
-    setTimeout(() =>{client.interaction.createApplicationCommand({
-            name: "me", 
-            description: "Действие от первого лица.",
-            options: [
-                {
-                    name: "действие",
-                    description: "Действие",
-                    type: "3",
-                    required: true
-                },
-                {
-                    name: "человек",
-                    description: "Человек, которому это направлено",
-                    type: "6"
-                },
-            ]
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-    }, 200);
+    client.interaction.createApplicationCommand({
+        name: "me", 
+        description: "Действие от первого лица.",
+        options: [
+            {
+                name: "действие",
+                description: "Действие",
+                type: "3",
+                required: true
+            },
+            {
+                name: "человек",
+                description: "Человек, которому это направлено",
+                type: "6"
+            },
+        ]
+    }, config.guild_id)
+    .then()
+    .catch(console.error);
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
