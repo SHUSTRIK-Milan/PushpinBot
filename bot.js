@@ -1171,7 +1171,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(rpchannel){
             let object = channel.parent.name.slice(4).slice(0,-1);
             let room = channel.name;
-            let adres = `${object.slice(0,1).toUpperCase()+object.slice(1)}, ${room.slice(0,1).toUpperCase()+room.slice(1)}`
+            let adres = `${Config.globalObjects.find(obj => obj.id == channel.topic.split('-')[0]).name}, ${object.slice(0,1).toUpperCase()+object.slice(1)}, ${room.slice(0,1).toUpperCase()+room.slice(1)}`
             if(code == '1'){
                 let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.fire[2]));
                 if(staff.size == 0){
@@ -1180,9 +1180,20 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }else{
                     sendLocalMessage(`**Вы вызывали пожарную службу** 🔥\n> ${text}`);
                     sendLog(msgDate,'РП','Вызвал пожарную службу.','Успешно',`Вывод: **Вы вызывали пожарную службу** 🔥\n> ${text}`)
-                    for(let worker of staff){
-                        worker[1].send(`**${msgDate.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${text}\n**Адрес:**\n> ${adres}`)
-                    }
+                    guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&${Config.departments.fire[2]}>, **${msgDate.author.tag} вызвал пожарную службу:**`, {embed: {
+                            thumbnail: {
+                                url: `https://cdn.discordapp.com/emojis/822763827975815198.png?v=1`
+                            },
+                            fields: [{
+                                name: `Текст вызова:`,
+                                value: `${arg}`
+                            }],
+                            fields: [{
+                                name: `Местоположение:`,
+                                value: adres
+                            }],
+                        }
+                    });
                 }
             }else if(code == '2'){
                 let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.police[2]));
@@ -1192,9 +1203,20 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }else{
                     sendLocalMessage(`**Вы вызывали полицию** 🚔\n> ${text}`);
                     sendLog(msgDate,'РП','Вызвал полицию.','Успешно',`Вывод: **Вы вызывали полицию** 🚔\n> ${text}`)
-                    for(let worker of staff){
-                        worker[1].send(`**${msgDate.member.nickname} вызывал(а) полицию** 🚔\n> ${text}\n**Адрес:**\n> ${adres}`)
-                    }
+                    guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&${Config.departments.police[2]}>, **${msgDate.author.tag} вызвал полицию:**`, {embed: {
+                            thumbnail: {
+                                url: `https://cdn.discordapp.com/emojis/822763866584121344.png?v=1`
+                            },
+                            fields: [{
+                                name: `Текст вызова:`,
+                                value: `${arg}`
+                            }],
+                            fields: [{
+                                name: `Местоположение:`,
+                                value: adres
+                            }],
+                        }
+                    });
                 }
             }else if(code == '3'){
                 let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.med[2]));
@@ -1204,9 +1226,20 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }else{
                     sendLocalMessage(`**Вы вызывали медицинскую службу** ⚕️\n> ${text}`)
                     sendLog(msgDate,'РП','Вызвал медицинскую службу.','Успешно',`Вывод: **Вы вызывали медицинскую службу** ⚕️\n> ${text}`)
-                    for(let worker of staff){
-                        worker[1].send(`**${msgDate.member.nickname} вызывал(а) медицинскую службу** ⚕️\n> ${text}\n**Адрес:**\n> ${adres}`)
-                    }
+                    guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&${Config.departments.med[2]}>, **${msgDate.author.tag} вызвал медицинскую службу:**`, {embed: {
+                            thumbnail: {
+                                url: `https://cdn.discordapp.com/emojis/822763786149691462.png?v=1`
+                            },
+                            fields: [{
+                                name: `Текст вызова:`,
+                                value: `${arg}`
+                            }],
+                            fields: [{
+                                name: `Местоположение:`,
+                                value: adres
+                            }],
+                        }
+                    });
                 }
             }else{
                 sendLocalMessage(`**Для вызова служб по номеру 911 используйте дополнительный код службы** ☎️\n> 1 – пожарная служба.\n> 2 – полиция.\n> 3 – медицинская служба.`)
@@ -1243,16 +1276,27 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         }],
                         fields: [{
                             name: `Местоположение:`,
-                            value: `${channel.parent.name} -> <#${channel.id}>`
+                            value: `${Config.globalObjects.find(obj => obj.id == channel.topic.split('-')[0]).name}, ${channel.parent.name} -> <#${channel.id}>`
                         }],
                     }
                 });
             }else{
                 sendLocalMessage(`**Вы вызывали администратора** 👥\n> ${arg}`)
                 sendLog(msgDate,'РП','Вызвал администратора.','Успешно',`Вывод: **Вы вызывали администратора** 👥\n> ${arg}`)
-                for(let worker of staff){
-                    worker[1].send(`**${msgDate.member.nickname} вызывал(а) администратора** 👥\n> ${arg}\n**Местоположение:**\n> ${channel.parent.name} -> <#${channel.id}>`)
-                }
+                guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${msgDate.author.tag} написал жалобу:**`, {embed: {
+                        thumbnail: {
+                            url: msgDate.author.displayAvatarURL()
+                        },
+                        fields: [{
+                            name: `Текст жалобы:`,
+                            value: `${arg}`
+                        }],
+                        fields: [{
+                            name: `Местоположение:`,
+                            value: `${Config.globalObjects.find(obj => obj.id == channel.topic.split('-')[0]).name}, ${channel.parent.name} -> <#${channel.id}>`
+                        }],
+                    }
+                });
             }
         }else{
             sendNullMessage()
