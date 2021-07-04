@@ -891,7 +891,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     async function sendEditMessage(text){
         let data = {content: text}
         let url = `https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`
-        await axios.patch(url, data, null)
+        let data = await axios.patch(url, data, null)
             .then((answer) => {
                 // Return the message object:
                 return channel.messages.fetch(answer.data.id)
