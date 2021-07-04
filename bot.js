@@ -1180,7 +1180,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }else{
                     sendLocalMessage(`**Вы вызывали пожарную службу** 🔥\n> ${text}`);
                     sendLog(msgDate,'РП','Вызвал пожарную службу.','Успешно',`Вывод: **Вы вызывали пожарную службу** 🔥\n> ${text}`)
-                    guild.channels.cache.get(`860559004278325268`).send(`<@&${Config.departments.fire[2]}>, **${msgDate.member.nickname} вызвал пожарную службу:**`, {embed: {
+                    guild.channels.cache.get(`860559004278325268`).send(`<@&${Config.departments.fire[2]}>, ${msgDate.member.nickname} вызвал пожарную службу:`, {embed: {
                             thumbnail: {
                                 url: `https://cdn.discordapp.com/emojis/822763827975815198.png?v=1`
                             },
@@ -1203,7 +1203,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }else{
                     sendLocalMessage(`**Вы вызывали полицию** 🚔\n> ${text}`);
                     sendLog(msgDate,'РП','Вызвал полицию.','Успешно',`Вывод: **Вы вызывали полицию** 🚔\n> ${text}`)
-                    guild.channels.cache.get(`860558870962110475`).send(`<@&${Config.departments.police[2]}>, **${msgDate.member.nickname} вызвал полицию:**`, {embed: {
+                    guild.channels.cache.get(`860558870962110475`).send(`<@&${Config.departments.police[2]}>, ${msgDate.member.nickname} вызвал полицию:`, {embed: {
                             thumbnail: {
                                 url: `https://cdn.discordapp.com/emojis/822763866584121344.png?v=1`
                             },
@@ -1226,7 +1226,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }else{
                     sendLocalMessage(`**Вы вызывали медицинскую службу** ⚕️\n> ${text}`)
                     sendLog(msgDate,'РП','Вызвал медицинскую службу.','Успешно',`Вывод: **Вы вызывали медицинскую службу** ⚕️\n> ${text}`)
-                    guild.channels.cache.get(`860558917762940997`).send(`<@&${Config.departments.med[2]}>, **${msgDate.member.nickname} вызвал медицинскую службу:**`, {embed: {
+                    guild.channels.cache.get(`860558917762940997`).send(`<@&${Config.departments.med[2]}>, ${msgDate.member.nickname} вызвал медицинскую службу:`, {embed: {
                             thumbnail: {
                                 url: `https://cdn.discordapp.com/emojis/822763786149691462.png?v=1`
                             },
