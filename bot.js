@@ -1163,7 +1163,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         }else{
-            console.log(interaction.data.options)
+            console.log(interaction.data.options[1].value)
             code = interaction.data.options[0].value
             text = interaction.data.options[1].value
         }
@@ -1186,9 +1186,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                             },
                             fields: [{
                                 name: `Текст вызова:`,
-                                value: `${text}`
-                            }],
-                            fields: [{
+                                value: text
+                            },
+                            {
                                 name: `Местоположение:`,
                                 value: adres
                             }],
@@ -1209,9 +1209,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                             },
                             fields: [{
                                 name: `Текст вызова:`,
-                                value: `${text}`
-                            }],
-                            fields: [{
+                                value: text
+                            },
+                            {
                                 name: `Местоположение:`,
                                 value: adres
                             }],
@@ -1232,9 +1232,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                             },
                             fields: [{
                                 name: `Текст вызова:`,
-                                value: `${text}`
-                            }],
-                            fields: [{
+                                value: text
+                            },
+                            {
                                 name: `Местоположение:`,
                                 value: adres
                             }],
@@ -1273,8 +1273,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         fields: [{
                             name: `Текст жалобы:`,
                             value: `${arg}`
-                        }],
-                        fields: [{
+                        },
+                        {
                             name: `Местоположение:`,
                             value: `${Config.globalObjects.find(obj => obj.id == channel.topic.split('-')[0]).name}, ${channel.parent.name} -> <#${channel.id}>`
                         }],
