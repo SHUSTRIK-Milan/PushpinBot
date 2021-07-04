@@ -890,8 +890,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
 
     async function sendEditMessage(text){
-        let data = {content: text}
+        let data = {'content': 'text'}
         let url = `https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`
+        console.log(url)
         let dat = await axios.patch(url, data, null)
     };
 
