@@ -888,9 +888,14 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
     }
 
-    const sendEditMessage = async (text) => {
+    async function sendEditMessage(text){
         let data = {content: text}
-        client.api.webhooks(config.applicationId, interaction.token).messages.patch(data)
+        let url = `https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`
+        await axios.patch(url, data, null)
+            .then((answer) => {
+                // Return the message object:
+                return channel.messages.fetch(answer.data.id)
+            })
     };
 
     if (interaction.data.name == "осмотр") {
