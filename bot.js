@@ -2,12 +2,10 @@ const Discord = require('discord.js');
 const Config = require('./config');
 const client = new Discord.Client();
 const {DiscordInteractions} = require("slash-commands");
-const axios = require("axios").default;
+const axios = require("axios");
 const prefix = '!';
 const BDpref = '^';
 const urlSteam = `https://steamcommunity.com/`;
-
-axios.defaults.headers.common['Authorization'] = `Bot ${process.env.BOT_TOKEN}`;
 
 var guild;
 var allChannels = [];
@@ -891,12 +889,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
 
     const sendEditMessage = async (text) => {
-        return axios
-        .patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/861379974253379624`, {content: 'newText'})
-        .then((answer) => {
-            // Return the message object:
-            return channel.messages.fetch(answer.data.id)
-        })
+        let data = {content: text}
+        client.api.webhooks(config.applicationId, interaction.token).messages.patch(data)
     };
 
     if (interaction.data.name == "осмотр") {
