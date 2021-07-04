@@ -1158,19 +1158,21 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
     }
     if (interaction.data.name == "911") {
-        var arg = "";
+        var code = "";
         var text = "";
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         }else{
             console.log(interaction.data.options)
+            code = interaction.data.options[0].value
+            text = interaction.data.options[1].value
         }
     
         if(rpchannel){
             let object = channel.parent.name.slice(4).slice(0,-1);
             let room = channel.name;
             let adres = `${object.slice(0,1).toUpperCase()+object.slice(1)}, ${room.slice(0,1).toUpperCase()+room.slice(1)}`
-            if(arg == '1'){
+            if(code == '1'){
                 let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.fire[2]));
                 if(staff.size == 0){
                     sendLocalMessage(`**На данный момент пожарные на службе отсутствуют** 🔥`);
@@ -1182,7 +1184,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         worker[1].send(`**${msgDate.member.nickname} вызывал(а) пожарную службу** 🔥\n> ${text}\n**Адрес:**\n> ${adres}`)
                     }
                 }
-            }else if(arg == '2'){
+            }else if(code == '2'){
                 let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.police[2]));
                 if(staff.size == 0){
                     sendLocalMessage(`**На данный момент полицейские на службе отсутствуют** 🚔`);
@@ -1194,7 +1196,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         worker[1].send(`**${msgDate.member.nickname} вызывал(а) полицию** 🚔\n> ${text}\n**Адрес:**\n> ${adres}`)
                     }
                 }
-            }else if(arg == '3'){
+            }else if(code == '3'){
                 let staff = guild.members.cache.filter(member => haveRole(member, Config.departments.med[2]));
                 if(staff.size == 0){
                     sendLocalMessage(`**На данный момент медики на службе отсутствуют** ⚕️`);
@@ -1407,9 +1409,10 @@ function checkIntegrations() {
         description: "Вызвать экстренные службы",
         options: [
             {
-                name: "код",
-                description: "Код службы",
+                name: "служба",
+                description: "Служба, которую вы хотите вызвать",
                 type: "3",
+                required: true,
                 choices: [
                     {
                         name: "полиция",
@@ -1428,7 +1431,8 @@ function checkIntegrations() {
             {
                 name: "текст",
                 description: "Текст сообщения для экстренных служб",
-                type: "3"
+                type: "3",
+                required: true,
             },
         ]
     };
