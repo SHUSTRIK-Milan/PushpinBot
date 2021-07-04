@@ -888,18 +888,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
     }
 
-    const sendEditMessage = async (client, interaction, response) => {
-        // Set the data as embed if reponse is an embed object else as content
-        const data = typeof response === 'object' ? { embeds: [ response ] } : { content: response };
-        // Get the channel object by channel id:
-        const channel = await client.channels.resolve(interaction.channel_id);
-        // Edit the original interaction response:
-        return axios
-            .patch(`https://discord.com/api/v8/webhooks/${config.applicationId}/${interaction.token}/messages/@original`, data)
-            .then((answer) => {
-                // Return the message object:
-                return channel.messages.fetch(answer.data.id)
-            })
+    const sendEditMessage = async (text) => {
+        let data = {content: text}
+        client.api.webhooks(config.applicationId).guilds(interaction.token).messages.patch(data)
     };
 
     if (interaction.data.name == "осмотр") {
@@ -1363,7 +1354,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
 
             if(rpchannel){
-                sendEditMessage(client, interaction, text)
+                sendEditMessage(text)
             }else{
                 sendNullMessage()
             }
@@ -1647,26 +1638,6 @@ function checkIntegrations() {
         .catch(console.error);
     }, 200);
     setTimeout(() =>{client.interaction.createApplicationCommand({
-            name: "me", 
-            description: "Действие от первого лица.",
-            options: [
-                {
-                    name: "действие",
-                    description: "Действие",
-                    type: "3",
-                    required: true
-                },
-                {
-                    name: "человек",
-                    description: "Человек, которому это направлено",
-                    type: "6"
-                },
-            ]
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-    }, 200);
-    setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "do", 
             description: "Действие от третьего лица, описание ситуации вокруг.",
             options: [
@@ -1768,6 +1739,26 @@ function checkIntegrations() {
             },
         ]
     }, config.guild_id) */
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "me", 
+            description: "Действие от первого лица.",
+            options: [
+                {
+                    name: "действие",
+                    description: "Действие",
+                    type: "3",
+                    required: true
+                },
+                {
+                    name: "человек",
+                    description: "Человек, которому это направлено",
+                    type: "6"
+                },
+            ]
+        }, config.guild_id)
+        .then()
+        .catch(console.error);
+    }, 200);
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
