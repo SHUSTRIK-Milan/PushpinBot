@@ -7,6 +7,8 @@ const prefix = '!';
 const BDpref = '^';
 const urlSteam = `https://steamcommunity.com/`;
 
+axios.defaults.headers.common['Authorization'] = `Bot ${process.env.BOT_TOKEN}`;
+
 var guild;
 var allChannels = [];
 var rpChannels = [];
