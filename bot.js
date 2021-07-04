@@ -3,6 +3,7 @@ const Config = require('./config');
 const client = new Discord.Client();
 const {DiscordInteractions} = require("slash-commands");
 const axios = require("axios");
+axios.defaults.headers.common['Authorization'] = `Bot ${process.env.BOT_TOKEN}`;
 const prefix = '!';
 const BDpref = '^';
 const urlSteam = `https://steamcommunity.com/`;
