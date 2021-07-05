@@ -915,27 +915,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         console.log(webhooks.find(hook => hook.name == user.nickname))
         if(webhooks.find(hook => hook.name == user.nickname) == undefined){
             let hook = await channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()})
-
-            function sendComand(){
-                hook.sendSlackMessage({
-                    'username': user.nickname,
-                    'attachments': [{
-                        'pretext': text,
-                        'color': color,
-                    }]
-                })
-            }
-
-            if(dop != undefined){
-                hook.send(dop).then(setTimeout(() => {sendComand()}, timeOfDelete))
-            }else{
-                sendComand()
-            }
             timer = setTimeout(() => {
                 hook.delete()
-            }, 120000);
-        }else{
-            let hook = webhooks.find(hook => hook.name == user.nickname)
+            }, 60000);
 
             function sendComand(){
                 hook.sendSlackMessage({
@@ -952,10 +934,28 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }else{
                 sendComand()
             }
+        }else{
+            let hook = webhooks.find(hook => hook.name == user.nickname)
             clearTimeout(timer); 
             timer = setTimeout(() => {
                 hook.delete()
-            }, 120000);
+            }, 60000);
+
+            function sendComand(){
+                hook.sendSlackMessage({
+                    'username': user.nickname,
+                    'attachments': [{
+                        'pretext': text,
+                        'color': color,
+                    }]
+                })
+            }
+
+            if(dop != undefined){
+                hook.send(dop).then(setTimeout(() => {sendComand()}, timeOfDelete))
+            }else{
+                sendComand()
+            }
         }
         
         client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
