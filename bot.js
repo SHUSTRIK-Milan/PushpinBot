@@ -643,7 +643,7 @@ client.on('message', message => {
     let rpCreator = haveRole(message.member, '856092976702816287')
 
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
-    if(!mb && !mg && rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
+    if(!mb && !mg && rpchannel && message.content.slice(0,1) != '!') sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
     if(!mb && !mg && !rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
 
     if(message.content == '⠀' && message.author.bot){
