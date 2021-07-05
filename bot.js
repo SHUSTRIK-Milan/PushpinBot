@@ -927,10 +927,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         'pretext': text,
                         'color': color,
                     }]
-                })}, 200)
+                })}, 100)
 
                 if(ping != undefined){
-                    hook.send(ping)
+                    setTimeout(() => hook.send(ping), 150)
                 }
 
                 timer = setTimeout(() => {
@@ -952,10 +952,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     'pretext': text,
                     'color': color,
                 }]
-            })}, 200)
+            })}, 100)
 
             if(ping != undefined){
-                hook.send(ping)
+                setTimeout(() => hook.send(ping), 150)
             }
 
             clearTimeout(timer); 
