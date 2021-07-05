@@ -843,7 +843,7 @@ client.on('message', message => {
         })
     } */
 
-    if(rpchannel){
+    if(rpchannel && !mb && !mg){
         let msg = message
         let channel = msg.channel
         let user = msg.member
@@ -856,7 +856,6 @@ client.on('message', message => {
 
         (async () => {
             webhooks = await msg.channel.fetchWebhooks()
-            console.log(user)
             if(webhooks.find(hook => hook.name == user.nickname) == undefined){
                 channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()}).then(hook => {
                     hook.send(msg.content)
