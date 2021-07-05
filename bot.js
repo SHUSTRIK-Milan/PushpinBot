@@ -1577,11 +1577,7 @@ function checkIntegrations() {
 
     //client.interaction.createApplicationCommand(command, config.guild_id, "856222015480135791").then(console.log)
 
-    client.interaction.deleteApplicationCommand(`861403225289392158`, config.guild_id)
-    client.interaction.deleteApplicationCommand(`861403225181257738`, config.guild_id)
     client.interaction.deleteApplicationCommand(`861403225151373352`, config.guild_id)
-    client.interaction.deleteApplicationCommand(`861403225140101160`, config.guild_id)
-    client.interaction.deleteApplicationCommand(`861374530932965396`, config.guild_id)
 
     // удаление старых команд
     /* client.interaction
