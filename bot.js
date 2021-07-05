@@ -942,19 +942,31 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             let hook = webhooks.find(hook => hook.name == user.nickname)
 
-            hook.sendSlackMessage({
-                'username': user.nickname,
-                'attachments': [
-                    {
-                    'pretext': text,
-                    'color': color,
-                    }
-                ]
-            })
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                hook.delete()
-            }, 120000);
+            function sendComand(){
+                hook.sendSlackMessage({
+                    'username': user.nickname,
+                    'attachments': [{
+                        'pretext': text,
+                        'color': color,
+                    }]
+                })
+            }
+
+            if(dop != undefined){
+                hook.send(dop).then(() => {
+                    setTimeout(() => sendComand(), timeOfDelete);
+                })
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    hook.delete()
+                }, 120000);
+            }else{
+                sendComand()
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    hook.delete()
+                }, 120000);
+            }
         }
         
         client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
