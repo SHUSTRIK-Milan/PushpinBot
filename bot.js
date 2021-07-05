@@ -623,7 +623,7 @@ client.on('messageDelete', (message) => {
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
     let mb = message.author.bot;
     let mg = message.guild == undefined;
-    if(!mb && !mg && rpchannel) sendLog(message,'РП',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
+    if(!mb && !mg && rpchannel){return}
     if(!mb && !mg && !rpchannel) sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
 });
 
@@ -643,7 +643,6 @@ client.on('message', message => {
     let rpCreator = haveRole(message.member, '856092976702816287')
 
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
-    if(!mb && !mg && rpchannel && message.content.slice(0,1) != '!') sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
     if(!mb && !mg && !rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
 
     if(message.content == '⠀' && message.author.bot){
@@ -859,7 +858,8 @@ client.on('message', message => {
             if(webhooks.find(hook => hook.name == user.nickname) == undefined){
                 channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()}).then(hook => {
                     hook.send(msg.content)
-    
+                    sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${msg.content}`)
+
                     timer = setTimeout(() => {
                         hook.delete()
                     }, 60000)
@@ -869,6 +869,7 @@ client.on('message', message => {
                 let hookId = hook.id
     
                 hook.send(msg.content)
+                sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${msg.content}`)
                 
                 clearTimeout(timer); 
                 timer = setTimeout(() => {
