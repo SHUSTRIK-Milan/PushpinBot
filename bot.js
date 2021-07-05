@@ -930,7 +930,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 })}, 100)
 
                 if(ping != undefined){
-                    setTimeout(() => hook.send(ping), 150)
+                    setTimeout(() => hook.send(`${ping}⤴️`), 150)
                 }
 
                 timer = setTimeout(() => {
@@ -955,7 +955,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             })}, 100)
 
             if(ping != undefined){
-                setTimeout(() => hook.send(ping), 150)
+                setTimeout(() => hook.send(`${ping}⤴️`), 150)
             }
 
             clearTimeout(timer); 
@@ -1465,7 +1465,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             var text = `*${arg}*`
             if (interaction.data.options[1] != undefined){
                 var userG = interaction.data.options[1].value
-                ping = `- <@!${userG}>`
+                ping = `<@!${userG}>`
             }
             let color = `#ECCB12`
 
@@ -1487,7 +1487,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             var color = `#5865F2`
             if (interaction.data.options[1] != undefined){
                 var userG = interaction.data.options[1].value
-                ping = `- <@!${userG}>`
+                ping = `<@!${userG}>`
             }
 
             if(rpchannel){
@@ -1512,7 +1512,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if (interaction.data.options[2] != undefined){
                 var userG = interaction.data.options[2].value
-                ping = `- <@!${userG}>`
+                ping = `<@!${userG}>`
             }
 
             if(rpchannel){
