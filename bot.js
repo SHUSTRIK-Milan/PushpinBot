@@ -916,46 +916,40 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(webhooks.find(hook => hook.name == user.nickname) == undefined){
             let hook = await channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()})
 
-            function sendComand(){
-                hook.sendSlackMessage({
-                    'username': user.nickname,
-                    'attachments': [{
-                        'pretext': `${text} <@!621917381681479693>`,
-                        'color': color,
-                    }]
-                })
-                timer = setTimeout(() => {
-                    hook.delete()
-                }, 60000);
+            if(dop != undefined){
+                hook.send(dop)
             }
 
-            if(dop != undefined){
-                hook.send(dop).then(setTimeout(() => {sendComand()}, timeOfDelete))
-            }else{
-                sendComand()
-            }
+            setTimeout(() => {hook.sendSlackMessage({
+                'username': user.nickname,
+                'attachments': [{
+                    'pretext': `${text} <@!621917381681479693>`,
+                    'color': color,
+                }]
+            })}, timeOfDelete)
+
+            timer = setTimeout(() => {
+                hook.delete()
+            }, 60000);
         }else{
             let hook = webhooks.find(hook => hook.name == user.nickname)
 
-            function sendComand(){
-                hook.sendSlackMessage({
-                    'username': user.nickname,
-                    'attachments': [{
-                        'pretext': text,
-                        'color': color,
-                    }]
-                })
-                clearTimeout(timer); 
-                timer = setTimeout(() => {
-                    hook.delete()
-                }, 60000);
+            if(dop != undefined){
+                hook.send(dop)
             }
 
-            if(dop != undefined){
-                hook.send(dop).then(setTimeout(() => {sendComand()}, timeOfDelete))
-            }else{
-                sendComand()
-            }
+            setTimeout(() => {hook.sendSlackMessage({
+                'username': user.nickname,
+                'attachments': [{
+                    'pretext': text,
+                    'color': color,
+                }]
+            })}, timeOfDelete)
+
+            clearTimeout(timer); 
+            timer = setTimeout(() => {
+                hook.delete()
+            }, 60000);
         }
         
         client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
