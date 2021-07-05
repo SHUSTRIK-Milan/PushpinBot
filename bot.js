@@ -1328,20 +1328,23 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }else{
                 sendLocalMessage(`**Вы вызывали администратора** 👥\n> ${arg}`)
                 sendLog(msgDate,'РП','Вызвал администратора.','Успешно',`Вывод: **Вы вызывали администратора** 👥\n> ${arg}`)
-                guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${msgDate.author.tag} написал жалобу:**`, {embed: {
-                        thumbnail: {
-                            url: msgDate.author.displayAvatarURL()
-                        },
-                        fields: [{
-                            name: `Текст жалобы:`,
-                            value: `${arg}`
-                        },
-                        {
-                            name: `Местоположение:`,
-                            value: `${Config.globalObjects.find(obj => obj.id == channel.topic.split('-')[0]).name}, ${channel.parent.name} -> <#${channel.id}>`
-                        }],
-                    }
-                });
+
+                for(let worker of staff){
+                    worker[1].send(`**${msgDate.author.tag} написал жалобу:**`, {embed: {
+                            thumbnail: {
+                                url: msgDate.author.displayAvatarURL()
+                            },
+                            fields: [{
+                                name: `Текст жалобы:`,
+                                value: `${arg}`
+                            },
+                            {
+                                name: `Местоположение:`,
+                                value: `${Config.globalObjects.find(obj => obj.id == channel.topic.split('-')[0]).name}, ${channel.parent.name} -> <#${channel.id}>`
+                            }],
+                        }
+                    });
+                }
             }
         }else{
             sendNullMessage()
