@@ -1416,10 +1416,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
-            var text = `*<@!${msgDate.member.id}> ${arg.slice(0,1).toLowerCase()}${arg.slice(1)}*`
+            var text = `*${arg.slice(0,1).toLowerCase()}${arg.slice(1)}*`
             if (interaction.data.options[1] != undefined){
                 var userG = interaction.data.options[1].value
-                var text = `*<@!${msgDate.member.id}> ${arg.slice(0,1).toLowerCase()}${arg.slice(1)}* - <@!${userG}>`
+                text = `*${arg.slice(0,1).toLowerCase()}${arg.slice(1)}* - <@!${userG}>`
             }
 
             if(rpchannel){
@@ -1434,10 +1434,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
-            var text = `> ${arg} (<@!${msgDate.member.id}>)`
+            var text = `> ${arg}`
             if (interaction.data.options[1] != undefined){
                 var userG = interaction.data.options[1].value
-                var text = `> ${arg} - <@!${userG}> (<@!${msgDate.member.id}>)`
+                text = `> ${arg} - <@!${userG}>`
             }
 
             if(rpchannel){
@@ -1456,7 +1456,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             var text = `${talk} - *Сказав, <@!${msgDate.member.id}> ${arg}*`
             if (interaction.data.options[2] != undefined){
                 var userG = interaction.data.options[2].value
-                var text = `${talk} - *Сказав, <@!${msgDate.member.id}> ${arg}* - <@!${userG}>`
+                if(talk.slice(-1) != ('!' || '?')) text = `${talk} - *Сказав, ${msgDate.member.nickname.split(' ')[0]} ${arg}* - <@!${userG}>`
+                if(talk.slice(-1) == '!') text = `${talk} - *Крикнув, ${msgDate.member.nickname.split(' ')[0]} ${arg}* - <@!${userG}>`
+                if(talk.slice(-1) == '?') text = `${talk} - *Спросив, ${msgDate.member.nickname.split(' ')[0]} ${arg}* - <@!${userG}>`
             }
 
             if(rpchannel){
@@ -1471,7 +1473,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
-            var text = `> **${arg} (<@!${msgDate.member.id}>)**`
+            var text = `> **${arg}**`
 
             if(rpchannel){
                 sendEditMessage(text)
@@ -1485,7 +1487,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
-            var text = `((<@!${msgDate.member.id}>: ${arg}))`
+            var text = `((${arg}))`
 
             if(rpchannel){
                 sendEditMessage(text)
