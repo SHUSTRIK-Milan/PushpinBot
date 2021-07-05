@@ -902,7 +902,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     embeds: [{
                         author: {
                             name: user.nickname,
-                            icon_url: user.avatarURL()
+                            icon_url: user.user.avatarURL()
                         },
                         fields: [{
                             name: text,
