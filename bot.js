@@ -1311,13 +1311,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             if(staff.size == 0){
                 sendLocalMessage(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`)
                 sendLog(msgDate,'РП','Попытался вызвать администратора.','Ошибка',`Вывод: **На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`)
-                guild.channels.cache.get(Config.channelsID.admin_claim).send(`830061387849662515>, **${msgDate.author.tag} написал жалобу, но администраторов нет в сети:**`, {embed: {
+                guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${msgDate.author.tag} написал жалобу, но администраторов нет в сети:**`, {embed: {
                         thumbnail: {
                             url: msgDate.author.displayAvatarURL()
                         },
                         fields: [{
                             name: `Текст жалобы:`,
-                            value: arg
+                            value: `${arg}`
                         },
                         {
                             name: `Местоположение:`,
@@ -1335,8 +1335,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         fields: [{
                             name: `Текст жалобы:`,
                             value: `${arg}`
-                        }],
-                        fields: [{
+                        },
+                        {
                             name: `Местоположение:`,
                             value: `${Config.globalObjects.find(obj => obj.id == channel.topic.split('-')[0]).name}, ${channel.parent.name} -> <#${channel.id}>`
                         }],
