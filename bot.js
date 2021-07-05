@@ -928,7 +928,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if(dop != undefined){
                 hook.send(dop).then(() => {
-                    setTimeout(() => sendComand(), 150);
+                    setTimeout(() => sendComand(), timeOfDelete);
                 })
             }else{
                 sendComand()
