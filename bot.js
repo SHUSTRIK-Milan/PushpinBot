@@ -897,6 +897,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
 
         let webhooks = await channel.fetchWebhooks()
+        let timer
         console.log(webhooks.find(hook => hook.name == user.nickname))
         if(webhooks.find(hook => hook.name == user.nickname) == undefined){
             let hook = await channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()})
@@ -908,11 +909,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     'color': color,
                 }]
             })
-            setTimeout(() => {
+            timer = setTimeout(() => {
                 hook.delete()
             }, 120000);
         }else{
             let hook = webhooks.find(hook => hook.name == user.nickname)
+            
             hook.sendSlackMessage({
                 'username': user.nickname,
                 'attachments': [{
@@ -920,6 +922,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     'color': color,
                 }]
             })
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                hook.delete()
+            }, 120000);
         }
         
         client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
