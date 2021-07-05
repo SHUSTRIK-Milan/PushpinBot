@@ -927,8 +927,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
 
             if(dop != undefined){
-                await hook.send(dop)
-                sendComand()
+                hook.send(dop)
+                setTimeout(() => sendComand(), 100);
             }else{
                 sendComand()
             }
@@ -1488,6 +1488,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             var talk = interaction.data.options[0].value
             var arg = interaction.data.options[1].value
+            arg = `${arg.slice(0,1).toLowerCase()}${arg.slice(1)}`
             var text = ` - *Сказав, <@!${msgDate.member.id}> ${arg}*`
             var color = `#57D9BF`
             if(talk.slice(-1) == '!'){ text = ` - *Крикнув, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#C9243F`}
