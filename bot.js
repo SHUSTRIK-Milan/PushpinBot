@@ -890,14 +890,18 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
 
     async function sendEditMessage(text){
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5,
-            },
-        })
-        client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({data: {
+        sendNullMessage()
+        /* client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({data: {
             content: text
-        }})
+        }}) */
+        channel.send({embed: {
+            author: {
+                name: user.nickname,
+                icon_url: message.author.avatarURL()
+            },
+            title: text,
+            }
+        });
     };
 
     if (interaction.data.name == "осмотр") {
