@@ -927,8 +927,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
 
             if(dop != undefined){
-                hook.send(dop)
-                setTimeout(() => sendComand(), 100);
+                hook.send(`> ${dop}`).then(() => {
+                    setTimeout(() => sendComand(), 150);
+                })
             }else{
                 sendComand()
             }
