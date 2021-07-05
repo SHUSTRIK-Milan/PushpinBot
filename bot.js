@@ -1469,6 +1469,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
+            arg = `${arg.slice(0,1).toUpperCase()}${arg.slice(1)}`
             var text = `> ${arg}`
             var color = `#5865F2`
             if (interaction.data.options[1] != undefined){
@@ -1512,6 +1513,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
+            arg = `${arg.slice(0,1).toUpperCase()}${arg.slice(1)}`
             var text = `> **${arg}**`
             let color = `#3E49C0`
 
