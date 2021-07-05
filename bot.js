@@ -1458,9 +1458,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             var talk = interaction.data.options[0].value
             var arg = interaction.data.options[1].value
             var text = `${talk} - *Сказав, <@!${msgDate.member.id}> ${arg}*`
-            var color = `#21DFB9`
-            if(talk.slice(-1) == '!') text = `${talk} - *Крикнув, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#C9243F`
-            if(talk.slice(-1) == '?') text = `${talk} - *Спросив, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#24C937`
+            var color = `#57D9BF`
+            if(talk.slice(-1) == '!'){ text = `${talk} - *Крикнув, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#C9243F`}
+            if(talk.slice(-1) == '?'){ text = `${talk} - *Спросив, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#24C937`}
 
             if (interaction.data.options[2] != undefined){
                 var userG = interaction.data.options[2].value
