@@ -1750,7 +1750,7 @@ function checkIntegrations() {
         ]
     }, config.guild_id)
     .then()
-    .catch(console.error);*/
+    .catch(console.error);
     setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "do", 
             description: "Действие от третьего лица, описание ситуации вокруг.",
@@ -1826,7 +1826,7 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    }, 200);
+    }, 200); */
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
