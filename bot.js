@@ -1406,6 +1406,71 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         }
     }
+    if (interaction.data.name == "do") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if (interaction.data.options == undefined) {
+        }else{
+            var arg = interaction.data.options[0].value
+            var text = `> ${arg} (${msgDate.member.nickname})`
+            if (interaction.data.options[1] != undefined){
+                var userG = interaction.data.options[1].value
+                var text = `> ${arg} - <@!${userG}> (${msgDate.member.nickname})`
+            }
+
+            if(rpchannel){
+                sendEditMessage(text)
+            }else{
+                sendNullMessage()
+            }
+        }
+    }
+    if (interaction.data.name == "todo") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if (interaction.data.options == undefined) {
+        }else{
+            var talk = interaction.data.options[0].value
+            var arg = interaction.data.options[1].value
+            var text = `${talk} - *Сказав, ${msgDate.member.nickname}) ${arg}*`
+            if (interaction.data.options[2] != undefined){
+                var userG = interaction.data.options[2].value
+                var text = `${talk} - *Сказав, ${msgDate.member.nickname}) ${arg}* - <@!${userG}>`
+            }
+
+            if(rpchannel){
+                sendEditMessage(text)
+            }else{
+                sendNullMessage()
+            }
+        }
+    }
+    if (interaction.data.name == "gdo") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if (interaction.data.options == undefined) {
+        }else{
+            var arg = interaction.data.options[0].value
+            var text = `> **${arg} (${msgDate.member.nickname})**`
+
+            if(rpchannel){
+                sendEditMessage(text)
+            }else{
+                sendNullMessage()
+            }
+        }
+    }
+    if (interaction.data.name == "local") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if (interaction.data.options == undefined) {
+        }else{
+            var arg = interaction.data.options[0].value
+            var text = `((${msgDate.member.nickname}: ${arg}))`
+
+            if(rpchannel){
+                sendEditMessage(text)
+            }else{
+                sendNullMessage()
+            }
+        }
+    }
 });
 
 function checkIntegrations() {
@@ -1642,6 +1707,51 @@ function checkIntegrations() {
         .catch(console.error);
     }, 200);
     setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "время", 
+            description: "Узнать текущее время",
+            options: []
+        }, config.guild_id)
+        .then()
+        .catch(console.error);
+    }, 200);
+    client.interaction.createApplicationCommand({
+        name: "tp", 
+        description: "Телепортировать игрока в локацию",
+        options: [
+            {
+                name: "локация",
+                description: "Локация, куда нужно телепортироваться",
+                type: "3",
+                required: true
+            },
+            {
+                name: "человек",
+                description: "Человек, которому это направлено",
+                type: "6",
+                required: true
+            },
+        ]
+    }, config.guild_id)
+    client.interaction.createApplicationCommand({
+        name: "me", 
+        description: "Действие от первого лица.",
+        options: [
+            {
+                name: "действие",
+                description: "Действие",
+                type: "3",
+                required: true
+            },
+            {
+                name: "человек",
+                description: "Человек, которому это направлено",
+                type: "6"
+            },
+        ]
+    }, config.guild_id)
+    .then()
+    .catch(console.error);*/
+    setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "do", 
             description: "Действие от третьего лица, описание ситуации вокруг.",
             options: [
@@ -1666,14 +1776,14 @@ function checkIntegrations() {
             description: "Действие от третьего лица, описание ситуации вокруг, сопровождающиеся фразой.",
             options: [
                 {
-                    name: "действие",
-                    description: "Действие",
+                    name: "фраза",
+                    description: "Фраза",
                     type: "3",
                     required: true
                 },
                 {
-                    name: "фраза",
-                    description: "Фраза",
+                    name: "действие",
+                    description: "Действие",
                     type: "3",
                     required: true
                 },
@@ -1717,51 +1827,6 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     }, 200);
-    setTimeout(() =>{client.interaction.createApplicationCommand({
-            name: "время", 
-            description: "Узнать текущее время",
-            options: []
-        }, config.guild_id)
-        .then()
-        .catch(console.error);
-    }, 200);
-    client.interaction.createApplicationCommand({
-        name: "tp", 
-        description: "Телепортировать игрока в локацию",
-        options: [
-            {
-                name: "локация",
-                description: "Локация, куда нужно телепортироваться",
-                type: "3",
-                required: true
-            },
-            {
-                name: "человек",
-                description: "Человек, которому это направлено",
-                type: "6",
-                required: true
-            },
-        ]
-    }, config.guild_id) */
-    client.interaction.createApplicationCommand({
-        name: "me", 
-        description: "Действие от первого лица.",
-        options: [
-            {
-                name: "действие",
-                description: "Действие",
-                type: "3",
-                required: true
-            },
-            {
-                name: "человек",
-                description: "Человек, которому это направлено",
-                type: "6"
-            },
-        ]
-    }, config.guild_id)
-    .then()
-    .catch(console.error);
 
     client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
