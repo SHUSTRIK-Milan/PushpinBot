@@ -843,6 +843,49 @@ client.on('message', message => {
         })
     } */
 
+    if(rpchannel){
+        let msg = message
+        let webhooks
+        let timer
+        message.delete()
+
+        (async () => {
+            webhooks = await msg.channel.fetchWebhooks()
+        })();
+
+        if(webhooks.find(hook => hook.name == user.nickname) == undefined){
+            channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()}).then(hook => {
+                hook.sendSlackMessage({
+                    'username': user.nickname,
+                    'attachments': [{
+                        'pretext': text,
+                        'color': color,
+                    }]
+                })
+
+                timer = setTimeout(() => {
+                    hook.delete()
+                }, 60000)
+            })
+        }else{
+            let hook = webhooks.find(hook => hook.name == user.nickname)
+            let hookId = hook.id
+
+            hook.sendSlackMessage({
+                'username': user.nickname,
+                'attachments': [{
+                    'pretext': text,
+                    'color': color,
+                }]
+            })
+            
+            clearTimeout(timer); 
+            timer = setTimeout(() => {
+                channel.fetchWebhooks().then(hooks => hooks.get(hookId).delete())
+            }, 60000);
+        }
+    }
+
 });
 
 const config = {
