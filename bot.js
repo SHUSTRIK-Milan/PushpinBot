@@ -899,7 +899,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             content: text,
             allowed_mentions: "users"
         }}) */
-        /* client.api.interactions(interaction.id, interaction.token).callback.post({
+        client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 5,
             },
@@ -908,17 +908,19 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         channel.createWebhook(`${user.nickname}`, {avatar: user.user.avatarURL()}).then(hook =>{
             console.log(hook)
             hook.send(text)
-            hook.delete()
+            setTimeout(() => {
+                hook.delete()
+            }, 150);
         })
         
-        client.api.webhooks(client.user.id, interaction.token).messages('@original').delete() */
-        
-        channel.createWebhook('Snek', {
+        client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
+
+        /* channel.createWebhook('Snek', {
             avatar: 'https://i.imgur.com/mI8XcpG.jpg',
             reason: 'Needed a cool new Webhook'
           })
             .then(webhook => webhook.send('hello!'))
-            .catch(console.error)
+            .catch(console.error) */
     };
 
     if (interaction.data.name == "осмотр") {
