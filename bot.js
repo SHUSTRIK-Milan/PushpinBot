@@ -845,7 +845,7 @@ client.on('message', message => {
 
     if(rpchannel){
         let msg = message
-        let channel = msg.message
+        let channel = msg.channel
         let webhooks
         let timer
         setTimeout(() => {
