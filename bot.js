@@ -915,6 +915,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         console.log(webhooks.find(hook => hook.name == user.nickname))
         if(webhooks.find(hook => hook.name == user.nickname) == undefined){
             let hook = await channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()})
+            console.log(hook)
 
             if(dop != undefined){
                 hook.send(dop)
@@ -933,6 +934,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }, 60000);
         }else{
             let hook = webhooks.find(hook => hook.name == user.nickname)
+            console.log(hook)
 
             if(dop != undefined){
                 hook.send(dop)
