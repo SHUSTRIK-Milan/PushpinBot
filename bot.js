@@ -829,8 +829,8 @@ client.on('message', message => {
         }catch(error){console.log(error)}
     }
 
-    if(message.content.slice(1) == `!` && !mb && !mg && message.reference.){
-
+    if(message.content.slice(1) == `!` && !mb && !mg){
+        
     }
 
 });
