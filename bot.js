@@ -914,13 +914,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }, 120000);
         }else{
             let hook = webhooks.find(hook => hook.name == user.nickname)
-            
+
             hook.sendSlackMessage({
                 'username': user.nickname,
-                'attachments': [{
+                'attachments': [
+                    {
                     'pretext': text,
                     'color': color,
-                }]
+                    }
+                ]
             })
             clearTimeout(timer);
             timer = setTimeout(() => {
@@ -1424,10 +1426,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
-            var text = `*${arg.slice(0,1).toLowerCase()}${arg.slice(1)}*`
+            var text = `*${arg}*`
             if (interaction.data.options[1] != undefined){
                 var userG = interaction.data.options[1].value
-                text = `*${arg.slice(0,1).toLowerCase()}${arg.slice(1)}* - <@!${userG}>`
+                text = `*${arg}* - <@!${userG}>`
             }
             let color = `#ECCB12`
 
