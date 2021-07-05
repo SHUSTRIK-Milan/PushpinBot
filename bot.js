@@ -831,6 +831,7 @@ client.on('message', message => {
 
     if(message.content.slice(0, 1) == `!` && !mb && !mg){
         let channel = guild.channels.cache.get(message.reference.channelID)
+        console.log(channel.name)
         channel.messages.fetch(message.reference.messageID).then(msg => {
             if(msg.author == message.author) console.log(msg)
         })
