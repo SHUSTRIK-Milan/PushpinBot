@@ -1424,7 +1424,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 text = `*${arg.slice(0,1).toLowerCase()}${arg.slice(1)}* - <@!${userG}>`
             }
             let color = `#ECCB12`
-            
+
             if(rpchannel){
                 sendEditMessage(text, color)
             }else{
@@ -1494,7 +1494,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
-            var text = `((${arg}))`
+            var text = `(( ${arg} ))`
             let color = `#818181`
 
             if(rpchannel){
