@@ -1487,7 +1487,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if (interaction.data.options[2] != undefined){
                 var userG = interaction.data.options[2].value
-                talk = ` - <@!${userG}>`
+                text = ` - <@!${userG}>`
             }
 
             if(rpchannel){
