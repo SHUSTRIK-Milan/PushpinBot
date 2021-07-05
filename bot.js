@@ -949,12 +949,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if(dop != undefined){
                 hook.send(dop).then(sendComand())
-                sendComand()
-                clearTimeout(timer); 
             }else{
                 sendComand()
-                clearTimeout(timer); 
             }
+            clearTimeout(timer); 
             timer = setTimeout(() => {
                 hook.delete()
             }, 120000);
