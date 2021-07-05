@@ -928,16 +928,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if(dop != undefined){
                 hook.send(dop)
-                setTimeout(() => sendComand(), timeOfDelete)
-                timer = setTimeout(() => {
-                    hook.delete()
-                }, 120000);
+                sendComand()
             }else{
                 sendComand()
-                timer = setTimeout(() => {
-                    hook.delete()
-                }, 120000);
             }
+            timer = setTimeout(() => {
+                hook.delete()
+            }, 120000);
         }else{
             let hook = webhooks.find(hook => hook.name == user.nickname)
 
@@ -953,17 +950,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if(dop != undefined){
                 hook.send(dop)
-                setTimeout(() => sendComand(), timeOfDelete)
-                timer = setTimeout(() => {
-                    hook.delete()
-                }, 120000);
+                sendComand()
+                clearTimeout(timer); 
             }else{
                 sendComand()
-                clearTimeout(timer);
-                timer = setTimeout(() => {
-                    hook.delete()
-                }, 120000);
+                clearTimeout(timer); 
             }
+            timer = setTimeout(() => {
+                hook.delete()
+            }, 120000);
         }
         
         client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
