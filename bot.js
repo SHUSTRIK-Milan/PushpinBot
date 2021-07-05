@@ -903,7 +903,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
     }
 
-    async function sendEditMessage(text, color, dop){
+    async function sendEditMessage(text, color, dop, ping){
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 5,
@@ -929,6 +929,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     }]
                 })}, 200)
 
+                if(ping != undefined){
+                    hook.send(ping)
+                }
+
                 timer = setTimeout(() => {
                     hook.delete()
                 }, 60000)
@@ -949,6 +953,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     'color': color,
                 }]
             })}, 200)
+
+            if(ping != undefined){
+                hook.send(ping)
+            }
 
             clearTimeout(timer); 
             timer = setTimeout(() => {
