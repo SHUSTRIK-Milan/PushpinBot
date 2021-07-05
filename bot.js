@@ -897,7 +897,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         channel.send({embed: {
             author: {
                 name: user.nickname,
-                icon_url: message.author.avatarURL()
+                icon_url: user.user.avatarURL()
             },
             title: text,
             }
