@@ -1346,27 +1346,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             sendNullMessage()
         }
     }
-    if (interaction.data.name == "me") {
-        console.log(interaction)
-        console.log(interaction.data)
-        console.log(interaction.data.options)
-        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
-        if (interaction.data.options == undefined) {
-        }else{
-            var arg = interaction.data.options[0].value
-            var text = `*${arg}*`
-            if (interaction.data.options[1] != undefined){
-                var userG = interaction.data.options[1].value
-                var text = `*${arg}* - <@!${userG}>`
-            }
-
-            if(rpchannel){
-                sendEditMessage(text)
-            }else{
-                sendNullMessage()
-            }
-        }
-    }
     if (interaction.data.name == "время") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(rpchannel){
@@ -1407,6 +1386,24 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }else{sendNullMessage()}
         }else{
             sendNullMessage()
+        }
+    }
+    if (interaction.data.name == "me") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if (interaction.data.options == undefined) {
+        }else{
+            var arg = interaction.data.options[0].value
+            var text = `*${msgDate.member.nickname} ${arg.slice(0,1).toLowerCase()}${arg.slice(1)}*`
+            if (interaction.data.options[1] != undefined){
+                var userG = interaction.data.options[1].value
+                var text = `*${msgDate.member.nickname} ${arg.slice(0,1).toLowerCase()}${arg.slice(1)}* - <@!${userG}>`
+            }
+
+            if(rpchannel){
+                sendEditMessage(text)
+            }else{
+                sendNullMessage()
+            }
         }
     }
 });
