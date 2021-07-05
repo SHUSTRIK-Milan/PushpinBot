@@ -890,7 +890,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
 
     async function sendEditMessage(text){
-        sendNullMessage()
         /* client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({data: {
             content: text
         }}) */
@@ -906,7 +905,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         },
                         fields: [{
                             name: text,
-                            value: text
+                            value: `⠀`
                         }],
                     }],
                 }
