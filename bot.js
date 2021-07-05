@@ -847,7 +847,9 @@ client.on('message', message => {
         let msg = message
         let webhooks
         let timer
-        message.delete()
+        setTimeout(() => {
+            message.delete()
+        }, timeOfDelete); 
 
         (async () => {
             webhooks = await msg.channel.fetchWebhooks()
