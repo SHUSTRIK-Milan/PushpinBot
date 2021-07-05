@@ -927,7 +927,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     'pretext': `${text} <@!621917381681479693>`,
                     'color': color,
                 }]
-            })}, timeOfDelete)
+            })}, 200)
 
             timer = setTimeout(() => {
                 hook.delete()
@@ -946,7 +946,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     'pretext': text,
                     'color': color,
                 }]
-            })}, timeOfDelete)
+            })}, 200)
 
             clearTimeout(timer); 
             timer = setTimeout(() => {
