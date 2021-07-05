@@ -889,7 +889,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
     }
 
-    async function sendEditMessage(text){
+    async function sendEditMessage(text, color){
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 5,
@@ -905,7 +905,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 'username': user.nickname,
                 'attachments': [{
                     'pretext': text,
-                    'color': '#C7A623',
+                    'color': color,
                 }]
             })
             setTimeout(() => {
@@ -917,7 +917,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 'username': user.nickname,
                 'attachments': [{
                     'pretext': text,
-                    'color': '#C7A623',
+                    'color': color,
                 }]
             })
         }
@@ -1423,9 +1423,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 var userG = interaction.data.options[1].value
                 text = `*${arg.slice(0,1).toLowerCase()}${arg.slice(1)}* - <@!${userG}>`
             }
-
+            let color = `#ECCB12`
+            
             if(rpchannel){
-                sendEditMessage(text)
+                sendEditMessage(text, color)
             }else{
                 sendNullMessage()
             }
@@ -1437,13 +1438,14 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             var arg = interaction.data.options[0].value
             var text = `> ${arg}`
+            var color = `#B26628`
             if (interaction.data.options[1] != undefined){
                 var userG = interaction.data.options[1].value
                 text = `> ${arg} - <@!${userG}>`
             }
 
             if(rpchannel){
-                sendEditMessage(text)
+                sendEditMessage(text, color)
             }else{
                 sendNullMessage()
             }
@@ -1456,15 +1458,17 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             var talk = interaction.data.options[0].value
             var arg = interaction.data.options[1].value
             var text = `${talk} - *Сказав, <@!${msgDate.member.id}> ${arg}*`
-            if(talk.slice(-1) == '!') text = `${talk} - *Крикнув, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`
-            if(talk.slice(-1) == '?') text = `${talk} - *Спросив, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`
+            var color = `#21DFB9`
+            if(talk.slice(-1) == '!') text = `${talk} - *Крикнув, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#C9243F`
+            if(talk.slice(-1) == '?') text = `${talk} - *Спросив, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#24C937`
+
             if (interaction.data.options[2] != undefined){
                 var userG = interaction.data.options[2].value
                 talk = `${talk} - <@!${userG}>`
             }
 
             if(rpchannel){
-                sendEditMessage(text)
+                sendEditMessage(text, color)
             }else{
                 sendNullMessage()
             }
@@ -1476,9 +1480,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             var arg = interaction.data.options[0].value
             var text = `> **${arg}**`
+            let color = `#8F4E1A`
 
             if(rpchannel){
-                sendEditMessage(text)
+                sendEditMessage(text, color)
             }else{
                 sendNullMessage()
             }
@@ -1490,9 +1495,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             var arg = interaction.data.options[0].value
             var text = `((${arg}))`
+            let color = `#818181`
 
             if(rpchannel){
-                sendEditMessage(text)
+                sendEditMessage(text, color)
             }else{
                 sendNullMessage()
             }
