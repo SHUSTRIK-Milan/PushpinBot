@@ -1306,12 +1306,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             arg = interaction.data.options[0].value
         }
     
-        if(rpchannel && !haveRole(msgDate.member, '830061387849662515')){
+        if(rpchannel){
             let staff = guild.members.cache.filter(member => (haveRole(member, '830061387849662515') || haveRole(member, '833226140755689483')) && member.presence.status != 'offline');
             if(staff.size == 0){
                 sendLocalMessage(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`)
                 sendLog(msgDate,'РП','Попытался вызвать администратора.','Ошибка',`Вывод: **На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`)
-                guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${msgDate.author.tag} написал жалобу, но администраторов нет в сети:**`, {embed: {
+                guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@& 830061387849662515>, **${msgDate.author.tag} написал жалобу, но администраторов нет в сети:**`, {embed: {
                         thumbnail: {
                             url: msgDate.author.displayAvatarURL()
                         },
