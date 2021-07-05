@@ -830,8 +830,16 @@ client.on('message', message => {
     }
 
     if(message.content.slice(0, 1) == `!` && !mb && !mg){
-        guild.channels.cache.get(message.reference.channelID).messages.fetch(message.reference.messageID).then(msg => {
-            console.log(msg)
+        guild.channels.cache.get(message.reference.channelID).messages.fetch(message.reference.messageID).then(async msg => {
+            let webhook = await msg.fetchWebhook()
+            if(webhook != undefined && msg.embeds.length != 0){
+                setTimeout(() => {
+                    msg.delete()
+                }, timeOfDelete);
+                setTimeout(() => {
+                    message.delete()
+                }, timeOfDelete); 
+            }
         })
     }
 
