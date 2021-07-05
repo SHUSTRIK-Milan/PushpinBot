@@ -890,37 +890,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
 
     async function sendEditMessage(text){
-        /* client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5,
-            },
-        })
-        client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({data: {
-            content: text,
-            allowed_mentions: "users"
-        }}) */
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 5,
-            },
-        })
-
         channel.createWebhook(`${user.nickname}`, {avatar: user.user.avatarURL()}).then(hook =>{
             console.log(hook)
             hook.send(text)
             setTimeout(() => {
                 hook.delete()
-            }, 150);
+            }, 60000);
         })
         
         client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
-
-        /* channel.createWebhook('Snek', {
-            avatar: 'https://i.imgur.com/mI8XcpG.jpg',
-            reason: 'Needed a cool new Webhook'
-          })
-            .then(webhook => webhook.send('hello!'))
-            .catch(console.error) */
     };
 
     if (interaction.data.name == "осмотр") {
