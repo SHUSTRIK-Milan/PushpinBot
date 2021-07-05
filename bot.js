@@ -827,58 +827,6 @@ client.on('message', message => {
             }
         }catch(error){console.log(error)}
     }
-
-    if(message.content.slice(0, 1) == `!` && !mb && !mg){
-        guild.channels.cache.get(message.reference.channelID).messages.fetch(message.reference.messageID).then(async msg => {
-            let webhook = await msg.fetchWebhook()
-            if(webhook != undefined && msg.embeds.length != 0){
-                setTimeout(() => {
-                    msg.delete()
-                }, timeOfDelete);
-                setTimeout(() => {
-                    message.delete()
-                }, timeOfDelete); 
-            }
-        })
-    }
-
-    if(rpchannel && message.content != '!' && !mb && !mg){
-        let msg = message
-        let channel = msg.channel
-        let user = msg.member
-
-        let webhooks
-        let timer
-
-        (async () => {
-            webhooks = await msg.channel.fetchWebhooks()
-            if(webhooks.find(hook => hook.name == user.nickname) == undefined){
-                channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()}).then(hook => {
-                    hook.send(msg.content)
-                    sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${msg.content}`)
-
-                    timer = setTimeout(() => {
-                        hook.delete()
-                    }, 60000)
-                })
-            }else{
-                let hook = webhooks.find(hook => hook.name == user.nickname)
-    
-                hook.send(msg.content)
-                sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${msg.content}`)
-                
-                clearTimeout(timer); 
-                timer = setTimeout(() => {
-                    hook.delete()
-                }, 60000);
-            }
-        })();
-
-        setTimeout(() => {
-            message.delete()
-        }, timeOfDelete);
-    }
-
 });
 
 const config = {
@@ -1491,7 +1439,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             sendNullMessage()
         }
     }
-    if (interaction.data.name == "me") {
+    /* if (interaction.data.name == "me") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         }else{
@@ -1588,43 +1536,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 sendNullMessage()
             }
         }
-    }
+    } */
 });
 
 function checkIntegrations() {
-    let standartPerm = [
-        {
-            id: `833226140755689483`,
-            type: 1,
-            permission: true
-        },
-        {
-            id: `833227050550296576`,
-            type: 1,
-            permission: true
-        },
-    ]
-    let adminPerm = [
-        {
-            id: `830061387849662515`,
-            type: 1,
-            permission: true
-        },
-    ]
-    let rpPerm = [
-        {
-            id: `856092976702816287`,
-            type: 1,
-            permission: true
-        },
-    ]
-    let mayorPerm = [
-        {
-            id: `852668893821665320`,
-            type: 1,
-            permission: true
-        },
-    ]
 
     let command = {
         name: "911", 
@@ -1660,7 +1575,13 @@ function checkIntegrations() {
     };
 
 
-    client.interaction.createApplicationCommand(command, config.guild_id, "856222015480135791").then(console.log)
+    //client.interaction.createApplicationCommand(command, config.guild_id, "856222015480135791").then(console.log)
+
+    client.interaction.deleteApplicationCommand(`861403225289392158`, config.guild_id)
+    client.interaction.deleteApplicationCommand(`861403225181257738`, config.guild_id)
+    client.interaction.deleteApplicationCommand(`861403225151373352`, config.guild_id)
+    client.interaction.deleteApplicationCommand(`861403225140101160`, config.guild_id)
+    client.interaction.deleteApplicationCommand(`861374530932965396`, config.guild_id)
 
     // удаление старых команд
     /* client.interaction
