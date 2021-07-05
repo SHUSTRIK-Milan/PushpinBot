@@ -906,7 +906,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         },
                         fields: [{
                             name: text,
-                            value: `⠀`
+                            value: text
                         }],
                     }],
                 }
