@@ -930,12 +930,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 hook.send(dop).then(() => {
                     setTimeout(() => sendComand(), timeOfDelete);
                 })
+                timer = setTimeout(() => {
+                    hook.delete()
+                }, 120000);
             }else{
                 sendComand()
+                timer = setTimeout(() => {
+                    hook.delete()
+                }, 120000);
             }
-            timer = setTimeout(() => {
-                hook.delete()
-            }, 120000);
         }else{
             let hook = webhooks.find(hook => hook.name == user.nickname)
 
