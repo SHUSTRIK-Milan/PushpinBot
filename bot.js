@@ -916,14 +916,21 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(webhooks.find(hook => hook.name == user.nickname) == undefined){
             let hook = await channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()})
 
-            if(dop != undefined) hook.send(dop)
-            await hook.sendSlackMessage({
-                'username': user.nickname,
-                'attachments': [{
-                    'pretext': text,
-                    'color': color,
-                }]
-            })
+            function sendComand(){
+                hook.sendSlackMessage({
+                    'username': user.nickname,
+                    'attachments': [{
+                        'pretext': text,
+                        'color': color,
+                    }]
+                })
+            }
+
+            if(dop != undefined){
+                hook.send(dop).then(sendComand())
+            }else{
+                sendComand()
+            }
             timer = setTimeout(() => {
                 hook.delete()
             }, 120000);
