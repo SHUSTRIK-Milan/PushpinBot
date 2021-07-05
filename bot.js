@@ -926,7 +926,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     'attachments': [{
                         'pretext': text,
                         'color': color,
-                        'footer': '<@621917381681479693>',
                     }]
                 })}, 200)
 
@@ -1454,15 +1453,16 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             var arg = interaction.data.options[0].value
             arg = `${arg.slice(0,1).toUpperCase()}${arg.slice(1)}`
+            var ping
             var text = `*${arg}*`
             if (interaction.data.options[1] != undefined){
                 var userG = interaction.data.options[1].value
-                text = `*${arg}* - <@!${userG}>`
+                ping = `- <@!${userG}>`
             }
             let color = `#ECCB12`
 
             if(rpchannel){
-                sendEditMessage(text, color)
+                sendEditMessage(text, color, undefined, ping)
             }else{
                 sendNullMessage()
             }
@@ -1474,15 +1474,16 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             var arg = interaction.data.options[0].value
             arg = `${arg.slice(0,1).toUpperCase()}${arg.slice(1)}`
+            var ping
             var text = `> ${arg}`
             var color = `#5865F2`
             if (interaction.data.options[1] != undefined){
                 var userG = interaction.data.options[1].value
-                text = `> ${arg} - <@!${userG}>`
+                ping = `- <@!${userG}>`
             }
 
             if(rpchannel){
-                sendEditMessage(text, color)
+                sendEditMessage(text, color, undefined, ping)
             }else{
                 sendNullMessage()
             }
@@ -1494,6 +1495,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             var talk = interaction.data.options[0].value
             var arg = interaction.data.options[1].value
+            var ping
             arg = `${arg.slice(0,1).toLowerCase()}${arg.slice(1)}`
             var text = ` - *Сказав, <@!${msgDate.member.id}> ${arg}*`
             var color = `#57D9BF`
@@ -1502,11 +1504,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             if (interaction.data.options[2] != undefined){
                 var userG = interaction.data.options[2].value
-                text = `${text} - <@!${userG}>`
+                ping = `- <@!${userG}>`
             }
 
             if(rpchannel){
-                sendEditMessage(text, color, talk)
+                sendEditMessage(text, color, talk, ping)
             }else{
                 sendNullMessage()
             }
