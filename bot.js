@@ -935,6 +935,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             })
         }else{
             let hook = webhooks.find(hook => hook.name == user.nickname)
+            let hookId = hook.id
             console.log(hook)
 
             if(dop != undefined){
@@ -951,7 +952,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             clearTimeout(timer); 
             timer = setTimeout(() => {
-                hook.delete()
+                channel.fetchWebhooks().then(hooks => hooks.get(hookId).delete())
             }, 60000);
         }
         
