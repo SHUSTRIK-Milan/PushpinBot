@@ -900,11 +900,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 data: {
                     embeds: [{
                         author: {
-                            name: user.nickname,
+                            name: "⠀",
                             icon_url: user.user.avatarURL()
                         },
                         fields: [{
-                            name: '⠀',
+                            name: user.nickname,
                             value: text
                         }],
                     }],
