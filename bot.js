@@ -903,7 +903,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
     }
 
-    async function sendEditMessage(text, color){
+    async function sendEditMessage(text, color, dop){
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 5,
@@ -916,6 +916,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(webhooks.find(hook => hook.name == user.nickname) == undefined){
             let hook = await channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()})
 
+            hook.send(dop)
             hook.sendSlackMessage({
                 'username': user.nickname,
                 'attachments': [{
@@ -1479,18 +1480,18 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             var talk = interaction.data.options[0].value
             var arg = interaction.data.options[1].value
-            var text = `${talk} - *Сказав, <@!${msgDate.member.id}> ${arg}*`
+            var text = ` - *Сказав, <@!${msgDate.member.id}> ${arg}*`
             var color = `#57D9BF`
-            if(talk.slice(-1) == '!'){ text = `${talk} - *Крикнув, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#C9243F`}
-            if(talk.slice(-1) == '?'){ text = `${talk} - *Спросив, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#24C937`}
+            if(talk.slice(-1) == '!'){ text = ` - *Крикнув, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#C9243F`}
+            if(talk.slice(-1) == '?'){ text = ` - *Спросив, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#24C937`}
 
             if (interaction.data.options[2] != undefined){
                 var userG = interaction.data.options[2].value
-                talk = `${talk} - <@!${userG}>`
+                talk = ` - <@!${userG}>`
             }
 
             if(rpchannel){
-                sendEditMessage(text, color)
+                sendEditMessage(text, color, dop)
             }else{
                 sendNullMessage()
             }
