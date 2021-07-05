@@ -1491,7 +1491,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
 
             if(rpchannel){
-                sendEditMessage(text, color, dop)
+                sendEditMessage(text, color, talk)
             }else{
                 sendNullMessage()
             }
