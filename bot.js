@@ -904,8 +904,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                             icon_url: user.user.avatarURL()
                         },
                         fields: [{
-                            name: text,
-                            value: `⠀`
+                            name: '⠀',
+                            value: test
                         }],
                     }],
                 }
