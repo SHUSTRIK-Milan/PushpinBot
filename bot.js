@@ -849,9 +849,6 @@ client.on('message', message => {
 
         let webhooks
         let timer
-        setTimeout(() => {
-            message.delete()
-        }, timeOfDelete);
 
         (async () => {
             webhooks = await msg.channel.fetchWebhooks()
@@ -876,6 +873,10 @@ client.on('message', message => {
                 }, 60000);
             }
         })();
+
+        setTimeout(() => {
+            message.delete()
+        }, timeOfDelete);
     }
 
 });
