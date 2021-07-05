@@ -905,11 +905,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             },
         }) */
 
-        let hook = await channel.createWebhook(user.nickname, {avatar: user.user.avatarURL()})
-        console.log(hook)
-        hook.send(text)
-        hook.delete()
-
+        channel.createWebhook(`${user.nickname}`, {avatar: user.user.avatarURL()}).then(hook =>{
+            console.log(hook)
+            hook.send(text)
+            hook.delete()
+        })
+        
         //client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
     };
 
