@@ -42,23 +42,7 @@ client.on('message', (message) => {
     }
     
     if(message.content == 'тест' && !message.author.bot){
-        let filter = m => m.author.id === message.author.id
-        message.author.send('Write your Name')
-        .then(() => {
-            message.channel.awaitMessages(filter, {
-                max: 2,
-                time: 5000,
-                errors: ['time'],
-            })
-            .then(message => {
-                msgs = message.map(message => message)
-                msgs[0].author.send(`Your Name is: ${msgs[0].content} ${msgs[1].content}`);
-            })
-            .catch(message => {
-                message.author.send('You didnt write your name');
-            });
-        });
-        
+        message.channel.createWebhook('test      ').then(hook => hook.send(message.content))
     };
 })
 
