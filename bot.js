@@ -890,9 +890,22 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
 
     async function sendEditMessage(text){
-        channel.createWebhook(`${user.nickname}`, {avatar: user.user.avatarURL()}).then(hook =>{
+        client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: 5,
+            },
+        })
+
+        let webhooks = await channel.fetchWebhooks()
+        if(webhooks.find(hook => hook.name == user.nickname) == undefined) channel.createWebhook(`${user.nickname}`, {avatar: user.user.avatarURL()}).then(hook =>{
             console.log(hook)
-            hook.send(text)
+            webhook.sendSlackMessage({
+                'username': user.nickname,
+                'attachments': [{
+                  'pretext': text,
+                  'color': '#C7A623',
+                }]
+            })
             setTimeout(() => {
                 hook.delete()
             }, 60000);
