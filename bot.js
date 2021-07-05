@@ -899,7 +899,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let webhooks = await channel.fetchWebhooks()
         if(webhooks.find(hook => hook.name == user.nickname) == undefined) channel.createWebhook(`${user.nickname}`, {avatar: user.user.avatarURL()}).then(hook =>{
             console.log(hook)
-            webhook.sendSlackMessage({
+            hook.sendSlackMessage({
                 'username': user.nickname,
                 'attachments': [{
                   'pretext': text,
