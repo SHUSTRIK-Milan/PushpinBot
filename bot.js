@@ -901,19 +901,19 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         console.log(webhooks.find(hook => hook.name == user.nickname))
         if(webhooks.find(hook => hook.name == user.nickname) == undefined){
             console.log('Webhook create!')
-            channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()}).then(hook =>{
-                console.log(hook)
-                hook.sendSlackMessage({
-                    'username': user.nickname,
-                    'attachments': [{
-                        'pretext': text,
-                        'color': '#C7A623',
-                    }]
-                })
-                setTimeout(() => {
-                    hook.delete()
-                }, 60000);
-            });
+            let hook = await channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()})
+
+            console.log(hook)
+            hook.sendSlackMessage({
+                'username': user.nickname,
+                'attachments': [{
+                    'pretext': text,
+                    'color': '#C7A623',
+                }]
+            })
+            setTimeout(() => {
+                hook.delete()
+            }, 60000);
         }else{
             let hook = webhooks.find(hook => hook.name == user.nickname)
             hook.sendSlackMessage({
