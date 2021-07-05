@@ -895,15 +895,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 type: 5,
             },
         })
-        console.log(text)
 
         let webhooks = await channel.fetchWebhooks()
         console.log(webhooks.find(hook => hook.name == user.nickname))
         if(webhooks.find(hook => hook.name == user.nickname) == undefined){
-            console.log('Webhook create!')
             let hook = await channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()})
 
-            console.log(hook)
             hook.sendSlackMessage({
                 'username': user.nickname,
                 'attachments': [{
@@ -913,7 +910,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             })
             setTimeout(() => {
                 hook.delete()
-            }, 60000);
+            }, 120000);
         }else{
             let hook = webhooks.find(hook => hook.name == user.nickname)
             hook.sendSlackMessage({
@@ -1459,11 +1456,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             var talk = interaction.data.options[0].value
             var arg = interaction.data.options[1].value
             var text = `${talk} - *Сказав, <@!${msgDate.member.id}> ${arg}*`
+            if(talk.slice(-1) == '!') text = `${talk} - *Крикнув, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`
+            if(talk.slice(-1) == '?') text = `${talk} - *Спросив, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`
             if (interaction.data.options[2] != undefined){
                 var userG = interaction.data.options[2].value
-                if(talk.slice(-1) != ('!' || '?')) text = `${talk} - *Сказав, ${msgDate.member.nickname.split(' ')[0]} ${arg}* - <@!${userG}>`
-                if(talk.slice(-1) == '!') text = `${talk} - *Крикнув, ${msgDate.member.nickname.split(' ')[0]} ${arg}* - <@!${userG}>`
-                if(talk.slice(-1) == '?') text = `${talk} - *Спросив, ${msgDate.member.nickname.split(' ')[0]} ${arg}* - <@!${userG}>`
+                talk = `${talk} - <@!${userG}>`
             }
 
             if(rpchannel){
