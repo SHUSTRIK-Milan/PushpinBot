@@ -1001,7 +1001,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 
                 if(cats.length != 0) for(let [id, cat] of cats){
                     let catId = Config.objects.find(obj => obj.cId == cat.id).id
-                    if (catId == channelFA.topic.split('-')[0] && (Config.globalObjects.find(obj => obj.name.toLowerCase() == walkway.toLowerCase()) || Config.globalObjects.find(obj => obj.children.toLowerCase() == walkway.toLowerCase()))){
+                    if (catId == channelFA.topic.split('-')[0] && (Config.globalObjects.find(obj => obj.name.toLowerCase() == walkway.toLowerCase()) || Config.globalObjects.find(obj => obj.children.find(child.toLowerCase() == walkway.toLowerCase())))){
                     //проверяем канал на тип категории
                         if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
                         sendNullMessage()
