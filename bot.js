@@ -1303,11 +1303,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         }else{
-            interaction.data.options.forEach((c) => {
-                if (c.name == "текст") {
-                    arg = c.value;
-                }
-            });
+            arg = interaction.data.options[0].value
         }
     
         if(rpchannel && !haveRole(msgDate.member, '830061387849662515')){
