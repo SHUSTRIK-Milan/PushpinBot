@@ -915,9 +915,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         console.log(webhooks.find(hook => hook.name == user.nickname))
         if(webhooks.find(hook => hook.name == user.nickname) == undefined){
             let hook = await channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()})
-            timer = setTimeout(() => {
-                hook.delete()
-            }, 60000);
 
             function sendComand(){
                 hook.sendSlackMessage({
@@ -927,6 +924,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         'color': color,
                     }]
                 })
+                timer = setTimeout(() => {
+                    hook.delete()
+                }, 60000);
             }
 
             if(dop != undefined){
@@ -936,10 +936,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         }else{
             let hook = webhooks.find(hook => hook.name == user.nickname)
-            clearTimeout(timer); 
-            timer = setTimeout(() => {
-                hook.delete()
-            }, 60000);
 
             function sendComand(){
                 hook.sendSlackMessage({
@@ -949,6 +945,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         'color': color,
                     }]
                 })
+                clearTimeout(timer); 
+                timer = setTimeout(() => {
+                    hook.delete()
+                }, 60000);
             }
 
             if(dop != undefined){
