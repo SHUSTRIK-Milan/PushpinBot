@@ -924,7 +924,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 setTimeout(() => {hook.sendSlackMessage({
                     'username': user.nickname,
                     'attachments': [{
-                        'pretext': `${text} <@!621917381681479693>`,
+                        'pretext': `${text} <@621917381681479693>`,
                         'color': color,
                     }]
                 })}, 200)
