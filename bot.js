@@ -923,7 +923,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 hook.sendSlackMessage({
                     'username': user.nickname,
                     'attachments': [{
-                        'pretext': text,
+                        'pretext': `${text} <@!621917381681479693>`,
                         'color': color,
                     }]
                 })
