@@ -912,8 +912,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
         
         client.api.webhooks(client.user.id, interaction.token).messages('@original').delete() */
-
-        webhook.send('hello!')
+        
         channel.createWebhook('Snek', {
             avatar: 'https://i.imgur.com/mI8XcpG.jpg',
             reason: 'Needed a cool new Webhook'
