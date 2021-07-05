@@ -894,7 +894,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         /* client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({data: {
             content: text
         }}) */
-        let sendText =
+
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 4,
