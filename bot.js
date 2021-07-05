@@ -856,13 +856,7 @@ client.on('message', message => {
             webhooks = await msg.channel.fetchWebhooks()
             if(webhooks.find(hook => hook.name == user.nickname) == undefined){
                 channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()}).then(hook => {
-                    hook.sendSlackMessage({
-                        'username': user.nickname,
-                        'attachments': [{
-                            'pretext': text,
-                            'color': color,
-                        }]
-                    })
+                    hook.send(msg.content)
     
                     timer = setTimeout(() => {
                         hook.delete()
@@ -872,13 +866,7 @@ client.on('message', message => {
                 let hook = webhooks.find(hook => hook.name == user.nickname)
                 let hookId = hook.id
     
-                hook.sendSlackMessage({
-                    'username': user.nickname,
-                    'attachments': [{
-                        'pretext': text,
-                        'color': color,
-                    }]
-                })
+                hook.send(msg.content)
                 
                 clearTimeout(timer); 
                 timer = setTimeout(() => {
