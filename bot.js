@@ -828,7 +828,7 @@ client.on('message', message => {
         }catch(error){console.log(error)}
     }
 
-    /* if(message.content.slice(0, 1) == `!` && !mb && !mg){
+    if(message.content.slice(0, 1) == `!` && !mb && !mg){
         guild.channels.cache.get(message.reference.channelID).messages.fetch(message.reference.messageID).then(async msg => {
             let webhook = await msg.fetchWebhook()
             if(webhook != undefined && msg.embeds.length != 0){
@@ -840,9 +840,9 @@ client.on('message', message => {
                 }, timeOfDelete); 
             }
         })
-    } */
+    }
 
-    if(rpchannel && !mb && !mg){
+    if(rpchannel && message.content != '!' && !mb && !mg){
         let msg = message
         let channel = msg.channel
         let user = msg.member
@@ -866,14 +866,13 @@ client.on('message', message => {
                 })
             }else{
                 let hook = webhooks.find(hook => hook.name == user.nickname)
-                let hookId = hook.id
     
                 hook.send(msg.content)
                 sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${msg.content}`)
                 
                 clearTimeout(timer); 
                 timer = setTimeout(() => {
-                    channel.fetchWebhooks().then(hooks => hooks.get(hookId).delete())
+                    hook.delete()
                 }, 60000);
             }
         })();
