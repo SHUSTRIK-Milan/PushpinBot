@@ -895,16 +895,18 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 type: 5,
             },
         })
+        console.log(text)
 
         let webhooks = await channel.fetchWebhooks()
+        console.log(webhooks)
         if(webhooks.find(hook => hook.name == user.nickname) == undefined){
             channel.createWebhook(`${user.nickname}`, {avatar: user.user.avatarURL()}).then(hook =>{
                 console.log(hook)
                 hook.sendSlackMessage({
                     'username': user.nickname,
                     'attachments': [{
-                    'pretext': text,
-                    'color': '#C7A623',
+                        'pretext': text,
+                        'color': '#C7A623',
                     }]
                 })
                 setTimeout(() => {
@@ -916,8 +918,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             hook.sendSlackMessage({
                 'username': user.nickname,
                 'attachments': [{
-                'pretext': text,
-                'color': '#C7A623',
+                    'pretext': text,
+                    'color': '#C7A623',
                 }]
             })
         }
