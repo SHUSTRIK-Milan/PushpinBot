@@ -899,16 +899,18 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             content: text,
             allowed_mentions: "users"
         }}) */
-        client.api.interactions(interaction.id, interaction.token).callback.post({
+        /* client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 5,
             },
-        })
+        }) */
+
         let hook = await channel.createWebhook(user.nickname, {avatar: user.user.avatarURL()})
+        console.log(hook)
         hook.send(text)
         hook.delete()
 
-        client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
+        //client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
     };
 
     if (interaction.data.name == "осмотр") {
