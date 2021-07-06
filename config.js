@@ -50,12 +50,12 @@ module.exports.globalObjects = [
 	{
 		name: 'Черчель Стрит',
 		id: '1',
-                children: []
+        children: []
 	},
 	{
 		name: 'Бродвей',
 		id: '2',
-                children: []
+        children: []
 	},
 	{
 		name: 'Либерти',
