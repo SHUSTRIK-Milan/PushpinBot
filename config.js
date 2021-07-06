@@ -55,7 +55,7 @@ module.exports.globalObjects = [
 	{
 		name: 'Бродвей',
 		id: '2',
-                children: ['Заброшка']
+                children: []
 	},
 	{
 		name: 'Либерти',
