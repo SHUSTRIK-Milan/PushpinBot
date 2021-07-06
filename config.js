@@ -65,6 +65,10 @@ module.exports.globalObjects = [
 ]
 
 module.exports.objects = [
+
+    //true - комната открыта.
+    //false - комната закрыта.
+
     {
         name: 'Черчель Стрит',
 		id: '1',
