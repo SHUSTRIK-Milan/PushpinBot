@@ -1418,8 +1418,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let userTp
         if(interaction.data.options[1] != undefined){
             userTp = interaction.data.options[1].value
+            console.log(userTp)
         }else{
-            userTp == user.id
+            userTp = user.id
         }
 
         if(rpchannel && (haveRole(msgDate.member, '830061387849662515') || head || rpCreator)){
