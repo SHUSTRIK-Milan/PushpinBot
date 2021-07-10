@@ -48,7 +48,7 @@ module.exports.discordTocens = {
 
 module.exports.globalObjects = [
 	{
-		name: 'Админ-комната',
+		name: 'Админ комната',
 		id: '0',
         children: []
 	},
@@ -75,7 +75,7 @@ module.exports.objects = [
     //false - комната закрыта.
 
     {
-        name: 'Админ-комната',
+        name: 'Админ комната',
 		id: '0',
         cId: '863436212261748766',
         open: false,
