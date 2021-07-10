@@ -855,7 +855,7 @@ client.on('ready', () => {
 client.ws.on('INTERACTION_CREATE', async interaction => {
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
-    let head = haveRole(user, '833226140755689483')
+    let head = (haveRole(user, '833226140755689483') || haveRole(user, '833227050550296576'));
     let rpCreator = haveRole(user, '856092976702816287')
     let rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
 
