@@ -639,7 +639,7 @@ client.on('messageUpdate', (messageOld, messageNew) =>{
 client.on('message', message => {
     let mb = message.author.bot;
     let mg = message.guild == undefined;
-    let head = haveRole(message.member, '833226140755689483');
+    let head = (haveRole(message.member, '833226140755689483') || haveRole(message.member, '833227050550296576'));
     let rpCreator = haveRole(message.member, '856092976702816287')
 
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
