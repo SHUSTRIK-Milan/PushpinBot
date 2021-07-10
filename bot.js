@@ -1416,6 +1416,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         let locate = interaction.data.options[0].value
         let userTp = interaction.data.options[1].value
+        if(userTp != undefined) userTp == user.id
 
         if(rpchannel && (haveRole(msgDate.member, '830061387849662515') || head || rpCreator)){
             if(guild.channels.cache.get(locate.slice(2,-1)) != undefined){
@@ -1557,9 +1558,8 @@ function checkIntegrations() {
             },
             {
                 name: "человек",
-                description: "Человек, которому это направлено",
+                description: "Человек, которому это направлено. По стандарту это вы",
                 type: "6",
-                required: true
             },
         ]
     };
