@@ -827,6 +827,11 @@ client.on('message', message => {
             }
         }catch(error){console.log(error)}
     }
+
+    if(comand(message).com == `commands` && head && !mb && !mg){
+        setTimeout(() => message.delete(), timeOfDelete);
+        client.interaction.getApplicationCommands(config.guild_id).then(console.log);
+    }
 });
 
 const config = {
@@ -1541,40 +1546,26 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 function checkIntegrations() {
 
     let command = {
-        name: "911", 
-        description: "Вызвать экстренные службы",
+        name: "tp", 
+        description: "Телепортировать игрока в локацию",
         options: [
             {
-                name: "служба",
-                description: "Служба, которую вы хотите вызвать",
+                name: "локация",
+                description: "Локация, куда нужно телепортироваться",
                 type: "3",
-                required: true,
-                choices: [
-                    {
-                        name: "пожарная служба",
-                        value: "1"
-                    },
-                    {
-                        name: "полиция",
-                        value: "2"
-                    },
-                    {
-                        name: "медицинская служба",
-                        value: "3"
-                    }
-                ]
+                required: true
             },
             {
-                name: "текст",
-                description: "Текст сообщения для экстренных служб",
-                type: "3",
-                required: true,
+                name: "человек",
+                description: "Человек, которому это направлено",
+                type: "6",
+                required: true
             },
         ]
     };
 
 
-    //client.interaction.createApplicationCommand(command, config.guild_id, "856222015480135791").then(console.log)
+    client.interaction.createApplicationCommand(command, config.guild_id, "856222015480135791").then(console.log)
 
     // удаление старых команд
     /* client.interaction
@@ -1859,8 +1850,6 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     }, 200); */
-
-    client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
 
 client.login(process.env.BOT_TOKEN);
