@@ -623,7 +623,7 @@ client.on('messageDelete', (message) => {
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
     let mb = message.author.bot;
     let mg = message.guild == undefined;
-    if(!mb && !mg && rpchannel) sendLog(messageNew, 'РП', "Сообщение удалено", "Успешно", `Содержимое сообщения: ${message.content}`)
+    if(!mb && !mg && rpchannel) sendLog(message, 'РП', "Сообщение удалено", "Успешно", `Содержимое сообщения: ${message.content}`)
     if(!mb && !mg && !rpchannel) sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
 });
 
@@ -631,8 +631,8 @@ client.on('messageUpdate', (messageOld, messageNew) =>{
     rpchannel = rpChannels.find(channel => channel == messageNew.channel.id) != null;
     let mb = messageNew.author.bot;
     let mg = messageNew.guild == undefined;
-    if(!mb && !mg && rpchannel) sendLog(messageNew, 'РП', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n\n**Новое сообщение:** ${messageNew.content}`)
-    if(!mb && !mg && !rpchannel) sendLog(messageNew, 'Общее', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n\n**Новое сообщение:** ${messageNew.content}`)
+    if(!mb && !mg && rpchannel) sendLog(messageNew, 'РП', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
+    if(!mb && !mg && !rpchannel) sendLog(messageNew, 'Общее', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
     
 })
 
