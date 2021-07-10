@@ -76,7 +76,7 @@ module.exports.objects = [
 
     {
         name: 'Черчель Стрит',
-		id: '1',
+		id: '0',
         cId: '863436212261748766',
         open: false,
         radius: [],
