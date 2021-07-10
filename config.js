@@ -48,6 +48,11 @@ module.exports.discordTocens = {
 
 module.exports.globalObjects = [
 	{
+		name: 'Админ-комната',
+		id: '0',
+        children: []
+	},
+	{
 		name: 'Черчель Стрит',
 		id: '1',
         children: []
@@ -68,6 +73,19 @@ module.exports.objects = [
 
     //true - комната открыта.
     //false - комната закрыта.
+
+    {
+        name: 'Черчель Стрит',
+		id: '1',
+        cId: '863436212261748766',
+        open: false,
+        radius: [],
+        rooms: ['комната-1',
+                'комната-2',
+                'комната-3',
+                'комната-4',]
+    },
+
 
     {
         name: 'Черчель Стрит',
