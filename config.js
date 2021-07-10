@@ -75,7 +75,7 @@ module.exports.objects = [
     //false - комната закрыта.
 
     {
-        name: 'Черчель Стрит',
+        name: 'Админ-комната',
 		id: '0',
         cId: '863436212261748766',
         open: false,
