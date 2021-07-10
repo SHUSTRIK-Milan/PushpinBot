@@ -1416,7 +1416,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         let locate = interaction.data.options[0].value
         let userTp
-        if(interaction.data.options[1].value != undefined){
+        if(interaction.data.options[1] != undefined){
             userTp = interaction.data.options[1].value
         }else{
             userTp == user.id
