@@ -1429,10 +1429,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 let position = channelFA.name.slice(1, -1).toLowerCase().split('-').join(' ');
 
                 let cats = guild.channels.cache.filter(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${position}»`.toLowerCase());
+                console.log(cats)
                 //ищем каналы чье имя будет равно имени объекта пути
                 
                 if(cats.length != 0) for(let [id, cat] of cats){
                     let catId = Config.objects.find(obj => obj.cId == cat.id).id
+                    console.log(catId)
                     if (catId == channelFA.topic.split('-')[0]){
                         for (let [id, channel] of guild.channels.cache){
                             if(channel.permissionOverwrites.get(userTp) != undefined && Config.objects.find(obj => obj.cId == id) != undefined) channel.permissionOverwrites.get(userTp).delete();
