@@ -1428,11 +1428,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 let channelFA = guild.channels.cache.get(locate.slice(2,-1))
                 let position = channelFA.name.slice(1, -1).toLowerCase().split('-').join(' ');
 
+                console.log(position)
                 let cats = guild.channels.cache.filter(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${position}»`.toLowerCase());
                 console.log(cats)
                 //ищем каналы чье имя будет равно имени объекта пути
                 
-                if(cats.length != 0) for(let [id, cat] of cats){
+                if(cats.length != 0){ for(let [id, cat] of cats){
                     let catId = Config.objects.find(obj => obj.cId == cat.id).id
                     console.log(catId)
                     if (catId == channelFA.topic.split('-')[0]){
@@ -1445,7 +1446,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     }else if (catId == channelFA.topic.split('-')[0]){
                         sendLocalMessage(`Объект ${argsObj} отсутствует.`)
                     }
-                }else{sendNullMessage()}
+                }}else{sendNullMessage()}
             }else{sendNullMessage()}
         }else{
             sendNullMessage()
