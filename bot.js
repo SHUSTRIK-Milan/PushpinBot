@@ -644,7 +644,7 @@ async function roflBot(text, messageG){
                 msgs = message.map(message => message)
                 let ed = `${msg.content}\n${messageG.content}^${msgs[0].content}^<@!${msgs[0].author.id}>`
                 console.log(msgs[0])
-                if(msgs[0].embeds.image != undefined) ed = `${msg.content}\n${messageG.content}^${msgs[0].content} ${msgs[0].embeds.image.url}^<@!${msgs[0].author.id}>`
+                if(msgs[0].attachments.first() != undefined) ed = `${msg.content}\n${messageG.content}^${msgs[0].content} ${msgs[0].attachments.first().url}^<@!${msgs[0].author.id}>`
 
                 if(ed.length < 1800){
                     messageG.channel.send(`Спасибо, ${messageG.author}!`);
