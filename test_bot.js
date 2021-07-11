@@ -2,6 +2,9 @@
 const Discord = require('discord.js')
 const Config = require('./config');
 const client = new Discord.Client();
+const bdChannel = `863714740023197707`
+const bdMsg = `863715737469583370`
+var t = false
 
 var guild;
 
@@ -18,9 +21,54 @@ client.on("messageDelete", (message) => {
     message.channel.send(message.author.username+' удалил сообщение: '+message.content+'| Из: '+message.channel.name)
 })
 
+async function checkBD(text, messageG){
+    let chnl = guild.channels.cache.get(bdChannel)
+    let msg = await chnl.messages.fetch(bdMsg)
+    let nMsg = msg.content.split('\n')
+
+    let outF = nMsg.find(n => n.split('^')[0].toLowerCase() == text.toLowerCase())
+    console.log(outF)
+
+    if(outF != undefined && t == false) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`)
+    if(outF == undefined && t == false){
+        let filter = m => m.author.id === messageG.author.id && m.author.bot === false
+        t = true
+        messageG.channel.send('Я не знаю как мне на это ответить. Напиши, как мне на это отвечать:')
+        .then(() => {
+            messageG.channel.awaitMessages(filter, {
+                max: 1,
+                time: 10000,
+                errors: ['time'],
+            })
+            .then(message => {
+                msgs = message.map(message => message)
+                let ed = `${msg.content}\n${messageG.content}^${msgs[0].content}^<@!${msgs[0].author.id}>`
+
+                if(ed.length < 1800){
+                    messageG.channel.send('Спасибо!');
+                    msg.edit(ed)
+                }
+                if(ed.length > 1800){
+                    messageG.channel.send('Ой... кажется моя память переполнена. Я все забыл. Давайте по новой!');
+                    msg.edit(nMsg[0])
+                }
+                t = false
+            })
+            .catch(() => {
+                messageG.channel.send('Вы так и не сказали, как мне на это отвечать.');
+                t = false
+            });
+        });
+        
+    }
+    return msg
+}
+
+
+
 client.on('message', (message) => {
     console.log(message.content);
-    if(message.content == 'dest' && !message.author.bot){
+    /* if(message.content == 'dest' && !message.author.bot){
         client.destroy();
     }
     if(message.content.toLowerCase() == "cock" && !message.author.bot && message.channel.name !='adverts'){
@@ -43,7 +91,15 @@ client.on('message', (message) => {
     
     if(message.content == 'тест' && !message.author.bot){
         message.channel.createWebhook('test      ').then(hook => hook.send(message.content))
-    };
+    }; */
+
+    if(message.content.slice(0,4) == 'send'){
+        message.channel.send(message.content.slice(4))
+    }
+
+    if(message.channel.id == '863714747161116672' && !message.author.bot){
+        checkBD(message.content, message)
+    }
 })
 
 client.login(Config.discordTocens.testBot);

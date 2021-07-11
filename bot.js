@@ -13,6 +13,7 @@ var allChannels = [];
 var rpChannels = [];
 var rpchannel;
 const BDchnl = Config.channelsID.bd;
+var ROFLbdMsg = `863733070308966422`
 const dopBDmsg = `838003963412480070`;
 const timeOfDelete = 350;
 
@@ -619,6 +620,49 @@ async function pay(message, userDate, money, functionSend){
     return;
 };
 
+async function roflBot(text, messageG){
+    let chnl = guild.channels.cache.get(BDchnl)
+    let msg = await chnl.messages.fetch(ROFLbdMsg)
+    let nMsg = msg.content.split('\n')
+
+    let outF = nMsg.find(n => n.split('^')[0].toLowerCase() == text.toLowerCase())
+    console.log(outF)
+
+    if(outF != undefined && t == false) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`)
+    if(outF == undefined && t == false){
+        let filter = m => m.author.id === messageG.author.id && m.author.bot === false
+        t = true
+        messageG.channel.send('Я не знаю как мне на это ответить. Напиши, как мне на это отвечать:')
+        .then(() => {
+            messageG.channel.awaitMessages(filter, {
+                max: 1,
+                time: 10000,
+                errors: ['time'],
+            })
+            .then(message => {
+                msgs = message.map(message => message)
+                let ed = `${msg.content}\n${messageG.content}^${msgs[0].content}^<@!${msgs[0].author.id}>`
+
+                if(ed.length < 1800){
+                    messageG.channel.send('Спасибо!');
+                    msg.edit(ed)
+                }
+                if(ed.length > 1800){
+                    messageG.channel.send('Ой... кажется моя память переполнена. Я все забыл. Давайте по новой!');
+                    msg.edit(nMsg[0])
+                }
+                t = false
+            })
+            .catch(() => {
+                messageG.channel.send('Вы так и не сказали, как мне на это отвечать.');
+                t = false
+            });
+        });
+        
+    }
+    return msg
+}
+
 client.on('messageDelete', (message) => {
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
     let mb = message.author.bot;
@@ -832,6 +876,10 @@ client.on('message', message => {
     if(comand(message).com == `commands` && head && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
         client.interaction.getApplicationCommands(config.guild_id).then(console.log);
+    }
+
+    if(message.channel.id == Config.channelsID.bot && !mb && !mg){
+        roflBot(message.content, message)
     }
 });
 
