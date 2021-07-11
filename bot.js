@@ -14,7 +14,7 @@ var rpChannels = [];
 var rpchannel;
 const BDchnl = Config.channelsID.bd;
 var ROFLbdMsg = `863733070308966422`
-var t = fasle
+var t = false
 const dopBDmsg = `838003963412480070`;
 const timeOfDelete = 350;
 
