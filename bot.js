@@ -629,7 +629,10 @@ async function roflBot(text, messageG){
     let outF = nMsg.find(n => n.split('^')[0].toLowerCase() == text.toLowerCase())
     console.log(outF)
 
-    if(outF != undefined && t == false) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`, {files: [outF.split('^')[3]]})
+    if(outF != undefined && t == false){
+        if(outF.split('^')[3] == undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`)
+        if(outF.split('^')[3] != undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`, {files: [outF.split('^')[3]]})
+    }
     if(outF == undefined && t == false){
         let filter = m => m.author.id === messageG.author.id && m.author.bot === false
         t = true
