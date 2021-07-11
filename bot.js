@@ -629,11 +629,11 @@ async function roflBot(text, messageG){
     let outF = nMsg.find(n => n.split('^')[0].toLowerCase() == text.toLowerCase())
     console.log(outF)
 
-    if(outF != undefined && t == false) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`)
+    if(outF != undefined && t == false) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`, {files: [outF.split('^')[3]]})
     if(outF == undefined && t == false){
         let filter = m => m.author.id === messageG.author.id && m.author.bot === false
         t = true
-        messageG.channel.send(`Я не знаю как мне на это ответить. Напиши, как мне на это отвечать, ${messageG.author}.`)
+        messageG.channel.send(`Я не знаю как мне на это ответить. Напиши, как мне на это отвечать, <@!${messageG.author.id}>.`)
         .then(() => {
             messageG.channel.awaitMessages(filter, {
                 max: 1,
@@ -644,20 +644,20 @@ async function roflBot(text, messageG){
                 msgs = message.map(message => message)
                 let ed = `${msg.content}\n${messageG.content}^${msgs[0].content}^<@!${msgs[0].author.id}>`
                 console.log(msgs[0])
-                if(msgs[0].attachments.first() != undefined) ed = `${msg.content}\n${messageG.content}^${msgs[0].content} ${msgs[0].attachments.first().url}^<@!${msgs[0].author.id}>`
+                if(msgs[0].attachments.first() != undefined) ed = `${msg.content}\n${messageG.content}^${msgs[0].content}^<@!${msgs[0].author.id}>^${msgs[0].attachments.first().url}`
 
                 if(ed.length < 1800){
-                    messageG.channel.send(`Спасибо, ${messageG.author}!`);
+                    messageG.channel.send(`Спасибо, <@!${messageG.author.id}>!`);
                     msg.edit(ed)
                 }
                 if(ed.length > 1800){
-                    messageG.channel.send(`Ой... кажется моя память переполнена. Я все забыл. Давайте по новой, ${messageG.author}.`);
+                    messageG.channel.send(`Ой... кажется моя память переполнена. Я все забыл. Давайте по новой, <@!${messageG.author.id}>.`);
                     msg.edit(nMsg[0])
                 }
                 t = false
             })
             .catch(() => {
-                messageG.channel.send(`Вы так и не сказали, как мне на это отвечать, ${messageG.author}.`);
+                messageG.channel.send(`Вы так и не сказали, как мне на это отвечать, <@!${messageG.author.id}>.`);
                 t = false
             });
         });
