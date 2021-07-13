@@ -1,5 +1,3 @@
-setTimeout(function() {window.onerror = function () {console.log('error!')}}, 1000);
-
 const Discord = require('discord.js');
 const Config = require('./config');
 const client = new Discord.Client();
