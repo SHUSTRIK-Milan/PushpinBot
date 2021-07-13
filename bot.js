@@ -56,26 +56,6 @@ client.on('ready', () => {
     }
 });
 
-client.on('error', (err) => {
-    console.log('Ошибка!')
-    guild.channels.cache.get(Config.channelsID.serverMsg).send('> Бот обнаружил ошибку!', {embed: {
-                color: 16325403,
-                fields: [{
-                    name: `[${err.name}]:`,
-                    value: err.message
-                }],
-                
-                timestamp: new Date()
-            }
-        }
-    )
-});
-
-client.on('invalidated', () => {
-    console.log('Краш!')
-    guild.channels.cache.get(Config.channelsID.serverMsg).send(`> Бот неожиданно отключился! Скорее оповестите SHUSTRIK'а, <@&833226140755689483> и <@&833227050550296576>`)
-});
-
 client.on('presenceUpdate', (om,nm) => {
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
@@ -1953,3 +1933,23 @@ function checkIntegrations() {
 }
 
 client.login(process.env.BOT_TOKEN);
+
+client.on('error', (err) => {
+    console.log('Ошибка!')
+    guild.channels.cache.get(Config.channelsID.serverMsg).send('> Бот обнаружил ошибку!', {embed: {
+                color: 16325403,
+                fields: [{
+                    name: `[${err.name}]:`,
+                    value: err.message
+                }],
+                
+                timestamp: new Date()
+            }
+        }
+    )
+});
+
+client.on('invalidated', () => {
+    console.log('Краш!')
+    guild.channels.cache.get(Config.channelsID.serverMsg).send(`> Бот неожиданно отключился! Скорее оповестите SHUSTRIK'а, <@&833226140755689483> и <@&833227050550296576>`)
+});
