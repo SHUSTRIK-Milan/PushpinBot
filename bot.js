@@ -57,6 +57,7 @@ client.on('ready', () => {
 });
 
 client.on('error', (err) => {
+    console.log('Ошибка!')
     guild.channels.cache.get(Config.channelsID.serverMsg).send('> Бот обнаружил ошибку!', {embed: {
                 color: 16325403,
                 fields: [{
@@ -71,6 +72,7 @@ client.on('error', (err) => {
 });
 
 client.on('invalidated', () => {
+    console.log('Краш!')
     guild.channels.cache.get(Config.channelsID.serverMsg).send(`> Бот неожиданно отключился! Скорее оповестите SHUSTRIK'а, <@&833226140755689483> и <@&833227050550296576>`)
 });
 
