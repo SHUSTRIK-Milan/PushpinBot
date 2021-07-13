@@ -141,6 +141,31 @@ function coinFlip(){
     return rand
 }
 
+function card(){
+    let rand = 0 - 0.5 + Math.random() * (13 - 1 + 1);
+    rand = Math.round(rand);
+    if(rand == 1) rand = 'Двойка'
+    if(rand == 2) rand = 'Тройка'
+    if(rand == 3) rand = 'Четверка'
+    if(rand == 4) rand = 'Пятерка'
+    if(rand == 5) rand = 'Шестерка'
+    if(rand == 6) rand = 'Семерка'
+    if(rand == 7) rand = 'Восьмерка'
+    if(rand == 8) rand = 'Девятка'
+    if(rand == 9) rand = 'Десятка'
+    if(rand == 10) rand = 'Валет'
+    if(rand == 11) rand = 'Дама'
+    if(rand == 12) rand = 'Король'
+    if(rand == 13) rand = 'Туз'
+    let rand_sec = 0 - 0.5 + Math.random() * (4 - 1 + 1);
+    rand_sec = Math.round(rand_sec)
+    if(rand_sec == 1) rand_sec = 'черви' 
+    if(rand_sec == 2) rand_sec = 'буби'
+    if(rand_sec == 3) rand_sec = 'трефы'
+    if(rand_sec == 4) rand_sec = 'пики'
+    return rand
+}
+
 function sendLog(message,cat,act,status,add){
     let img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
@@ -1630,6 +1655,17 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
     }
 });
+    if (interaction.data.name == "карты") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if(rpchannel){
+            let output = card()
+            sendLog(msgDate,'РП','Вытянул карту.','Успешно',`Вывод: Достал карту: ${output}`)
+            sendLocalMessage(`Достал: ${output}`)
+        }else{
+            sendNullMessage()
+        }
+    }
+    });
 
 function checkIntegrations() {
 
@@ -1645,6 +1681,8 @@ function checkIntegrations() {
             .then()
             .catch(console.error);
     }, 200);
+
+
 
     //client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log)
 
@@ -1957,3 +1995,4 @@ client.on("debug", (e) => console.info(e));
     console.log('Краш!')
     guild.channels.cache.get(Config.channelsID.serverMsg).send(`> Бот неожиданно отключился! Скорее оповестите SHUSTRIK'а, <@&833226140755689483> и <@&833227050550296576>`)
 }); */
+// Абобус
