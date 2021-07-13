@@ -135,9 +135,10 @@ function roll(){
 
 function coinFlip(){
     let rand = 0 - 0.5 + Math.random() * (1 - 0 + 1);
+    rand = Math.round(rand);
     if(rand == 0) rand = 'Решка'
     if(rand == 1) rand = 'Орёл'
-    return Math.round(rand);
+    return rand
 }
 
 function sendLog(message,cat,act,status,add){
