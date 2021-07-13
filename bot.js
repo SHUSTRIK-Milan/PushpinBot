@@ -114,7 +114,7 @@ function comand(message,countS){
 };
 
 function random(min, max){
-    return Math.round(min - 0.5 + Math.random() * (max - min + 1););
+    return Math.round(min - 0.5 + Math.random() * (max - min + 1));
 }
 
 function haveRole(member, roleid){
@@ -168,7 +168,7 @@ function card(){
 }
 
 function cube(){
-    let rand = 0 - 0.5 + Math.random() * (5 - 0 + 1);
+    let rand = random (0, 5)
     if(rand == 0) rand = '1'
     if(rand == 1) rand = '2'
     if(rand == 2) rand = '3'
@@ -1683,10 +1683,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(rpchannel){
             let output = cube()
             sendLog(msgDate,'РП','Бросил кубик.','Успешно',`Вывод: Выбрасил число: ${output}`)
-            sendLocalMessage(`Выбросил: ${output}`)
+            sendGlobalMessage(`Выбросил: ${output}`)
         }else{
             sendNullMessage()
         }
+    }
 });
     
 
@@ -1698,15 +1699,13 @@ function checkIntegrations() {
     */
 
     setTimeout(() =>{client.interaction.createApplicationCommand({
-            name: "монета", 
-            description: "Подбросить монету",
+            name: "кубик", 
+            description: "Бросить игральный кубик",
             options: []
         }, config.guild_id)
             .then()
             .catch(console.error);
     }, 200);
-
-
 
     //client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log)
 
@@ -1991,7 +1990,15 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    }, 200); */
+    }, 200);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "монета", 
+            description: "Подбросить монету",
+            options: []
+        }, config.guild_id)
+            .then()
+            .catch(console.error);
+    }, 200);*/
 }
 
 client.login(process.env.BOT_TOKEN);
