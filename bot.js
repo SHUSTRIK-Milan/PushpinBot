@@ -171,6 +171,18 @@ function card(){
     return `${rand} ${rand_sec}`
 }
 
+function cube(){
+    let rand = 0 - 0.5 + Math.random() * (5 - 0 + 1);
+    rand = Math.round(rand);
+    if(rand == 0) rand = '1'
+    if(rand == 1) rand = '2'
+    if(rand == 2) rand = '3'
+    if(rand == 3) rand = '4'
+    if(rand == 4) rand = '5'
+    if(rand == 5) rand = '6'
+    return rand
+}
+
 function sendLog(message,cat,act,status,add){
     let img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
@@ -1670,7 +1682,19 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             sendNullMessage()
         }
     }
+
+    if (interaction.data.name == "кубик") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if(rpchannel){
+            let output = cube()
+            sendLog(msgDate,'РП','Бросил кубик.','Успешно',`Вывод: Выбрасил число: ${output}`)
+            sendLocalMessage(`Выбросил: ${output}`)
+        }else{
+            sendNullMessage()
+        }
 });
+    
+
 
 function checkIntegrations() {
 
