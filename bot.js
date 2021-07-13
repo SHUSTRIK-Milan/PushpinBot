@@ -171,12 +171,13 @@ function card(){
 function cube(){
     let rand = random(0, 5)
     console.log(rand)
-    if(rand == 0){rand = '1'; return rand}
-    if(rand == 1){rand = '2'; return rand}
-    if(rand == 2){rand = '3'; return rand}
-    if(rand == 3){rand = '4'; return rand}
-    if(rand == 4){rand = '5'; return rand}
-    if(rand == 5){rand = '6'; return rand}
+    if(rand == 0) rand = '1'
+    else if(rand == 1) rand = '2'
+    else if(rand == 2) rand = '3'
+    else if(rand == 3) rand = '4'
+    else if(rand == 4) rand = '5'
+    else if(rand == 5) rand = '6'
+    return rand
 }
 
 function sendLog(message,cat,act,status,add){
