@@ -169,7 +169,7 @@ function card(){
 
 function cube(){
     let rand = random(1, 6)
-    console.log(typeof(rand))
+    console.log(rand)
     if(rand == 1) rand = '1'
     if(rand == 2) rand = '2'
     if(rand == 3) rand = '3'
