@@ -826,8 +826,8 @@ client.on('message', message => {
 
     if(comand(message).com == `checkpos` && message.author.id == `621917381681479693` && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
-        console.log(`1: ${message.channel.position}`);
-        console.log(`2: ${message.channel.parent.position}`);
+        let t = undefined
+        t.split(1)
     }
 
     if(comand(message).com == `ban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
