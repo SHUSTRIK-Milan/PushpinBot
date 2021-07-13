@@ -113,6 +113,10 @@ function comand(message,countS){
     return comand;
 };
 
+function random(min, max){
+    return min - 0.5 + Math.random() * (max - min + 1);
+}
+
 function haveRole(member, roleid){
     let have = false;
     if(member == null){return have};
@@ -129,12 +133,12 @@ function removeRole(member, roleId){
 };
 
 function roll(){
-    let rand = 0 - 0.5 + Math.random() * (100 - 0 + 1);
+    let rand = random(0, 100)
     return Math.round(rand);
 }
 
 function coinFlip(){
-    let rand = 0 - 0.5 + Math.random() * (1 - 0 + 1);
+    let rand = random(0, 1)
     rand = Math.round(rand);
     if(rand == 0) rand = 'Решка'
     if(rand == 1) rand = 'Орёл'
@@ -142,7 +146,7 @@ function coinFlip(){
 }
 
 function card(){
-    let rand = 0 - 0.5 + Math.random() * (13 - 1 + 1);
+    let rand = random(1, 13)
     rand = Math.round(rand);
     if(rand == 1) rand = 'Двойка'
     if(rand == 2) rand = 'Тройка'
@@ -157,13 +161,14 @@ function card(){
     if(rand == 11) rand = 'Дама'
     if(rand == 12) rand = 'Король'
     if(rand == 13) rand = 'Туз'
-    let rand_sec = 0 - 0.5 + Math.random() * (4 - 1 + 1);
+
+    let rand_sec = random(1, 4)
     rand_sec = Math.round(rand_sec)
     if(rand_sec == 1) rand_sec = 'черви' 
     if(rand_sec == 2) rand_sec = 'буби'
     if(rand_sec == 3) rand_sec = 'трефы'
     if(rand_sec == 4) rand_sec = 'пики'
-    return rand
+    return `${rand} ${rand_sec}`
 }
 
 function cube(){
@@ -1666,7 +1671,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             sendNullMessage()
         }
     }
-});
+
     if (interaction.data.name == "карты") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(rpchannel){
@@ -1676,7 +1681,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             sendNullMessage()
         }
-    });
+    }
 
     if (interaction.data.name == "кубик") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
@@ -1687,7 +1692,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             sendNullMessage()
         }
-    });
+});
     
 
 
@@ -1996,7 +2001,7 @@ function checkIntegrations() {
 
 client.login(process.env.BOT_TOKEN);
 
-client.on('error', err => {
+/* client.on('error', err => {
     console.log('Ошибка!')
     guild.channels.cache.get(Config.channelsID.serverMsg).send('> Бот обнаружил ошибку!', {embed: {
                 color: 16325403,
@@ -2009,11 +2014,4 @@ client.on('error', err => {
             }
         }
     )
-});
-
-
-/* client.on('invalidated', () => {
-    console.log('Краш!')
-    guild.channels.cache.get(Config.channelsID.serverMsg).send(`> Бот неожиданно отключился! Скорее оповестите SHUSTRIK'а, <@&833226140755689483> и <@&833227050550296576>`)
 }); */
-// Абобус
