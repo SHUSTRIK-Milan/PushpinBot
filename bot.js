@@ -157,13 +157,14 @@ function card(){
     if(rand == 11) rand = 'Дама'
     if(rand == 12) rand = 'Король'
     if(rand == 13) rand = 'Туз'
+
     let rand_sec = 0 - 0.5 + Math.random() * (4 - 1 + 1);
     rand_sec = Math.round(rand_sec)
     if(rand_sec == 1) rand_sec = 'черви' 
     if(rand_sec == 2) rand_sec = 'буби'
     if(rand_sec == 3) rand_sec = 'трефы'
     if(rand_sec == 4) rand_sec = 'пики'
-    return rand
+    return `${rand} ${rand_sec}`
 }
 
 function sendLog(message,cat,act,status,add){
