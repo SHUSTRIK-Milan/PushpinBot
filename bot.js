@@ -1934,7 +1934,7 @@ function checkIntegrations() {
 
 client.login(process.env.BOT_TOKEN);
 
-client.on('error', err => {
+/* client.on('error', err => {
     console.log('Ошибка!')
     guild.channels.cache.get(Config.channelsID.serverMsg).send('> Бот обнаружил ошибку!', {embed: {
                 color: 16325403,
@@ -1947,8 +1947,11 @@ client.on('error', err => {
             }
         }
     )
-});
+}); */
 
+client.on("error", (e) => console.error(e));
+client.on("warn", (e) => console.warn(e));
+client.on("debug", (e) => console.info(e));
 
 /* client.on('invalidated', () => {
     console.log('Краш!')
