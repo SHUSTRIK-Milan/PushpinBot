@@ -1654,7 +1654,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             sendNullMessage()
         }
     }
-});
+
     if (interaction.data.name == "карты") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(rpchannel){
@@ -1665,7 +1665,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             sendNullMessage()
         }
     }
-    });
+});
 
 function checkIntegrations() {
 
