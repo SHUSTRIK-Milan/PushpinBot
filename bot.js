@@ -13,6 +13,8 @@ var allChannels = [];
 var rpChannels = [];
 var rpchannel;
 const BDchnl = Config.channelsID.bd;
+var ROFLbdMsg = `863733070308966422`
+var t = false
 const dopBDmsg = `838003963412480070`;
 const timeOfDelete = 350;
 
@@ -129,6 +131,51 @@ function removeRole(member, roleId){
 function roll(){
     let rand = 0 - 0.5 + Math.random() * (100 - 0 + 1);
     return Math.round(rand);
+}
+
+function coinFlip(){
+    let rand = 0 - 0.5 + Math.random() * (1 - 0 + 1);
+    rand = Math.round(rand);
+    if(rand == 0) rand = 'Решка'
+    if(rand == 1) rand = 'Орёл'
+    return rand
+}
+
+function card(){
+    let rand = 0 - 0.5 + Math.random() * (13 - 1 + 1);
+    rand = Math.round(rand);
+    if(rand == 1) rand = 'Двойка'
+    if(rand == 2) rand = 'Тройка'
+    if(rand == 3) rand = 'Четверка'
+    if(rand == 4) rand = 'Пятерка'
+    if(rand == 5) rand = 'Шестерка'
+    if(rand == 6) rand = 'Семерка'
+    if(rand == 7) rand = 'Восьмерка'
+    if(rand == 8) rand = 'Девятка'
+    if(rand == 9) rand = 'Десятка'
+    if(rand == 10) rand = 'Валет'
+    if(rand == 11) rand = 'Дама'
+    if(rand == 12) rand = 'Король'
+    if(rand == 13) rand = 'Туз'
+    let rand_sec = 0 - 0.5 + Math.random() * (4 - 1 + 1);
+    rand_sec = Math.round(rand_sec)
+    if(rand_sec == 1) rand_sec = 'черви' 
+    if(rand_sec == 2) rand_sec = 'буби'
+    if(rand_sec == 3) rand_sec = 'трефы'
+    if(rand_sec == 4) rand_sec = 'пики'
+    return rand
+}
+
+function cube(){
+    let rand = 0 - 0.5 + Math.random() * (5 - 0 + 1);
+    rand = Math.round(rand);
+    if(rand == 0) rand = '1'
+    if(rand == 1) rand = '2'
+    if(rand == 2) rand = '3'
+    if(rand == 3) rand = '4'
+    if(rand == 4) rand = '5'
+    if(rand == 5) rand = '6'
+    return rand
 }
 
 function sendLog(message,cat,act,status,add){
@@ -619,11 +666,59 @@ async function pay(message, userDate, money, functionSend){
     return;
 };
 
+async function roflBot(text, messageG){
+    let chnl = guild.channels.cache.get(BDchnl)
+    let msg = await chnl.messages.fetch(ROFLbdMsg)
+    let nMsg = msg.content.split('\n')
+
+    let outF = nMsg.find(n => n.split('^')[0].toLowerCase() == text.toLowerCase())
+    console.log(outF)
+
+    if(outF != undefined && t == false){
+        if(outF.split('^')[3] == undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`)
+        if(outF.split('^')[3] != undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`, {files: [outF.split('^')[3]]})
+    }
+    if(outF == undefined && t == false){
+        let filter = m => m.author.id === messageG.author.id && m.author.bot === false
+        t = true
+        messageG.channel.send(`Я не знаю как мне на это ответить. Напиши, как мне на это отвечать, <@!${messageG.author.id}>.`)
+        .then(() => {
+            messageG.channel.awaitMessages(filter, {
+                max: 1,
+                time: 10000,
+                errors: ['time'],
+            })
+            .then(message => {
+                msgs = message.map(message => message)
+                let ed = `${msg.content}\n${messageG.content}^${msgs[0].content}^<@!${msgs[0].author.id}>`
+                console.log(msgs[0])
+                if(msgs[0].attachments.first() != undefined) ed = `${msg.content}\n${messageG.content}^${msgs[0].content}^<@!${msgs[0].author.id}>^${msgs[0].attachments.first().url}`
+
+                if(ed.length < 1800){
+                    messageG.channel.send(`Спасибо, <@!${messageG.author.id}>!`);
+                    msg.edit(ed)
+                }
+                if(ed.length > 1800){
+                    messageG.channel.send(`Ой... кажется моя память переполнена. Я все забыл. Давайте по новой, <@!${messageG.author.id}>.`);
+                    msg.edit(nMsg[0])
+                }
+                t = false
+            })
+            .catch(() => {
+                messageG.channel.send(`Вы так и не сказали, как мне на это отвечать, <@!${messageG.author.id}>.`);
+                t = false
+            });
+        });
+        
+    }
+    return msg
+}
+
 client.on('messageDelete', (message) => {
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
     let mb = message.author.bot;
     let mg = message.guild == undefined;
-    if(!mb && !mg && rpchannel) sendLog(message,'РП',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
+    if(!mb && !mg && rpchannel) sendLog(message, 'РП', "Сообщение удалено", "Успешно", `Содержимое сообщения: ${message.content}`)
     if(!mb && !mg && !rpchannel) sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
 });
 
@@ -639,12 +734,12 @@ client.on('messageUpdate', (messageOld, messageNew) =>{
 client.on('message', message => {
     let mb = message.author.bot;
     let mg = message.guild == undefined;
-    let head = haveRole(message.member, '833226140755689483');
+    let head = (haveRole(message.member, '833226140755689483') || haveRole(message.member, '833227050550296576'));
     let rpCreator = haveRole(message.member, '856092976702816287')
 
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
-    if(!mb && !mg && rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
     if(!mb && !mg && !rpchannel) sendLog(message,`Общее`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
+    if(!mb && !mg && rpchannel) sendLog(message,`РП`,`Отправил сообщение.`,`Успешно`,`${message.content}`)
 
     if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), timeOfDelete);
@@ -750,8 +845,8 @@ client.on('message', message => {
 
     if(comand(message).com == `checkpos` && message.author.id == `621917381681479693` && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
-        console.log(`1: ${message.channel.position}`);
-        console.log(`2: ${message.channel.parent.position}`);
+        let t = undefined
+        t.split(1)
     }
 
     if(comand(message).com == `ban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
@@ -829,6 +924,14 @@ client.on('message', message => {
         }catch(error){console.log(error)}
     }
 
+    if(comand(message).com == `commands` && head && !mb && !mg){
+        setTimeout(() => message.delete(), timeOfDelete);
+        client.interaction.getApplicationCommands(config.guild_id).then(console.log);
+    }
+
+    if(message.channel.id == Config.channelsID.bot && !mb && !mg){
+        roflBot(message.content, message)
+    }
 });
 
 const config = {
@@ -849,9 +952,14 @@ client.on('ready', () => {
 });
 
 client.ws.on('INTERACTION_CREATE', async interaction => {
+
+    /* 
+    БЛОК ФУНКЦИЙ КОМАНД
+    */
+
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
-    let head = haveRole(user, '833226140755689483')
+    let head = (haveRole(user, '833226140755689483') || haveRole(user, '833227050550296576'));
     let rpCreator = haveRole(user, '856092976702816287')
     let rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
 
@@ -889,15 +997,68 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
     }
 
-    async function sendEditMessage(text){
+    async function sendEditMessage(text, color, dop, ping){
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 5,
             },
         })
-        client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({data: {
-            content: text
-        }})
+
+        let webhooks = await channel.fetchWebhooks()
+        let timer
+        console.log(webhooks.find(hook => hook.name == user.nickname))
+        if(webhooks.find(hook => hook.name == user.nickname) == undefined){
+            channel.createWebhook(`${user.nickname}`, {avatar: user.user.displayAvatarURL()}).then(hook => {
+                console.log(hook)
+
+                if(dop != undefined){
+                    hook.send(dop)
+                }
+
+                setTimeout(() => {hook.sendSlackMessage({
+                    'username': user.nickname,
+                    'attachments': [{
+                        'pretext': text,
+                        'color': color,
+                    }]
+                })}, 100)
+
+                if(ping != undefined){
+                    setTimeout(() => hook.send(`${ping}⤴️`), 150)
+                }
+
+                timer = setTimeout(() => {
+                    hook.delete()
+                }, 60000)
+            })
+        }else{
+            let hook = webhooks.find(hook => hook.name == user.nickname)
+            let hookId = hook.id
+            console.log(hook)
+
+            if(dop != undefined){
+                hook.send(dop)
+            }
+
+            setTimeout(() => {hook.sendSlackMessage({
+                'username': user.nickname,
+                'attachments': [{
+                    'pretext': text,
+                    'color': color,
+                }]
+            })}, 100)
+
+            if(ping != undefined){
+                setTimeout(() => hook.send(`${ping}⤴️`), 150)
+            }
+
+            clearTimeout(timer); 
+            timer = setTimeout(() => {
+                channel.fetchWebhooks().then(hooks => hooks.get(hookId).delete())
+            }, 60000);
+        }
+        
+        client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
     };
 
     if (interaction.data.name == "осмотр") {
@@ -966,7 +1127,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 
                 if(cats.length != 0) for(let [id, cat] of cats){
                     let catId = Config.objects.find(obj => obj.cId == cat.id).id
-                    if (catId == channelFA.topic.split('-')[0] && Config.globalObjects.find(obj => obj.name.toLowerCase() == walkway.toLowerCase())){
+                    if (catId == channelFA.topic.split('-')[0] && (Config.globalObjects.find(obj => obj.name.toLowerCase() == walkway.toLowerCase()) || Config.globalObjects.find(obj => obj.children.find(child => child.toLowerCase() == walkway.toLowerCase()) != undefined))){
                     //проверяем канал на тип категории
                         if (haveRole(user,'835630198199681026')){ sendLocalMessage(`> Вы находитесь в админ-моде.`); return};
                         sendNullMessage()
@@ -1252,14 +1413,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         }else{
-            interaction.data.options.forEach((c) => {
-                if (c.name == "текст") {
-                    arg = c.value;
-                }
-            });
+            arg = interaction.data.options[0].value
         }
     
-        if(rpchannel && !haveRole(msgDate.member, '830061387849662515')){
+        if(rpchannel){
             let staff = guild.members.cache.filter(member => (haveRole(member, '830061387849662515') || haveRole(member, '833226140755689483')) && member.presence.status != 'offline');
             if(staff.size == 0){
                 sendLocalMessage(`**На данный момент администраторы в сети отсутствуют. Мы оповестили их о вашей жалобе** 👥`)
@@ -1281,20 +1438,23 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }else{
                 sendLocalMessage(`**Вы вызывали администратора** 👥\n> ${arg}`)
                 sendLog(msgDate,'РП','Вызвал администратора.','Успешно',`Вывод: **Вы вызывали администратора** 👥\n> ${arg}`)
-                guild.channels.cache.get(Config.channelsID.admin_claim).send(`<@&830061387849662515>, **${msgDate.author.tag} написал жалобу:**`, {embed: {
-                        thumbnail: {
-                            url: msgDate.author.displayAvatarURL()
-                        },
-                        fields: [{
-                            name: `Текст жалобы:`,
-                            value: `${arg}`
-                        }],
-                        fields: [{
-                            name: `Местоположение:`,
-                            value: `${Config.globalObjects.find(obj => obj.id == channel.topic.split('-')[0]).name}, ${channel.parent.name} -> <#${channel.id}>`
-                        }],
-                    }
-                });
+
+                for(let worker of staff){
+                    worker[1].send(`**${msgDate.author.tag} написал жалобу:**`, {embed: {
+                            thumbnail: {
+                                url: msgDate.author.displayAvatarURL()
+                            },
+                            fields: [{
+                                name: `Текст жалобы:`,
+                                value: `${arg}`
+                            },
+                            {
+                                name: `Местоположение:`,
+                                value: `${Config.globalObjects.find(obj => obj.id == channel.topic.split('-')[0]).name}, ${channel.parent.name} -> <#${channel.id}>`
+                            }],
+                        }
+                    });
+                }
             }
         }else{
             sendNullMessage()
@@ -1340,8 +1500,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
     
         if(rpchannel){
-            sendLog(msgDate,'РП','Использовал шанс.','Успешно',`Вывод: Шанс: ${roll()} из 100`)
-            sendGlobalMessage(`Шанс: ${roll()} из 100`)
+            let output = roll()
+            sendLog(msgDate,'РП','Использовал шанс.','Успешно',`Вывод: Шанс: ${output} из 100`)
+            sendGlobalMessage(`Шанс: ${output} из 100`)
         }else{
             sendNullMessage()
         }
@@ -1360,18 +1521,27 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     if (interaction.data.name == "tp") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         let locate = interaction.data.options[0].value
-        let userTp = interaction.data.options[1].value
+        let userTp
+        if(interaction.data.options[1] != undefined){
+            userTp = interaction.data.options[1].value
+            console.log(userTp)
+        }else{
+            userTp = user.id
+        }
 
         if(rpchannel && (haveRole(msgDate.member, '830061387849662515') || head || rpCreator)){
             if(guild.channels.cache.get(locate.slice(2,-1)) != undefined){
                 let channelFA = guild.channels.cache.get(locate.slice(2,-1))
                 let position = channelFA.name.slice(1, -1).toLowerCase().split('-').join(' ');
 
+                console.log(position)
                 let cats = guild.channels.cache.filter(cat => cat.type == 'category' && cat.name.toLowerCase().slice(3) == `«${position}»`.toLowerCase());
+                console.log(cats)
                 //ищем каналы чье имя будет равно имени объекта пути
                 
-                if(cats.length != 0) for(let [id, cat] of cats){
+                if(cats.length != 0){ for(let [id, cat] of cats){
                     let catId = Config.objects.find(obj => obj.cId == cat.id).id
+                    console.log(catId)
                     if (catId == channelFA.topic.split('-')[0]){
                         for (let [id, channel] of guild.channels.cache){
                             if(channel.permissionOverwrites.get(userTp) != undefined && Config.objects.find(obj => obj.cId == id) != undefined) channel.permissionOverwrites.get(userTp).delete();
@@ -1382,25 +1552,28 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     }else if (catId == channelFA.topic.split('-')[0]){
                         sendLocalMessage(`Объект ${argsObj} отсутствует.`)
                     }
-                }else{sendNullMessage()}
+                }}else{sendNullMessage()}
             }else{sendNullMessage()}
         }else{
             sendNullMessage()
         }
     }
-    if (interaction.data.name == "me") {
+    /* if (interaction.data.name == "me") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
-            var text = `*<@!${msgDate.member.id}> ${arg.slice(0,1).toLowerCase()}${arg.slice(1)}*`
+            arg = `${arg.slice(0,1).toUpperCase()}${arg.slice(1)}`
+            var ping
+            var text = `*${arg}*`
             if (interaction.data.options[1] != undefined){
                 var userG = interaction.data.options[1].value
-                var text = `*<@!${msgDate.member.id}> ${arg.slice(0,1).toLowerCase()}${arg.slice(1)}* - <@!${userG}>`
+                ping = `<@!${userG}>`
             }
+            let color = `#ECCB12`
 
             if(rpchannel){
-                sendEditMessage(text)
+                sendEditMessage(text, color, undefined, ping)
             }else{
                 sendNullMessage()
             }
@@ -1411,14 +1584,17 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
-            var text = `> ${arg} (<@!${msgDate.member.id}>)`
+            arg = `${arg.slice(0,1).toUpperCase()}${arg.slice(1)}`
+            var ping
+            var text = `> ${arg}`
+            var color = `#5865F2`
             if (interaction.data.options[1] != undefined){
                 var userG = interaction.data.options[1].value
-                var text = `> ${arg} - <@!${userG}> (<@!${msgDate.member.id}>)`
+                ping = `<@!${userG}>`
             }
 
             if(rpchannel){
-                sendEditMessage(text)
+                sendEditMessage(text, color, undefined, ping)
             }else{
                 sendNullMessage()
             }
@@ -1430,14 +1606,20 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             var talk = interaction.data.options[0].value
             var arg = interaction.data.options[1].value
-            var text = `${talk} - *Сказав, <@!${msgDate.member.id}> ${arg}*`
+            var ping
+            arg = `${arg.slice(0,1).toLowerCase()}${arg.slice(1)}`
+            var text = ` - *Сказав, <@!${msgDate.member.id}> ${arg}*`
+            var color = `#57D9BF`
+            if(talk.slice(-1) == '!'){ text = ` - *Крикнув, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#C9243F`}
+            if(talk.slice(-1) == '?'){ text = ` - *Спросив, ${msgDate.member.nickname.split(' ')[0]} ${arg}*`; color = `#24C937`}
+
             if (interaction.data.options[2] != undefined){
                 var userG = interaction.data.options[2].value
-                var text = `${talk} - *Сказав, <@!${msgDate.member.id}> ${arg}* - <@!${userG}>`
+                ping = `<@!${userG}>`
             }
 
             if(rpchannel){
-                sendEditMessage(text)
+                sendEditMessage(text, color, talk, ping)
             }else{
                 sendNullMessage()
             }
@@ -1448,10 +1630,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
-            var text = `> **${arg} (<@!${msgDate.member.id}>)**`
+            arg = `${arg.slice(0,1).toUpperCase()}${arg.slice(1)}`
+            var text = `> **${arg}**`
+            let color = `#3E49C0`
 
             if(rpchannel){
-                sendEditMessage(text)
+                sendEditMessage(text, color)
             }else{
                 sendNullMessage()
             }
@@ -1462,87 +1646,69 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if (interaction.data.options == undefined) {
         }else{
             var arg = interaction.data.options[0].value
-            var text = `((<@!${msgDate.member.id}>: ${arg}))`
+            var text = `(( ${arg} ))`
+            let color = `#818181`
 
             if(rpchannel){
-                sendEditMessage(text)
+                sendEditMessage(text, color)
             }else{
                 sendNullMessage()
             }
         }
+    } */
+    if (interaction.data.name == "монета") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if(rpchannel){
+            let output = coinFlip()
+            sendLog(msgDate,'РП','Использовал монетку.','Успешно',`Вывод: Выпал(-а): ${output}`)
+            sendGlobalMessage(`Выпал(-а): ${output}`)
+        }else{
+            sendNullMessage()
+        }
     }
 });
+    if (interaction.data.name == "карты") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if(rpchannel){
+            let output = card()
+            sendLog(msgDate,'РП','Вытянул карту.','Успешно',`Вывод: Достал карту: ${output}`)
+            sendLocalMessage(`Достал: ${output}`)
+        }else{
+            sendNullMessage()
+        }
+    });
+
+    if (interaction.data.name == "кубик") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if(rpchannel){
+            let output = cube()
+            sendLog(msgDate,'РП','Бросил кубик.','Успешно',`Вывод: Выбрасил число: ${output}`)
+            sendLocalMessage(`Выбросил: ${output}`)
+        }else{
+            sendNullMessage()
+        }
+    });
+    
+
 
 function checkIntegrations() {
-    let standartPerm = [
-        {
-            id: `833226140755689483`,
-            type: 1,
-            permission: true
-        },
-        {
-            id: `833227050550296576`,
-            type: 1,
-            permission: true
-        },
-    ]
-    let adminPerm = [
-        {
-            id: `830061387849662515`,
-            type: 1,
-            permission: true
-        },
-    ]
-    let rpPerm = [
-        {
-            id: `856092976702816287`,
-            type: 1,
-            permission: true
-        },
-    ]
-    let mayorPerm = [
-        {
-            id: `852668893821665320`,
-            type: 1,
-            permission: true
-        },
-    ]
 
-    let command = {
-        name: "911", 
-        description: "Вызвать экстренные службы",
-        options: [
-            {
-                name: "служба",
-                description: "Служба, которую вы хотите вызвать",
-                type: "3",
-                required: true,
-                choices: [
-                    {
-                        name: "пожарная служба",
-                        value: "1"
-                    },
-                    {
-                        name: "полиция",
-                        value: "2"
-                    },
-                    {
-                        name: "медицинская служба",
-                        value: "3"
-                    }
-                ]
-            },
-            {
-                name: "текст",
-                description: "Текст сообщения для экстренных служб",
-                type: "3",
-                required: true,
-            },
-        ]
-    };
+    /* 
+    БЛОК СПИСКА КОМАНД
+    */
+
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "монета", 
+            description: "Подбросить монету",
+            options: []
+        }, config.guild_id)
+            .then()
+            .catch(console.error);
+    }, 200);
 
 
-    client.interaction.createApplicationCommand(command, config.guild_id, "856222015480135791").then(console.log)
+
+    //client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log)
 
     // удаление старых команд
     /* client.interaction
@@ -1726,9 +1892,8 @@ function checkIntegrations() {
             },
             {
                 name: "человек",
-                description: "Человек, которому это направлено",
+                description: "Человек, которому это направлено. По стандарту это вы",
                 type: "6",
-                required: true
             },
         ]
     }, config.guild_id)
@@ -1827,8 +1992,28 @@ function checkIntegrations() {
         .then()
         .catch(console.error);
     }, 200); */
-
-    client.interaction.getApplicationCommands(config.guild_id).then(console.log);
 }
 
 client.login(process.env.BOT_TOKEN);
+
+client.on('error', err => {
+    console.log('Ошибка!')
+    guild.channels.cache.get(Config.channelsID.serverMsg).send('> Бот обнаружил ошибку!', {embed: {
+                color: 16325403,
+                fields: [{
+                    name: `[${err.name}]:`,
+                    value: err.message
+                }],
+                
+                timestamp: new Date()
+            }
+        }
+    )
+});
+
+
+/* client.on('invalidated', () => {
+    console.log('Краш!')
+    guild.channels.cache.get(Config.channelsID.serverMsg).send(`> Бот неожиданно отключился! Скорее оповестите SHUSTRIK'а, <@&833226140755689483> и <@&833227050550296576>`)
+}); */
+// Абобус
