@@ -113,8 +113,9 @@ function comand(message,countS){
     return comand;
 };
 
-function random(min, max){
-    return Math.round(min - 0.5 + Math.random() * (max - min + 1));
+function random(min, max) {
+    let rand = min + Math.random() * (max + 1 - min);
+    return Math.floor(rand);
 }
 
 function haveRole(member, roleid){
