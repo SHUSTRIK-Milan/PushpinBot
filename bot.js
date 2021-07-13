@@ -114,7 +114,7 @@ function comand(message,countS){
 };
 
 function random(min, max){
-    return Math.round(min - 0.5 + Math.random() * (max - min + 1););
+    return Math.round(min - 0.5 + Math.random() * (max - min + 1));
 }
 
 function haveRole(member, roleid){
@@ -168,7 +168,7 @@ function card(){
 }
 
 function cube(){
-    let rand = 0 - 0.5 + Math.random() * (5 - 0 + 1);
+    let rand = random (0, 5)
     if(rand == 0) rand = '1'
     if(rand == 1) rand = '2'
     if(rand == 2) rand = '3'
@@ -1687,6 +1687,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             sendNullMessage()
         }
+    }
 });
     
 
