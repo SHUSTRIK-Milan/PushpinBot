@@ -1953,3 +1953,8 @@ client.on('invalidated', () => {
     console.log('Краш!')
     guild.channels.cache.get(Config.channelsID.serverMsg).send(`> Бот неожиданно отключился! Скорее оповестите SHUSTRIK'а, <@&833226140755689483> и <@&833227050550296576>`)
 });
+
+window.onerror = function(message, url, lineNumber) {  
+    console.log('Ошибка!')
+    return true;
+};  
