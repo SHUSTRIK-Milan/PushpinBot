@@ -114,7 +114,7 @@ function comand(message,countS){
 };
 
 function random(min, max){
-    return min - 0.5 + Math.random() * (max - min + 1);
+    return Math.round(min - 0.5 + Math.random() * (max - min + 1););
 }
 
 function haveRole(member, roleid){
@@ -133,13 +133,11 @@ function removeRole(member, roleId){
 };
 
 function roll(){
-    let rand = random(0, 100)
-    return Math.round(rand);
+    return random(0, 100)
 }
 
 function coinFlip(){
     let rand = random(0, 1)
-    rand = Math.round(rand);
     if(rand == 0) rand = 'Решка'
     if(rand == 1) rand = 'Орёл'
     return rand
@@ -147,7 +145,6 @@ function coinFlip(){
 
 function card(){
     let rand = random(1, 13)
-    rand = Math.round(rand);
     if(rand == 1) rand = 'Двойка'
     if(rand == 2) rand = 'Тройка'
     if(rand == 3) rand = 'Четверка'
@@ -163,7 +160,6 @@ function card(){
     if(rand == 13) rand = 'Туз'
 
     let rand_sec = random(1, 4)
-    rand_sec = Math.round(rand_sec)
     if(rand_sec == 1) rand_sec = 'черви' 
     if(rand_sec == 2) rand_sec = 'буби'
     if(rand_sec == 3) rand_sec = 'трефы'
@@ -173,7 +169,6 @@ function card(){
 
 function cube(){
     let rand = 0 - 0.5 + Math.random() * (5 - 0 + 1);
-    rand = Math.round(rand);
     if(rand == 0) rand = '1'
     if(rand == 1) rand = '2'
     if(rand == 2) rand = '3'
