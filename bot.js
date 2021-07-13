@@ -133,6 +133,13 @@ function roll(){
     return Math.round(rand);
 }
 
+function coinFlip(){
+    let rand = 0 - 0.5 + Math.random() * (1 - 0 + 1);
+    if(rand == 0) rand = 'Решка'
+    if(rand == 1) rand = 'Орёл'
+    return Math.round(rand);
+}
+
 function sendLog(message,cat,act,status,add){
     let img = `https://i.imgur.com/cjSSwtu.png`;
     if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
@@ -907,6 +914,11 @@ client.on('ready', () => {
 });
 
 client.ws.on('INTERACTION_CREATE', async interaction => {
+
+    /* 
+    БЛОК ФУНКЦИЙ КОМАНД
+    */
+
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
     let head = (haveRole(user, '833226140755689483') || haveRole(user, '833227050550296576'));
@@ -1450,8 +1462,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
     
         if(rpchannel){
-            sendLog(msgDate,'РП','Использовал шанс.','Успешно',`Вывод: Шанс: ${roll()} из 100`)
-            sendGlobalMessage(`Шанс: ${roll()} из 100`)
+            let output = roll()
+            sendLog(msgDate,'РП','Использовал шанс.','Успешно',`Вывод: Шанс: ${output} из 100`)
+            sendGlobalMessage(`Шанс: ${output} из 100`)
         }else{
             sendNullMessage()
         }
@@ -1605,30 +1618,37 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         }
     } */
+    if (interaction.data.name == "монета") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        if (interaction.data.options == undefined) {
+        }else{
+            if(rpchannel){
+                let output = coinFlip()
+                sendLog(msgDate,'РП','Использовал монетку.','Успешно',`Вывод: Выпал(-а): ${output}`)
+                sendGlobalMessage(`Выпал(-а): ${output}`)
+            }else{
+                sendNullMessage()
+            }
+        }
+    }
 });
 
 function checkIntegrations() {
 
-    let command = {
-        name: "tp", 
-        description: "Телепортировать игрока в локацию",
-        options: [
-            {
-                name: "локация",
-                description: "Локация, куда нужно телепортироваться",
-                type: "3",
-                required: true
-            },
-            {
-                name: "человек",
-                description: "Человек, которому это направлено. По стандарту это вы",
-                type: "6",
-            },
-        ]
-    };
+    /* 
+    БЛОК СПИСКА КОМАНД
+    */
 
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "монета", 
+            description: "Подбросить монету",
+            options: []
+        }, config.guild_id)
+            .then()
+            .catch(console.error);
+    }, 200);
 
-    client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log)
+    //client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log)
 
     // удаление старых команд
     /* client.interaction
@@ -1812,9 +1832,8 @@ function checkIntegrations() {
             },
             {
                 name: "человек",
-                description: "Человек, которому это направлено",
+                description: "Человек, которому это направлено. По стандарту это вы",
                 type: "6",
-                required: true
             },
         ]
     }, config.guild_id)
