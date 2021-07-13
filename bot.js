@@ -168,7 +168,8 @@ function card(){
 }
 
 function cube(){
-    let rand = random (0, 5)
+    let rand = random(0, 5)
+    console.log(rand)
     if(rand == 0) rand = '1'
     if(rand == 1) rand = '2'
     if(rand == 2) rand = '3'
