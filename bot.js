@@ -1,4 +1,4 @@
-window.onerror = function () {console.log('error!');};
+setTimeout(function() {window.onerror = function () {console.log('error!')}}, 1000);
 
 const Discord = require('discord.js');
 const Config = require('./config');
