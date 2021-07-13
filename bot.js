@@ -1699,15 +1699,6 @@ function checkIntegrations() {
     БЛОК СПИСКА КОМАНД
     */
 
-    setTimeout(() =>{client.interaction.createApplicationCommand({
-            name: "кубик", 
-            description: "Бросить игральный кубик",
-            options: []
-        }, config.guild_id)
-            .then()
-            .catch(console.error);
-    }, 200);
-
     //client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log)
 
     // удаление старых команд
@@ -1995,6 +1986,14 @@ function checkIntegrations() {
     setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "монета", 
             description: "Подбросить монету",
+            options: []
+        }, config.guild_id)
+            .then()
+            .catch(console.error);
+    }, 200);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "кубик", 
+            description: "Бросить игральный кубик",
             options: []
         }, config.guild_id)
             .then()
