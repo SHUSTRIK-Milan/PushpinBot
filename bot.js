@@ -1683,7 +1683,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(rpchannel){
             let output = cube()
             sendLog(msgDate,'РП','Бросил кубик.','Успешно',`Вывод: Выбрасил число: ${output}`)
-            sendLocalMessage(`Выбросил: ${output}`)
+            sendGlobalMessage(`Выбросил: ${output}`)
         }else{
             sendNullMessage()
         }
@@ -1699,15 +1699,13 @@ function checkIntegrations() {
     */
 
     setTimeout(() =>{client.interaction.createApplicationCommand({
-            name: "монета", 
-            description: "Подбросить монету",
+            name: "кубик", 
+            description: "Бросить игральный кубик",
             options: []
         }, config.guild_id)
             .then()
             .catch(console.error);
     }, 200);
-
-
 
     //client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log)
 
@@ -1992,7 +1990,15 @@ function checkIntegrations() {
         }, config.guild_id)
         .then()
         .catch(console.error);
-    }, 200); */
+    }, 200);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "монета", 
+            description: "Подбросить монету",
+            options: []
+        }, config.guild_id)
+            .then()
+            .catch(console.error);
+    }, 200);*/
 }
 
 client.login(process.env.BOT_TOKEN);
