@@ -1,3 +1,5 @@
+window.onerror = function () {console.log('error!');};
+
 const Discord = require('discord.js');
 const Config = require('./config');
 const client = new Discord.Client();
@@ -1954,6 +1956,3 @@ client.on('invalidated', () => {
     console.log('Краш!')
     guild.channels.cache.get(Config.channelsID.serverMsg).send(`> Бот неожиданно отключился! Скорее оповестите SHUSTRIK'а, <@&833226140755689483> и <@&833227050550296576>`)
 }); */
-
-window.onerror = function () {console.log('error!');};
-throw new Error();
