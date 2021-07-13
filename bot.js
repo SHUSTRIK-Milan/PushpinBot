@@ -1639,15 +1639,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     } */
     if (interaction.data.name == "монета") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
-        if (interaction.data.options == undefined) {
+        if(rpchannel){
+            let output = coinFlip()
+            sendLog(msgDate,'РП','Использовал монетку.','Успешно',`Вывод: Выпал(-а): ${output}`)
+            sendGlobalMessage(`Выпал(-а): ${output}`)
         }else{
-            if(rpchannel){
-                let output = coinFlip()
-                sendLog(msgDate,'РП','Использовал монетку.','Успешно',`Вывод: Выпал(-а): ${output}`)
-                sendGlobalMessage(`Выпал(-а): ${output}`)
-            }else{
-                sendNullMessage()
-            }
+            sendNullMessage()
         }
     }
 });
