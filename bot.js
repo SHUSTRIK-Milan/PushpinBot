@@ -1934,7 +1934,7 @@ function checkIntegrations() {
 
 client.login(process.env.BOT_TOKEN);
 
-client.on('shardError', (err) => {
+client.on('error', err => {
     console.log('Ошибка!')
     guild.channels.cache.get(Config.channelsID.serverMsg).send('> Бот обнаружил ошибку!', {embed: {
                 color: 16325403,
