@@ -1986,13 +1986,3 @@ client.login(process.env.BOT_TOKEN);
         }
     )
 }); */
-
-client.on("error", (e) => console.error(e));
-client.on("warn", (e) => console.warn(e));
-client.on("debug", (e) => console.info(e));
-
-/* client.on('invalidated', () => {
-    console.log('Краш!')
-    guild.channels.cache.get(Config.channelsID.serverMsg).send(`> Бот неожиданно отключился! Скорее оповестите SHUSTRIK'а, <@&833226140755689483> и <@&833227050550296576>`)
-}); */
-// Абобус
