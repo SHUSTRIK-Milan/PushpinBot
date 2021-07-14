@@ -1064,7 +1064,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                                 {
                                     type: 2,
                                     label: "Поднять",
-                                    style: 1,
+                                    style: 3,
                                     custom_id: "pick"
                                 },
                                 {
