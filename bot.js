@@ -1045,15 +1045,17 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 type: 4,
                 data: {
                     embeds: {
-                        fields: [{
-                            name: `Банка пива [x1]`,
-                            value: `Алюминиевая банка Балтики 9. Специально для Петри.`
-                        }],
-                        thumbnail: {
-                            url: `https://i.imgur.com/EdEYIrH.png`,
-                            height: 16,
-                            width: 16
-                        }
+                        [{
+                            fields: [{
+                                name: `Банка пива [x1]`,
+                                value: `Алюминиевая банка Балтики 9. Специально для Петри.`
+                            }],
+                            thumbnail: {
+                                url: `https://i.imgur.com/EdEYIrH.png`,
+                                height: 16,
+                                width: 16
+                            }
+                        }]
                     },
                     components: [
                         {
