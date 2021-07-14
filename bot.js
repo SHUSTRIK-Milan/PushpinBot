@@ -1672,7 +1672,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     if (interaction.data.name == "карты") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(rpchannel){
-            console.log(interaction.data)
+            console.log(interaction.data.options)
             let output = card()
             sendLog(msgDate,'РП','Вытянул карту.','Успешно',`Вывод: Достал карту: ${output}`)
             sendLocalMessage(`Достал: ${output}`)
