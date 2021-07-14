@@ -2002,7 +2002,7 @@ function checkIntegrations() {
     }, 200);*/
 }
 
-client.login(process.env.BOT_TOKEN);
+client.login(Config.discordTocens.main);
 
 /* client.on('error', err => {
     console.log('Ошибка!')
