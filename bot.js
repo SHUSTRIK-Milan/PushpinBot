@@ -946,10 +946,16 @@ client.on('message', message => {
                         components: [
                             {
                                 type: 2,
-                                label: "Hello!",
+                                label: "Выкинуть",
                                 style: 1,
-                                custom_id: "hello"
-                            }
+                                custom_id: "drop"
+                            },
+                            {
+                                type: 2,
+                                label: "Использовать",
+                                style: 4,
+                                custom_id: "use"
+                            },
                         ]
                     }
                 ]
@@ -1086,7 +1092,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     };
 
     if(interaction.type == 3){
-        if(interaction.data.custom_id == 'hello'){
+        if(interaction.data.custom_id == 'drop'){
+            sendLocalMessage('Hello!')
+        }else if(interaction.data.custom_id == 'pick'){
+            sendLocalMessage('Hello!')
+        }else if(interaction.data.custom_id == 'use'){
             sendLocalMessage('Hello!')
         }
     }
