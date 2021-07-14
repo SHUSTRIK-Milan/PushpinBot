@@ -1672,6 +1672,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     if (interaction.data.name == "карты") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(rpchannel){
+            console.log(interaction.data)
             let output = card()
             sendLog(msgDate,'РП','Вытянул карту.','Успешно',`Вывод: Достал карту: ${output}`)
             sendLocalMessage(`Достал: ${output}`)
@@ -1700,7 +1701,45 @@ function checkIntegrations() {
     БЛОК СПИСКА КОМАНД
     */
 
-    //client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log)
+    
+
+    let command = {
+        name: "карты", 
+        description: "Вытащить карту из колоды",
+        options: [
+            {
+                name: "открытость",
+                description: "Достать ли карту в открытую?",
+                type: "5",
+            }
+        ]
+    }
+    let command2 = {
+        name: "монета", 
+        description: "Подбросить монету",
+        options: [
+            {
+                name: "открытость",
+                description: "Бросить ли монету в открытую?",
+                type: "5",
+            }
+        ]
+    }
+    let command3 = {
+        name: "кубик", 
+        description: "Бросить игральный кубик",
+        options: [
+            {
+                name: "открытость",
+                description: "Бросить ли кубик в открытую?",
+                type: "5",
+            }
+        ]
+    }
+
+    client.interaction.createApplicationCommand(command, config.guild_id, "859131311692316682").then(console.log)
+    client.interaction.createApplicationCommand(command2, config.guild_id, "864551702278570014").then(console.log)
+    client.interaction.createApplicationCommand(command3, config.guild_id, "864610902053355529").then(console.log)
 
     // удаление старых команд
     /* client.interaction
