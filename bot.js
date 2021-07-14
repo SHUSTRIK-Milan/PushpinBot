@@ -944,6 +944,11 @@ client.on('message', message => {
                         name: `Банка пива [x1]`,
                         value: `Алюминиевая банка Балтики 9. Специально для Петри.`
                     }],
+                    image: {
+                        url: `https://i.imgur.com/EdEYIrH.png`,
+                        height: 32,
+                        width: 32
+                    }
                 },
                 components: [
                     {
@@ -1038,37 +1043,39 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         client.api.interactions(interaction.id, interaction.token).callback.post({
             type: 4,
             data:{
-                embed: {
-                    fields: [{
-                        name: `Банка пива [x1]`,
-                        value: `Алюминиевая банка Балтики 9. Специально для Петри.`
-                    }],
-                    image: {
-                        url: `https://i.imgur.com/EdEYIrH.png`,
-                        height: 32,
-                        width: 32
-                    }
-                },
-                components: [
-                    {
-                        type: 1,
-                        components: [
-                            {
-                                type: 2,
-                                label: "Поднять",
-                                style: 1,
-                                custom_id: "pick"
-                            },
-                            {
-                                type: 2,
-                                label: "Использовать",
-                                style: 4,
-                                custom_id: "use"
-                            },
-                        ]
-                    }
-                ],
-                flags: 64
+                data: {
+                    embed: {
+                        fields: [{
+                            name: `Банка пива [x1]`,
+                            value: `Алюминиевая банка Балтики 9. Специально для Петри.`
+                        }],
+                        image: {
+                            url: `https://i.imgur.com/EdEYIrH.png`,
+                            height: 32,
+                            width: 32
+                        }
+                    },
+                    components: [
+                        {
+                            type: 1,
+                            components: [
+                                {
+                                    type: 2,
+                                    label: "Поднять",
+                                    style: 1,
+                                    custom_id: "pick"
+                                },
+                                {
+                                    type: 2,
+                                    label: "Использовать",
+                                    style: 4,
+                                    custom_id: "use"
+                                },
+                            ]
+                        }
+                    ],
+                    flags: 64
+                }
             }
         })
     }
