@@ -113,8 +113,9 @@ function comand(message,countS){
     return comand;
 };
 
-function random(min, max){
-    return Math.round(min - 0.5 + Math.random() * (max - min + 1));
+function random(min, max) {
+    let rand = min + Math.random() * (max + 1 - min);
+    return Math.floor(rand);
 }
 
 function haveRole(member, roleid){
@@ -139,42 +140,43 @@ function roll(){
 function coinFlip(){
     let rand = random(0, 1)
     if(rand == 0) rand = 'Решка'
-    if(rand == 1) rand = 'Орёл'
+    else if(rand == 1) rand = 'Орёл'
     return rand
 }
 
 function card(){
     let rand = random(1, 13)
     if(rand == 1) rand = 'Двойка'
-    if(rand == 2) rand = 'Тройка'
-    if(rand == 3) rand = 'Четверка'
-    if(rand == 4) rand = 'Пятерка'
-    if(rand == 5) rand = 'Шестерка'
-    if(rand == 6) rand = 'Семерка'
-    if(rand == 7) rand = 'Восьмерка'
-    if(rand == 8) rand = 'Девятка'
-    if(rand == 9) rand = 'Десятка'
-    if(rand == 10) rand = 'Валет'
-    if(rand == 11) rand = 'Дама'
-    if(rand == 12) rand = 'Король'
-    if(rand == 13) rand = 'Туз'
+    else if(rand == 2) rand = 'Тройка'
+    else if(rand == 3) rand = 'Четверка'
+    else if(rand == 4) rand = 'Пятерка'
+    else if(rand == 5) rand = 'Шестерка'
+    else if(rand == 6) rand = 'Семерка'
+    else if(rand == 7) rand = 'Восьмерка'
+    else if(rand == 8) rand = 'Девятка'
+    else if(rand == 9) rand = 'Десятка'
+    else if(rand == 10) rand = 'Валет'
+    else if(rand == 11) rand = 'Дама'
+    else if(rand == 12) rand = 'Король'
+    else if(rand == 13) rand = 'Туз'
 
     let rand_sec = random(1, 4)
     if(rand_sec == 1) rand_sec = 'черви' 
-    if(rand_sec == 2) rand_sec = 'буби'
-    if(rand_sec == 3) rand_sec = 'трефы'
-    if(rand_sec == 4) rand_sec = 'пики'
+    else if(rand_sec == 2) rand_sec = 'буби'
+    else if(rand_sec == 3) rand_sec = 'трефы'
+    else if(rand_sec == 4) rand_sec = 'пики'
     return `${rand} ${rand_sec}`
 }
 
 function cube(){
-    let rand = random (0, 5)
+    let rand = random(0, 5)
+    console.log(rand)
     if(rand == 0) rand = '1'
-    if(rand == 1) rand = '2'
-    if(rand == 2) rand = '3'
-    if(rand == 3) rand = '4'
-    if(rand == 4) rand = '5'
-    if(rand == 5) rand = '6'
+    else if(rand == 1) rand = '2'
+    else if(rand == 2) rand = '3'
+    else if(rand == 3) rand = '4'
+    else if(rand == 4) rand = '5'
+    else if(rand == 5) rand = '6'
     return rand
 }
 
@@ -1698,15 +1700,6 @@ function checkIntegrations() {
     БЛОК СПИСКА КОМАНД
     */
 
-    setTimeout(() =>{client.interaction.createApplicationCommand({
-            name: "кубик", 
-            description: "Бросить игральный кубик",
-            options: []
-        }, config.guild_id)
-            .then()
-            .catch(console.error);
-    }, 200);
-
     //client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log)
 
     // удаление старых команд
@@ -1994,6 +1987,14 @@ function checkIntegrations() {
     setTimeout(() =>{client.interaction.createApplicationCommand({
             name: "монета", 
             description: "Подбросить монету",
+            options: []
+        }, config.guild_id)
+            .then()
+            .catch(console.error);
+    }, 200);
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+            name: "кубик", 
+            description: "Бросить игральный кубик",
             options: []
         }, config.guild_id)
             .then()
