@@ -1043,6 +1043,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         name: `Банка пива [x1]`,
                         value: `Алюминиевая банка Балтики 9. Специально для Петри.`
                     }],
+                    image: {
+                        url: `https://i.imgur.com/EdEYIrH.png`,
+                        height: 32,
+                        width: 32
+                    }
                 },
                 components: [
                     {
