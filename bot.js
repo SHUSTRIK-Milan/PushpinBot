@@ -939,7 +939,12 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
         client.api.channels(message.channel.id).messages.post({
             data:{
-                content: "This is a message with components",
+                embed: {
+                    fields: [{
+                        name: `Банка пива [x1]`,
+                        value: `Алюминиевая банка Балтики 9. Специально для Петри.`
+                    }],
+                },
                 components: [
                     {
                         type: 1,
@@ -986,6 +991,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     /* 
     БЛОК ФУНКЦИЙ КОМАНД
     */
+
+    console.log(interaction)
     
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
@@ -1023,6 +1030,38 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     content: content,
                     flags: 64
                 }
+            }
+        })
+    }
+
+    function dropObject(){
+        client.api.interactions(interaction.id, interaction.token).callback.post({
+            data:{
+                embed: {
+                    fields: [{
+                        name: `Банка пива [x1]`,
+                        value: `Алюминиевая банка Балтики 9. Специально для Петри.`
+                    }],
+                },
+                components: [
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                label: "Поднять",
+                                style: 1,
+                                custom_id: "pick"
+                            },
+                            {
+                                type: 2,
+                                label: "Использовать",
+                                style: 4,
+                                custom_id: "use"
+                            },
+                        ]
+                    }
+                ]
             }
         })
     }
@@ -1093,7 +1132,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     if(interaction.type == 3){
         if(interaction.data.custom_id == 'drop'){
-            sendLocalMessage('Hello!')
+            dropObject()
         }else if(interaction.data.custom_id == 'pick'){
             sendLocalMessage('Hello!')
         }else if(interaction.data.custom_id == 'use'){
