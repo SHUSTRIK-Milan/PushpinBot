@@ -944,7 +944,7 @@ client.on('message', message => {
                         name: `Банка пива [x1]`,
                         value: `Алюминиевая банка Балтики 9. Специально для Петри.`
                     }],
-                    image: {
+                    thumbnail: {
                         url: `https://i.imgur.com/EdEYIrH.png`,
                         height: 32,
                         width: 32
@@ -1041,15 +1041,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     function dropObject(){
         client.api.interactions(interaction.id, interaction.token).callback.post({
-            type: 4,
             data:{
+                type: 4,
                 data: {
                     embed: {
                         fields: [{
                             name: `Банка пива [x1]`,
                             value: `Алюминиевая банка Балтики 9. Специально для Петри.`
                         }],
-                        image: {
+                        thumbnail: {
                             url: `https://i.imgur.com/EdEYIrH.png`,
                             height: 32,
                             width: 32
