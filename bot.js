@@ -1662,8 +1662,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(rpchannel){
             let output = coinFlip()
-            sendLog(msgDate,'РП','Использовал монетку.','Успешно',`Вывод: Выпал(-а): ${output}`)
-            sendGlobalMessage(`Выпал(-а): ${output}`)
+            if(interaction.data.options == undefined){
+                sendLog(msgDate,'РП','Использовал монетку.','Успешно',`Вывод: Выпал(-а): ${output}`)
+                sendLocalMessage(`Выпал(-а): ${output}`)
+            }else if(interaction.data.options[0].value == 'true'){
+                sendLog(msgDate,'РП','Использовал монетку.','Успешно',`Вывод: Выпал(-а): ${output}`)
+                sendGlobalMessage(`Выпал(-а): ${output}`)
+            }
         }else{
             sendNullMessage()
         }
@@ -1674,8 +1679,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(rpchannel){
             console.log(interaction.data.options)
             let output = card()
-            sendLog(msgDate,'РП','Вытянул карту.','Успешно',`Вывод: Достал карту: ${output}`)
-            sendLocalMessage(`Достал: ${output}`)
+            if(interaction.data.options == undefined){
+                sendLog(msgDate,'РП','Вытянул карту.','Успешно',`Вывод: Достал карту: ${output}`)
+                sendLocalMessage(`Достал: ${output}`)
+            }else if(interaction.data.options[0].value == 'true'){
+                sendLog(msgDate,'РП','Вытянул карту.','Успешно',`Вывод: Достал карту: ${output}`)
+                sendGlobalMessage(`Достал: ${output}`)
+            }
         }else{
             sendNullMessage()
         }
@@ -1685,8 +1695,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(rpchannel){
             let output = cube()
-            sendLog(msgDate,'РП','Бросил кубик.','Успешно',`Вывод: Выбрасил число: ${output}`)
-            sendGlobalMessage(`Выбросил: ${output}`)
+            if(interaction.data.options == undefined){
+                sendLog(msgDate,'РП','Бросил кубик.','Успешно',`Вывод: Выбрасил число: ${output}`)
+                sendLocalMessage(`Выбросил: ${output}`)
+            }else if(interaction.data.options[0].value == 'true'){
+                sendLog(msgDate,'РП','Бросил кубик.','Успешно',`Вывод: Выбрасил число: ${output}`)
+                sendGlobalMessage(`Выбросил: ${output}`)
+            }
         }else{
             sendNullMessage()
         }
@@ -1710,7 +1725,13 @@ function checkIntegrations() {
             {
                 name: "открытость",
                 description: "Достать ли карту в открытую?",
-                type: "5",
+                type: "3",
+                choices: [
+                    {
+                        name: "Да",
+                        value: "true"
+                    }
+                ]
             }
         ]
     }
@@ -1721,7 +1742,13 @@ function checkIntegrations() {
             {
                 name: "открытость",
                 description: "Бросить ли монету в открытую?",
-                type: "5",
+                type: "3",
+                choices: [
+                    {
+                        name: "Да",
+                        value: "true"
+                    }
+                ]
             }
         ]
     }
@@ -1732,7 +1759,13 @@ function checkIntegrations() {
             {
                 name: "открытость",
                 description: "Бросить ли кубик в открытую?",
-                type: "5",
+                type: "3",
+                choices: [
+                    {
+                        name: "Да",
+                        value: "true"
+                    }
+                ]
             }
         ]
     }
