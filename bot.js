@@ -1036,6 +1036,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     function dropObject(){
         client.api.interactions(interaction.id, interaction.token).callback.post({
+            type: 4,
             data:{
                 embed: {
                     fields: [{
@@ -1061,7 +1062,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                             },
                         ]
                     }
-                ]
+                ],
+                flags: 64
             }
         })
     }
