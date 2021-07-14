@@ -946,8 +946,8 @@ client.on('message', message => {
                     }],
                     thumbnail: {
                         url: `https://i.imgur.com/EdEYIrH.png`,
-                        height: 32,
-                        width: 32
+                        height: 16,
+                        width: 16
                     }
                 },
                 components: [
@@ -1051,8 +1051,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         }],
                         thumbnail: {
                             url: `https://i.imgur.com/EdEYIrH.png`,
-                            height: 32,
-                            width: 32
+                            height: 16,
+                            width: 16
                         }
                     },
                     components: [
