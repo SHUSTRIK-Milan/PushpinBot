@@ -946,9 +946,9 @@ client.on('message', message => {
                         components: [
                             {
                                 type: 2,
-                                label: "Click me!",
+                                label: "Hello!",
                                 style: 1,
-                                custom_id: "click_one"
+                                custom_id: "hello"
                             }
                         ]
                     }
@@ -981,7 +981,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     БЛОК ФУНКЦИЙ КОМАНД
     */
     
-    console.log(interaction)
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
     let head = (haveRole(user, '833226140755689483') || haveRole(user, '833227050550296576'));
@@ -1085,6 +1084,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         
         client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
     };
+
+    if(interaction.type == 3){
+        if(interaction.data.custom_id == 'hello'){
+            sendLocalMessage('Hello!')
+        }
+    }
 
     if (interaction.data.name == "осмотр") {
         var arg = "";
