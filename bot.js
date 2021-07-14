@@ -1044,8 +1044,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             data:{
                 type: 4,
                 data: {
-                    embeds: {
-                        [{
+                    embeds: [
+                        {
                             fields: [{
                                 name: `Банка пива [x1]`,
                                 value: `Алюминиевая банка Балтики 9. Специально для Петри.`
@@ -1055,8 +1055,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                                 height: 16,
                                 width: 16
                             }
-                        }]
-                    },
+                        }
+                    ],
                     components: [
                         {
                             type: 1,
