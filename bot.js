@@ -978,7 +978,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     /* 
     БЛОК ФУНКЦИЙ КОМАНД
     */
-
+    
+    console.log(interaction.data)
     let channel = guild.channels.cache.get(interaction.channel_id);
     let user = await guild.members.fetch(interaction.member.user.id);
     let head = (haveRole(user, '833226140755689483') || haveRole(user, '833227050550296576'));
