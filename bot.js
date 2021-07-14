@@ -937,7 +937,7 @@ client.on('message', message => {
 
     if(comand(message).com == `test` && head && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
-        message.channel.send({
+        client.api.channels(message.channel.id).messages.post({
             content: "This is a message with components",
             components: [
                 {
