@@ -1044,7 +1044,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             data:{
                 type: 4,
                 data: {
-                    embed: {
+                    embeds: {
                         fields: [{
                             name: `Банка пива [x1]`,
                             value: `Алюминиевая банка Балтики 9. Специально для Петри.`
