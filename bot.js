@@ -1105,15 +1105,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         } else {
-            arg = interaction.data.options[0].value
+            arg = interaction.data.options[0].value.split(' ')[0]
         }
         
 
         if(rpchannel){
             let argsObj = guild.channels.cache.get(arg.slice(2).slice(0,-1))
             let channelFA = argsObj
-            console.log(argsObj)
-            console.log(arg.slice(2).slice(0,-1))
             //принимаю аргументы
             let homePos = Config.objects.find(st => `«${st.name.toLowerCase()}»` == channel.parent.name.toLowerCase().slice(3) && st.id == channel.topic.split('-')[0]);
             console.log(homePos)
