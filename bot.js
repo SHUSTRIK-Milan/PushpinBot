@@ -1108,6 +1108,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             console.log(interaction.data.options[0])
             arg = interaction.data.options[0].value
         }
+        console.log(interaction.data.options)
 
         if(rpchannel){
             let argsObj = guild.channels.cache.get(arg.slice(2).slice(0,-1))
@@ -1117,7 +1118,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             console.log(homePos)
             //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
             if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase().split('-').join(' ');
-            if(argsObj == undefined){sendLocalMessage("Используйте # для быстрого доступа из категории \`❌ Fast Access.\`"); return};
+            if(argsObj == undefined){sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: Используйте # для быстрого доступа из категории \`❌ Fast Access.\``); sendLocalMessage("Используйте # для быстрого доступа из категории \`❌ Fast Access.\`"); return};
             if(homePos.name == argsObj){sendLocalMessage(`Вы уже находитесь на этом объекте.`); return}
             //проверяю не канал ли аргумент, если нет, то просто беру написанное.
             let walkway = homePos.radius.find(obj => obj.toLowerCase() == argsObj.toLowerCase());
