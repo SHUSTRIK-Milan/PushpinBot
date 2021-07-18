@@ -1069,7 +1069,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             giveRole(user, Config.departments[interaction.data.custom_id][2]);
             removeRole(user, '854315001543786507');
             sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id][2]).name}`)
-            sendLocalMessage(`> **Вы взяли форму** 🗂️`);
+            client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({
+                data: {
+                    content: `> **Вы взяли форму** 🗂️`
+                }
+            })
         }
     }
 
