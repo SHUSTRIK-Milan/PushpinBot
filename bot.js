@@ -1326,10 +1326,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                             }
                         }
                     })
-                    giveRole(member, role);
-                    removeRole(msgDate.member, '854315001543786507');
-                    sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(role).name}`)
-                    sendLocalMessage(`> **Вы взяли форму** 🗂️`);
                 }
             };
             for(let dept in Config.departments){
