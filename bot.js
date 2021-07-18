@@ -1281,11 +1281,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(rpchannel){
             function giveForm(member, role){
                 let comps = []
+                let r1 = random(1,3)
+                if(r1 == 2) r1 = 4
                 for(obj in Config.departments){
                     comps.push({
                         type: 2,
                         label: Config.departments[obj][3],
-                        style: 1,
+                        style: r1,
                         custom_id: obj
                     })
                 }
@@ -1309,8 +1311,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                                 embeds: [
                                     {
                                         fields: [{
-                                            name: `Банка пива [x1]`,
-                                            value: `Алюминиевая банка Балтики 9. Специально для Петри.`
+                                            name: `Взятие формы`,
+                                            value: `Выберите желаемую форму.`
                                         }],
                                     }
                                 ],
