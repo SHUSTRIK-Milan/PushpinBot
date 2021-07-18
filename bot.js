@@ -1349,10 +1349,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                                 style: Config.departments[dept][4],
                                 custom_id: dept
                             })
+                            
                         }
                     });
                 };
-            }})
+            }resolve()})
                 
             promFor1.then(() => {
                 console.log(comps)
