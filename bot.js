@@ -1066,11 +1066,25 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     if(interaction.type == 3){
         if(Object.getOwnPropertyNames(Config.departments).find(obj => obj == interaction.data.custom_id) != undefined){
-            giveRole(user, Config.departments[interaction.data.custom_id][2]);
-            removeRole(user, '854315001543786507');
-            sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id][2]).name}`)
-
-            sendLocalMessage(`> **Вы взяли форму** 🗂️`);
+            for(let dep in Config.departments){
+                if(channel.id == Config.departments[dep][0] && haveRole(msgDate.member, `854315001543786507`) && !haveRole(msgDate.member, Config.departments[dep][2])){
+                    giveRole(user, Config.departments[interaction.data.custom_id][2]);
+                    removeRole(user, '854315001543786507');
+                    sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id][2]).name}`)
+                    sendLocalMessage(`> **Вы взяли форму** 🗂️`);
+                    return;
+                }else if(channel.id == Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
+                    removeRole(msgDate.member, Config.departments[dep][2]);
+                    giveRole(msgDate.member, '854315001543786507');
+                    sendLocalMessage(`> **Форма снята** 🗂️`);
+                    sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Успешно',`Вывод: > **Форма снята** 🗂️`)
+                    return;
+                }else if(channel.id != Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
+                    sendLocalMessage(`> **Вы не можете взять несколько форм организаций** 🗂️`);
+                    sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: > **Вы не можете взять несколько форм организаций** 🗂️`)
+                    return;
+                }
+            }
         }
     }
 
@@ -1296,19 +1310,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     sendLocalMessage(`> **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
                     sendLog(msgDate,'РП','Попытался взять форму.','Ошибка',`Вывод: > **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
                     return
-                }
-                for(let dep in Config.departments){
-                    if(channel.id == Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
-                        removeRole(msgDate.member, Config.departments[dep][2]);
-                        giveRole(msgDate.member, '854315001543786507');
-                        sendLocalMessage(`> **Форма снята** 🗂️`);
-                        sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Успешно',`Вывод: > **Форма снята** 🗂️`)
-                        return;
-                    }else if(channel.id != Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
-                        sendLocalMessage(`> **Вы не можете взять несколько форм организаций** 🗂️`);
-                        sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: > **Вы не можете взять несколько форм организаций** 🗂️`)
-                        return;
-                    }
                 }
                 
                 client.api.interactions(interaction.id, interaction.token).callback.post({
