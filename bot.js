@@ -1306,13 +1306,14 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     sendLog(msgDate,'РП','Попытался взять форму.','Ошибка',`Вывод: > **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
                     return
                 }
-
-                if(channel.id == Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
-                    removeRole(msgDate.member, Config.departments[dep][2]);
-                    giveRole(msgDate.member, '854315001543786507');
-                    sendLocalMessage(`> **Форма снята** 🗂️`);
-                    sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Успешно',`Вывод: > **Форма снята** 🗂️`)
-                    return;
+                for(let dep in Config.departments){
+                    if(channel.id == Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
+                        removeRole(msgDate.member, Config.departments[dep][2]);
+                        giveRole(msgDate.member, '854315001543786507');
+                        sendLocalMessage(`> **Форма снята** 🗂️`);
+                        sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Успешно',`Вывод: > **Форма снята** 🗂️`)
+                        return;
+                    }
                 }
                 
                 client.api.interactions(interaction.id, interaction.token).callback.post({
