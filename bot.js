@@ -1280,6 +1280,16 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     
         if(rpchannel){
             function giveForm(member, role){
+                let comps = []
+                for(obj in Config.departments){
+                    comps.push({
+                        type: 2,
+                        label: Config.departments[obj][3],
+                        style: 1,
+                        custom_id: obj
+                    })
+                }
+
                 if(haveRole(member, role)){
                     removeRole(member, role);
                     giveRole(msgDate.member, '854315001543786507');
@@ -1292,6 +1302,28 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: > **Вы не можете взять несколько форм организаций** 🗂️`)
                         return;
                     }
+                    client.api.interactions(interaction.id, interaction.token).callback.post({
+                        data:{
+                            type: 4,
+                            data: {
+                                embeds: [
+                                    {
+                                        fields: [{
+                                            name: `Банка пива [x1]`,
+                                            value: `Алюминиевая банка Балтики 9. Специально для Петри.`
+                                        }],
+                                    }
+                                ],
+                                components: [
+                                    {
+                                        type: 1,
+                                        components: comps
+                                    }
+                                ],
+                                flags: 64
+                            }
+                        }
+                    })
                     giveRole(member, role);
                     removeRole(msgDate.member, '854315001543786507');
                     sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(role).name}`)
