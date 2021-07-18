@@ -1354,7 +1354,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         });
                     };
                 }
-                return
+                return comps
             }
                 
             forsDeps().then(comps => {
