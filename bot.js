@@ -1335,7 +1335,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 })
             };
 
-            var promFor1 = new Promise((resolve, reject) => { for(let dept in Config.departments){
+            for(let dept in Config.departments){
                 if(channel.id == Config.departments[dept][0]){
                     let channel = guild.channels.cache.get(BDchnl);
                     channel.messages.fetch(Config.departments[dept][1]).then(oMsg => {
@@ -1352,12 +1352,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         }
                     });
                 };
-            } resolve(comps)})
+            }
                 
-            promFor1.then(compss => {
+            setTimeout(() => {
                 console.log(compss)
                 //giveForm(compss);
-            });
+            }, 50);
             
         }else{
             sendNullMessage()
