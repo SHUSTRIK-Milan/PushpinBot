@@ -1335,7 +1335,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 })
             };
 
-            async function forDep()
+            async function forDep(){
                 for(let dept in Config.departments){
                     if(channel.id == Config.departments[dept][0]){
                         let channel = guild.channels.cache.get(BDchnl);
