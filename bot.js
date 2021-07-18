@@ -1355,7 +1355,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
                 
             setTimeout(() => {
-                console.log(compss)
+                console.log(comps)
                 //giveForm(compss);
             }, 50);
             
