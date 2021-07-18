@@ -1335,7 +1335,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 })
             };
 
-            for(let dept in Config.departments){
+            var promFor1 = new Promise((resolve, reject) => { for(let dept in Config.departments){
                 if(channel.id == Config.departments[dept][0]){
                     let channel = guild.channels.cache.get(BDchnl);
                     channel.messages.fetch(Config.departments[dept][1]).then(oMsg => {
@@ -1352,12 +1352,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         }
                     });
                 };
-            }
+            }})
                 
-            Promise.all(comps)
+            Promise.all(promFor1)
             .then(data => {
                 console.log(data)
-                giveForm(comps);
+                giveForm(data);
             });
             
         }else{
