@@ -1069,9 +1069,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             giveRole(user, Config.departments[interaction.data.custom_id][2]);
             removeRole(user, '854315001543786507');
             sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id][2]).name}`)
-            client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({
-                content: `> **Вы взяли форму** 🗂️`
-            })
+
+            sendLocalMessage(`> **Вы взяли форму** 🗂️`);
         }
     }
 
@@ -1291,7 +1290,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
     
         if(rpchannel){
-            let r1
             let comps = []
             function giveForm(member, role, comps){
                 if(haveRole(member, role)){
@@ -1337,13 +1335,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         let nMsg = oMsg.content.split('\n');
                         nMsg.splice(0,1);
 
-                        r1 = random(1,3)
-                        if(r1 == 2) r1 = 4
-
                         comps.push({
                             type: 2,
                             label: Config.departments[dept][3],
-                            style: r1,
+                            style: Config.departments[dept][4],
                             custom_id: dept
                         })
         
