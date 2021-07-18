@@ -1353,11 +1353,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         }
                     };
                 }
-
+            }
+            forDep().then(() => {
                 console.log(comps)
                 giveForm(comps);
-            }
-            forDep()
+            })
             
         }else{
             sendNullMessage()
