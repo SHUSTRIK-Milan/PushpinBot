@@ -1334,25 +1334,30 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     }
                 })
             };
-            for(let dept in Config.departments){
-                if(channel.id == Config.departments[dept][0]){
-                    let channel = guild.channels.cache.get(BDchnl);
-                    channel.messages.fetch(Config.departments[dept][1]).then(oMsg => {
-                        let nMsg = oMsg.content.split('\n');
-                        nMsg.splice(0,1);
-        
-                        if(nMsg.find(member => member.split('-')[0] == msgDate.member.id) != null){
-                            comps.push({
-                                type: 2,
-                                label: Config.departments[dept][3],
-                                style: Config.departments[dept][4],
-                                custom_id: dept
-                            })
-                        }
-                    });
-                };
-            }
-            giveForm(comps);
+            (async () => {
+                for(let dept in Config.departments){
+                    if(channel.id == Config.departments[dept][0]){
+                        let channel = guild.channels.cache.get(BDchnl);
+                        channel.messages.fetch(Config.departments[dept][1]).then(oMsg => {
+                            let nMsg = oMsg.content.split('\n');
+                            nMsg.splice(0,1);
+            
+                            if(nMsg.find(member => member.split('-')[0] == msgDate.member.id) != null){
+                                comps.push({
+                                    type: 2,
+                                    label: Config.departments[dept][3],
+                                    style: Config.departments[dept][4],
+                                    custom_id: dept
+                                })
+                            }
+                        });
+                    };
+                }
+            })().then(() => {
+                console.log(comps)
+                giveForm(comps);
+            })
+            
         }else{
             sendNullMessage()
         }
