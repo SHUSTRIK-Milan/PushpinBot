@@ -1291,42 +1291,39 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     
         if(rpchannel){
             let comps = []
-            function giveForm(member, role, comps){
-                if(haveRole(member, role)){
-                    removeRole(member, role);
-                    giveRole(msgDate.member, '854315001543786507');
-                    sendLog(msgDate,'РП','Снял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(role).name}`)
-                    sendLocalMessage(`> **Вы сняли форму** 🗂️`);
-                }
-                if(!haveRole(member, role)){
-                    if(!haveRole(msgDate.member, `854315001543786507`)){
-                        sendLocalMessage(`> **Вы не можете взять несколько форм организаций** 🗂️`);
-                        sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: > **Вы не можете взять несколько форм организаций** 🗂️`)
+            function giveForm(comps){
+                for(let dep in Config.departments){
+                    if(!haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
+                        removeRole(msgDate.member, Config.departments[dep][2]);
+                        giveRole(msgDate.member, '854315001543786507');
+                        sendLocalMessage(`> **Форма снята** 🗂️`);
+                        sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Успешно',`Вывод: > **Форма снята** 🗂️`)
                         return;
                     }
-                    client.api.interactions(interaction.id, interaction.token).callback.post({
-                        data:{
-                            type: 4,
-                            data: {
-                                embeds: [
-                                    {
-                                        fields: [{
-                                            name: `Взятие формы`,
-                                            value: `Выберите желаемую профессию.`
-                                        }],
-                                    }
-                                ],
-                                components: [
-                                    {
-                                        type: 1,
-                                        components: comps
-                                    }
-                                ],
-                                flags: 64
-                            }
-                        }
-                    })
                 }
+                
+                client.api.interactions(interaction.id, interaction.token).callback.post({
+                    data:{
+                        type: 4,
+                        data: {
+                            embeds: [
+                                {
+                                    fields: [{
+                                        name: `Взятие формы`,
+                                        value: `Выберите желаемую профессию.`
+                                    }],
+                                }
+                            ],
+                            components: [
+                                {
+                                    type: 1,
+                                    components: comps
+                                }
+                            ],
+                            flags: 64
+                        }
+                    }
+                })
             };
             for(let dept in Config.departments){
                 if(channel.id == Config.departments[dept][0]){
@@ -1343,7 +1340,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         })
         
                         if(nMsg.find(member => member.split('-')[0] == msgDate.member.id) != null){
-                            giveForm(msgDate.member, Config.departments[dept][2], comps);
+                            giveForm(comps);
                         }else{
                             sendLocalMessage(`> **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
                             sendLog(msgDate,'РП','Попытался взять форму.','Ошибка',`Вывод: > **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
