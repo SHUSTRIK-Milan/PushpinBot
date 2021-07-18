@@ -1290,6 +1290,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
     
         if(rpchannel){
+            let comps = []
             function giveForm(comps){
                 if(comps.length == 0){
                     sendLocalMessage(`> **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
@@ -1335,7 +1336,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             };
 
             async function forsDeps(){
-                let comps = []
                 for(let dept in Config.departments){
                     if(channel.id == Config.departments[dept][0]){
                         let channel = guild.channels.cache.get(BDchnl);
