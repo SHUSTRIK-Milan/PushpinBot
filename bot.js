@@ -1293,11 +1293,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             let comps = []
             function giveForm(comps){
                 for(let dep in Config.departments){
-                    if(!haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
+                    if(channel.id == Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
                         removeRole(msgDate.member, Config.departments[dep][2]);
                         giveRole(msgDate.member, '854315001543786507');
                         sendLocalMessage(`> **Форма снята** 🗂️`);
                         sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Успешно',`Вывод: > **Форма снята** 🗂️`)
+                        return;
+                    }else{
+                        sendLocalMessage(`> **Вы не можете взять несколько форм организаций** 🗂️`);
+                        sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: > **Вы не можете взять несколько форм организаций** 🗂️`)
                         return;
                     }
                 }
