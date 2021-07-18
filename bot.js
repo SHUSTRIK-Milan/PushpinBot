@@ -1354,10 +1354,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 };
             }})
                 
-            Promise.all([promFor1])
-            .then(data => {
-                console.log(data)
-                giveForm(data);
+            promFor1.then(() => {
+                console.log(comps)
+                giveForm(comps);
             });
             
         }else{
