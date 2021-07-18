@@ -1335,10 +1335,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 })
             };
 
-            for(let dept in Config.departments){
-                if(channel.id == Config.departments[dept][0]){
-                    let channel = guild.channels.cache.get(BDchnl);
-                    channel.messages.fetch(Config.departments[dept][1]).then(oMsg => {
+            async function forDep()
+                for(let dept in Config.departments){
+                    if(channel.id == Config.departments[dept][0]){
+                        let channel = guild.channels.cache.get(BDchnl);
+                        let oMsg = await channel.messages.fetch(Config.departments[dept][1])
                         let nMsg = oMsg.content.split('\n');
                         nMsg.splice(0,1);
         
@@ -1349,16 +1350,14 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                                 style: Config.departments[dept][4],
                                 custom_id: dept
                             })
-                            console.log(comps)
                         }
-                    });
-                };
-            }
-                
-            setTimeout(() => {
+                    };
+                }
+
                 console.log(comps)
-                //giveForm(compss);
-            }, 150);
+                giveForm(comps);
+            }
+            forDep()
             
         }else{
             sendNullMessage()
