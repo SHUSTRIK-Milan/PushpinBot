@@ -964,6 +964,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     let head = (haveRole(user, '833226140755689483') || haveRole(user, '833227050550296576'));
     let rpCreator = haveRole(user, '856092976702816287')
     let rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
+    let msgDate = {author: user.user, channel: channel, content: arg, member: user};
 
     function sendNullMessage(){
         client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -1062,6 +1063,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         
         client.api.webhooks(client.user.id, interaction.token).messages('@original').delete()
     };
+
+    if(interaction.type == 3){
+        if(Object.getOwnPropertyNames(Config.departments).find(obj => obj == interaction.data.custom_id) != undefined){
+            giveRole(user, Config.departments[interaction.data.custom_id]);
+            removeRole(user, '854315001543786507');
+            sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id]).name}`)
+            sendLocalMessage(`> **Вы взяли форму** 🗂️`);
+        }
+    }
 
     if (interaction.data.name == "осмотр") {
         var arg = "";
