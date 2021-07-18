@@ -1356,7 +1356,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             }
                 
-            forsDeps.then(() => {
+            forsDeps().then(() => {
                 console.log(comps)
                 //giveForm(compss);
             })
