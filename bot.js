@@ -1349,15 +1349,14 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                                 style: Config.departments[dept][4],
                                 custom_id: dept
                             })
-                            console.log(comps)
                         }
                     });
                 };
             }
                 
             Promise.all(comps)
-            .then(comps => {
-                console.log(comps)
+            .then(data => {
+                console.log(data)
                 giveForm(comps);
             });
             
