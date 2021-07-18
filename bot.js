@@ -1066,9 +1066,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     if(interaction.type == 3){
         if(Object.getOwnPropertyNames(Config.departments).find(obj => obj == interaction.data.custom_id) != undefined){
-            giveRole(user, Config.departments[interaction.data.custom_id]);
+            giveRole(user, Config.departments[interaction.data.custom_id][2]);
             removeRole(user, '854315001543786507');
-            sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id]).name}`)
+            sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id][2]).name}`)
             sendLocalMessage(`> **Вы взяли форму** 🗂️`);
         }
     }
@@ -1289,19 +1289,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
     
         if(rpchannel){
-            function giveForm(member, role){
-                let comps = []
-                let r1 = random(1,3)
-                if(r1 == 2) r1 = 4
-                for(obj in Config.departments){
-                    comps.push({
-                        type: 2,
-                        label: Config.departments[obj][3],
-                        style: r1,
-                        custom_id: obj
-                    })
-                }
-
+            let r1
+            let comps = []
+            function giveForm(member, role, comps){
                 if(haveRole(member, role)){
                     removeRole(member, role);
                     giveRole(msgDate.member, '854315001543786507');
@@ -1322,7 +1312,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                                     {
                                         fields: [{
                                             name: `Взятие формы`,
-                                            value: `Выберите желаемую форму.`
+                                            value: `Выберите желаемую профессию.`
                                         }],
                                     }
                                 ],
@@ -1344,9 +1334,19 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     channel.messages.fetch(Config.departments[dept][1]).then(oMsg => {
                         let nMsg = oMsg.content.split('\n');
                         nMsg.splice(0,1);
+
+                        r1 = random(1,3)
+                        if(r1 == 2) r1 = 4
+
+                        comps.push({
+                            type: 2,
+                            label: Config.departments[dept][3],
+                            style: r1,
+                            custom_id: dept
+                        })
         
                         if(nMsg.find(member => member.split('-')[0] == msgDate.member.id) != null){
-                            giveForm(msgDate.member, Config.departments[dept][2]);
+                            giveForm(msgDate.member, Config.departments[dept][2], comps);
                         }else{
                             sendLocalMessage(`> **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
                             sendLog(msgDate,'РП','Попытался взять форму.','Ошибка',`Вывод: > **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
