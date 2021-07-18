@@ -1335,15 +1335,14 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     channel.messages.fetch(Config.departments[dept][1]).then(oMsg => {
                         let nMsg = oMsg.content.split('\n');
                         nMsg.splice(0,1);
-
-                        comps.push({
-                            type: 2,
-                            label: Config.departments[dept][3],
-                            style: Config.departments[dept][4],
-                            custom_id: dept
-                        })
         
                         if(nMsg.find(member => member.split('-')[0] == msgDate.member.id) != null){
+                            comps.push({
+                                type: 2,
+                                label: Config.departments[dept][3],
+                                style: Config.departments[dept][4],
+                                custom_id: dept
+                            })
                             giveForm(comps);
                         }else{
                             sendLocalMessage(`> **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
