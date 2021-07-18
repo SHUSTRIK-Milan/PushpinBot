@@ -1292,7 +1292,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(rpchannel){
             let comps = []
             function giveForm(comps){
-                if(comps.length == 0){return}
+                if(comps.length == 0){
+                    sendLocalMessage(`> **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
+                    sendLog(msgDate,'РП','Попытался взять форму.','Ошибка',`Вывод: > **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
+                    return
+                }
                 for(let dep in Config.departments){
                     if(channel.id == Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
                         removeRole(msgDate.member, Config.departments[dep][2]);
@@ -1344,10 +1348,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                                 style: Config.departments[dept][4],
                                 custom_id: dept
                             })
-                        }else{
-                            sendLocalMessage(`> **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
-                            sendLog(msgDate,'РП','Попытался взять форму.','Ошибка',`Вывод: > **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
-                        };
+                        }
                     });
                 };
             }
