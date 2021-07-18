@@ -1354,7 +1354,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 };
             }
                 
-            Promise.all()
+            Promise.all(comps)
             .then(compss => {
                 console.log(compss)
             });
