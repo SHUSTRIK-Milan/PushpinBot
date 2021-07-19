@@ -1321,7 +1321,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         removeRole(msgDate.member, Config.departments[dep][2]);
                         giveRole(msgDate.member, '854315001543786507');
                         sendLocalMessage(`> **Форма снята** 🗂️`);
-                        sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Успешно',`Вывод: > **Форма снята** 🗂️`)
+                        sendLog(msgDate,'РП','Снял форму.','Успешно',`Вывод: > **Форма снята** 🗂️`)
                         return;
                     }
                 }
