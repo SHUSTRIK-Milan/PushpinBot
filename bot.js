@@ -1069,7 +1069,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             for(let dep in Config.departments){
                 if(channel.id == Config.departments[dep][0] && haveRole(msgDate.member, `854315001543786507`) && !haveRole(msgDate.member, Config.departments[dep][2])){
                     let channel = guild.channels.cache.get(BDchnl);
-                    let oMsg = await channel.messages.fetch(Config.departments[dept][1])
+                    let oMsg = await channel.messages.fetch(Config.departments[dep][1])
                     let nMsg = oMsg.content.split('\n');
                     nMsg.splice(0,1);
     
