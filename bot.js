@@ -937,38 +937,44 @@ client.on('message', message => {
 
     if(comand(message).com == `test` && head && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
+        async function invOpen(){
+            let channel = message.channel
+            let oMsgs = await channel.messages.fetch()
+            let oMsg
+            let objects = []
+            let quickObjs = []
+
+            for([id, msg] of oMsgs){
+                if(msg.split('^')[0].slice(3).slice(0,-1) == message.author.id && msg.split('^')[1].toLowerCase() == message.member.nickname.toLowerCase()){
+                    oMsg = msg
+                }
+            }
+            nMsg = oMsg.split('\n')
+            nMsg.splice(0,1)
+            for(object of nMsg){
+                nObj = object.split('^')
+                objects.push({
+                    id: nObj[1],
+                    name: nObj[2],
+                    disc: nObj[3],
+                    count: nObj[4],
+                    img: nObj[5]
+                })
+                quickObjs.push(
+                    {
+                        name: `[${nObj[1]}] ${nObj[2]} (${nObj[4]}x)`,
+                        value: `${nObj[3]}`
+                    }
+                )
+            }
+        }
+        invOpen()
+        
         client.api.channels(message.channel.id).messages.post({
             data:{
                 embed: {
-                    fields: [{
-                        name: `Банка пива [x1]`,
-                        value: `Алюминиевая банка Балтики 9. Специально для Петри.`
-                    }],
-                    thumbnail: {
-                        url: `https://i.imgur.com/EdEYIrH.png`,
-                        height: 16,
-                        width: 16
-                    }
-                },
-                components: [
-                    {
-                        type: 1,
-                        components: [
-                            {
-                                type: 2,
-                                label: "Выкинуть",
-                                style: 1,
-                                custom_id: "drop"
-                            },
-                            {
-                                type: 2,
-                                label: "Использовать",
-                                style: 4,
-                                custom_id: "use"
-                            },
-                        ]
-                    }
-                ]
+                    fields: quickObjs
+                }
             }
         })
     }
