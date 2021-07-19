@@ -1068,11 +1068,18 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(Object.getOwnPropertyNames(Config.departments).find(obj => obj == interaction.data.custom_id) != undefined){
             for(let dep in Config.departments){
                 if(channel.id == Config.departments[dep][0] && haveRole(msgDate.member, `854315001543786507`) && !haveRole(msgDate.member, Config.departments[dep][2])){
-                    giveRole(user, Config.departments[interaction.data.custom_id][2]);
-                    removeRole(user, '854315001543786507');
-                    sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id][2]).name}`)
-                    sendLocalMessage(`> **Вы взяли форму** 🗂️`);
-                    return;
+                    let channel = guild.channels.cache.get(BDchnl);
+                    let oMsg = await channel.messages.fetch(Config.departments[dept][1])
+                    let nMsg = oMsg.content.split('\n');
+                    nMsg.splice(0,1);
+    
+                    if(nMsg.find(member => member.split('-')[0] == msgDate.member.id) != null){
+                        giveRole(user, Config.departments[interaction.data.custom_id][2]);
+                        removeRole(user, '854315001543786507');
+                        sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id][2]).name}`)
+                        sendLocalMessage(`> **Вы взяли форму** 🗂️`);
+                        return;
+                    }
                 }else if(channel.id == Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2]) ||
                     channel.id != Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
                     sendLocalMessage(`> **Вы не можете взять несколько форм организаций** 🗂️`);
