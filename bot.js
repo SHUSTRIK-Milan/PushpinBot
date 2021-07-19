@@ -934,44 +934,6 @@ client.on('message', message => {
     if(message.channel.id == Config.channelsID.bot && !mb && !mg){
         roflBot(message.content, message)
     }
-
-    if(comand(message).com == `test` && head && !mb && !mg){
-        setTimeout(() => message.delete(), timeOfDelete);
-        client.api.channels(message.channel.id).messages.post({
-            data:{
-                embed: {
-                    fields: [{
-                        name: `Банка пива [x1]`,
-                        value: `Алюминиевая банка Балтики 9. Специально для Петри.`
-                    }],
-                    thumbnail: {
-                        url: `https://i.imgur.com/EdEYIrH.png`,
-                        height: 16,
-                        width: 16
-                    }
-                },
-                components: [
-                    {
-                        type: 1,
-                        components: [
-                            {
-                                type: 2,
-                                label: "Выкинуть",
-                                style: 1,
-                                custom_id: "drop"
-                            },
-                            {
-                                type: 2,
-                                label: "Использовать",
-                                style: 4,
-                                custom_id: "use"
-                            },
-                        ]
-                    }
-                ]
-            }
-        })
-    }
 });
 
 const config = {
@@ -1034,49 +996,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 type: 4,
                 data: {
                     content: content,
-                    flags: 64
-                }
-            }
-        })
-    }
-
-    function dropObject(){
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data:{
-                type: 4,
-                data: {
-                    embeds: [
-                        {
-                            fields: [{
-                                name: `Банка пива [x1]`,
-                                value: `Алюминиевая банка Балтики 9. Специально для Петри.`
-                            }],
-                            thumbnail: {
-                                url: `https://i.imgur.com/EdEYIrH.png`,
-                                height: 16,
-                                width: 16
-                            }
-                        }
-                    ],
-                    components: [
-                        {
-                            type: 1,
-                            components: [
-                                {
-                                    type: 2,
-                                    label: "Поднять",
-                                    style: 3,
-                                    custom_id: "pick"
-                                },
-                                {
-                                    type: 2,
-                                    label: "Использовать",
-                                    style: 4,
-                                    custom_id: "use"
-                                },
-                            ]
-                        }
-                    ],
                     flags: 64
                 }
             }
@@ -1173,14 +1092,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: > **Вы не можете взять несколько форм организаций** 🗂️`)
                 return;
             }
-        }
-      
-        if(interaction.data.custom_id == 'drop'){
-            dropObject()
-        }else if(interaction.data.custom_id == 'pick'){
-            sendLocalMessage('Hello!')
-        }else if(interaction.data.custom_id == 'use'){
-            sendLocalMessage('Hello!')
         }
     }
 
