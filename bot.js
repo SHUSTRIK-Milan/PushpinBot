@@ -1086,8 +1086,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     sendLog(msgDate,'РП','Попытался взять форму.','Ошибка',`Вывод: > **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
                     return
                 }
-            }else if(channel.id == Config.departments[interaction.data.custom_id][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[interaction.data.custom_id][2]) ||
-                channel.id != Config.departments[interaction.data.custom_id][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[interaction.data.custom_id][2])){
+            }else if(channel.id == Config.departments[interaction.data.custom_id][0] && !haveRole(msgDate.member, `854315001543786507`)||
+                channel.id != Config.departments[interaction.data.custom_id][0] && !haveRole(msgDate.member, `854315001543786507`)){
                 sendLocalMessage(`> **Вы не можете взять несколько форм организаций** 🗂️`);
                 sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: > **Вы не можете взять несколько форм организаций** 🗂️`)
                 return;
