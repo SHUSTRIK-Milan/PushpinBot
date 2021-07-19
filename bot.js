@@ -1074,6 +1074,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     nMsg.splice(0,1);
     
                     if(nMsg.find(member => member.split('-')[0] == msgDate.member.id) != null){
+                        console.log(nMsg.find(member => member.split('-')[0] == msgDate.member.id))
                         giveRole(user, Config.departments[interaction.data.custom_id][2]);
                         removeRole(user, '854315001543786507');
                         sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id][2]).name}`)
