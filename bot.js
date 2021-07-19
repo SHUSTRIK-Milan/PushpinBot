@@ -1066,27 +1066,25 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     if(interaction.type == 3){
         if(Object.getOwnPropertyNames(Config.departments).find(obj => obj == interaction.data.custom_id) != undefined){
-            for(let dep in Config.departments){
-                if(channel.id == Config.departments[dep][0] && haveRole(msgDate.member, `854315001543786507`) && !haveRole(msgDate.member, Config.departments[dep][2])){
-                    let channel = guild.channels.cache.get(BDchnl);
-                    let oMsg = await channel.messages.fetch(Config.departments[dep][1])
-                    let nMsg = oMsg.content.split('\n');
-                    nMsg.splice(0,1);
-    
-                    if(nMsg.find(member => member.split('-')[0] == msgDate.member.id) != null){
-                        console.log(nMsg.find(member => member.split('-')[0] == msgDate.member.id))
-                        giveRole(user, Config.departments[interaction.data.custom_id][2]);
-                        removeRole(user, '854315001543786507');
-                        sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id][2]).name}`)
-                        sendLocalMessage(`> **Вы взяли форму** 🗂️`);
-                        return;
-                    }
-                }else if(channel.id == Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2]) ||
-                    channel.id != Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
-                    sendLocalMessage(`> **Вы не можете взять несколько форм организаций** 🗂️`);
-                    sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: > **Вы не можете взять несколько форм организаций** 🗂️`)
+            if(channel.id == Config.departments[interaction.data.custom_id][0] && haveRole(msgDate.member, `854315001543786507`) && !haveRole(msgDate.member, Config.departments[interaction.data.custom_id][2])){
+                let channel = guild.channels.cache.get(BDchnl);
+                let oMsg = await channel.messages.fetch(Config.departments[interaction.data.custom_id][1])
+                let nMsg = oMsg.content.split('\n');
+                nMsg.splice(0,1);
+
+                if(nMsg.find(member => member.split('-')[0] == msgDate.member.id) != null){
+                    console.log(nMsg.find(member => member.split('-')[0] == msgDate.member.id))
+                    giveRole(user, Config.departments[interaction.data.custom_id][2]);
+                    removeRole(user, '854315001543786507');
+                    sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id][2]).name}`)
+                    sendLocalMessage(`> **Вы взяли форму** 🗂️`);
                     return;
                 }
+            }else if(channel.id == Config.departments[interaction.data.custom_id][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[interaction.data.custom_id][2]) ||
+                channel.id != Config.departments[interaction.data.custom_id][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[interaction.data.custom_id][2])){
+                sendLocalMessage(`> **Вы не можете взять несколько форм организаций** 🗂️`);
+                sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: > **Вы не можете взять несколько форм организаций** 🗂️`)
+                return;
             }
         }
     }
