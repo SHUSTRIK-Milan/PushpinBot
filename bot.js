@@ -1004,6 +1004,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     let head = (haveRole(user, '833226140755689483') || haveRole(user, '833227050550296576'));
     let rpCreator = haveRole(user, '856092976702816287')
     let rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
+    let msgDate = {author: user.user, channel: channel, content: arg, member: user};
 
     function sendNullMessage(){
         client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -1147,6 +1148,33 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     };
 
     if(interaction.type == 3){
+        if(Object.getOwnPropertyNames(Config.departments).find(obj => obj == interaction.data.custom_id) != undefined){
+            if(channel.id == Config.departments[interaction.data.custom_id][0] && haveRole(msgDate.member, `854315001543786507`) && !haveRole(msgDate.member, Config.departments[interaction.data.custom_id][2])){
+                let channel = guild.channels.cache.get(BDchnl);
+                let oMsg = await channel.messages.fetch(Config.departments[interaction.data.custom_id][1])
+                let nMsg = oMsg.content.split('\n');
+                nMsg.splice(0,1);
+
+                if(nMsg.find(member => member.split('-')[0] == msgDate.member.id) != null){
+                    console.log(nMsg.find(member => member.split('-')[0] == msgDate.member.id))
+                    giveRole(user, Config.departments[interaction.data.custom_id][2]);
+                    removeRole(user, '854315001543786507');
+                    sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(Config.departments[interaction.data.custom_id][2]).name}`)
+                    sendLocalMessage(`> **Вы взяли форму** 🗂️`);
+                    return;
+                }else{
+                    sendLocalMessage(`> **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
+                    sendLog(msgDate,'РП','Попытался взять форму.','Ошибка',`Вывод: > **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
+                    return
+                }
+            }else if(channel.id == Config.departments[interaction.data.custom_id][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[interaction.data.custom_id][2]) ||
+                channel.id != Config.departments[interaction.data.custom_id][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[interaction.data.custom_id][2])){
+                sendLocalMessage(`> **Вы не можете взять несколько форм организаций** 🗂️`);
+                sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: > **Вы не можете взять несколько форм организаций** 🗂️`)
+                return;
+            }
+        }
+      
         if(interaction.data.custom_id == 'drop'){
             dropObject()
         }else if(interaction.data.custom_id == 'pick'){
@@ -1198,9 +1226,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if (interaction.data.options == undefined) {
         } else {
-            console.log(interaction.data.options[0])
-            arg = interaction.data.options[0].value
+            arg = interaction.data.options[0].value.split(' ')[0]
         }
+        
 
         if(rpchannel){
             let argsObj = guild.channels.cache.get(arg.slice(2).slice(0,-1))
@@ -1210,7 +1238,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             console.log(homePos)
             //ищим среди улиц такую улицу, которая будет ровна категории нашего канал.
             if(argsObj != undefined) argsObj = argsObj.name.slice(1).slice(0,-1).toLowerCase().split('-').join(' ');
-            if(argsObj == undefined){sendLocalMessage("Используйте # для быстрого доступа из категории \`❌ Fast Access.\`"); return};
+            if(argsObj == undefined){sendLog(msgDate,`РП`,`Попытался пойти.`,`Ошибка`,`Вывод: Используйте # для быстрого доступа из категории \`❌ Fast Access.\``); sendLocalMessage("Используйте # для быстрого доступа из категории \`❌ Fast Access.\`"); return};
             if(homePos.name == argsObj){sendLocalMessage(`Вы уже находитесь на этом объекте.`); return}
             //проверяю не канал ли аргумент, если нет, то просто беру написанное.
             let walkway = homePos.radius.find(obj => obj.toLowerCase() == argsObj.toLowerCase());
@@ -1372,41 +1400,71 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
     
         if(rpchannel){
-            function giveForm(member, role){
-                if(haveRole(member, role)){
-                    removeRole(member, role);
-                    giveRole(msgDate.member, '854315001543786507');
-                    sendLog(msgDate,'РП','Снял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(role).name}`)
-                    sendLocalMessage(`> **Вы сняли форму** 🗂️`);
+            let comps = []
+            function giveForm(comps){
+                if(comps.length == 0){
+                    sendLocalMessage(`> **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
+                    sendLog(msgDate,'РП','Попытался взять форму.','Ошибка',`Вывод: > **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
+                    return
                 }
-                if(!haveRole(member, role)){
-                    if(!haveRole(msgDate.member, `854315001543786507`)){
-                        sendLocalMessage(`> **Вы не можете взять несколько форм организаций** 🗂️`);
-                        sendLog(msgDate,'РП','Попытался взять несколько ролей организации.','Ошибка',`Вывод: > **Вы не можете взять несколько форм организаций** 🗂️`)
+                for(let dep in Config.departments){
+                    if(channel.id == Config.departments[dep][0] && !haveRole(msgDate.member, `854315001543786507`) && haveRole(msgDate.member, Config.departments[dep][2])){
+                        removeRole(msgDate.member, Config.departments[dep][2]);
+                        giveRole(msgDate.member, '854315001543786507');
+                        sendLocalMessage(`> **Форма снята** 🗂️`);
+                        sendLog(msgDate,'РП','Снял форму.','Успешно',`Вывод: > **Форма снята** 🗂️`)
                         return;
                     }
-                    giveRole(member, role);
-                    removeRole(msgDate.member, '854315001543786507');
-                    sendLog(msgDate,'РП','Взял форму организации.','Успешно',`Роль: ${guild.roles.cache.get(role).name}`)
-                    sendLocalMessage(`> **Вы взяли форму** 🗂️`);
                 }
+                
+                client.api.interactions(interaction.id, interaction.token).callback.post({
+                    data:{
+                        type: 4,
+                        data: {
+                            embeds: [
+                                {
+                                    fields: [{
+                                        name: `Взятие формы`,
+                                        value: `Выберите желаемую профессию.`
+                                    }],
+                                }
+                            ],
+                            components: [
+                                {
+                                    type: 1,
+                                    components: comps
+                                }
+                            ],
+                            flags: 64
+                        }
+                    }
+                })
             };
-            for(let dept in Config.departments){
-                if(channel.id == Config.departments[dept][0]){
-                    let channel = guild.channels.cache.get(BDchnl);
-                    channel.messages.fetch(Config.departments[dept][1]).then(oMsg => {
+
+            async function forDep(){
+                for(let dept in Config.departments){
+                    if(channel.id == Config.departments[dept][0]){
+                        let channel = guild.channels.cache.get(BDchnl);
+                        let oMsg = await channel.messages.fetch(Config.departments[dept][1])
                         let nMsg = oMsg.content.split('\n');
                         nMsg.splice(0,1);
         
                         if(nMsg.find(member => member.split('-')[0] == msgDate.member.id) != null){
-                            giveForm(msgDate.member, Config.departments[dept][2]);
-                        }else{
-                            sendLocalMessage(`> **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`);
-                            sendLog(msgDate,'РП','Попытался взять форму.','Ошибка',`Вывод: > **Вы отсутствуете в базе данных организации** 🗂️ Обратитесь к управляющему.`)
-                        };
-                    });
-                };
+                            comps.push({
+                                type: 2,
+                                label: Config.departments[dept][3],
+                                style: Config.departments[dept][4],
+                                custom_id: dept
+                            })
+                        }
+                    };
+                }
             }
+            forDep().then(() => {
+                console.log(comps)
+                giveForm(comps);
+            })
+            
         }else{
             sendNullMessage()
         }
@@ -1755,8 +1813,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(rpchannel){
             let output = coinFlip()
-            sendLog(msgDate,'РП','Использовал монетку.','Успешно',`Вывод: Выпал(-а): ${output}`)
-            sendGlobalMessage(`Выпал(-а): ${output}`)
+            if(interaction.data.options == undefined){
+                sendLog(msgDate,'РП','Использовал монетку.','Успешно',`Вывод: Выпал(-а): ${output}`)
+                sendLocalMessage(`Выпал(-а): ${output}`)
+            }else if(interaction.data.options[0].value == 'true'){
+                sendLog(msgDate,'РП','Использовал монетку.','Успешно',`Вывод: Выпал(-а): ${output}`)
+                sendGlobalMessage(`Выпал(-а): ${output}`)
+            }
         }else{
             sendNullMessage()
         }
@@ -1765,9 +1828,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     if (interaction.data.name == "карты") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(rpchannel){
+            console.log(interaction.data.options)
             let output = card()
-            sendLog(msgDate,'РП','Вытянул карту.','Успешно',`Вывод: Достал карту: ${output}`)
-            sendLocalMessage(`Достал: ${output}`)
+            if(interaction.data.options == undefined){
+                sendLog(msgDate,'РП','Вытянул карту.','Успешно',`Вывод: Достал карту: ${output}`)
+                sendLocalMessage(`Достал: ${output}`)
+            }else if(interaction.data.options[0].value == 'true'){
+                sendLog(msgDate,'РП','Вытянул карту.','Успешно',`Вывод: Достал карту: ${output}`)
+                sendGlobalMessage(`Достал: ${output}`)
+            }
         }else{
             sendNullMessage()
         }
@@ -1777,8 +1846,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(rpchannel){
             let output = cube()
-            sendLog(msgDate,'РП','Бросил кубик.','Успешно',`Вывод: Выбрасил число: ${output}`)
-            sendGlobalMessage(`Выбросил: ${output}`)
+            if(interaction.data.options == undefined){
+                sendLog(msgDate,'РП','Бросил кубик.','Успешно',`Вывод: Выбрасил число: ${output}`)
+                sendLocalMessage(`Выбросил: ${output}`)
+            }else if(interaction.data.options[0].value == 'true'){
+                sendLog(msgDate,'РП','Бросил кубик.','Успешно',`Вывод: Выбрасил число: ${output}`)
+                sendGlobalMessage(`Выбросил: ${output}`)
+            }
         }else{
             sendNullMessage()
         }
@@ -1793,7 +1867,63 @@ function checkIntegrations() {
     БЛОК СПИСКА КОМАНД
     */
 
-    //client.interaction.createApplicationCommand(command, config.guild_id, "860922816774012979").then(console.log)
+    
+
+    let command = {
+        name: "карты", 
+        description: "Вытащить карту из колоды",
+        options: [
+            {
+                name: "открытость",
+                description: "Достать ли карту в открытую?",
+                type: "3",
+                choices: [
+                    {
+                        name: "Да",
+                        value: "true"
+                    }
+                ]
+            }
+        ]
+    }
+    let command2 = {
+        name: "монета", 
+        description: "Подбросить монету",
+        options: [
+            {
+                name: "открытость",
+                description: "Бросить ли монету в открытую?",
+                type: "3",
+                choices: [
+                    {
+                        name: "Да",
+                        value: "true"
+                    }
+                ]
+            }
+        ]
+    }
+    let command3 = {
+        name: "кубик", 
+        description: "Бросить игральный кубик",
+        options: [
+            {
+                name: "открытость",
+                description: "Бросить ли кубик в открытую?",
+                type: "3",
+                choices: [
+                    {
+                        name: "Да",
+                        value: "true"
+                    }
+                ]
+            }
+        ]
+    }
+
+    client.interaction.createApplicationCommand(command, config.guild_id, "859131311692316682").then(console.log)
+    client.interaction.createApplicationCommand(command2, config.guild_id, "864551702278570014").then(console.log)
+    client.interaction.createApplicationCommand(command3, config.guild_id, "864610902053355529").then(console.log)
 
     // удаление старых команд
     /* client.interaction
