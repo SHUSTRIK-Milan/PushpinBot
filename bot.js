@@ -1106,49 +1106,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
     }
 
-    function dropObject(){
-        client.api.interactions(interaction.id, interaction.token).callback.post({
-            data:{
-                type: 4,
-                data: {
-                    embeds: [
-                        {
-                            fields: [{
-                                name: `Банка пива [x1]`,
-                                value: `Алюминиевая банка Балтики 9. Специально для Петри.`
-                            }],
-                            thumbnail: {
-                                url: `https://i.imgur.com/EdEYIrH.png`,
-                                height: 16,
-                                width: 16
-                            }
-                        }
-                    ],
-                    components: [
-                        {
-                            type: 1,
-                            components: [
-                                {
-                                    type: 2,
-                                    label: "Поднять",
-                                    style: 3,
-                                    custom_id: "pick"
-                                },
-                                {
-                                    type: 2,
-                                    label: "Использовать",
-                                    style: 4,
-                                    custom_id: "use"
-                                },
-                            ]
-                        }
-                    ],
-                    flags: 64
-                }
-            }
-        })
-    }
-
     async function sendEditMessage(text, color, dop, ping){
         client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
