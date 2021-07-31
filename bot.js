@@ -1104,7 +1104,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
                         type: 7,
-                        data:{content: 'Отлично! Вам был отключен доступ к NSFW каналам.'}
+                        data:{
+                            content: 'Отлично! Вам был отключен доступ к NSFW каналам.',
+                            components: []
+                        }
                     }
                 })
                 removeRole(user, '871027221521899621')
@@ -1112,7 +1115,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
                         type: 7,
-                        data:{content: 'Отлично! Вам был подключен доступ к NSFW каналам.'}
+                        data:{
+                            content: 'Отлично! Вам был подключен доступ к NSFW каналам.',
+                            components: []
+                        }
                     }
                 })
                 giveRole(user, '871027221521899621')
@@ -1122,7 +1128,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             client.api.interactions(interaction.id, interaction.token).callback.post({
                 data: {
                     type: 7,
-                    data:{content: 'Хорошо. Спасибо за обращение!'}
+                    data:{
+                        content: 'Хорошо. Спасибо за обращение!',
+                        components: []
+                    }
                 }
             })
         }
