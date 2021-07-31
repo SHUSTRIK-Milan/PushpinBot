@@ -1102,7 +1102,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(interaction.data.custom_id == 'yesNSFW'){
             if(haveRole(user, `871027221521899621`)){
                 client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({data: {
-                        content: 'Отлично! Вам был отключен доступ к NSFW каналам.'
+                    content: 'Отлично! Вам был отключен доступ к NSFW каналам.'
                 }})
                 removeRole(user, '871027221521899621')
             }else if(!haveRole(user, `871027221521899621`)){
@@ -1800,7 +1800,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 data: {
                     type: 4,
                     data:{
-                        embeds: {
+                        embeds: [{
                             fields: [{
                                 name: `Вы действительно желаете отказаться от доступа к NSFW каналам?`,
                                 value: 'Выберите ответ ниже, нажав на одну из кнопок.'
@@ -1808,7 +1808,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                             thumbnail: {
                                 url: 'https://i.imgur.com/utuBexR.png'
                             },
-                        },
+                        }],
                         components: [
                             {
                                 type: 1,
@@ -1836,7 +1836,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 data: {
                     type: 4,
                     data:{
-                        embeds: {
+                        embeds: [{
                             fields: [{
                                 name: `Вы действительно желаете получить доступ к NSFW каналам?`,
                                 value: 'Выберите ответ ниже, нажав на одну из кнопок.'
@@ -1844,7 +1844,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                             thumbnail: {
                                 url: 'https://i.imgur.com/cjSSwtu.png'
                             },
-                        },
+                        }],
                         components: [
                             {
                                 type: 1,
