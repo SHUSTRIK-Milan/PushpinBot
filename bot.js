@@ -1106,7 +1106,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         type: 7,
                         data:{
                             content: 'Отлично! Вам был отключен доступ к NSFW каналам.',
-                            components: []
+                            components: [],
+                            embeds: []
                         }
                     }
                 })
@@ -1117,7 +1118,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                         type: 7,
                         data:{
                             content: 'Отлично! Вам был подключен доступ к NSFW каналам.',
-                            components: []
+                            components: [],
+                            embeds: []
                         }
                     }
                 })
@@ -1130,7 +1132,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     type: 7,
                     data:{
                         content: 'Хорошо. Спасибо за обращение!',
-                        components: []
+                        components: [],
+                        embeds: []
                     }
                 }
             })
