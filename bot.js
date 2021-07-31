@@ -1790,7 +1790,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     if (interaction.data.name == "nsfw") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
-        if(haveRole(member, `871027221521899621`)){
+        if(haveRole(member, `871027221521899621`) && message.guild == undefined){
             client.api.interactions(interaction.id, interaction.token).callback.post({
                 data:{
                     embed: {
@@ -1823,7 +1823,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     ]
                 }
             })
-        }else if(!haveRole(member, `871027221521899621`)){
+        }else if(!haveRole(member, `871027221521899621`) && message.guild == undefined){
             client.api.interactions(interaction.id, interaction.token).callback.post({
                 data:{
                     embed: {
@@ -1856,6 +1856,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     ]
                 }
             })
+        }else{
+            sendLocalMessage('Использование данной команды доступно лишь в личных сообщениях с <@!822500483826450454>')
         }
     }
 });
@@ -2228,7 +2230,7 @@ function checkIntegrations() {
         name: "nsfw", 
         description: "Запросить доступ к NSFW контенту внутри сервера",
         options: []
-    })
+    }, null)
         .then(console.log)
         .catch(console.error);
     }, 200);
