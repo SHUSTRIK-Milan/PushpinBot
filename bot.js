@@ -1800,7 +1800,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 data: {
                     type: 4,
                     data:{
-                        embed: {
+                        embeds: {
                             fields: [{
                                 name: `Вы действительно желаете отказаться от доступа к NSFW каналам?`,
                                 value: 'Выберите ответ ниже, нажав на одну из кнопок.'
@@ -1836,7 +1836,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 data: {
                     type: 4,
                     data:{
-                        embed: {
+                        embeds: {
                             fields: [{
                                 name: `Вы действительно желаете получить доступ к NSFW каналам?`,
                                 value: 'Выберите ответ ниже, нажав на одну из кнопок.'
