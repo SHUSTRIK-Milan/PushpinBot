@@ -1795,7 +1795,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     if (interaction.data.name == "nsfw") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
-        if(haveRole(user, `871027221521899621`) && message.guild == undefined){
+        if(haveRole(user, `871027221521899621`) && interaction['guild_id'] == undefined){
             client.api.interactions(interaction.id, interaction.token).callback.post({
                 data:{
                     embed: {
@@ -1828,7 +1828,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     ]
                 }
             })
-        }else if(!haveRole(user, `871027221521899621`) && message.guild == undefined){
+        }else if(!haveRole(user, `871027221521899621`) && interaction['guild_id'] == undefined){
             client.api.interactions(interaction.id, interaction.token).callback.post({
                 data:{
                     embed: {
