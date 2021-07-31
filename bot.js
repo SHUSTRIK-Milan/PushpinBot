@@ -937,7 +937,7 @@ client.on('message', message => {
 });
 
 const config = {
-    token: process.env.BOT_TOKEN,
+    token: Config.discordTocens.main,
     publicKey : "0e6a87c0f53052a2025917df52069144195fea4b82e32cb43619d65d1c278a97",
     applicationId: "822500483826450454",
     guild_id: "814795850885627964"
@@ -1870,8 +1870,6 @@ function checkIntegrations() {
     БЛОК СПИСКА КОМАНД
     */
 
-    
-
     /* let command = {
         name: "карты", 
         description: "Вытащить карту из колоды",
@@ -2232,7 +2230,7 @@ function checkIntegrations() {
         options: []
     }, null)
         .then(console.log)
-        .catch(console.error);
+        .catch(console.log);
     }, 200);
 }
 
