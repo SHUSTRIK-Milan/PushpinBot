@@ -1101,17 +1101,30 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
         if(interaction.data.custom_id == 'yesNSFW'){
             if(haveRole(user, `871027221521899621`)){
-                sendLocalMessage('Отлично! Вам был отключен доступ к NSFW каналам.')
+                client.api.interactions(interaction.id, interaction.token).callback.post({
+                    data: {
+                        type: 7,
+                        data:{content: 'Отлично! Вам был отключен доступ к NSFW каналам.'}
+                    }
+                })
                 removeRole(user, '871027221521899621')
             }else if(!haveRole(user, `871027221521899621`)){
-                sendLocalMessage('Отлично! Вам был подключен доступ к NSFW каналам.')
+                client.api.interactions(interaction.id, interaction.token).callback.post({
+                    data: {
+                        type: 7,
+                        data:{content: 'Отлично! Вам был подключен доступ к NSFW каналам.'}
+                    }
+                })
                 giveRole(user, '871027221521899621')
             }
         }
         if(interaction.data.custom_id == 'noNSFW'){
-            client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({data: {
-                content: 'Хорошо. Спасибо за обращение!'
-            }})
+            client.api.interactions(interaction.id, interaction.token).callback.post({
+                data: {
+                    type: 7,
+                    data:{content: 'Хорошо. Спасибо за обращение!'}
+                }
+            })
         }
     }
 
@@ -1861,7 +1874,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                                 ]
                             }
                         ],
-                        flags: 64
+                        //flags: 64
                     }
                 }
             })
