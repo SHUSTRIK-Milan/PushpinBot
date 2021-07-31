@@ -1788,7 +1788,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }
     }
 
-    if (interaction.data.name == "NSFW") {
+    if (interaction.data.name == "nsfw") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(haveRole(member, `871027221521899621`)){
             client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -2225,7 +2225,7 @@ function checkIntegrations() {
             .catch(console.error);
     }, 200);*/
     setTimeout(() =>{client.interaction.createApplicationCommand({
-        name: "NSFW", 
+        name: "nsfw", 
         description: "Запросить доступ к NSFW контенту внутри сервера",
         options: []
     })
