@@ -2229,7 +2229,7 @@ function checkIntegrations() {
         description: "Запросить доступ к NSFW контенту внутри сервера",
         options: []
     })
-        .then()
+        .then(console.log)
         .catch(console.error);
     }, 200);
 }
