@@ -1797,68 +1797,74 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
         if(haveRole(user, `871027221521899621`) && interaction['guild_id'] == undefined){
             client.api.interactions(interaction.id, interaction.token).callback.post({
-                data:{
-                    embed: {
-                        fields: [{
-                            name: `Вы действительно желаете отказаться от доступа к NSFW каналам?`,
-                            value: 'Выберите ответ ниже, нажав на одну из кнопок.'
-                        }],
-                        thumbnail: {
-                            url: 'https://i.imgur.com/utuBexR.png'
+                data: {
+                    type: 4,
+                    data:{
+                        embed: {
+                            fields: [{
+                                name: `Вы действительно желаете отказаться от доступа к NSFW каналам?`,
+                                value: 'Выберите ответ ниже, нажав на одну из кнопок.'
+                            }],
+                            thumbnail: {
+                                url: 'https://i.imgur.com/utuBexR.png'
+                            },
                         },
-                    },
-                    components: [
-                        {
-                            type: 1,
-                            components: [
-                                {
-                                    type: 2,
-                                    label: "✅ Да",
-                                    style: 3,
-                                    custom_id: "yesNSFW"
-                                },
-                                {
-                                    type: 2,
-                                    label: "❌ Нет",
-                                    style: 1,
-                                    custom_id: "noNSFW"
-                                },
-                            ]
-                        }
-                    ]
+                        components: [
+                            {
+                                type: 1,
+                                components: [
+                                    {
+                                        type: 2,
+                                        label: "✅ Да",
+                                        style: 3,
+                                        custom_id: "yesNSFW"
+                                    },
+                                    {
+                                        type: 2,
+                                        label: "❌ Нет",
+                                        style: 1,
+                                        custom_id: "noNSFW"
+                                    },
+                                ]
+                            }
+                        ]
+                    }
                 }
             })
         }else if(!haveRole(user, `871027221521899621`) && interaction['guild_id'] == undefined){
             client.api.interactions(interaction.id, interaction.token).callback.post({
-                data:{
-                    embed: {
-                        fields: [{
-                            name: `Вы действительно желаете получить доступ к NSFW каналам?`,
-                            value: 'Выберите ответ ниже, нажав на одну из кнопок.'
-                        }],
-                        thumbnail: {
-                            url: 'https://i.imgur.com/cjSSwtu.png'
+                data: {
+                    type: 4,
+                    data:{
+                        embed: {
+                            fields: [{
+                                name: `Вы действительно желаете получить доступ к NSFW каналам?`,
+                                value: 'Выберите ответ ниже, нажав на одну из кнопок.'
+                            }],
+                            thumbnail: {
+                                url: 'https://i.imgur.com/cjSSwtu.png'
+                            },
                         },
-                    },
-                    components: [
-                        {
-                            type: 1,
-                            components: [
-                                {
-                                    type: 2,
-                                    label: "✅ Да",
-                                    style: 3,
-                                    custom_id: "yesNSFW"
-                                },
-                                {
-                                    type: 2,
-                                    label: "❌ Нет",
-                                    style: 1,
-                                    custom_id: "noNSFW"
-                                },
-                            ]
-                        }
-                    ]
+                        components: [
+                            {
+                                type: 1,
+                                components: [
+                                    {
+                                        type: 2,
+                                        label: "✅ Да",
+                                        style: 3,
+                                        custom_id: "yesNSFW"
+                                    },
+                                    {
+                                        type: 2,
+                                        label: "❌ Нет",
+                                        style: 1,
+                                        custom_id: "noNSFW"
+                                    },
+                                ]
+                            }
+                        ]
+                    }
                 }
             })
         }else{
