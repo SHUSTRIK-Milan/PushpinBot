@@ -1768,6 +1768,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             sendNullMessage()
         }
     }
+
+    if (interaction.data.name == "NSFW") {
+        let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+        
+    }
 });
     
 
@@ -1780,7 +1785,7 @@ function checkIntegrations() {
 
     
 
-    let command = {
+    /* let command = {
         name: "карты", 
         description: "Вытащить карту из колоды",
         options: [
@@ -1834,7 +1839,7 @@ function checkIntegrations() {
 
     client.interaction.createApplicationCommand(command, config.guild_id, "859131311692316682").then(console.log)
     client.interaction.createApplicationCommand(command2, config.guild_id, "864551702278570014").then(console.log)
-    client.interaction.createApplicationCommand(command3, config.guild_id, "864610902053355529").then(console.log)
+    client.interaction.createApplicationCommand(command3, config.guild_id, "864610902053355529").then(console.log) */
 
     // удаление старых команд
     /* client.interaction
@@ -2134,6 +2139,14 @@ function checkIntegrations() {
             .then()
             .catch(console.error);
     }, 200);*/
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+        name: "NSFW", 
+        description: "Запросить доступ к NSFW контенту внутри сервера",
+        options: []
+    })
+        .then()
+        .catch(console.error);
+    }, 200);
 }
 
 client.login(Config.discordTocens.main);
