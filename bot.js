@@ -1109,7 +1109,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             }
         }
         if(interaction.data.custom_id == 'noNSFW'){
-            sendLocalMessage('Хорошо. Спасибо за обращение!')
+            client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({data: {
+                content: 'Хорошо. Спасибо за обращение!'
+            }})
         }
     }
 
@@ -1822,7 +1824,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                                 ]
                             }
                         ],
-                        flags: 64
+                        //flags: 64
                     }
                 }
             })
