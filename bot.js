@@ -2224,14 +2224,14 @@ function checkIntegrations() {
             .then()
             .catch(console.error);
     }, 200);*/
-    await interaction
-        .createApplicationCommand({
-            name: "nsfw", 
-            description: "Запросить доступ к NSFW контенту внутри сервера",
-            options: []
-        })
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+        name: "nsfw", 
+        description: "Запросить доступ к NSFW контенту внутри сервера",
+        options: []
+    })
         .then(console.log)
         .catch(console.error);
+    }, 200);
 }
 
 client.login(Config.discordTocens.main);
