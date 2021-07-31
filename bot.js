@@ -1816,7 +1816,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                                     {
                                         type: 2,
                                         label: "❌ Нет",
-                                        style: 1,
+                                        style: 4,
                                         custom_id: "noNSFW"
                                     },
                                 ]
@@ -1853,7 +1853,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                                     {
                                         type: 2,
                                         label: "❌ Нет",
-                                        style: 1,
+                                        style: 4,
                                         custom_id: "noNSFW"
                                     },
                                 ]
