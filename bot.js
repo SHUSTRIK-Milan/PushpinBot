@@ -2232,7 +2232,6 @@ function checkIntegrations() {
         })
         .then(console.log)
         .catch(console.error);
-    }, 200);
 }
 
 client.login(Config.discordTocens.main);
