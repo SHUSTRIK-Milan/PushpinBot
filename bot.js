@@ -479,8 +479,7 @@ async function delStats(id){
 
 async function Stats(message){
     var AllStats = await GetStats();
-    var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`);
-    var t2 = false
+    var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`)
 
     function verificate(name){
         guild.members.cache.get(message.author.id).setNickname(name);
@@ -498,18 +497,18 @@ async function Stats(message){
         guild.channels.cache.get(`849709660579954748`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
     };
 
+    let filter = m => m.author.id === message.author.id
     function rpName(){
-        let filter = m => m.author.id === message.author.id
         message.author.send('> Для окончания регистрации требуется лишь одна маленькая условность 👥\nПожалуйста, введите свое ролевое имя ')
         .then(msg => {
             msg.channel.awaitMessages(filter, {
                 max: 1,
                 time: 120000,
-                errors: ['time'],
+                errors: 'time',
             })
             .then(message => {
                 msgs = message.map(message => message)
-                if(msgs[0].content.length <= 32 && typeof(msgs[0].content) == 'string' && (msgs[0].content != " " || msgs[0].content != "")){
+                if(msgs[0].content.length <= 32 && (msgs[0].content != " " || msgs[0].content != "")){
                     msgs[0].author.send(`
 > **Успешно! Ваш аккаунт зарегистрирован** 🎉\nВы установили свое ролевое имя. Сменить его вы сможете только при помощи администратора.
                     `)
