@@ -494,7 +494,7 @@ async function Stats(message){
             setTimeout(() => removeRole(member,`829423238169755658`), timeOfDelete); //ooc
         });
 
-        sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
+        sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', ``)
         guild.channels.cache.get(`849709660579954748`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
     };
 
