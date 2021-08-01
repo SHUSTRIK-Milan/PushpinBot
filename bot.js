@@ -528,6 +528,9 @@ async function Stats(message){
     }else if(person != undefined && haveRole(guild.members.cache.get(message.author.id), `829423238169755658`)){
         message.author.send('> С возвращением!')
         rpName()
+    }else if(person == undefined && haveRole(guild.members.cache.get(message.author.id), `836269090996879387`)){
+        message.author.send('> С возвращением!')
+        rpName()
     }else{
         message.author.send('> Вы уже зарегистрированы.')
     }
@@ -1829,7 +1832,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(interaction['guild_id'] == undefined){
             Stats(msgDate);
         }
-        sendLocalMessage('⠀')
+        sendGlobalMessage('⠀')
     }
 });
     
