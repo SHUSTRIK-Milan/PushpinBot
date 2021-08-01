@@ -485,6 +485,7 @@ async function Stats(message){
     function verificate(name){
         guild.members.cache.get(message.author.id).setNickname(name);
         AddStats(`<@!${message.author.id}>`,250,'Нет','Нет','111')
+        message.channel = {id: message.channel_id}
 
         guild.members.fetch(message.author.id).then(member =>{
             setTimeout(() => giveRole(member,`854315001543786507`), timeOfDelete); //citizen
@@ -898,7 +899,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     let head = (haveRole(user, '833226140755689483') || haveRole(user, '833227050550296576'));
     let rpCreator = haveRole(user, '856092976702816287')
     let rpchannel = rpChannels.find(channel => channel == interaction.channel_id) != null;
-    let msgDate = {author: user.user, channel: channel, content: arg, member: user};
+    let msgDate = {author: user.user, channel: channel, content: arg, member: user, channel_id: interaction.channel_id};
 
     function sendNullMessage(){
         client.api.interactions(interaction.id, interaction.token).callback.post({
