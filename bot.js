@@ -480,123 +480,56 @@ async function delStats(id){
 async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`);
-    var steamProfile;
-    var steamProfileInfo;
-    var steamNick;
 
-    if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) steamProfile = await steam.resolve(comand(message).sarg[0]);
+    function verificate(name){
+        guild.members.cache.get(message.author.id).setNickname(name);
+        AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfileInfo.steamID)
 
-    if (steamProfile != null){
-        var steamNick = `[PP] ${message.author.username}`.slice(0,19);
-        let n = steamNick.split("")
-
-        for(var h = 0; h <= n.length; h++){
-            if (n[h] == " " && (n[h+1] == " " || n[h+1] == null)){
-                n.splice(h, 1)
-            }
-        }
-
-        steamNick = n.join('')
-    }
-
-    if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
-        message.author.send(`
-> **Вы уже зарегистрированы** 📟
-Вы уже зарегистрированы в базе данных пользователей. Если вы желаете обнулить свой аккаунт, обратитесь к администрации проекта.
-        `)
-    }else if (person == undefined && comand(message).com == `подтвердить` && steamProfile == null){ //пользователь не зарегистрирован
-        message.author.send(`
-> **Процесс регистрации** 📚
-Привет! Я PushPin бот, а вы пользователь, желающий пройти верификацию. Всё верно? Если так, то давайте начнём.
-> **Для начала **повторите команду**, дополнив её ссылкой на свой стим-профиль** 📬
-Ссылка на стим-профиль получается очень просто. Вам достаточно повторять действия, отмеченные на этой справке.
-        `,{
-            files: [{
-                attachment: 'https://i.imgur.com/vVTXtbD.png',
-                name: 'howToGetSteamProfileLink.png'
-            }]
+        guild.members.fetch(message.author.id).then(member =>{
+            setTimeout(() => giveRole(member,`854315001543786507`), timeOfDelete); //citizen
+            setTimeout(() => giveRole(member,`851059555499638825`), timeOfDelete); //rp-role
+            setTimeout(() => giveRole(member,`836183994646921248`), timeOfDelete); //pushpin
+            setTimeout(() => giveRole(member,`836269090996879387`), timeOfDelete); //user
+            setTimeout(() => removeRole(member,`829423238169755658`), timeOfDelete); //ooc
         });
-    }else if (comand(message).com == `подтвердить` && steamProfile == null){ //ошибка
-        message.author.send(`
-> **Возникла ошибка** 🔏
-Возникла непредвиденная ошибка. Обратитесь к администрации проекта.
-        `);
-        sendLog(message,'Глобальное','Попытался(-ась) подтвердить свой аккаунт.', 'Ошибка', `SteamID: ${steamProfile}`)
-    }; //информационная справка при отправке команды "подтвердить"
 
-    if (person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) == null){
-        try{
-            steamProfileInfo = await steam.getUserSummary(steamProfile);
-            
-            if (steamProfileInfo.nickname == steamNick){
-                function verificate(name){
-                    guild.members.cache.get(message.author.id).setNickname(name);
-                    AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfileInfo.steamID)
+        sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
+        guild.channels.cache.get(`849709660579954748`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
+    };
 
-                    guild.members.fetch(message.author.id).then(member =>{
-                        setTimeout(() => giveRole(member,`854315001543786507`), timeOfDelete); //citizen
-                        setTimeout(() => giveRole(member,`851059555499638825`), timeOfDelete); //rp-role
-                        setTimeout(() => giveRole(member,`836183994646921248`), timeOfDelete); //pushpin
-                        setTimeout(() => giveRole(member,`836269090996879387`), timeOfDelete); //user
-                        setTimeout(() => removeRole(member,`829423238169755658`), timeOfDelete); //ooc
-                    });
-
-                    sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', `SteamID: ${steamProfile}`)
-                    guild.channels.cache.get(`849709660579954748`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
-                };
-
-                function rpName(){
-                    let filter = m => m.author.id === message.author.id
-                    message.author.send('> Введите свое ролевое имя 👥')
-                    .then(() => {
-                        message.channel.awaitMessages(filter, {
-                            max: 1,
-                            time: 60000,
-                            errors: ['time'],
-                        })
-                        .then(message => {
-                            msgs = message.map(message => message)
-                            if(msgs[0].content.length <= 32 && typeof(msgs[0].content) == 'string' && (msgs[0].content != " " || msgs[0].content != "")){
-                                msgs[0].author.send(`
-> **Успешно! Ваш аккаунт зарегистрирован** 🎉 Вы установили свое ролевое имя. Сменить его вы сможете только при помощи администратора.
-Все прошло успешно! Удачной игры на сервере!
-                                `)
-                                verificate(msgs[0].content);
-                            }else{
-                                rpName();
-                            }
-                        })
-                        .catch(() => {
-                            rpName();
-                        });
-                    });
-                };
-
+    function rpName(){
+        let filter = m => m.author.id === message.author.id
+        message.author.send('> Для окончания регистрации требуется лишь одна маленькая условность 👥\nПожалуйста, введите свое ролевое имя ')
+        .then(() => {
+            message.channel.awaitMessages(filter, {
+                max: 1,
+                time: 120000,
+                errors: ['time'],
+            })
+            .then(message => {
+                msgs = message.map(message => message)
+                if(msgs[0].content.length <= 32 && typeof(msgs[0].content) == 'string' && (msgs[0].content != " " || msgs[0].content != "")){
+                    msgs[0].author.send(`
+> **Успешно! Ваш аккаунт зарегистрирован** 🎉\nВы установили свое ролевое имя. Сменить его вы сможете только при помощи администратора.
+                    `)
+                    verificate(msgs[0].content);
+                }else{
+                    rpName();
+                }
+            })
+            .catch(() => {
                 rpName();
-            }else if (steamProfileInfo.nickname != steamNick){
-                message.author.send(`
-> **Измените имя** 📝
-Чтобы успешно завершить аутентификацию временно измените имя своего **стим-профиля** на \`${steamNick}\` и повторите попытку. 
-                `)
-            }else{
-                message.author.send(`
-> **Возникла ошибка** 🔏
-Возникла непредвиденная ошибка. Обратитесь к администрации проекта.
-                `);
-                sendLog(message,'Глобальное','Попытался(-ась) подтвердить свой аккаунт.', 'Ошибка', `SteamID: ${steamProfile}`)
-            }
-        }catch{
-            message.author.send(`
-> **Возникла ошибка** 🔏
-SteamAPI не сумел найти ваш аккаунт, а поэтому мы просим вас установить личную ссылку, что можно сделать в настройках вашего профиля во вкладке основное.
-                `);
-            sendLog(message,'Глобальное','Попытался(-ась) подтвердить свой аккаунт.', 'Ошибка', `SteamID: ${steamProfile}`)
-        }
-    }else if(person == undefined && comand(message).com == `подтвердить` && steamProfile != null && AllStats.find(pers => pers.steamID == steamProfile) != null){
-        message.author.send(`
-> **Я был о вас лучшего мнения** 😢
-Не пытайтесь меня обмануть. Ваш стим-аккаунт уже привязан к одному из участников.
-            `)
+            });
+        });
+    };
+
+    if(person == undefined && haveRole(guild.members.cache.get(message.author.id), `829423238169755658`)){
+        rpName()
+    }else if(person != undefined && haveRole(guild.members.cache.get(message.author.id), `829423238169755658`)){
+        message.author.send('> С возвращением!')
+        rpName()
+    }else{
+        message.author.send('> Вы уже зарегистрированы.')
     }
     
 };
@@ -835,10 +768,6 @@ client.on('message', message => {
     if(comand(message).com == `clore` && message.author.id == `621917381681479693` && !mb && !mg){
         createLore(comand(message).sarg[0],comand(message).sarg[1],comand(message,2).carg,message)
         setTimeout(() => message.delete(), timeOfDelete);
-    };
-
-    if(!mb && mg){
-        Stats(message);
     };
 
     if(message.channel.id == Config.channelsID.commits && message.author.id != '822500483826450454' && !mg){
@@ -1894,6 +1823,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             sendLocalMessage('Использование данной команды доступно лишь в личных сообщениях с <@!822500483826450454>')
         }
     }
+
+    if(interaction.data.name == 'регистрация'){
+        if(interaction['guild_id'] == undefined){
+            Stats(msgDate);
+        }
+    }
 });
     
 
@@ -2258,9 +2193,18 @@ function checkIntegrations() {
             .then()
             .catch(console.error);
     }, 200);*/
-    setTimeout(() =>{client.interaction.createApplicationCommand({
+    /* setTimeout(() =>{client.interaction.createApplicationCommand({
         name: "nsfw", 
         description: "Запросить доступ к NSFW контенту внутри сервера",
+        options: []
+    }, null)
+        .then(console.log)
+        .catch(console.log);
+    }, 200); */
+
+    setTimeout(() =>{client.interaction.createApplicationCommand({
+        name: "регистрация", 
+        description: "Зарегистрировать своего персонажа",
         options: []
     }, null)
         .then(console.log)
