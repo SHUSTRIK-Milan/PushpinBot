@@ -480,6 +480,7 @@ async function delStats(id){
 async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`);
+    var t2 = false
 
     function verificate(name){
         guild.members.cache.get(message.author.id).setNickname(name);
