@@ -1828,6 +1828,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         if(interaction['guild_id'] == undefined){
             Stats(msgDate);
         }
+        sendLocalMessage('⠀')
     }
 });
     
@@ -2200,8 +2201,7 @@ function checkIntegrations() {
     }, null)
         .then(console.log)
         .catch(console.log);
-    }, 200); */
-
+    }, 200); 
     setTimeout(() =>{client.interaction.createApplicationCommand({
         name: "регистрация", 
         description: "Зарегистрировать своего персонажа",
@@ -2209,7 +2209,7 @@ function checkIntegrations() {
     }, null)
         .then(console.log)
         .catch(console.log);
-    }, 200);
+    }, 200);*/
 }
 
 client.login(Config.discordTocens.main);
