@@ -480,24 +480,6 @@ async function delStats(id){
 async function Stats(message){
     var AllStats = await GetStats();
     var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`);
-    var steamProfile;
-    var steamProfileInfo;
-    var steamNick;
-
-    if (comand(message).sarg[0].slice(0,urlSteam.length) == urlSteam) steamProfile = await steam.resolve(comand(message).sarg[0]);
-
-    if (steamProfile != null){
-        var steamNick = `[PP] ${message.author.username}`.slice(0,19);
-        let n = steamNick.split("")
-
-        for(var h = 0; h <= n.length; h++){
-            if (n[h] == " " && (n[h+1] == " " || n[h+1] == null)){
-                n.splice(h, 1)
-            }
-        }
-
-        steamNick = n.join('')
-    }
 
     if (person != undefined && comand(message).com == `подтвердить`){ //пользователь зарегистрирован
         message.author.send(`
