@@ -1831,6 +1831,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     if(interaction.data.name == 'регистрация'){
         if(interaction['guild_id'] == undefined){
             Stats(msgDate);
+        }else{
+            sendLocalMessage('Использование данной команды доступно лишь в личных сообщениях с <@!822500483826450454>')
         }
         sendGlobalMessage('⠀')
     }
