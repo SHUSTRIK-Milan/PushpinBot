@@ -483,7 +483,7 @@ async function Stats(message){
 
     function verificate(name){
         guild.members.cache.get(message.author.id).setNickname(name);
-        AddStats(`<@!${message.author.id}>`,250,'Нет','Нет',steamProfileInfo.steamID)
+        AddStats(`<@!${message.author.id}>`,250,'Нет','Нет','111')
 
         guild.members.fetch(message.author.id).then(member =>{
             setTimeout(() => giveRole(member,`854315001543786507`), timeOfDelete); //citizen
@@ -513,12 +513,14 @@ async function Stats(message){
 > **Успешно! Ваш аккаунт зарегистрирован** 🎉\nВы установили свое ролевое имя. Сменить его вы сможете только при помощи администратора.
                     `)
                     verificate(msgs[0].content);
+                    return
                 }else{
-                    message.author.send('> Время вышло👥\nОтвет')
+                    rpName()
+                    return
                 }
             })
             .catch(() => {
-                message.author.send('> Время вышло👥\nОтвет')
+                rpName()
             });
         });
     };
