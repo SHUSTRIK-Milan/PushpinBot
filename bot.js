@@ -500,8 +500,8 @@ async function Stats(message){
     function rpName(){
         let filter = m => m.author.id === message.author.id
         message.author.send('> Для окончания регистрации требуется лишь одна маленькая условность 👥\nПожалуйста, введите свое ролевое имя ')
-        .then(() => {
-            message.channel.awaitMessages(filter, {
+        .then(msg => {
+            msg.channel.awaitMessages(filter, {
                 max: 1,
                 time: 120000,
                 errors: ['time'],
@@ -526,10 +526,8 @@ async function Stats(message){
     if(person == undefined && haveRole(guild.members.cache.get(message.author.id), `829423238169755658`)){
         rpName()
     }else if(person != undefined && haveRole(guild.members.cache.get(message.author.id), `829423238169755658`)){
-        message.author.send('> С возвращением!')
         rpName()
     }else if(person == undefined && haveRole(guild.members.cache.get(message.author.id), `836269090996879387`)){
-        message.author.send('> С возвращением!')
         rpName()
     }else{
         message.author.send('> Вы уже зарегистрированы.')
