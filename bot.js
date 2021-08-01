@@ -499,7 +499,7 @@ async function Stats(message){
 
     let filter = m => m.author.id === message.author.id
     function rpName(){
-        message.author.send('> Для окончания регистрации требуется лишь одна маленькая условность 👥\nПожалуйста, введите свое ролевое имя ')
+        message.author.send('> Для окончания регистрации требуется лишь одна маленькая условность 👥\nПожалуйста, введите свое ролевое имя')
         .then(msg => {
             msg.channel.awaitMessages(filter, {
                 max: 1,
@@ -514,11 +514,11 @@ async function Stats(message){
                     `)
                     verificate(msgs[0].content);
                 }else{
-                    rpName();
+                    message.author.send('> Время вышло👥\nОтвет')
                 }
             })
             .catch(() => {
-                rpName();
+                message.author.send('> Время вышло👥\nОтвет')
             });
         });
     };
