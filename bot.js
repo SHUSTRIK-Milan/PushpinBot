@@ -640,10 +640,6 @@ async function roflBot(text, messageG){
                 }
                 t = false
             })
-            .catch(() => {
-                messageG.channel.send(`Вы так и не сказали, как мне на это отвечать, <@!${messageG.author.id}>.`);
-                t = false
-            });
         });
         
     }
