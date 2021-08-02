@@ -47,7 +47,7 @@ module.exports.logChannels = {
 };
 
 module.exports.discordTocens = {
-    main: `ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.7W4gydKsdaDNOdi1Zj__B2Uvdcg`,
+    main: `ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.-5ksrLJRwNPAEN_wFmQ2KSpl4rw`,
 	testBot: `ODQwMjMwNTMxNjYwNTEzMjgw.YJVLqQ.Lr7HGn01gH50OUcHrHr4Rl-BpSM`
 };
 
