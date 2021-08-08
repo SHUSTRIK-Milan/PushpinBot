@@ -604,6 +604,7 @@ async function pay(message, userDate, money, functionSend){
 };
 
 async function roflBot(text, messageG){
+    let waitingOutput = false
     let chnl = guild.channels.cache.get(BDchnl)
     let msg = await chnl.messages.fetch(ROFLbdMsg)
     let nMsg = msg.content.split('\n')
@@ -611,13 +612,14 @@ async function roflBot(text, messageG){
     let outF = nMsg.find(n => n.split('^')[0].toLowerCase() == text.toLowerCase())
     console.log(outF)
 
-    if(outF != undefined){
+    if(outF != undefined && !waitingOutput){
         if(outF.split('^')[3] == undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`)
         if(outF.split('^')[3] != undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`, {files: [outF.split('^')[3]]})
     }
-    if(outF == undefined){
+    if(outF == undefined && !waitingOutput){
         let filter = m => m.author.id == messageG.author.id && m.author.bot == false
         messageG.channel.send(`Я не знаю как мне на это ответить. Напиши, как мне на это отвечать, <@!${messageG.author.id}>.`)
+        waitingOutput = true
         .then(() => {
             messageG.channel.awaitMessages(filter, {
                 max: 1,
@@ -638,6 +640,7 @@ async function roflBot(text, messageG){
                     messageG.channel.send(`Ой... кажется моя память переполнена. Я все забыл. Давайте по новой, <@!${messageG.author.id}>.`);
                     msg.edit(nMsg[0])
                 }
+                waitingOutput = false
             })
         });
         
