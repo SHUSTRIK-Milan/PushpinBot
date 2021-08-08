@@ -505,7 +505,7 @@ async function Stats(message){
         .then(msg => {
             msg.channel.awaitMessages(filter, {
                 max: 1,
-                time: 60000,
+                time: 25000,
                 errors: 'time',
             })
             .then(message => {
@@ -521,7 +521,7 @@ async function Stats(message){
             })
             .catch(() => {
                 message.author.send(`
-> **Вышло время ожидания** ⏳\nПовторите попытку позже.
+> **Вышло время ожидания** ⏳\nПовторите попытку ещё раз.
                 `)
                 rpName()
             })
