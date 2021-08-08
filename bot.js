@@ -611,13 +611,12 @@ async function roflBot(text, messageG){
     let outF = nMsg.find(n => n.split('^')[0].toLowerCase() == text.toLowerCase())
     console.log(outF)
 
-    if(outF != undefined && t == false){
+    if(outF != undefined){
         if(outF.split('^')[3] == undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`)
         if(outF.split('^')[3] != undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`, {files: [outF.split('^')[3]]})
     }
-    if(outF == undefined && t == false){
+    if(outF == undefined){
         let filter = m => m.author.id === messageG.author.id && m.author.bot === false
-        t = true
         messageG.channel.send(`Я не знаю как мне на это ответить. Напиши, как мне на это отвечать, <@!${messageG.author.id}>.`)
         .then(() => {
             messageG.channel.awaitMessages(filter, {
@@ -639,7 +638,6 @@ async function roflBot(text, messageG){
                     messageG.channel.send(`Ой... кажется моя память переполнена. Я все забыл. Давайте по новой, <@!${messageG.author.id}>.`);
                     msg.edit(nMsg[0])
                 }
-                t = false
             })
         });
         
