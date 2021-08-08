@@ -386,7 +386,7 @@ async function AddStats(user, money, status, car, steamID) {
     };
     try{
         let dbd = await refDI(); //получая данные с доп бд
-        let id = `${dbd.fMsg[1]}-${dbd.msg.content.split('\n').length}`; //создаю ID
+        let id = `${dbd.fMsg[1]}-${dbd.msg.content.split('\n').slice(-1).split(BDpref)[1]}`; //создаю ID
         let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`; //создаю переменную всех данных
         if ((`${dbd.msg.content}\n${bdInfo}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
             let nnMsg = dbd.msg.content.split('\n').slice(1); //разделяю сообщение на строки, удаляя название
