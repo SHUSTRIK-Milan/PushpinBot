@@ -505,7 +505,7 @@ async function Stats(message){
         .then(msg => {
             msg.channel.awaitMessages(filter, {
                 max: 1,
-                time: 120000,
+                time: 60000,
                 errors: 'time',
             })
             .then(message => {
@@ -515,11 +515,15 @@ async function Stats(message){
 > **Успешно! Ваш аккаунт зарегистрирован** 🎉\nВы установили свое ролевое имя. Сменить его вы сможете только при помощи администратора.
                     `)
                     verificate(msgs[0].content);
-                    return
                 }else{
                     rpName()
-                    return
                 }
+            })
+            .catch(() => {
+                message.author.send(`
+> **Вышло время ожидания** ⏳\nПовторите попытку позже.
+                `)
+                rpName()
             })
         });
     };
