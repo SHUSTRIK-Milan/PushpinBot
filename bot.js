@@ -748,7 +748,7 @@ client.on('message', message => {
     };
 
     if(comand(message).com == `tbd` && haveRole(message.member,`822493460493500436`) && !mb && !mg){
-        setTimeout(() => AddStats(`<@!${message.author.id}>`,25,'В розыске','Отсутствует',101), 1000);
+        AddStats(`<@!${message.author.id}>`,25,'В розыске','Отсутствует',101)
         setTimeout(() => message.delete(), timeOfDelete);
     };
 
