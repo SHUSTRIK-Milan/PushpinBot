@@ -6,8 +6,6 @@ const axios = require("axios");
 axios.defaults.headers.common['Authorization'] = `Bot ${process.env.BOT_TOKEN}`;
 const prefix = '!';
 const BDpref = '^';
-var waitingOutputRoflBot = false
-const urlSteam = `https://steamcommunity.com/`;
 
 var guild;
 var allChannels = [];
@@ -605,6 +603,7 @@ async function pay(message, userDate, money, functionSend){
 };
 
 async function roflBot(text, messageG){
+    let waitingOutputRoflBot = false
     let chnl = guild.channels.cache.get(BDchnl)
     let msg = await chnl.messages.fetch(ROFLbdMsg)
     let nMsg = msg.content.split('\n')
