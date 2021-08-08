@@ -499,7 +499,7 @@ async function Stats(message){
         guild.channels.cache.get(`849709660579954748`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
     };
 
-    let filter = m => m.author.id === message.author.id
+    let filter = m => m.author.id == message.author.id
     function rpName(){
         message.author.send('> Для окончания регистрации требуется лишь одна маленькая условность 👥\nПожалуйста, введите свое ролевое имя')
         .then(msg => {
@@ -616,7 +616,7 @@ async function roflBot(text, messageG){
         if(outF.split('^')[3] != undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`, {files: [outF.split('^')[3]]})
     }
     if(outF == undefined){
-        let filter = m => m.author.id === messageG.author.id && m.author.bot === false
+        let filter = m => m.author.id == messageG.author.id && m.author.bot == false
         messageG.channel.send(`Я не знаю как мне на это ответить. Напиши, как мне на это отвечать, <@!${messageG.author.id}>.`)
         .then(() => {
             messageG.channel.awaitMessages(filter, {
