@@ -618,8 +618,8 @@ async function roflBot(text, messageG){
     }
     if(outF == undefined && !waitingOutputRoflBot){
         let filter = m => m.author.id == messageG.author.id && m.author.bot == false
-        messageG.channel.send(`Я не знаю как мне на это ответить. Напиши, как мне на это отвечать, <@!${messageG.author.id}>.`)
         waitingOutputRoflBot = true
+        messageG.channel.send(`Я не знаю как мне на это ответить. Напиши, как мне на это отвечать, <@!${messageG.author.id}>.`)
         .then(() => {
             messageG.channel.awaitMessages(filter, {
                 max: 1,
