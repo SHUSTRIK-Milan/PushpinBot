@@ -61,7 +61,7 @@ client.on('ready', () => {
         date.getUTCDay() == 6 ||
         date.getUTCDay() == 0){
             let lastMessage = await guild.channels.cache.get(Config.announcements).messages.fetch({ limit: 1 })
-            if(date.getUTCHours == 17 && lastMessage.createdAt.getUTCDay() != date.getUTCDay()){
+            if(date.getUTCHours+3 == 17 && lastMessage.createdAt.getUTCDay() != date.getUTCDay()){
                 guild.channels.cache.get(Config.announcements).send('> Сбор, дамы и господа!\nВсем приятной и интересной игры!')
             }
         }
