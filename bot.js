@@ -65,6 +65,8 @@ client.on('ready', () => {
                 guild.channels.cache.get(Config.announcements).send('> Сбор, дамы и господа!\nВсем приятной и интересной игры!')
             }
         }
+        console.log('test')
+        console.log(date.getUTCDay())
     }, 60000)
 });
 
