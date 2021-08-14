@@ -63,7 +63,7 @@ client.on('ready', () => {
             let channel = guild.channels.cache.get(Config.channelsID.announcements)
             let lastMessage = await channel.messages.fetch({limit: 1})
             console.log(lastMessage)
-            if(date.getUTCHours()+3 == 19 && (lastMessage.createdAt.getUTCDay() != date.getUTCDay() && lastMessage.author.bot != true)){
+            if(date.getUTCHours()+3 == 19 && lastMessage.createdAt.getUTCDay() != date.getUTCDay()){
                 channel.send('> Сбор, дамы и господа!\nВсем приятной и интересной игры!')
             }
             console.log(date)
