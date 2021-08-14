@@ -57,12 +57,12 @@ client.on('ready', () => {
 
     setInterval(async () => {
         var date = new Date()
-        console.log(date)
         if(date.getUTCDay() == 5 ||
         date.getUTCDay() == 6 ||
         date.getUTCDay() == 0){
             let channel = guild.channels.cache.get(Config.channelsID.announcements)
             let lastMessage = await channel.messages.fetch({limit: 1})
+            console.log(lastMessage.createdAt)
             if(date.getUTCHours()+3 == 19 && (lastMessage.createdAt.getUTCDay() != date.getUTCDay() && lastMessage.author.bot != true)){
                 channel.send('> Сбор, дамы и господа!\nВсем приятной и интересной игры!')
             }
