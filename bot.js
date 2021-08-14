@@ -63,9 +63,11 @@ client.on('ready', () => {
             let channel = guild.channels.cache.get(Config.channelsID.announcements)
             let lastMessage = await channel.messages.fetch()
 
-            lastMessage = lastMessage.filter(msg => msg.author.bot).first()
-            if(lastMessage == undefined){
+            lastMessageBot = lastMessage.filter(msg => msg.author.bot)
+            if(lastMessageBot == undefined){
                 lastMessage = lastMessage.first()
+            }else{
+                lastMessage = lastMessageBot.first()
             }
 
             let dateOfMessage = new Date(lastMessage.createdTimestamp)
