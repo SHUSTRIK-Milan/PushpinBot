@@ -61,9 +61,17 @@ client.on('ready', () => {
         date.getUTCDay() == 6 ||
         date.getUTCDay() == 0){
             let channel = guild.channels.cache.get(Config.channelsID.announcements)
-            let lastMessage = await channel.messages.fetch({limit: 1})
-            console.log(lastMessage)
-            if(date.getUTCHours()+3 == 19 && lastMessage.createdAt.getUTCDay() != date.getUTCDay()){
+            let lastMessage = await channel.messages.fetch()
+            console.log(lastMessage.filter(msg => msg.author.bot))
+            try{
+                lastMessage = lastMessage.filter(msg => msg.author.bot)[0]
+            }catch{
+                lastMessage = lastMessage[0]
+            }
+
+            let dateOfMessage = new Date(lastMessage.createdTimestamp)
+
+            if(date.getUTCHours()+3 == 19 && dateOfMessage.getUTCDay() != date.getUTCDay()){
                 channel.send('> Сбор, дамы и господа!\nВсем приятной и интересной игры!')
             }
             console.log(date)
