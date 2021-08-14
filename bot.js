@@ -65,6 +65,7 @@ client.on('ready', () => {
             if(date.getUTCHours()+3 == 19 && (lastMessage.createdAt.getUTCDay() != date.getUTCDay() && lastMessage.author.bot != true)){
                 channel.send('> Сбор, дамы и господа!\nВсем приятной и интересной игры!')
             }
+            console.log(date)
         }
     }, 60000)
 });
