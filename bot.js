@@ -64,11 +64,12 @@ client.on('ready', () => {
             let lastMessage = await channel.messages.fetch()
 
             lastMessageBot = lastMessage.filter(msg => msg.author.bot)
-            if(lastMessageBot == undefined){
+            if(lastMessageBot.size == 0){
                 lastMessage = lastMessage.first()
             }else{
                 lastMessage = lastMessageBot.first()
             }
+            console.log(lastMessage)
 
             let dateOfMessage = new Date(lastMessage.createdTimestamp)
 
