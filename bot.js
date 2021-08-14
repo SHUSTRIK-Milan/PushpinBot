@@ -56,7 +56,8 @@ client.on('ready', () => {
     }
 
     setInterval(async () => {
-        let date = new Date()
+        var date = new Date()
+        console.log(date)
         if(date.getUTCDay() == 5 ||
         date.getUTCDay() == 6 ||
         date.getUTCDay() == 0){
