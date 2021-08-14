@@ -62,13 +62,15 @@ client.on('ready', () => {
         date.getUTCDay() == 0){
             let channel = guild.channels.cache.get(Config.channelsID.announcements)
             let lastMessage = await channel.messages.fetch()
+            console.log(lastMessage)
 
             try{
-                lastMessage = lastMessage.filter(msg => msg.author.bot)[0]
+                lastMessage = lastMessage.filter(msg => msg.author.bot)
             }catch{
-                lastMessage = lastMessage[0]
+                lastMessage = lastMessage
             }
-            console.log(lastMessage)
+
+            console.log(lastMessage[0])
 
             let dateOfMessage = new Date(lastMessage.createdTimestamp)
 
