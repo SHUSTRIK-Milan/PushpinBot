@@ -68,8 +68,7 @@ client.on('ready', () => {
             }catch{
                 lastMessage = lastMessage
             }
-
-            console.log(lastMessage.first())
+            lastMessage = lastMessage.first()
 
             let dateOfMessage = new Date(lastMessage.createdTimestamp)
 
