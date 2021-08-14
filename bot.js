@@ -65,6 +65,7 @@ client.on('ready', () => {
 
             try{
                 lastMessage = lastMessage.filter(msg => msg.author.bot)
+                console.log(typeof(lastMessage))
             }catch{
                 lastMessage = lastMessage
             }
