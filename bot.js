@@ -69,9 +69,9 @@ client.on('ready', () => {
             }else{
                 lastMessage = lastMessageBot.first()
             }
-            console.log(lastMessage)
 
             let dateOfMessage = new Date(lastMessage.createdTimestamp)
+            console.log(dateOfMessage.getUTCDay())
 
             if(date.getUTCHours()+3 == 19 && dateOfMessage.getUTCDay() != date.getUTCDay()){
                 channel.send('> Сбор, дамы и господа!\nВсем приятной и интересной игры!')
