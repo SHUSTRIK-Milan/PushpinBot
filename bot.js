@@ -71,9 +71,8 @@ client.on('ready', () => {
             }
 
             let dateOfMessage = new Date(lastMessage.createdTimestamp)
-            console.log(dateOfMessage.getUTCDay())
 
-            if(date.getUTCHours()+3 == 19 && dateOfMessage.getUTCDay() != date.getUTCDay()){
+            if(date.getUTCHours()+3 == 20 && (dateOfMessage.getUTCFullYear() != date.getUTCFullYear() || dateOfMessage.getUTCMonth() != date.getUTCMonth() || dateOfMessage.getUTCDate() != date.getUTCDate())){
                 channel.send('> Сбор, дамы и господа!\nВсем приятной и интересной игры!')
             }
         }
