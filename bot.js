@@ -73,7 +73,7 @@ client.on('ready', () => {
             let dateOfMessage = new Date(lastMessage.createdTimestamp)
 
             if(date.getUTCHours()+3 == 17 && (dateOfMessage.getUTCFullYear() != date.getUTCFullYear() || dateOfMessage.getUTCMonth() != date.getUTCMonth() || dateOfMessage.getUTCDate() != date.getUTCDate())){
-                channel.send('> Сбор, дамы и господа!\nВсем приятной и интересной игры!')
+                channel.send(`> <@&836269090996879387>, сбор, дамы и господа!\nВсем приятной и интересной игры! 📌`)
             }
         }
     }, 60000)
