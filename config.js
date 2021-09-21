@@ -47,7 +47,7 @@ module.exports.logChannels = {
 };
 
 module.exports.discordTocens = {
-    main: `ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.-5ksrLJRwNPAEN_wFmQ2KSpl4rw`,
+    main: `ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.JS95C2U2Wgwzuq9kgZZQh2hQXks`,
 	testBot: `ODQwMjMwNTMxNjYwNTEzMjgw.YJVLqQ.Lr7HGn01gH50OUcHrHr4Rl-BpSM`
 };
 
@@ -71,6 +71,11 @@ module.exports.globalObjects = [
 		name: 'Либерти',
 		id: '3',
         children: ['Заброшка']
+	},
+	{
+		name: 'Шоссе 58',
+		id: '4',
+        children: []
 	},
 ]
 

@@ -673,7 +673,6 @@ async function roflBot(text, messageG){
                 waitingOutputRoflBot = false
             });
         });
-        
     }
     return msg
 }
