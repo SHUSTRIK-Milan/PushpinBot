@@ -55,7 +55,8 @@ client.on('ready', () => {
       });
     }
 
-    setInterval(async () => {
+    // ОПОВЕЩЕНИЕ О СБОРАХ
+    /* setInterval(async () => {
         var date = new Date()
         if(date.getUTCDay() == 5 ||
         date.getUTCDay() == 6 ||
@@ -76,7 +77,7 @@ client.on('ready', () => {
                 channel.send(`> <@&836269090996879387>, сбор, дамы и господа!\nВсем приятной и интересной игры! 📌`)
             }
         }
-    }, 60000)
+    }, 60000) */
 });
 
 client.on('presenceUpdate', (om,nm) => {
