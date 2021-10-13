@@ -1,7 +1,7 @@
 module.exports.channelsID = {
     welcome: `822528060196388926`,
     news: `837393627360788480`,
-    commits: `837393666527985694`,
+    dev_process: `837393666527985694`,
     announcements: `857727017045983232`,
     /////////verification////////////
     verification: `855871125753430016`,
@@ -19,10 +19,6 @@ module.exports.channelsID = {
     ////////main[rp]////////////
     main_rp: `855926428754509854`,
     help_info: `855873161090170901`,
-    characters: `858323732686962710`,
-    organization_and_formation: `858325435392983050`,
-    adverts: `855926564226596865`,
-    global_do: `860540156716515378`,
     /////////Project Rules//////
     projectRules: `837395201726742528`,
     generalRules: `837395238360055879`,
