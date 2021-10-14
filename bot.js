@@ -500,14 +500,13 @@ async function Stats(message){
     var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`)
     console.log(message)
 
-    function verificate(name){
+    function verificate(name, role){
         guild.members.cache.get(message.author.id).setNickname(name);
         AddStats(`<@!${message.author.id}>`,250,'Нет','Нет','111')
         message.channel = {id: message.channel_id}
 
         guild.members.fetch(message.author.id).then(member =>{
-            setTimeout(() => giveRole(member,`854315001543786507`), timeOfDelete); //citizen
-            setTimeout(() => giveRole(member,`851059555499638825`), timeOfDelete); //rp-role
+            setTimeout(() => giveRole(member,`854315001543786507`), timeOfDelete); //role
             setTimeout(() => giveRole(member,`836183994646921248`), timeOfDelete); //pushpin
             setTimeout(() => giveRole(member,`836269090996879387`), timeOfDelete); //user
             setTimeout(() => removeRole(member,`829423238169755658`), timeOfDelete); //ooc
