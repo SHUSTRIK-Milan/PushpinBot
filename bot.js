@@ -350,13 +350,10 @@ async function createCom(embd, message){
     return;
 };
 
-function member(id, user, money, status, car, steamID) {
+function member(id, user, money) {
     this.id = id;
     this.user = user;
     this.money = money;
-    this.status = status;
-    this.car = car;
-    this.steamID = steamID;
 };
 
 async function GetStats() {
@@ -390,13 +387,13 @@ async function GetStats() {
 
     membersArray = []; //задаем массив участников
     for(let i of mainArray){ //перебераем массив X со всеми данными и сортируем их в объект member, который отправляем в массив участников
-        var newMember = new member(i[0], i[1], i[2], i[3], i[4], i[5]);
+        var newMember = new member(i[0], i[1], i[2]);
         membersArray.push(newMember);
     };
     return membersArray; //возвращаем массив участников
 };
 
-async function AddStats(user, money, status, car, steamID) {
+async function AddStats(user, money) {
     async function refDI(){
         var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
         var oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
@@ -411,7 +408,7 @@ async function AddStats(user, money, status, car, steamID) {
     try{
         let dbd = await refDI(); //получая данные с доп бд
         let id = `${dbd.fMsg[1]}-${parseInt(dbd.msg.content.split('\n').slice(-1).join('').split(BDpref)[1].split('-')[1])+1}`; //создаю ID
-        let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`; //создаю переменную всех данных
+        let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}`; //создаю переменную всех данных
         if ((`${dbd.msg.content}\n${bdInfo}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
             let nnMsg = dbd.msg.content.split('\n').slice(1); //разделяю сообщение на строки, удаляя название
             nnMsg.push(`${bdInfo}`); //добавляю к разделеному сообщению данные
@@ -424,7 +421,7 @@ async function AddStats(user, money, status, car, steamID) {
 
             dbd = await refDI(); //получаю данные
             let id = `${dbd.fMsg[1]}-${smsg.content.split('\n').length}`; //создаю ID
-            let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}${BDpref}${status}${BDpref}${car}${BDpref}${steamID}`; //создаю переменную всех данных
+            let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}`; //создаю переменную всех данных
 
             let nnMsg = smsg.content.split('\n').slice(1); //разделяю сообщение на строки, удаляя название
             nnMsg.push(`${bdInfo}`); //добавляю к разделеному сообщению данные
@@ -444,9 +441,6 @@ async function EditStats(id, stat, dat){
 
     if(stat == 'user') stat = 0;
     if(stat == 'money') stat = 1;
-    if(stat == 'status') stat = 2;
-    if(stat == 'car') stat = 3;
-    if(stat == 'steamID') stat = 4;
 
     var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
     var oMsg = await channel.messages.fetch(dopBDmsg);
@@ -470,7 +464,7 @@ async function EditStats(id, stat, dat){
 
     if (nnMsg.join('\n').length > 2000){
         nnMsg.splice(parseInt(idnum),1);
-        AddStats(eStat[0],eStat[1],eStat[2],eStat[3],eStat[4]);
+        AddStats(eStat[0],eStat[1]);
     }
         
     msg.edit(nnMsg.join('\n'));
@@ -1625,6 +1619,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         }else{
             sendNullMessage()
         }
+
     }
     /* if (interaction.data.name == "me") {
         let msgDate = {author: user.user, channel: channel, content: arg, member: user};
