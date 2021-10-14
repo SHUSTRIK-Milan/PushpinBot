@@ -584,11 +584,7 @@ async function pay(message, userDate, money, functionSend){
     stats = await GetStats();
     if (stats.length == 0){return};
 
-    let moneyT = new Intl.NumberFormat("ru", {
-        style: "currency",
-        currency: "USD",
-        minimumSignificantDigits: 1
-    })
+    let moneyT = new Intl.NumberFormat("ru")
 
     let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
     let gUser = stats.find(stat => stat.user == `<@!${userDate}>`);
