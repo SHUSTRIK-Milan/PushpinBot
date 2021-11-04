@@ -315,7 +315,7 @@ async function createCom(embd, message){
 
         let color = 11645371;
         if(countC>0) color = 8506509;
-        guild.channels.cache.get(Config.channelsID.commits).send({embed: {
+        guild.channels.cache.get(Config.channelsID.dev_process).send({embed: {
             title: `[PushpinBot:${branch}] ${countC} коммит(ов).`,
             description: nCommits.join('\n'),
             url: lastcom.html_url,
@@ -331,7 +331,7 @@ async function createCom(embd, message){
         let req = await fork.listPullRequests({state:'close'});
         let lastReq = await req.data[0];
         message.delete();
-        guild.channels.cache.get(Config.channelsID.commits).send({embed: {
+        guild.channels.cache.get(Config.channelsID.dev_process).send({embed: {
             title: `[PushpinBot:${lastReq.head.ref}] Новое слияние веток.`,
             description: `\`(${lastReq.head.ref} → ${lastReq.base.ref})\` ${lastReq.title}`,
             url: lastReq.url,
