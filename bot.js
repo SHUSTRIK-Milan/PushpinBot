@@ -1,22 +1,27 @@
+// Интеграции
 const Discord = require('discord.js');
+const {DiscordInteractions} = require("slash-commands");
 const Config = require('./config');
 const client = new Discord.Client();
-const {DiscordInteractions} = require("slash-commands");
 
+// Системные переменные
 const prefix = '!';
 const BDpref = '^';
 var waitingOutputRoflBot = false
+const timeOfDelete = 350;
 
+// Глобальные переменные
 var guild;
 var allChannels = [];
 var rpChannels = [];
 var rpchannel;
+
+// Базы данных
 const BDchnl = Config.channelsID.bd;
 var ROFLbdMsg = `863733070308966422`
-
 const dopBDmsg = `838003963412480070`;
-const timeOfDelete = 350;
 
+// Гитхаб
 var GitHub = require('github-api');
 var gitA = new GitHub({
     token: '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'
@@ -622,14 +627,13 @@ async function roflBot(text, messageG){
     let nMsg = msg.content.split('\n')
 
     let outF = nMsg.find(n => n.split('^')[0].toLowerCase() == text.toLowerCase())
-    console.log(outF)
 
     if(outF != undefined && !waitingOutputRoflBot){
         if(outF.split('^')[3] == undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`)
         if(outF.split('^')[3] != undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`, {files: [outF.split('^')[3]]})
     }
     if(outF == undefined && !waitingOutputRoflBot){
-        let filter = m => m.author.id == messageG.author.id && m.author.bot == false
+        let filter = m => m.author.id == messageG.author.id
         waitingOutputRoflBot = true
         messageG.channel.send(`Я не знаю как мне на это ответить. Напиши, как мне на это отвечать, <@!${messageG.author.id}>.`)
         .then(() => {
