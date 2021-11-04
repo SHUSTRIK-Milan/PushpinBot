@@ -1,14 +1,3 @@
-const http = require('http')
-const createHandler = require('github-webhook-handler')
-const handler = createHandler({ path: 'http://192.168.0.7:7777/webhook', secret: 'test2' })
-
-http.createServer(function (req, res) {
-    handler(req, res, function (err) {
-      res.statusCode = 404
-      res.end('no such location')
-    })
-}).listen(7777)
-
 const Discord = require('discord.js');
 const Config = require('./config');
 const client = new Discord.Client();
@@ -30,7 +19,7 @@ const timeOfDelete = 350;
 
 var GitHub = require('github-api');
 var gitA = new GitHub({
-    token: process.env.git
+    token: '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'
 });
 var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot');
 
@@ -304,13 +293,6 @@ function createLore(title,img,desc,message){
     return;
 };
 
-handler.on('push', function (event) {
-    console.log("test")
-    console.log(event.payload.head)
-    console.log(event.payload.push_id)
-    console.log(event.payload.commits)
-})
-
 async function createCom(embd, message){
     let act = null;
     for(let a of embd.title.split(':')){
@@ -320,6 +302,7 @@ async function createCom(embd, message){
     if(act == 'commit'){
         let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
         let branch = nTitle.slice(0,nTitle.length-1);
+        print(fork)
         let commits = await fork.listCommits({sha:branch});
         message.delete()
         let countC = parseInt(embd.title.split(' ')[1]);
