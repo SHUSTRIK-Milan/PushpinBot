@@ -2,8 +2,7 @@ const Discord = require('discord.js');
 const Config = require('./config');
 const client = new Discord.Client();
 const {DiscordInteractions} = require("slash-commands");
-const axios = require("axios");
-axios.defaults.headers.common['Authorization'] = `Bot ${process.env.BOT_TOKEN}`;
+
 const prefix = '!';
 const BDpref = '^';
 var waitingOutputRoflBot = false
@@ -14,7 +13,7 @@ var rpChannels = [];
 var rpchannel;
 const BDchnl = Config.channelsID.bd;
 var ROFLbdMsg = `863733070308966422`
-var t = false
+
 const dopBDmsg = `838003963412480070`;
 const timeOfDelete = 350;
 
