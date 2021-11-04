@@ -23,6 +23,7 @@
     "discord.js": "^12.5.1",
     "github-api": "^3.4.0",
     "github-webhook-handler": "^1.0.0",
+    "http": "0.0.1-security",
     "slash-commands": "^1.4.0"
   }
 }
