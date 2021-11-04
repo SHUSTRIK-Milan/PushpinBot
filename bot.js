@@ -28,7 +28,6 @@ client.on('ready', () => {
     guild = client.guilds.cache.get('814795850885627964');
     for(let channel of guild.channels.cache) allChannels.push(channel[0])
     for(let channel of allChannels) if(Object.values(Config.channelsID).find(chl => chl == channel) == null) rpChannels.push(channel);
-    for(let t of rpChannels){ console.log(guild.channels.cache.get(t).name)}
     
     let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
     let member = guild.memberCount;
@@ -302,7 +301,7 @@ async function createCom(embd, message){
     if(act == 'commit'){
         let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
         let branch = nTitle.slice(0,nTitle.length-1);
-        print(fork)
+        console.log(fork)
         let commits = await fork.listCommits({sha:branch});
         message.delete()
         let countC = parseInt(embd.title.split(' ')[1]);
