@@ -1,3 +1,14 @@
+const http = require('http')
+const createHandler = require('github-webhook-handler')
+const handler = createHandler({ path: '/webhook', secret: 'myhashsecret' })
+
+http.createServer(function (req, res) {
+    handler(req, res, function (err) {
+      res.statusCode = 404
+      res.end('no such location')
+    })
+}).listen(7777)
+
 const Discord = require('discord.js');
 const Config = require('./config');
 const client = new Discord.Client();
@@ -17,9 +28,7 @@ var ROFLbdMsg = `863733070308966422`
 const dopBDmsg = `838003963412480070`;
 const timeOfDelete = 350;
 
-const SteamAPI = require('steamapi');
 var GitHub = require('github-api');
-const steam = new SteamAPI('52E6781CF3B4EB4234DC424555A7AD9C');
 var gitA = new GitHub({
     token: process.env.git
 });
@@ -294,6 +303,12 @@ function createLore(title,img,desc,message){
     });
     return;
 };
+
+handler.on('push', function (event) {
+    console.log(event.payload.head)
+    console.log(event.payload.push_id)
+    console.log(event.payload.commits)
+})
 
 async function createCom(embd, message){
     let act = null;
