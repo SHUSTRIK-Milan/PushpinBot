@@ -785,7 +785,7 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
     };
 
-    if(message.channel.id == Config.channelsID.dev_process && message.author.id != '822500483826450454' && !mg){
+    if(message.channel.id == Config.channelsID.dev_process && message.author.id != '822500483826450454' && !mg && mb){
         createCom(message.embeds[0],message);
     }
 
