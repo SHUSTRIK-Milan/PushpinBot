@@ -1,60 +1,80 @@
 // Интеграции
-const Discord = require('discord.js');
-const {DiscordInteractions} = require("slash-commands");
-const Config = require('./config');
-const client = new Discord.Client();
+const Discord = require('discord.js')
+const {DiscordInteractions} = require("slash-commands")
+const Config = require('./config')
+const client = new Discord.Client()
 
 // Системные переменные
-const prefix = '!';
-const BDpref = '^';
+const prefix = '!'
+const BDpref = '^'
 var waitingOutputRoflBot = false
 const timeOfDelete = 350;
 
 // Глобальные переменные
 var guild;
-var allChannels = [];
-var rpChannels = [];
-var rpchannel;
 
 // Базы данных
-const BDchnl = Config.channelsID.bd;
+const BDchnl = Config.channelsID.bd
 var ROFLbdMsg = `863733070308966422`
-const dopBDmsg = `838003963412480070`;
+const dopBDmsg = `838003963412480070`
 
 // Гитхаб
-var GitHub = require('github-api');
+var GitHub = require('github-api')
 var gitA = new GitHub({
     token: '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'
 });
-var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot');
+var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot')
+
+// Проверка на наличие роли
+function haveRole(member, roleid){
+    let have = false;
+    if(member == null){return have};
+    if (member.roles.cache.get(roleid) != null) have = true;
+    return have;
+};
+
+// Дача роли
+function giveRole(member, roleId){
+    member.roles.add(roleId, `Добавил роль под ID: ${roleId}.`).catch(console.error);
+};
+
+// Отбирание роли
+function removeRole(member, roleId){
+    member.roles.remove(roleId, `Удалил роль под ID: ${roleId}.`).catch(console.error);
+};
 
 client.on('ready', () => {
-    console.log(`${client.user.tag} готов!`);
-    guild = client.guilds.cache.get('814795850885627964');
-    for(let channel of guild.channels.cache) allChannels.push(channel[0])
-    for(let channel of allChannels) if(Object.values(Config.channelsID).find(chl => chl == channel) == null) rpChannels.push(channel);
-    
-    let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
-    let member = guild.memberCount;
-    let onlinemember = member - offlinemember - 2;
+    console.log(`${client.user.tag} ready!`)
+    guild = client.guilds.cache.get('814795850885627964')
 
-    if (onlinemember > 0){
-      client.user.setPresence({
-        status: "online",
-        activity: {
-            name: `на ${onlinemember} участников!`,
-            type: "WATCHING",
+    function checkOnlineUsers(){
+        let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size
+        let member = guild.memberCount
+        let onlinemember = member - offlinemember - 2
+
+        if (onlinemember > 0){
+            client.user.setPresence({
+              status: "online",
+              activity: {
+                  name: `на ${onlinemember} участников!`,
+                  type: "WATCHING",
+              }
+            })
+        }else if (onlinemember == 0){
+            client.user.setPresence({
+                status: "idle",
+                activity: {
+                    name: `в пустоту...`,
+                    type: "WATCHING",
+                }
+            })
         }
-      });
-    }else if (onlinemember == 0){
-      client.user.setPresence({
-        status: "idle",
-        activity: {
-            name: `в пустоту.`,
-            type: "WATCHING",
-        }
-      });
     }
+
+    checkOnlineUsers()
+    client.on('presenceUpdate', () => {
+        checkOnlineUsers()
+    });
 
     // ОПОВЕЩЕНИЕ О СБОРАХ
     /* setInterval(async () => {
@@ -81,39 +101,13 @@ client.on('ready', () => {
     }, 60000) */
 });
 
-client.on('presenceUpdate', (om,nm) => {
-    let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size;
-    let member = guild.memberCount;
-    let onlinemember = member - offlinemember - 2;
-
-    if (onlinemember > 0){
-      client.user.setPresence({
-        status: "online",
-        activity: {
-            name: `на ${onlinemember} участников!`,
-            type: "WATCHING",
-        }
-      });
-    }else if (onlinemember == 0){
-      client.user.setPresence({
-        status: "idle",
-        activity: {
-            name: `в пустоту.`,
-            type: "WATCHING",
-        }
-      });
-    }
-});
-
 client.on('guildMemberAdd', (member) => {
-    const role = "829423238169755658";
-    member.roles.add(role).catch(console.error);
+    giveRole(member, '829423238169755658')
 });
 
 function comand(message,countS){
-
-    if (countS == undefined) countS = 0;
-    let msg = message.content;
+    if (countS == undefined) countS = 0
+    let msg = message.content
 
     var comand = {
         com: '0',
@@ -122,12 +116,12 @@ function comand(message,countS){
         carg: '0'
     };
 
-    if(msg.slice(0,1) != prefix) return comand;
+    if(msg.slice(0,1) != prefix) return comand
     
-    let com = msg.split(" ", 1).join('').slice(prefix.length); // команда, первый слитнонаписанный текст
-    let arg = msg.slice(com.length+prefix.length+1); // все, что идет после команды
-    let sarg = arg.split(" "); // разбитый аргумент на пробелы
-    let carg = sarg.slice(countS).join(' '); // отрезанние от разбитого аргумента первых аргументов
+    let com = msg.split(" ", 1).join('').slice(prefix.length) // команда, первый слитнонаписанный текст
+    let arg = msg.slice(com.length+prefix.length+1) // все, что идет после команды
+    let sarg = arg.split(" ") // разбитый аргумент на пробелы
+    let carg = sarg.slice(countS).join(' ') // отрезанние от разбитого аргумента первых аргументов
     var comand = {
         com: com,
         arg: arg,
@@ -135,28 +129,13 @@ function comand(message,countS){
         carg: carg
     };
 
-    return comand;
+    return comand
 };
 
 function random(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
 }
-
-function haveRole(member, roleid){
-    let have = false;
-    if(member == null){return have};
-    if (member.roles.cache.get(roleid) != null) have = true;
-    return have;
-};
-
-function giveRole(member, roleId){
-    member.roles.add(roleId, `Добавил роль под ID: ${roleId}.`).catch(console.error);
-};
-
-function removeRole(member, roleId){
-    member.roles.remove(roleId, `Удалил роль под ID: ${roleId}.`).catch(console.error);
-};
 
 function roll(){
     return random(0, 100)
@@ -206,56 +185,43 @@ function cube(){
 }
 
 function sendLog(message,cat,act,status,add){
-    let img = `https://i.imgur.com/cjSSwtu.png`;
-    if (status == 'Успешно') img = `https://i.imgur.com/cjSSwtu.png`;
-    if (status == 'Ошибка') img = `https://i.imgur.com/utuBexR.png`;
+    if (cat == 'admin'){var color = 4105807; var channel = Config.channelsID.admin}
+    if (cat == 'other'){var color = 11645371; var channel = Config.channelsID.other}
+    if (cat == 'rp'){var color = 11382073; var channel = Config.channelsID.rp}
 
-    let color = 11645371; 
-    if (cat == 'Админ') color = 4105807;
-    if (cat == 'Глобальное') color = 14560833;
-    if (cat == 'Общее') color = 11645371;
-    if (cat == 'РП') color = 11382073;
+    if (status == 0) status = '🟩'
+    if (status == 1) status = '🟥'
     
-    if(cat != 'РП'){
-        guild.channels.cache.get(Config.channelsID.logs).send({embed: {
+    if(cat != 'rp'){
+        guild.channels.cache.get(channel).send({embed: {
             color: color,
             author: {
                 name: message.author.username,
                 icon_url: message.author.avatarURL()
             },
-            thumbnail: {
-                url: img
-            },
-            title: `[${cat}] ${act}`,
+            title: `[${status}] ${act}`,
             fields: [{
                 name: `Допольнительно:`,
-                value: `${add}\n[<#${message.channel.id}>, https://discord.com/channels/814795850885627964/${message.channel.id}/${message.id}]`
+                value: `${add}\n[<#${message.channel.id}>, https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}]`
             }],
-            
             timestamp: new Date()
             }
         });
-    };
-    if(cat == 'РП'){
+    }else if(cat == 'rp'){
         guild.channels.cache.get(Config.channelsID.rp_logs).send({embed: {
             color: color,
             author: {
-                name: `${message.author.username} - ${message.member.nickname}`,
+                name: `${message.author.username} – ${message.user.nickname}`,
                 icon_url: message.author.avatarURL()
             },
-            thumbnail: {
-                url: img
-            },
-            title: `[${cat}] ${act}`,
+            title: `[${status}] ${act}`,
             fields: [{
                 name: `Допольнительно:`,
-                value: `${add}\n[<#${message.channel.id}>]`
+                value: `${add}\n[<#${message.channel.id}>, https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}]`
             }],
-            
             timestamp: new Date()
             }
         });
-        return;
     }else{
         return;
     }
