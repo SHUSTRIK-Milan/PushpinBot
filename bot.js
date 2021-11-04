@@ -1,6 +1,6 @@
 const http = require('http')
 const createHandler = require('github-webhook-handler')
-const handler = createHandler({ path: '/webhook', secret: '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' })
+const handler = createHandler({ path: '/webhook', secret: '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' })
 
 http.createServer(function (req, res) {
     handler(req, res, function (err) {
