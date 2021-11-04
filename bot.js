@@ -1,6 +1,6 @@
 const http = require('http')
 const createHandler = require('github-webhook-handler')
-const handler = createHandler({ path: '/webhook', secret: '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' })
+const handler = createHandler({ path: '/webhook', secret: 'test2' })
 
 http.createServer(function (req, res) {
     handler(req, res, function (err) {
@@ -305,6 +305,7 @@ function createLore(title,img,desc,message){
 };
 
 handler.on('push', function (event) {
+    console.log("test")
     console.log(event.payload.head)
     console.log(event.payload.push_id)
     console.log(event.payload.commits)
