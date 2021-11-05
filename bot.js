@@ -264,11 +264,15 @@ function createLore(title,img,desc,message){
 };
 
 async function createCom(embd, message){
-    let act = null;
+    let commitChannel = guild.channels.cache.get(Config.channelsID.dev_process)
+    let webhook = await commitChannel.fetchWebhooks()
+    webhook = webhook.find(web => web.id == '906144022588956692')
+
     for(let a of embd.title.split(':')){
-        if(a.slice(-6) == 'closed') act = 'merge';
-        if(a.slice(-7) == 'commits' || a.slice(-6) == 'commit') act = 'commit';
+        if(a.slice(-6) == 'closed') var act = 'merge';
+        if(a.slice(-7) == 'commits' || a.slice(-6) == 'commit') var act = 'commit';
     };
+
     if(act == 'commit'){
         let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
         let branch = nTitle.slice(0,nTitle.length-1);
@@ -285,34 +289,39 @@ async function createCom(embd, message){
 
         let color = 11645371;
         if(countC>0) color = 8506509;
-        guild.channels.cache.get(Config.channelsID.dev_process).send({embed: {
-            title: `[PushpinBot:${branch}] ${countC} коммит(ов).`,
-            description: nCommits.join('\n'),
-            url: lastcom.html_url,
-            color: color,
-            author: {
-                name: lastcom.author.login,
-                icon_url: lastcom.author.avatar_url
-            },
-            fields: [],
-            timestamp: new Date()
-        }});
+        
+        webhook.send({
+            embeds: [{
+                title: `[PushpinBot:${branch}] ${countC} коммит(ов).`,
+                description: nCommits.join('\n'),
+                url: lastcom.html_url,
+                color: color,
+                author: {
+                    name: lastcom.author.login,
+                    icon_url: lastcom.author.avatar_url
+                },
+                fields: [],
+                timestamp: new Date()
+            }]
+        });
     }else if(act == 'merge'){
         let req = await fork.listPullRequests({state:'close'});
         let lastReq = await req.data[0];
         message.delete();
-        guild.channels.cache.get(Config.channelsID.dev_process).send({embed: {
-            title: `[PushpinBot:${lastReq.head.ref}] Новое слияние веток.`,
-            description: `\`(${lastReq.head.ref} → ${lastReq.base.ref})\` ${lastReq.title}`,
-            url: lastReq.url,
-            color: 13158471,
-            author: {
-                name: lastReq.user.login,
-                icon_url: lastReq.user.avatar_url
-            },
-            fields: [],
-            timestamp: new Date()
-        }});
+        webhook.send({
+            embeds: [{
+                title: `[PushpinBot:${lastReq.head.ref}] Новое слияние веток.`,
+                description: `\`(${lastReq.head.ref} → ${lastReq.base.ref})\` ${lastReq.title}`,
+                url: lastReq.url,
+                color: 13158471,
+                author: {
+                    name: lastReq.user.login,
+                    icon_url: lastReq.user.avatar_url
+                },
+                fields: [],
+                timestamp: new Date()
+            }]
+        });
     }
     return;
 };
@@ -633,12 +642,12 @@ async function roflBot(text, messageG){
     return msg
 }
 
-client.on('messageDelete', (message) => {
+/* client.on('messageDelete', (message) => {
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
     let mb = message.author.bot;
     let mg = message.guild == undefined;
-    /* if(!mb && !mg && rpchannel) sendLog(message, 'РП', "Сообщение удалено", "Успешно", `Содержимое сообщения: ${message.content}`)
-    if(!mb && !mg && !rpchannel) sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`) */
+    if(!mb && !mg && rpchannel) sendLog(message, 'РП', "Сообщение удалено", "Успешно", `Содержимое сообщения: ${message.content}`)
+    if(!mb && !mg && !rpchannel) sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
 });
 
 client.on('messageUpdate', (messageOld, messageNew) =>{    
@@ -647,7 +656,7 @@ client.on('messageUpdate', (messageOld, messageNew) =>{
     let mg = messageNew.guild == undefined;
     if(!mb && !mg && rpchannel) sendLog(messageNew, 'РП', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
     if(!mb && !mg && !rpchannel) sendLog(messageNew, 'Общее', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`) 
-})
+}) */
 
 client.on('message', message => {
     let mb = message.author.bot;
