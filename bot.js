@@ -236,11 +236,8 @@ function createEx(rule,num,status,add,message){
 
     message.channel.send({embed: {
             color: color,
-            thumbnail: {
-                url: img
-            },
             fields: [{
-                name: `[${rule}] Пример #${num}`,
+                name: `\\${status} ${rule} [Пример #${num}]`,
                 value: `${add}`
             }]
         }
