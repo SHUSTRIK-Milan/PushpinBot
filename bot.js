@@ -746,7 +746,7 @@ client.on('message', message => {
     };
 
     if(comand.com == `cex` && message.author.id == `621917381681479693` && !mb && !mg){
-        createEx(comand.sarg[0],comand.sarg[1],comand.sarg[2],comand(message,3).carg,message)
+        createEx(comand.oarg[0],comand.oarg[1],comand.oarg[2],comand.oarg[3],message)
         setTimeout(() => message.delete(), timeOfDelete);
     };
 
