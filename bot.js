@@ -105,7 +105,7 @@ client.on('guildMemberAdd', (member) => {
     giveRole(member, '829423238169755658')
 });
 
-function comand(message,countS){
+function cmdParametrs(message,countS){
     if (countS == undefined) countS = 0
     if(msg.slice(0,1) != prefix) return null
 
@@ -655,7 +655,7 @@ client.on('messageUpdate', (messageOld, messageNew) =>{
 client.on('message', message => {
     let mb = message.author.bot;
     let mg = message.guild == undefined;
-    let comand = comand(message)
+    let comand = cmdParametrs(message)
 
     let head = (haveRole(message.member, '833226140755689483') || haveRole(message.member, '833227050550296576'));
     let rpCreator = haveRole(message.member, '856092976702816287')
