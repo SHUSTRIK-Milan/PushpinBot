@@ -107,26 +107,25 @@ client.on('guildMemberAdd', (member) => {
 
 function comand(message,countS){
     if (countS == undefined) countS = 0
+    if(msg.slice(0,1) != prefix) return null
+
     let msg = message.content
-
-    var comand = {
-        com: '0',
-        arg: '0',
-        sarg: '0',
-        carg: '0'
-    };
-
-    if(msg.slice(0,1) != prefix) return comand
+    let regexp = /"(\\.|[^"\\])*"/g;
     
-    let com = msg.split(" ", 1).join('').slice(prefix.length) // команда, первый слитнонаписанный текст
+    let com = msg.split(" ")[0].slice(prefix.length) // команда, первый слитнонаписанный текст
     let arg = msg.slice(com.length+prefix.length+1) // все, что идет после команды
     let sarg = arg.split(" ") // разбитый аргумент на пробелы
     let carg = sarg.slice(countS).join(' ') // отрезанние от разбитого аргумента первых аргументов
+    let oarg = arg.match(regexp)
+    for(let i = 0; i < oarg.length; i++){
+        oarg[i] = oarg[i].replace( /"/g, "" )
+    }
     var comand = {
         com: com,
         arg: arg,
         sarg: sarg,
-        carg: carg
+        carg: carg,
+        oarg: oarg
     };
 
     return comand
