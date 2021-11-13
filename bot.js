@@ -107,7 +107,7 @@ client.on('guildMemberAdd', (member) => {
 
 function cmdParametrs(message,countS){
     if (countS == undefined) countS = 0
-    if(msg.slice(0,1) != prefix) return null
+    if(message.content.slice(0,1) != prefix) return null
 
     let msg = message.content
     let regexp = /"(\\.|[^"\\])*"/g;
