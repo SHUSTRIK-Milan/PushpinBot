@@ -1,3 +1,8 @@
+//
+// ПЕРЕМЕННЫЕ
+//
+
+
 // Интеграции
 const Discord = require('discord.js')
 const {DiscordInteractions} = require("slash-commands")
@@ -8,10 +13,11 @@ const client = new Discord.Client()
 const prefix = '!'
 const BDpref = '^'
 var waitingOutputRoflBot = false
-const timeOfDelete = 350;
+const timeOfDelete = 350
 
 // Глобальные переменные
-var guild;
+var guild
+var guildAges
 
 // Базы данных
 const BDchnl = Config.channelsID.bd
@@ -24,6 +30,12 @@ var gitA = new GitHub({
     token: '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'
 });
 var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot')
+
+
+//
+// ФУНКЦИИ
+//
+
 
 // Проверка на наличие роли
 function haveRole(member, roleid){
@@ -43,68 +55,6 @@ function removeRole(member, roleId){
     member.roles.remove(roleId, `Удалил роль под ID: ${roleId}.`).catch(console.error);
 };
 
-client.on('ready', () => {
-    console.log(`${client.user.tag} ready!`)
-    guild = client.guilds.cache.get('814795850885627964')
-
-    function checkOnlineUsers(){
-        let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size
-        let member = guild.memberCount
-        let onlinemember = member - offlinemember - 2
-
-        if (onlinemember > 0){
-            client.user.setPresence({
-              status: "online",
-              activity: {
-                  name: `на ${onlinemember} участников!`,
-                  type: "WATCHING",
-              }
-            })
-        }else if (onlinemember == 0){
-            client.user.setPresence({
-                status: "idle",
-                activity: {
-                    name: `в пустоту...`,
-                    type: "WATCHING",
-                }
-            })
-        }
-    }
-
-    checkOnlineUsers()
-    client.on('presenceUpdate', () => {
-        checkOnlineUsers()
-    });
-
-    // ОПОВЕЩЕНИЕ О СБОРАХ
-    /* setInterval(async () => {
-        var date = new Date()
-        if(date.getUTCDay() == 5 ||
-        date.getUTCDay() == 6 ||
-        date.getUTCDay() == 0){
-            let channel = guild.channels.cache.get(Config.channelsID.announcements)
-            let lastMessage = await channel.messages.fetch()
-
-            lastMessageBot = lastMessage.filter(msg => msg.author.bot)
-            if(lastMessageBot.size == 0){
-                lastMessage = lastMessage.first()
-            }else{
-                lastMessage = lastMessageBot.first()
-            }
-
-            let dateOfMessage = new Date(lastMessage.createdTimestamp)
-
-            if(date.getUTCHours()+3 == 17 && (dateOfMessage.getUTCFullYear() != date.getUTCFullYear() || dateOfMessage.getUTCMonth() != date.getUTCMonth() || dateOfMessage.getUTCDate() != date.getUTCDate())){
-                channel.send(`> <@&836269090996879387>, сбор, дамы и господа!\nВсем приятной и интересной игры! 📌`)
-            }
-        }
-    }, 60000) */
-});
-
-client.on('guildMemberAdd', (member) => {
-    giveRole(member, '829423238169755658')
-});
-
 function cmdParametrs(message,countS){
     var comand = {
         com: '0', arg: '0', sarg: '0', carg: '0', oarg: '0'
@@ -116,20 +66,20 @@ function cmdParametrs(message,countS){
     let msg = message.content
     let regexp = /"(\\.|[^"\\])*"/g;
     
-    let com = msg.split(" ")[0].slice(prefix.length) // команда, первый слитнонаписанный текст
-    let arg = msg.slice(com.length+prefix.length+1) // все, что идет после команды
-    let sarg = arg.split(" ") // разбитый аргумент на пробелы
-    let carg = sarg.slice(countS).join(' ') // отрезанние от разбитого аргумента первых аргументов
+    let com = msg.split(" ")[0].slice(prefix.length)
+    let arg = msg.slice(com.length+prefix.length+1)
+    let sarg = arg.split(" ")
+    let carg = sarg.slice(countS).join(' ')
     let oarg = arg.match(regexp)
-    for(let i = 0; i < oarg.length; i++){
+    if(oarg != undefined){for(let i = 0; i < oarg.length; i++){
         oarg[i] = oarg[i].replace( /"/g, "" )
-    }
+    }}else{oarg='null';message.channel.send('> `args - null, use "text"`')}
     comand = {
-        com: com,
-        arg: arg,
-        sarg: sarg,
-        carg: carg,
-        oarg: oarg
+        com: com, // команда, первый слитнонаписанный текст
+        arg: arg, // все, что идет после команды
+        sarg: sarg, // разбитый аргумент на пробелы
+        carg: carg, // отрезанние от разбитого аргумента первых аргументов
+        oarg: oarg // аргументы в кавычках
     };
 
     return comand
@@ -187,50 +137,67 @@ function cube(){
     return rand
 }
 
-function sendLog(message,cat,act,status,add){
+async function sendLog(message,cat,act,status,add){
     if (cat == 'admin'){var color = 4105807; var channel = Config.channelsID.admin}
     if (cat == 'other'){var color = 11645371; var channel = Config.channelsID.other}
     if (cat == 'rp'){var color = 11382073; var channel = Config.channelsID.rp}
+
+    let CChannel = guild.channels.cache.get(channel)
+    let webhook = await CChannel.fetchWebhooks()
+    webhook = webhook.first()
 
     if (status == 0) status = '🟩'
     if (status == 1) status = '🟥'
     
     if(cat != 'rp'){
-        guild.channels.cache.get(channel).send({embed: {
-            color: color,
-            author: {
-                name: message.author.username,
-                icon_url: message.author.avatarURL()
-            },
-            title: `[${status}] ${act}`,
-            fields: [{
-                name: `Допольнительно:`,
-                value: `${add}\n[<#${message.channel.id}>, https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}]`
+        webhook.send({
+            embeds: [{
+                color: color,
+                author: {
+                    name: message.author.username,
+                    icon_url: message.author.avatarURL()
+                },
+                title: `\\${status} ${act}`,
+                fields: [{
+                    name: `Допольнительно:`,
+                    value: `${add}\n\n**[**<#${message.channel.id}>**]**`
+                }],
             }],
-            timestamp: new Date()
-            }
         });
     }else if(cat == 'rp'){
-        guild.channels.cache.get(Config.channelsID.rp_logs).send({embed: {
-            color: color,
-            author: {
-                name: `${message.author.username} – ${message.user.nickname}`,
-                icon_url: message.author.avatarURL()
-            },
-            title: `[${status}] ${act}`,
-            fields: [{
-                name: `Допольнительно:`,
-                value: `${add}\n[<#${message.channel.id}>, https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}]`
+        webhook.send({
+            embeds: [{
+                color: color,
+                author: {
+                    name: `${message.author.username} – ${message.user.nickname}`,
+                    icon_url: message.author.avatarURL()
+                },
+                title: `\\${status} ${act}`,
+                fields: [{
+                    name: `Допольнительно:`,
+                    value: `${add}\n\n**[**<#${message.channel.id}>**]**`
+                }],
             }],
-            timestamp: new Date()
-            }
         });
     }else{
         return;
     }
 };
 
-function createEx(rule,num,status,add,message){
+async function createLore(title,img,desc,message){
+    message.channel.send({embed: {
+            color: 15521158,
+            fields: [{
+                name: `${title}`,
+                value: `${desc}`
+            }],
+            image:{url:img}
+        }
+    });
+    return;
+};
+
+async function createEx(rule,num,status,add,message){
     if (status == 0){status = '🟩'; var color = 9819812}
     if (status == 1){status = '🟥'; var color = 14508910}
 
@@ -245,22 +212,9 @@ function createEx(rule,num,status,add,message){
     return;
 };
 
-function createLore(title,img,desc,message){
-    message.channel.send({embed: {
-            color: 15521158,
-            fields: [{
-                name: `${title}`,
-                value: `${desc}`
-            }],
-            image:{url:img}
-        }
-    });
-    return;
-};
-
 async function createCom(embd, message){
-    let commitChannel = guild.channels.cache.get(Config.channelsID.dev_process)
-    let webhook = await commitChannel.fetchWebhooks()
+    let CChannel = guild.channels.cache.get(Config.channelsID.dev_process)
+    let webhook = await CChannel.fetchWebhooks()
     webhook = webhook.find(web => web.id == '906144022588956692')
 
     for(let a of embd.title.split(':')){
@@ -637,6 +591,72 @@ async function roflBot(text, messageG){
     return msg
 }
 
+client.on('ready', () => {
+    console.log(`${client.user.tag} ready!`)
+
+    guild = client.guilds.cache.get(Config.guilds.main)
+    guildAges = client.guilds.cache.get(Config.guilds.ages)
+
+    function checkOnlineUsers(){
+        let offlinemember = guild.members.cache.filter(m => m.presence.status === 'offline').size
+        let member = guild.memberCount
+        let onlinemember = member - offlinemember - 2
+
+        if (onlinemember > 0){
+            client.user.setPresence({
+              status: "online",
+              activity: {
+                  name: `на ${onlinemember} участников!`,
+                  type: "WATCHING",
+              }
+            })
+        }else if (onlinemember == 0){
+            client.user.setPresence({
+                status: "idle",
+                activity: {
+                    name: `в пустоту...`,
+                    type: "WATCHING",
+                }
+            })
+        }
+    }
+
+    checkOnlineUsers()
+    client.on('presenceUpdate', () => {
+        checkOnlineUsers()
+    });
+
+    // ОПОВЕЩЕНИЕ О СБОРАХ
+    /* setInterval(async () => {
+        var date = new Date()
+        if(date.getUTCDay() == 5 ||
+        date.getUTCDay() == 6 ||
+        date.getUTCDay() == 0){
+            let channel = guild.channels.cache.get(Config.channelsID.announcements)
+            let lastMessage = await channel.messages.fetch()
+
+            lastMessageBot = lastMessage.filter(msg => msg.author.bot)
+            if(lastMessageBot.size == 0){
+                lastMessage = lastMessage.first()
+            }else{
+                lastMessage = lastMessageBot.first()
+            }
+
+            let dateOfMessage = new Date(lastMessage.createdTimestamp)
+
+            if(date.getUTCHours()+3 == 17 && (dateOfMessage.getUTCFullYear() != date.getUTCFullYear() || dateOfMessage.getUTCMonth() != date.getUTCMonth() || dateOfMessage.getUTCDate() != date.getUTCDate())){
+                channel.send(`> <@&836269090996879387>, сбор, дамы и господа!\nВсем приятной и интересной игры! 📌`)
+            }
+        }
+    }, 60000) */
+});
+
+client.on('guildMemberAdd', (member) => {
+    if(member.guild.id == Config.guilds.main){
+        giveRole(member, '829423238169755658')
+    }
+});
+
 /* client.on('messageDelete', (message) => {
     rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
     let mb = message.author.bot;
@@ -654,9 +674,12 @@ client.on('messageUpdate', (messageOld, messageNew) =>{
 }) */
 
 client.on('message', message => {
+    if (message.guild.id == Config.guilds.main){
     let mb = message.author.bot;
     let mg = message.guild == undefined;
     let comand = cmdParametrs(message)
+
+    if(!mb && !mg) sendLog(message, 'other', 'Отправил сообщение', '0', message.content)
 
     let head = (haveRole(message.member, '833226140755689483') || haveRole(message.member, '833227050550296576'));
     let rpCreator = haveRole(message.member, '856092976702816287')
@@ -684,17 +707,13 @@ client.on('message', message => {
         setTimeout(() => message.delete(), timeOfDelete);
     };
     
-    if(comand.com == `edit` && !mg && (haveRole(message.member, `833778527609552918`) || head)
-    || comand.com == `edit` && !mg && (haveRole(message.member, `822501730964078633`) || head)){
+    if(comand.com == `edit` && !mg && (haveRole(message.member, `833778527609552918`) || head)){
         message.channel.guild.channels.cache.find(id => id == `${comand.sarg[0]}`).messages.fetch(`${comand.sarg[1]}`)
         .then(msg =>{
-
             if(!msg.author.bot) return;
-            msg.edit(comand(message,2).carg);
-        
+            msg.edit(cmdParametrs(message,2).carg);
         })
-        .catch(console.error);
-        setTimeout(() => message.delete(), timeOfDelete);
+        setTimeout(() => message.delete(), timeOfDelete)
     };
 
     if(comand.com == `checkm` && message.author.id == `621917381681479693` && !mb && !mg){
@@ -732,7 +751,7 @@ client.on('message', message => {
     };
 
     if(comand.com == `ebd` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
-        EditStats(comand.sarg[0],comand.sarg[1], comand(message,2).carg)
+        EditStats(comand.sarg[0],comand.sarg[1], cmdParametrs(message,2).carg)
         setTimeout(() => message.delete(), timeOfDelete);
     };
 
@@ -771,7 +790,7 @@ client.on('message', message => {
         let userbanned = guild.members.cache.get(comand.sarg[0].slice(3).slice(0,-1));
 
         if(userbanned != undefined){
-            let reason = comand(message, 1).carg;
+            let reason = cmdParametrs(message, 1).carg;
             console.log(reason);
             for (let [id, channel] of guild.channels.cache) {
                 if(Object.values(Config.channelsID).find(chl => chl == channel.id) == null && channel.type == 'category'){
@@ -788,7 +807,7 @@ client.on('message', message => {
         let userunbanned = guild.members.cache.get(comand.sarg[0].slice(3).slice(0,-1));
 
         if(userunbanned != undefined){
-            let reason = comand(message, 1).carg;
+            let reason = cmdParametrs(message, 1).carg;
             console.log(reason);
             guild.channels.cache.get(`849709660579954748`).updateOverwrite(userunbanned,{'VIEW_CHANNEL': true});
             userunbanned.send(`**Вы были разбанены администратором ${message.author.tag}** 🔨\n> ${reason}`);
@@ -848,6 +867,7 @@ client.on('message', message => {
 
     if(message.channel.id == Config.channelsID.bot && !mb && !mg){
         roflBot(message.content, message)
+    }
     }
 });
 
