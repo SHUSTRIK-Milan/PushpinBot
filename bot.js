@@ -684,7 +684,6 @@ client.on('message', message => {
     
     // ГЛОБАЛЬНЫЕ КОМАНДЫ
 
-    if(!mb && !mg) sendLog(message, 'other', 'Отправил сообщение', '0', message.content)
     if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), timeOfDelete)
     }
@@ -730,6 +729,8 @@ client.on('message', message => {
     // ГЛАВНЫЙ СЕРВЕР
 
     if (message.guild.id == Config.guilds.main){
+        if(!mb && !mg) sendLog(message, 'other', 'Отправил сообщение', '0', message.content)
+
         if(message.channel.id == Config.channelsID.dev_process && message.author.id != '822500483826450454' && !mg && mb){
             createCom(message.embeds[0],message)
         }
@@ -859,6 +860,8 @@ client.on('message', message => {
             setTimeout(() => message.delete(), timeOfDelete);
             client.interaction.getApplicationCommands(config.guild_id).then(console.log);
         }
+    }else if(message.guild.id == Config.guilds.ages){
+        if(!mb && !mg) sendLog(message, 'rp', 'Отправил сообщение', '0', message.content)
     }
 });
 
