@@ -23,15 +23,16 @@ module.exports.channelsID = {
     projectRules: `837395201726742528`,
     generalRules: `837395238360055879`,
     generalTerm: `837395471877013595`,
-    /////////Lore///////////////
-    fast_access: `859436063159091251`,
     /////////Team-Other/////////////
     team_other: `837393532808986625`,
     serverMsg: `838002676709064754`,
-    logs: `838002959610675221`,
-    rp_logs: `855781431023370270`,
     bd: `838002825765322792`,
-    admin_claim: `854322030714421258`
+    admin_claim: `854322030714421258`,
+    /////////Logs/////////////
+    logs: `905859484520448051`,
+    other: `905859556624703548`,
+    admin: `905861294303871007`,
+    rp: `905861380282925076`,
 };
 
 module.exports.logChannels = {
@@ -40,6 +41,11 @@ module.exports.logChannels = {
     qa: `837393416202878989`,
     offers: `837393458435063886`,
     voiceMain: `837397109463711744`
+};
+
+module.exports.guilds = {
+    main: `814795850885627964`,
+    ages: `905150931274965052`,
 };
 
 module.exports.discordTocens = {
