@@ -674,200 +674,191 @@ client.on('messageUpdate', (messageOld, messageNew) =>{
 }) */
 
 client.on('message', message => {
-    if (message.guild.id == Config.guilds.main){
+    // ПЕРЕМЕННЫЕ
+
     let mb = message.author.bot;
     let mg = message.guild == undefined;
     let comand = cmdParametrs(message)
-
-    if(!mb && !mg) sendLog(message, 'other', 'Отправил сообщение', '0', message.content)
-
     let head = (haveRole(message.member, '833226140755689483') || haveRole(message.member, '833227050550296576'));
     let rpCreator = haveRole(message.member, '856092976702816287')
+    
+    // ГЛОБАЛЬНЫЕ КОМАНДЫ
 
+    if(!mb && !mg) sendLog(message, 'other', 'Отправил сообщение', '0', message.content)
     if(message.content == '⠀' && message.author.bot){
-        setTimeout(() => message.delete(), timeOfDelete);
+        setTimeout(() => message.delete(), timeOfDelete)
     }
-
     if(comand.com == `send` && !mb && !mg && (haveRole(message.member, `833778527609552918`) || head)){		
-        message.channel.send(`${comand.arg}`);
-        setTimeout(() => message.delete(), timeOfDelete);
-    };
-
+        message.channel.send(`${comand.arg}`)
+        setTimeout(() => message.delete(), timeOfDelete)
+    }
     if(comand.com == `clear` && !mb && !mg && (haveRole(message.member, `833778527609552918`) || head)){
-        let arg = parseInt(comand.sarg[0]);
+        let arg = parseInt(comand.sarg[0])
         
         if (arg > 0 && arg < 100){
-            message.channel.bulkDelete(arg+1, true);
-            sendLog(message,`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`);
+            message.channel.bulkDelete(arg+1, true)
+            sendLog(message,`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`)
         }else if (arg >= 100){
-            sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Попытка удалить более 100 сообщений.`);
+            sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Попытка удалить более 100 сообщений.`)
         }else{
-            sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Неверный аргумент.`);
-        };
-        setTimeout(() => message.delete(), timeOfDelete);
-    };
-    
+            sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Неверный аргумент.`)
+        }
+        setTimeout(() => message.delete(), timeOfDelete)
+    }
     if(comand.com == `edit` && !mg && (haveRole(message.member, `833778527609552918`) || head)){
         message.channel.guild.channels.cache.find(id => id == `${comand.sarg[0]}`).messages.fetch(`${comand.sarg[1]}`)
         .then(msg =>{
-            if(!msg.author.bot) return;
-            msg.edit(cmdParametrs(message,2).carg);
+            if(!msg.author.bot) return
+            msg.edit(cmdParametrs(message,2).carg)
         })
         setTimeout(() => message.delete(), timeOfDelete)
-    };
-
+    }
     if(comand.com == `checkm` && message.author.id == `621917381681479693` && !mb && !mg){
-        console.log(comand);
+        console.log(comand)
         console.log(message)
-        setTimeout(() => message.delete(), timeOfDelete);
-    };
-
-    if(comand.com == 'cbd' && message.author.id == `621917381681479693` && !mb && !mg){
-        let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-        channel.messages.fetch(dopBDmsg).then(oMsg => { //получаем сообщение доп бд
-            let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
-            try{
-                nMsg.splice(0,1);
-                let fMsg = nMsg[parseInt(comand.sarg[0])-1].split(BDpref); //получаем последние данные в доп бд
-                if (fMsg[0] == ''){
-                    fMsg.splice(0,1);
-                };
-                message.channel.send(`!edit ${BDchnl} ${fMsg[0]} > **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ 1**`);
-            }catch{
-                console.log(`Недостача аргументов`);
-            }
-        });
-        setTimeout(() => message.delete(), timeOfDelete);
-    };
-
-    if(comand.com == 'cdbd' && message.author.id == `621917381681479693` && !mb && !mg){
-        message.channel.send(`!edit ${BDchnl} ${dopBDmsg} > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^838003797149220884^1`);
-        setTimeout(() => message.delete(), timeOfDelete);
-    };
-
-    if(comand.com == `tbd` && haveRole(message.member,`822493460493500436`) && !mb && !mg){
-        AddStats(`<@!${message.author.id}>`,25,'В розыске','Отсутствует',101)
-        setTimeout(() => message.delete(), timeOfDelete);
-    };
-
-    if(comand.com == `ebd` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
-        EditStats(comand.sarg[0],comand.sarg[1], cmdParametrs(message,2).carg)
-        setTimeout(() => message.delete(), timeOfDelete);
-    };
-
-    if(comand.com == `delbd` && message.author.id == `621917381681479693` && !mb && !mg){
-        delStats(comand.sarg[0])
-        setTimeout(() => message.delete(), timeOfDelete);
-    };
-
-    if(comand.com == `gbd` && message.author.id == `621917381681479693` && !mb && !mg){
-        GetStats().then(stats => console.log(stats));
-        setTimeout(() => message.delete(), timeOfDelete);
-    };
-
+        setTimeout(() => message.delete(), timeOfDelete)
+    }
     if(comand.com == `cex` && message.author.id == `621917381681479693` && !mb && !mg){
         createEx(comand.oarg[0],comand.oarg[1],comand.oarg[2],comand.oarg[3],message)
-        setTimeout(() => message.delete(), timeOfDelete);
-    };
-
+        setTimeout(() => message.delete(), timeOfDelete)
+    }
     if(comand.com == `clore` && message.author.id == `621917381681479693` && !mb && !mg){
-        createLore(comand.sarg[0],comand.sarg[1],comand(message,2).carg,message)
-        setTimeout(() => message.delete(), timeOfDelete);
-    };
-
-    if(message.channel.id == Config.channelsID.dev_process && message.author.id != '822500483826450454' && !mg && mb){
-        createCom(message.embeds[0],message);
+        createLore(comand.oarg[0],comand.oarg[1],comand.oarg[2],message)
+        setTimeout(() => message.delete(), timeOfDelete)
     }
 
-    if(comand.com == `checkpos` && message.author.id == `621917381681479693` && !mb && !mg){
-        let t = undefined
-        t.split(1)
-        setTimeout(() => message.delete(), timeOfDelete);
-    }
+    // ГЛАВНЫЙ СЕРВЕР
 
-    if(comand.com == `ban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
-        setTimeout(() => message.delete(), timeOfDelete);
-        let userbanned = guild.members.cache.get(comand.sarg[0].slice(3).slice(0,-1));
+    if (message.guild.id == Config.guilds.main){
+        if(message.channel.id == Config.channelsID.dev_process && message.author.id != '822500483826450454' && !mg && mb){
+            createCom(message.embeds[0],message)
+        }
+        if(message.channel.id == Config.channelsID.bot && !mb && !mg){
+            roflBot(message.content, message)
+        }
 
-        if(userbanned != undefined){
-            let reason = cmdParametrs(message, 1).carg;
-            console.log(reason);
-            for (let [id, channel] of guild.channels.cache) {
-                if(Object.values(Config.channelsID).find(chl => chl == channel.id) == null && channel.type == 'category'){
-                    if(channel.permissionOverwrites.get(userbanned.id) != undefined) channel.permissionOverwrites.get(userbanned.id).delete();
+        if(comand.com == 'cbd' && message.author.id == `621917381681479693` && !mb && !mg){
+            let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
+            channel.messages.fetch(dopBDmsg).then(oMsg => { //получаем сообщение доп бд
+                let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
+                try{
+                    nMsg.splice(0,1);
+                    let fMsg = nMsg[parseInt(comand.sarg[0])-1].split(BDpref); //получаем последние данные в доп бд
+                    if (fMsg[0] == ''){
+                        fMsg.splice(0,1);
+                    };
+                    message.channel.send(`!edit ${BDchnl} ${fMsg[0]} > **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ 1**`);
+                }catch{
+                    console.log(`Недостача аргументов`);
                 }
-            }
-            userbanned.send(`**Вы были забанены администратором ${message.author.tag}** 🔨\n> ${reason}`);
-            sendLog(message,'РП','Забанил игрока.','Успешно',`Вывод: **Вы были забанены администратором ${message.author.tag}** 🔨\n> ${reason}`)
+            });
+            setTimeout(() => message.delete(), timeOfDelete);
         };
-    }
 
-    if(comand.com == `unban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
-        setTimeout(() => message.delete(), timeOfDelete);
-        let userunbanned = guild.members.cache.get(comand.sarg[0].slice(3).slice(0,-1));
-
-        if(userunbanned != undefined){
-            let reason = cmdParametrs(message, 1).carg;
-            console.log(reason);
-            guild.channels.cache.get(`849709660579954748`).updateOverwrite(userunbanned,{'VIEW_CHANNEL': true});
-            userunbanned.send(`**Вы были разбанены администратором ${message.author.tag}** 🔨\n> ${reason}`);
-            sendLog(message,'РП','Разбанил игрока.','Успешно',`Вывод: **Вы были разбанены администратором ${message.author.tag}** 🔨\n> ${reason}`)
+        if(comand.com == 'cdbd' && message.author.id == `621917381681479693` && !mb && !mg){
+            message.channel.send(`!edit ${BDchnl} ${dopBDmsg} > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^838003797149220884^1`);
+            setTimeout(() => message.delete(), timeOfDelete);
         };
-    }
 
-    if(comand.com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
-        setTimeout(() => message.delete(), timeOfDelete);
-        let channel
-        let specialChannel = [
-            {id: guild.roles.everyone, deny: 'VIEW_CHANNEL'},
-            {id: `833226140755689483`, allow: 'VIEW_CHANNEL'},
-            {id: `833227050550296576`, allow: 'VIEW_CHANNEL'},
-            {id: `830061387849662515`, allow: 'VIEW_CHANNEL'},
-            {id: `856092976702816287`, allow: 'VIEW_CHANNEL'},
-        ]
-        try{
-            for(let channelID of guild.channels.cache){
-                channel = guild.channels.cache.get(channelID[0])
-                if(channel != undefined){
-                    if(channel.parentID == Config.channelsID.fast_access){channel.delete()}
+        if(comand.com == `tbd` && haveRole(message.member,`822493460493500436`) && !mb && !mg){
+            AddStats(`<@!${message.author.id}>`,25,'В розыске','Отсутствует',101)
+            setTimeout(() => message.delete(), timeOfDelete);
+        };
+
+        if(comand.com == `ebd` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
+            EditStats(comand.sarg[0],comand.sarg[1], cmdParametrs(message,2).carg)
+            setTimeout(() => message.delete(), timeOfDelete);
+        };
+
+        if(comand.com == `delbd` && message.author.id == `621917381681479693` && !mb && !mg){
+            delStats(comand.sarg[0])
+            setTimeout(() => message.delete(), timeOfDelete);
+        };
+
+        if(comand.com == `gbd` && message.author.id == `621917381681479693` && !mb && !mg){
+            GetStats().then(stats => console.log(stats));
+            setTimeout(() => message.delete(), timeOfDelete);
+        };
+
+        if(comand.com == `ban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
+            setTimeout(() => message.delete(), timeOfDelete);
+            let userbanned = guild.members.cache.get(comand.sarg[0].slice(3).slice(0,-1));
+
+            if(userbanned != undefined){
+                let reason = cmdParametrs(message, 1).carg;
+                console.log(reason);
+                for (let [id, channel] of guild.channels.cache) {
+                    if(Object.values(Config.channelsID).find(chl => chl == channel.id) == null && channel.type == 'category'){
+                        if(channel.permissionOverwrites.get(userbanned.id) != undefined) channel.permissionOverwrites.get(userbanned.id).delete();
+                    }
                 }
-            }
-            setTimeout(() =>{
-                if(channel != undefined){
-                    for(let obj of Config.objects){
-                        if(obj.open){
-                            guild.channels.create(`«${obj.name}»`, {type: 'text', topic: `${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`, parent: Config.channelsID.fast_access})
-                        }else if(!obj.open){
-                            guild.channels.create(`«${obj.name}»`, {type: 'text', topic: `${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`, parent: Config.channelsID.fast_access, permissionOverwrites: specialChannel})
-                        }
-                    } 
+                userbanned.send(`**Вы были забанены администратором ${message.author.tag}** 🔨\n> ${reason}`);
+                sendLog(message,'РП','Забанил игрока.','Успешно',`Вывод: **Вы были забанены администратором ${message.author.tag}** 🔨\n> ${reason}`)
+            };
+        }
+
+        if(comand.com == `unban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
+            setTimeout(() => message.delete(), timeOfDelete);
+            let userunbanned = guild.members.cache.get(comand.sarg[0].slice(3).slice(0,-1));
+
+            if(userunbanned != undefined){
+                let reason = cmdParametrs(message, 1).carg;
+                console.log(reason);
+                guild.channels.cache.get(`849709660579954748`).updateOverwrite(userunbanned,{'VIEW_CHANNEL': true});
+                userunbanned.send(`**Вы были разбанены администратором ${message.author.tag}** 🔨\n> ${reason}`);
+                sendLog(message,'РП','Разбанил игрока.','Успешно',`Вывод: **Вы были разбанены администратором ${message.author.tag}** 🔨\n> ${reason}`)
+            };
+        }
+
+        if(comand.com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
+            setTimeout(() => message.delete(), timeOfDelete);
+            let channel
+            let specialChannel = [
+                {id: guild.roles.everyone, deny: 'VIEW_CHANNEL'},
+                {id: `833226140755689483`, allow: 'VIEW_CHANNEL'},
+                {id: `833227050550296576`, allow: 'VIEW_CHANNEL'},
+                {id: `830061387849662515`, allow: 'VIEW_CHANNEL'},
+                {id: `856092976702816287`, allow: 'VIEW_CHANNEL'},
+            ]
+            try{
+                for(let channelID of guild.channels.cache){
+                    channel = guild.channels.cache.get(channelID[0])
+                    if(channel != undefined){
+                        if(channel.parentID == Config.channelsID.fast_access){channel.delete()}
+                    }
                 }
-            }, timeOfDelete*5)
-        }catch(error){console.log(error)}
-    }
+                setTimeout(() =>{
+                    if(channel != undefined){
+                        for(let obj of Config.objects){
+                            if(obj.open){
+                                guild.channels.create(`«${obj.name}»`, {type: 'text', topic: `${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`, parent: Config.channelsID.fast_access})
+                            }else if(!obj.open){
+                                guild.channels.create(`«${obj.name}»`, {type: 'text', topic: `${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`, parent: Config.channelsID.fast_access, permissionOverwrites: specialChannel})
+                            }
+                        } 
+                    }
+                }, timeOfDelete*5)
+            }catch(error){console.log(error)}
+        }
 
-    if(comand.com == `refreshIDobj` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
-        setTimeout(() => message.delete(), timeOfDelete);
-        let channelsRefr = []
-        for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
-        try{
-            for(let obj of Config.objects){
-                for(let room of obj.rooms){
-                    let channel = channelsRefr.find(channel => channel.name.toLowerCase() == room.toLowerCase() && channel.parent.id == obj.cId)
-                    channel.setTopic(`${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`)
+        if(comand.com == `refreshIDobj` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
+            setTimeout(() => message.delete(), timeOfDelete);
+            let channelsRefr = []
+            for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
+            try{
+                for(let obj of Config.objects){
+                    for(let room of obj.rooms){
+                        let channel = channelsRefr.find(channel => channel.name.toLowerCase() == room.toLowerCase() && channel.parent.id == obj.cId)
+                        channel.setTopic(`${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`)
+                    }
                 }
-            }
-        }catch(error){console.log(error)}
-    }
+            }catch(error){console.log(error)}
+        }
 
-    if(comand.com == `commands` && head && !mb && !mg){
-        setTimeout(() => message.delete(), timeOfDelete);
-        client.interaction.getApplicationCommands(config.guild_id).then(console.log);
-    }
-
-    if(message.channel.id == Config.channelsID.bot && !mb && !mg){
-        roflBot(message.content, message)
-    }
+        if(comand.com == `commands` && head && !mb && !mg){
+            setTimeout(() => message.delete(), timeOfDelete);
+            client.interaction.getApplicationCommands(config.guild_id).then(console.log);
+        }
     }
 });
 
