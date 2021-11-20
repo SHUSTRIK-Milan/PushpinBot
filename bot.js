@@ -607,7 +607,7 @@ client.on('ready', () => {
         let onlinemember = member - offlinemember
 
         let endword
-        if(onlinemember.toString().slice(-1) == ('1' || '0')){endword == 'а'}else{endword == 'ов'}
+        if(onlinemember.toString().slice(-1) == '1'){endword = 'а'}else{endword = 'ов'}
 
         if (onlinemember > 0){
             client.user.setPresence({
