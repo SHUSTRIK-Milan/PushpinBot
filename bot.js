@@ -600,7 +600,7 @@ client.on('ready', () => {
     function checkOnlineUsers(){
         let offlinemember = 0
         let member = 0
-        for (let [id, guild] of Client.guilds.cache){
+        for (let [id, guild] of client.guilds.cache){
             offlinemember += guild.members.cache.filter(m => m.presence.status === 'offline' && !m.user.bot).size
             member += guild.members.cache.filter(m => !m.user.bot).size
         }
