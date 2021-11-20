@@ -606,11 +606,14 @@ client.on('ready', () => {
         let member = members.filter(m => !m.user.bot).size
         let onlinemember = member - offlinemember
 
+        let endword
+        if(onlinemember.toString().slice(-1) == ('1' || '0')){endword == 'а'}else{endword == 'ов'}
+
         if (onlinemember > 0){
             client.user.setPresence({
               status: "online",
               activity: {
-                  name: `на ${onlinemember} участников!`,
+                  name: `на ${onlinemember} участник${endword}!`,
                   type: "WATCHING",
               }
             })
