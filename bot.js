@@ -598,7 +598,7 @@ client.on('ready', () => {
     guildAges = client.guilds.cache.get(Config.guilds.ages)
 
     function checkOnlineUsers(){
-        let members = members = guild.members.cache
+        let members = guild.members.cache
         for (let [id, guild] of client.guilds.cache){
             members = guild.members.cache.concat(members)
         }
