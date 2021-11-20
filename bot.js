@@ -169,7 +169,7 @@ async function sendLog(message,cat,act,status,add){
             embeds: [{
                 color: color,
                 author: {
-                    name: `${message.author.username} – ${message.user.nickname}`,
+                    name: `${message.author.username} – ${message.member.nickname}`,
                     icon_url: message.author.avatarURL()
                 },
                 title: `\\${status} ${act}`,
@@ -695,7 +695,7 @@ client.on('message', message => {
         let arg = parseInt(comand.sarg[0])
         
         if (arg > 0 && arg < 100){
-            message.channel.bulkDelete(arg+1, true)
+            message.channel.bulkDelete(arg, true)
             sendLog(message,`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`)
         }else if (arg >= 100){
             sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Попытка удалить более 100 сообщений.`)
