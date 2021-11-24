@@ -73,7 +73,7 @@ function cmdParametrs(message,countS){
     let oarg = arg.match(regexp)
     if(oarg != undefined){for(let i = 0; i < oarg.length; i++){
         oarg[i] = oarg[i].replace( /"/g, "" )
-    }}else{oarg='null';message.channel.send('> `args - null, use "text"`')}
+    }}else{oarg='null'}
     comand = {
         com: com, // команда, первый слитнонаписанный текст
         arg: arg, // все, что идет после команды
