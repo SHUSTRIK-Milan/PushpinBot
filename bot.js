@@ -149,39 +149,16 @@ async function sendLog(message,cat,act,status,add){
     if (status == 0) status = '🟩'
     if (status == 1) status = '🟥'
     
-    if(cat != 'rp'){
-        webhook.send({
-            embeds: [{
-                color: color,
-                author: {
-                    name: message.author.username,
-                    icon_url: message.author.avatarURL()
-                },
-                title: `\\${status} ${act}`,
-                fields: [{
-                    name: `Допольнительно:`,
-                    value: `${add}\n\n**[**<#${message.channel.id}>**]**`
-                }],
-            }],
-        });
-    }else if(cat == 'rp'){
-        webhook.send({
-            embeds: [{
-                color: color,
-                author: {
-                    name: `${message.author.username} – ${message.member.nickname}`,
-                    icon_url: message.author.avatarURL()
-                },
-                title: `\\${status} ${act}`,
-                fields: [{
-                    name: `Допольнительно:`,
-                    value: `${add}\n\n**[**<#${message.channel.id}>**]**`
-                }],
-            }],
-        });
-    }else{
-        return;
-    }
+    webhook.send({
+        embeds: [{
+            color: color,
+            author: {
+                name: `${message.author.username} – ${message.member.nickname}`,
+                icon_url: message.author.avatarURL()
+            },
+            description: `\\${status} **${act}:**\n${add}\n[<#${message.channel.id}>]`
+        }],
+    });
 };
 
 async function createLore(title,img,desc,message){
@@ -2222,7 +2199,7 @@ function checkIntegrations() {
     }, 200);*/
 }
 
-client.login(Config.discordTocens.main);
+client.login(Config.discordTocens.main)
 
 /* client.on('error', err => {
     console.log('Ошибка!')
