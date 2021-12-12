@@ -46,7 +46,14 @@ module.exports.logChannels = {
 module.exports.guilds = {
     main: `814795850885627964`,
     ages: `905150931274965052`,
+    BD: `919494529072111637`,
 };
+
+module.exports.projects = {
+    pushpin: `919509669045743656`,
+    ages: `919509682660462592`,
+};
+
 
 module.exports.discordTocens = {
     main: `ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.JS95C2U2Wgwzuq9kgZZQh2hQXks`,

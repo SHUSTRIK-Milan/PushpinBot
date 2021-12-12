@@ -4,10 +4,12 @@
 
 
 // Интеграции
-const Discord = require('discord.js')
-const {DiscordInteractions} = require("slash-commands")
+const { Client, Intents } = require('discord.js');
+const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_PRESENCES", "GUILD_MEMBERS"] });
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+
 const Config = require('./config')
-const client = new Discord.Client()
 
 // Системные переменные
 const prefix = '!'
@@ -18,6 +20,7 @@ const timeOfDelete = 350
 // Глобальные переменные
 var guild
 var guildAges
+var guildBD
 
 // Базы данных
 const BDchnl = Config.channelsID.bd
@@ -162,14 +165,14 @@ async function sendLog(message,cat,act,status,add){
 };
 
 async function createLore(title,img,desc,message){
-    message.channel.send({embed: {
+    message.channel.send({embeds: [{
             color: 15521158,
             fields: [{
                 name: `${title}`,
                 value: `${desc}`
             }],
             image:{url:img}
-        }
+        }]
     });
     return;
 };
@@ -178,13 +181,13 @@ async function createEx(rule,num,status,add,message){
     if (status == 0){status = '🟩'; var color = 9819812}
     if (status == 1){status = '🟥'; var color = 14508910}
 
-    message.channel.send({embed: {
+    message.channel.send({embeds: [{
             color: color,
             fields: [{
                 name: `\\${status} ${rule} [Пример #${num}]`,
                 value: `${add}`
             }]
-        }
+        }]
     });
     return;
 };
@@ -257,6 +260,12 @@ function member(id, user, money) {
     this.user = user;
     this.money = money;
 };
+
+async function GStats(project, path){
+    var cat = guildBD.channels.cache.get(Config.projects[project])
+    var chl = cat.children.find(chl => chl.name.toLowerCase() == path.toLowerCase())
+    console.log(chl)
+}
 
 async function GetStats() {
     let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
@@ -573,13 +582,17 @@ client.on('ready', () => {
 
     guild = client.guilds.cache.get(Config.guilds.main)
     guildAges = client.guilds.cache.get(Config.guilds.ages)
+    guildBD = client.guilds.cache.get(Config.guilds.BD)
+
+    //GStats('pushpin', 'main')
 
     function checkOnlineUsers(){
-        let members = guild.members.cache
+        members = guild.members.cache
         for (let [id, guild] of client.guilds.cache){
             members = guild.members.cache.concat(members)
         }
-        let offlinemember = members.filter(m => m.presence.status === 'offline' && !m.user.bot).size
+
+        let offlinemember = members.filter(m => m.presence === null && !m.user.bot).size
         let member = members.filter(m => !m.user.bot).size
         let onlinemember = member - offlinemember
 
@@ -589,18 +602,18 @@ client.on('ready', () => {
         if (onlinemember > 0){
             client.user.setPresence({
               status: "online",
-              activity: {
-                  name: `на ${onlinemember} участник${endword}!`,
+              activities: [{
+                  name: `на ${onlinemember} участник${endword} 👥`,
                   type: "WATCHING",
-              }
+              }]
             })
         }else if (onlinemember == 0){
             client.user.setPresence({
                 status: "idle",
-                activity: {
-                    name: `в пустоту...`,
+                activities: [{
+                    name: `в пустоту... 🌙`,
                     type: "WATCHING",
-                }
+                }]
             })
         }
     }
@@ -657,7 +670,7 @@ client.on('messageUpdate', (messageOld, messageNew) =>{
     if(!mb && !mg && !rpchannel) sendLog(messageNew, 'Общее', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`) 
 }) */
 
-client.on('message', message => {
+client.on('messageCreate', message => {
     // ПЕРЕМЕННЫЕ
 
     let mb = message.author.bot;
@@ -846,6 +859,8 @@ client.on('message', message => {
         }
     }else if(message.guild.id == Config.guilds.ages){
         if(!mb && !mg) sendLog(message, 'rp', 'Отправил сообщение', '0', message.content)
+    }else{
+
     }
 });
 
@@ -856,7 +871,7 @@ const config = {
     guild_id: "814795850885627964"
 };
 
-client.interaction = new DiscordInteractions({
+/* client.interaction = new DiscordInteractions({
     applicationId: config.applicationId,
     authToken: config.token,
     publicKey: config.publicKey,
@@ -864,7 +879,7 @@ client.interaction = new DiscordInteractions({
 
 client.on('ready', () => {
 	checkIntegrations();
-});
+}); */
 
 client.ws.on('INTERACTION_CREATE', async interaction => {
 
