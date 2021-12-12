@@ -547,7 +547,7 @@ async function roflBot(text, messageG){
         waitingOutputRoflBot = true
         messageG.channel.send(`Я не знаю как мне на это ответить. Напиши, как мне на это отвечать, <@!${messageG.author.id}>.`)
         .then(() => {
-            messageG.channel.awaitMessages(filter, {
+            messageG.channel.awaitMessages({filter,
                 max: 1,
                 time: 10000,
                 errors: ['time'],
