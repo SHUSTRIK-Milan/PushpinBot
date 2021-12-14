@@ -58,19 +58,18 @@ function removeRole(member, roleId){
     member.roles.remove(roleId, `Удалил роль под ID: ${roleId}.`).catch(console.error);
 };
 
-function cmdParametrs(message,countS){
+function cmdParametrs(msg,countS){
     var comand = {
         com: '0', arg: '0', sarg: '0', carg: '0', oarg: '0'
     }
 
     if (countS == undefined) countS = 0
-    if(message.content.slice(0,1) != prefix) return comand
+    if(msg.content.slice(0,1) != prefix) return comand
 
-    let msg = message.content
     let regexp = /"(\\.|[^"\\])*"/g;
     
-    let com = msg.split(" ")[0].slice(prefix.length)
-    let arg = msg.slice(com.length+prefix.length+1)
+    let com = msg.content.split(" ")[0].slice(prefix.length)
+    let arg = msg.content.slice(com.length+prefix.length+1)
     let sarg = arg.split(" ")
     let carg = sarg.slice(countS).join(' ')
     let oarg = arg.match(regexp)
@@ -159,7 +158,7 @@ async function sendLog(message,cat,act,status,add){
                 name: `${message.author.username} – ${message.member.nickname}`,
                 icon_url: message.author.avatarURL()
             },
-            description: `\\${status} **${act}:**\n${add}\n[<#${message.channel.id}>]`
+            description: `[${status}] **${act}:**\n${add}\n[<#${message.channel.id}>]`
         }],
     });
 };
@@ -255,156 +254,68 @@ async function createCom(embd, message){
     return;
 };
 
-function member(id, user, money) {
-    this.id = id;
-    this.user = user;
-    this.money = money;
+function member(id, mid, user, money) {
+    this.id = id
+    this.mid = mid
+    this.user = user
+    this.money = money
 };
 
-async function GStats(project, path){
+async function GStats(allpath){
+    var project = allpath.split('/')[0]
+    var path = allpath.split('/')[1]
+
     var cat = guildBD.channels.cache.get(Config.projects[project])
     var chl = cat.children.find(chl => chl.name.toLowerCase() == path.toLowerCase())
-    console.log(chl)
+    var msgs = await chl.messages.fetch()
+    var users = []
+
+    for (let [id, msg] of msgs){
+        let cMsg = msg.content.split('^') 
+        users.push(new member(cMsg[0], msg.id, cMsg[1].slice(3,-1),cMsg[2]))
+    }
+    return users.reverse()
 }
 
-async function GetStats() {
-    let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-    let oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
-    let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
-    nMsg.splice(0,1); //удаляем заголовок
+async function AStats(allpath, user, money){
+    var project = allpath.split('/')[0]
+    var path = allpath.split('/')[1]
 
-    let idmsgs = [];
-    let fmsgt = []
-    for(n of nMsg){
-        let nidmsg = n.split('\n');
-        for(nm of nidmsg) idmsgs.push(nm.split('^')[1]);
-    };
-    for(m of idmsgs){
-        let msg = await channel.messages.fetch(m);
-        let nmsg = msg.content.split('\n');
-        for(m of nmsg) if(m.slice(0,8) != '> **БАЗА')fmsgt.push(m);
+    var cat = guildBD.channels.cache.get(Config.projects[project])
+    var chl = cat.children.find(chl => chl.name.toLowerCase() == path.toLowerCase())
+    var msgs = await chl.messages.fetch()
+
+    var users = await GStats(allpath, path)
+    var id
+    if (users.length == 0){id = msgs.size}else{
+        id = users[users.length-1].id
     }
+    chl.send(`${parseInt(id)+1}^<@!${user}>^${money}`)
+}
 
-    mainArray = []; //задаем новый массив X
-    for(let msg of fmsgt){ //перебераем строки сообщения и задаем каждой строке переменную msg
-        let split = msg.split(BDpref); //разделяем каждое сообщение по префиксу, задавая переменную split
-        if (split[0] != ''){ //проверка на пустоту элементов. Если не пустой, то запускаем разделеное сообщение в массив X
-            mainArray.push(split);
-        }else{
-            split.splice(0,1); //Если пустой, то удаляем пустой элемент и делаем ту-же операцию.
-            mainArray.push(split);
-        }
-    };
+async function EStats(allpath, id, money){
+    var project = allpath.split('/')[0]
+    var path = allpath.split('/')[1]
 
-    membersArray = []; //задаем массив участников
-    for(let i of mainArray){ //перебераем массив X со всеми данными и сортируем их в объект member, который отправляем в массив участников
-        var newMember = new member(i[0], i[1], i[2]);
-        membersArray.push(newMember);
-    };
-    return membersArray; //возвращаем массив участников
-};
+    var cat = guildBD.channels.cache.get(Config.projects[project])
+    var chl = cat.children.find(chl => chl.name.toLowerCase() == path.toLowerCase())
+    var BD = await GStats(allpath, path)
+    var user = BD.find(user => user.id == id)
+    var msg = await chl.messages.fetch(user.mid)
+    msg.edit(`${user.id}^<@!${user.user}>^${money}`)
+}
 
-async function AddStats(user, money) {
-    async function refDI(){
-        var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-        var oMsg = await channel.messages.fetch(dopBDmsg); //получаем сообщение доп бд
-        var nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
-        var fMsg = nMsg[nMsg.length-1].split(BDpref); //получаем последние данные в доп бд
-        if (fMsg[0] == ''){
-            fMsg.splice(0,1);
-        }; //удаляем пустые строки
-        var msg = await channel.messages.fetch(fMsg[0]); //подключаемся к сообщению, получая о нем все данные.
-        return{channel:channel,oMsg:oMsg,nMsg:nMsg,fMsg:fMsg,msg:msg}; //возвращаю все переменные
-    };
-    try{
-        let dbd = await refDI(); //получая данные с доп бд
-        let id = `${dbd.fMsg[1]}-${parseInt(dbd.msg.content.split('\n').slice(-1).join('').split(BDpref)[1].split('-')[1])+1}`; //создаю ID
-        let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}`; //создаю переменную всех данных
-        if ((`${dbd.msg.content}\n${bdInfo}`).length < 2000){ //если сообщение меньше лимита, то редактируем его и допооняем БД
-            let nnMsg = dbd.msg.content.split('\n').slice(1); //разделяю сообщение на строки, удаляя название
-            nnMsg.push(`${bdInfo}`); //добавляю к разделеному сообщению данные
-            dbd.msg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**\n`+nnMsg.join('\n')); //редактирую сообщение со всеми данными
-            return;
-        }else if ((`${dbd.msg.content}\n${bdInfo}`).length >= 2000){ //если сообщение привышает лимит
-            let dbd = await refDI(); //получаю данные
-            let smsg = await dbd.channel.send(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ**`); //пишем новое сообщение
-            await dbd.oMsg.edit(dbd.oMsg.content + `\n${BDpref}${smsg.id}${BDpref}${dbd.nMsg.length}`); //записываем в доп.БД id и номер нового БД
-
-            dbd = await refDI(); //получаю данные
-            let id = `${dbd.fMsg[1]}-${smsg.content.split('\n').length}`; //создаю ID
-            let bdInfo = `${BDpref}${id}${BDpref}${user}${BDpref}${money}`; //создаю переменную всех данных
-
-            let nnMsg = smsg.content.split('\n').slice(1); //разделяю сообщение на строки, удаляя название
-            nnMsg.push(`${bdInfo}`); //добавляю к разделеному сообщению данные
-            smsg.edit(`> **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ${dbd.fMsg[1]}**\n`+nnMsg.join('\n')); //редактирую сообщение со всеми данными
-        };
-    }catch{
-        return null;
-    };
-};
-
-async function EditStats(id, stat, dat){
-    if (id == null){return}; 
-    var bdnum = id.split('-')[0];
-    var idnum = id.split('-')[1];
-    var AllStats = await GetStats();
-    var person = AllStats.find(pers => pers.id == id);
-
-    if(stat == 'user') stat = 0;
-    if(stat == 'money') stat = 1;
-
-    var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-    var oMsg = await channel.messages.fetch(dopBDmsg);
-
-    let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
-    nMsg.splice(0,1);
-    let fMsg = nMsg[parseInt(bdnum)-1].split(BDpref); //получаем последние данные в доп бд
-    if (fMsg[0] == ''){
-        fMsg.splice(0,1);
-    };
-
-    var msg = await channel.messages.fetch(fMsg[0]);
-    var nnMsg = msg.content.split('\n');
-
-    var eStat = [];
-    for(let s in person) eStat.push(person[s]);
-    eStat.splice(0,1);
-    eStat.splice(stat,1,dat);
-
-    nnMsg.splice(parseInt(idnum),1,`^${id}^${eStat.join(BDpref)}`);
-
-    if (nnMsg.join('\n').length > 2000){
-        nnMsg.splice(parseInt(idnum),1);
-        AddStats(eStat[0],eStat[1]);
-    }
-        
-    msg.edit(nnMsg.join('\n'));
-    return;
-};
-
-async function delStats(id){
-    if (id == ''){return}; 
-    var bdnum = id.split('-')[0];
+async function DStats(allpath, id){
+    var project = allpath.split('/')[0]
+    var path = allpath.split('/')[1]
     
-    var channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-    var oMsg = await channel.messages.fetch(dopBDmsg);
-
-    let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
-    nMsg.splice(0,1);
-    if(nMsg[parseInt(bdnum)-1] == undefined){return};
-    let fMsg = nMsg[parseInt(bdnum)-1].split(BDpref); //получаем последние данные в доп бд
-    if (fMsg[0] == ''){
-        fMsg.splice(0,1);
-    };
-
-    var msg = await channel.messages.fetch(fMsg[0]);
-    var nnMsg = msg.content.split('\n');
-    var stat = nnMsg.find(n => n.split(BDpref)[1] == id);
-    if (stat == undefined){return};
-
-    nnMsg.splice(nnMsg.indexOf(stat),1);
-    msg.edit(nnMsg.join('\n'));
-};
+    var cat = guildBD.channels.cache.get(Config.projects[project])
+    var chl = cat.children.find(chl => chl.name.toLowerCase() == path.toLowerCase())
+    var BD = await GStats(allpath, path)
+    var user = BD.find(user => user.id == id)
+    var msg = await chl.messages.fetch(user.mid)
+    setTimeout(() => msg.delete(), timeOfDelete)
+}
 
 async function Stats(message){
     var AllStats = await GetStats();
@@ -583,8 +494,6 @@ client.on('ready', () => {
     guild = client.guilds.cache.get(Config.guilds.main)
     guildAges = client.guilds.cache.get(Config.guilds.ages)
     guildBD = client.guilds.cache.get(Config.guilds.BD)
-
-    //GStats('pushpin', 'main')
 
     function checkOnlineUsers(){
         members = guild.members.cache
@@ -859,6 +768,19 @@ client.on('messageCreate', message => {
         }
     }else if(message.guild.id == Config.guilds.ages){
         if(!mb && !mg) sendLog(message, 'rp', 'Отправил сообщение', '0', message.content)
+    }else if(message.guild.id == Config.guilds.BD){
+        if(!mb && !mg && comand.com == "Add"){
+            AStats(comand.oarg[0], comand.oarg[1], comand.oarg[2])
+        }
+        if(!mb && !mg && comand.com == "Get"){
+            GStats(comand.oarg[0]).then(console.log)
+        }
+        if(!mb && !mg && comand.com == "Edit"){
+            EStats(comand.oarg[0], comand.oarg[1], comand.oarg[2])
+        }
+        if(!mb && !mg && comand.com == "Del"){
+            DStats(comand.oarg[0], comand.oarg[1])
+        }
     }else{
 
     }
