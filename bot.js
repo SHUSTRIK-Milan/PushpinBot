@@ -634,16 +634,16 @@ client.on('messageCreate', message => {
         })
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(comand.com == `checkm` && message.author.id == `621917381681479693` && !mb && !mg){
+    if(comand.com == `checkm` && !mb && !mg && cA){
         console.log(comand)
         console.log(message)
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(comand.com == `cex` && message.author.id == `621917381681479693` && !mb && !mg){
+    if(comand.com == `cex` && !mb && !mg && cA){
         createEx(comand.oarg[0],comand.oarg[1],comand.oarg[2],comand.oarg[3],message)
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(comand.com == `clore` && message.author.id == `621917381681479693` && !mb && !mg){
+    if(comand.com == `clore` && !mb && !mg && cA){
         createLore(comand.oarg[0],comand.oarg[1],comand.oarg[2],message)
         setTimeout(() => message.delete(), timeOfDelete)
     }
@@ -660,50 +660,7 @@ client.on('messageCreate', message => {
             roflBot(message.content, message)
         }
 
-        if(comand.com == 'cbd' && message.author.id == `621917381681479693` && !mb && !mg){
-            let channel = guild.channels.cache.get(BDchnl); //получаем канал в котором находится наша БД
-            channel.messages.fetch(dopBDmsg).then(oMsg => { //получаем сообщение доп бд
-                let nMsg = oMsg.content.split('\n'); //разделяем доп бд на строки
-                try{
-                    nMsg.splice(0,1);
-                    let fMsg = nMsg[parseInt(comand.sarg[0])-1].split(BDpref); //получаем последние данные в доп бд
-                    if (fMsg[0] == ''){
-                        fMsg.splice(0,1);
-                    };
-                    message.channel.send(`!edit ${BDchnl} ${fMsg[0]} > **БАЗА ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ 1**`);
-                }catch{
-                    console.log(`Недостача аргументов`);
-                }
-            });
-            setTimeout(() => message.delete(), timeOfDelete);
-        };
-
-        if(comand.com == 'cdbd' && message.author.id == `621917381681479693` && !mb && !mg){
-            message.channel.send(`!edit ${BDchnl} ${dopBDmsg} > **ДОПОЛНИТЕЛЬНАЯ БАЗА ДАННЫХ ЗНАЧЕНИЙ**\n^838003797149220884^1`);
-            setTimeout(() => message.delete(), timeOfDelete);
-        };
-
-        if(comand.com == `tbd` && haveRole(message.member,`822493460493500436`) && !mb && !mg){
-            AddStats(`<@!${message.author.id}>`,25,'В розыске','Отсутствует',101)
-            setTimeout(() => message.delete(), timeOfDelete);
-        };
-
-        if(comand.com == `ebd` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
-            EditStats(comand.sarg[0],comand.sarg[1], cmdParametrs(message,2).carg)
-            setTimeout(() => message.delete(), timeOfDelete);
-        };
-
-        if(comand.com == `delbd` && message.author.id == `621917381681479693` && !mb && !mg){
-            delStats(comand.sarg[0])
-            setTimeout(() => message.delete(), timeOfDelete);
-        };
-
-        if(comand.com == `gbd` && message.author.id == `621917381681479693` && !mb && !mg){
-            GetStats().then(stats => console.log(stats));
-            setTimeout(() => message.delete(), timeOfDelete);
-        };
-
-        if(comand.com == `ban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
+        if(comand.com == `ban` && (haveRole(message.member, `833778527609552918`) || cA) && !mb && !mg){
             setTimeout(() => message.delete(), timeOfDelete);
             let userbanned = guild.members.cache.get(comand.sarg[0].slice(3).slice(0,-1));
 
@@ -720,7 +677,7 @@ client.on('messageCreate', message => {
             };
         }
 
-        if(comand.com == `unban` && (haveRole(message.member, `833778527609552918`) || head) && !mb && !mg){
+        if(comand.com == `unban` && (haveRole(message.member, `833778527609552918`) || cA) && !mb && !mg){
             setTimeout(() => message.delete(), timeOfDelete);
             let userunbanned = guild.members.cache.get(comand.sarg[0].slice(3).slice(0,-1));
 
@@ -785,16 +742,16 @@ client.on('messageCreate', message => {
     }else if(message.guild.id == Config.guilds.ages){
         if(!mb && !mg) sendLog(message, 'rp', 'Отправил сообщение', '0', message.content)
     }else if(message.guild.id == Config.guilds.BD){
-        if(!mb && !mg && comand.com == "Add"){
+        if(!mb && !mg && comand.com == "Add" && cA){
             AStats(comand.oarg[0], comand.oarg[1], comand.oarg.slice(2))
         }
-        if(!mb && !mg && comand.com == "Get"){
+        if(!mb && !mg && comand.com == "Get" && cA){
             GStats(comand.oarg[0]).then(console.log)
         }
-        if(!mb && !mg && comand.com == "Edit"){
+        if(!mb && !mg && comand.com == "Edit" && cA){
             EStats(comand.oarg[0], comand.oarg[1], comand.oarg[2], comand.oarg[3])
         }
-        if(!mb && !mg && comand.com == "Del"){
+        if(!mb && !mg && comand.com == "Del" && cA){
             DStats(comand.oarg[0], comand.oarg[1])
         }
     }else{
