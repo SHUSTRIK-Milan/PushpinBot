@@ -60,7 +60,11 @@ var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot')
 // Проверка на наличие роли
 function haveRole(member, role){
     if(member == undefined){return false}
-    if(member.roles.cache.get(role) != null || member.roles.cache.find(role => role.name.toLowerCase() == role.toLowerCase())){return true}
+    if(member.roles.cache.get(role) != null){
+        return true
+    }else if(member.roles.cache.find(roleF => roleF.name.toLowerCase() == role.toLowerCase()) != null){
+        return true
+    }
     return false
 };
 
