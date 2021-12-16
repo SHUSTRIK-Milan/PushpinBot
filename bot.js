@@ -664,36 +664,6 @@ client.on('messageCreate', message => {
             roflBot(message.content, message)
         }
 
-        if(comand.com == `ban` && (haveRole(message.member, `833778527609552918`) || cA) && !mb && !mg){
-            setTimeout(() => message.delete(), timeOfDelete);
-            let userbanned = guild.members.cache.get(comand.sarg[0].slice(3).slice(0,-1));
-
-            if(userbanned != undefined){
-                let reason = cmdParametrs(message, 1).carg;
-                console.log(reason);
-                for (let [id, channel] of guild.channels.cache) {
-                    if(Object.values(Config.channelsID).find(chl => chl == channel.id) == null && channel.type == 'category'){
-                        if(channel.permissionOverwrites.get(userbanned.id) != undefined) channel.permissionOverwrites.get(userbanned.id).delete();
-                    }
-                }
-                userbanned.send(`**Вы были забанены администратором ${message.author.tag}** 🔨\n> ${reason}`);
-                sendLog(message,'РП','Забанил игрока.','Успешно',`Вывод: **Вы были забанены администратором ${message.author.tag}** 🔨\n> ${reason}`)
-            };
-        }
-
-        if(comand.com == `unban` && (haveRole(message.member, `833778527609552918`) || cA) && !mb && !mg){
-            setTimeout(() => message.delete(), timeOfDelete);
-            let userunbanned = guild.members.cache.get(comand.sarg[0].slice(3).slice(0,-1));
-
-            if(userunbanned != undefined){
-                let reason = cmdParametrs(message, 1).carg;
-                console.log(reason);
-                guild.channels.cache.get(`849709660579954748`).updateOverwrite(userunbanned,{'VIEW_CHANNEL': true});
-                userunbanned.send(`**Вы были разбанены администратором ${message.author.tag}** 🔨\n> ${reason}`);
-                sendLog(message,'РП','Разбанил игрока.','Успешно',`Вывод: **Вы были разбанены администратором ${message.author.tag}** 🔨\n> ${reason}`)
-            };
-        }
-
         if(comand.com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
             setTimeout(() => message.delete(), timeOfDelete);
             let channel
