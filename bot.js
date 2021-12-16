@@ -5,7 +5,24 @@
 
 // Интеграции
 const { Client, Intents } = require('discord.js');
-const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_PRESENCES", "GUILD_MEMBERS"] });
+const client = new Client({ intents: [
+"GUILDS",
+"GUILD_MEMBERS",
+"GUILD_BANS",
+"GUILD_EMOJIS_AND_STICKERS",
+"GUILD_INTEGRATIONS",
+"GUILD_WEBHOOKS",
+"GUILD_INVITES",
+"GUILD_VOICE_STATES",
+"GUILD_PRESENCES",
+"GUILD_MESSAGES",
+"GUILD_MESSAGE_REACTIONS",
+"GUILD_MESSAGE_TYPING",
+"DIRECT_MESSAGES",
+"DIRECT_MESSAGE_REACTIONS",
+"DIRECT_MESSAGE_TYPING"
+]});
+
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 
@@ -41,11 +58,10 @@ var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot')
 
 
 // Проверка на наличие роли
-function haveRole(member, roleid){
-    let have = false;
-    if(member == null){return have};
-    if (member.roles.cache.get(roleid) != null) have = true;
-    return have;
+function haveRole(member, role){
+    if(member == undefined){return false}
+    if(member.roles.cache.get(role) != null || member.roles.cache.find(role => role.name.toLowerCase() == role.toLowerCase())){return true}
+    return false
 };
 
 // Дача роли
@@ -63,7 +79,7 @@ function cmdParametrs(msg,countS){
         com: '0', arg: '0', sarg: '0', carg: '0', oarg: '0'
     }
 
-    if (countS == undefined) countS = 0
+    if(countS == undefined) countS = 0
     if(msg.content.slice(0,1) != prefix) return comand
 
     let regexp = /"(\\.|[^"\\])*"/g;
@@ -211,12 +227,12 @@ async function createCom(embd, message){
 
         let nCommits = [];
         for (let i = countC-1; i > -1; i--) {
-            lastcom = await commits.data[i];
+            lastcom = await commits.data[i]
             nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
         }
 
-        let color = 11645371;
-        if(countC>0) color = 8506509;
+        let color = 11645371
+        if(countC>0) color = 8506509
         
         webhook.send({
             embeds: [{
@@ -231,9 +247,9 @@ async function createCom(embd, message){
                 fields: [],
                 timestamp: new Date()
             }]
-        });
+        })
     }else if(act == 'merge'){
-        let req = await fork.listPullRequests({state:'close'});
+        let req = await fork.listPullRequests({state:'close'})
         let lastReq = await req.data[0];
         message.delete();
         webhook.send({
@@ -249,39 +265,34 @@ async function createCom(embd, message){
                 fields: [],
                 timestamp: new Date()
             }]
-        });
+        })
     }
-    return;
-};
-
-function member(id, mid, user, money) {
-    this.id = id
-    this.mid = mid
-    this.user = user
-    this.money = money
-};
+    return
+}
 
 async function GStats(allpath){
     var project = allpath.split('/')[0]
     var path = allpath.split('/')[1]
+    var member = Config.BDs[`member_${project}_${path}`]
 
-    var cat = guildBD.channels.cache.get(Config.projects[project])
+    var cat = guildBD.channels.cache.find(chl => chl.name.toLowerCase() == project.toLowerCase() && chl.type == "GUILD_CATEGORY")
     var chl = cat.children.find(chl => chl.name.toLowerCase() == path.toLowerCase())
     var msgs = await chl.messages.fetch()
     var users = []
 
     for (let [id, msg] of msgs){
         let cMsg = msg.content.split('^') 
-        users.push(new member(cMsg[0], msg.id, cMsg[1].slice(3,-1),cMsg[2]))
+        users.push(new member(cMsg[0], msg.id, cMsg[1].slice(3,-1), cMsg.slice(2)))
     }
     return users.reverse()
 }
 
-async function AStats(allpath, user, money){
+async function AStats(allpath, user, data){
+    data = data.join('^')
     var project = allpath.split('/')[0]
     var path = allpath.split('/')[1]
 
-    var cat = guildBD.channels.cache.get(Config.projects[project])
+    var cat = guildBD.channels.cache.find(chl => chl.name.toLowerCase() == project.toLowerCase() && chl.type == "GUILD_CATEGORY")
     var chl = cat.children.find(chl => chl.name.toLowerCase() == path.toLowerCase())
     var msgs = await chl.messages.fetch()
 
@@ -290,26 +301,30 @@ async function AStats(allpath, user, money){
     if (users.length == 0){id = msgs.size}else{
         id = users[users.length-1].id
     }
-    chl.send(`${parseInt(id)+1}^<@!${user}>^${money}`)
+    chl.send(`${parseInt(id)+1}^<@!${user}>^${data}`)
 }
 
-async function EStats(allpath, id, money){
+async function EStats(allpath, id, par, data){
     var project = allpath.split('/')[0]
     var path = allpath.split('/')[1]
 
-    var cat = guildBD.channels.cache.get(Config.projects[project])
+    var cat = guildBD.channels.cache.find(chl => chl.name.toLowerCase() == project.toLowerCase() && chl.type == "GUILD_CATEGORY")
     var chl = cat.children.find(chl => chl.name.toLowerCase() == path.toLowerCase())
     var BD = await GStats(allpath, path)
     var user = BD.find(user => user.id == id)
     var msg = await chl.messages.fetch(user.mid)
-    msg.edit(`${user.id}^<@!${user.user}>^${money}`)
+    var oldMsg = msg.content.split('^')
+    oldMsg.splice(0,2)
+    oldMsg[par-1] = data
+
+    msg.edit(`${user.id}^<@!${user.user}>^${oldMsg.join('^')}`)
 }
 
 async function DStats(allpath, id){
     var project = allpath.split('/')[0]
     var path = allpath.split('/')[1]
     
-    var cat = guildBD.channels.cache.get(Config.projects[project])
+    var cat = guildBD.channels.cache.find(chl => chl.name.toLowerCase() == project.toLowerCase() && chl.type == "GUILD_CATEGORY")
     var chl = cat.children.find(chl => chl.name.toLowerCase() == path.toLowerCase())
     var BD = await GStats(allpath, path)
     var user = BD.find(user => user.id == id)
@@ -582,22 +597,23 @@ client.on('messageUpdate', (messageOld, messageNew) =>{
 client.on('messageCreate', message => {
     // ПЕРЕМЕННЫЕ
 
+    var cA = haveRole(message.member, "[A]"),
+        cB = haveRole(message.member, "[B]"),
+        cC = haveRole(message.member, "[C]")
     let mb = message.author.bot;
-    let mg = message.guild == undefined;
+    let mg = message.channel.type == "DM";
     let comand = cmdParametrs(message)
-    let head = (haveRole(message.member, '833226140755689483') || haveRole(message.member, '833227050550296576'));
-    let rpCreator = haveRole(message.member, '856092976702816287')
-    
+
     // ГЛОБАЛЬНЫЕ КОМАНДЫ
 
     if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(comand.com == `send` && !mb && !mg && (haveRole(message.member, `833778527609552918`) || head)){		
+    if(comand.com == `send` && !mb && !mg && cA){		
         message.channel.send(`${comand.arg}`)
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(comand.com == `clear` && !mb && !mg && (haveRole(message.member, `833778527609552918`) || head)){
+    if(comand.com == `clear` && !mb && !mg && (cA || cB)){
         let arg = parseInt(comand.sarg[0])
         
         if (arg > 0 && arg < 100){
@@ -610,7 +626,7 @@ client.on('messageCreate', message => {
         }
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(comand.com == `edit` && !mg && (haveRole(message.member, `833778527609552918`) || head)){
+    if(comand.com == `edit` && !mg && cA){
         message.channel.guild.channels.cache.find(id => id == `${comand.sarg[0]}`).messages.fetch(`${comand.sarg[1]}`)
         .then(msg =>{
             if(!msg.author.bot) return
@@ -770,13 +786,13 @@ client.on('messageCreate', message => {
         if(!mb && !mg) sendLog(message, 'rp', 'Отправил сообщение', '0', message.content)
     }else if(message.guild.id == Config.guilds.BD){
         if(!mb && !mg && comand.com == "Add"){
-            AStats(comand.oarg[0], comand.oarg[1], comand.oarg[2])
+            AStats(comand.oarg[0], comand.oarg[1], comand.oarg.slice(2))
         }
         if(!mb && !mg && comand.com == "Get"){
             GStats(comand.oarg[0]).then(console.log)
         }
         if(!mb && !mg && comand.com == "Edit"){
-            EStats(comand.oarg[0], comand.oarg[1], comand.oarg[2])
+            EStats(comand.oarg[0], comand.oarg[1], comand.oarg[2], comand.oarg[3])
         }
         if(!mb && !mg && comand.com == "Del"){
             DStats(comand.oarg[0], comand.oarg[1])
