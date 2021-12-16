@@ -49,11 +49,14 @@ module.exports.guilds = {
     BD: `919494529072111637`,
 };
 
-module.exports.projects = {
-    pushpin: `919509669045743656`,
-    ages: `919509682660462592`,
+module.exports.BDs = {
+    member_pushpin_main: function (id, mid, user, data) {
+        this.id = id
+        this.mid = mid
+        this.user = user
+        this.money = data[0]
+    },
 };
-
 
 module.exports.discordTocens = {
     main: `ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.JS95C2U2Wgwzuq9kgZZQh2hQXks`,
