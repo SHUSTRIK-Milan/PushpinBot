@@ -38,11 +38,7 @@ const timeOfDelete = 350
 var guild
 var guildAges
 var guildBD
-
-// Базы данных
-const BDchnl = Config.channelsID.bd
-var ROFLbdMsg = `863733070308966422`
-const dopBDmsg = `838003963412480070`
+var rpGuilds = [Config.guilds.ages]
 
 // Гитхаб
 var GitHub = require('github-api')
@@ -51,57 +47,39 @@ var gitA = new GitHub({
 });
 var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot')
 
-
 //
-// ФУНКЦИИ
+// ГЛАВНЫЕ ФУНКЦИИ
 //
 
-
-// Проверка на наличие роли
-function haveRole(member, role){
-    if(member == undefined){return false}
-    if(member.roles.cache.get(role) != null){
-        return true
-    }else if(member.roles.cache.find(roleF => roleF.name.toLowerCase() == role.toLowerCase()) != null){
-        return true
-    }
-    return false
-};
-
-// Дача роли
-function giveRole(member, roleId){
-    member.roles.add(roleId, `Добавил роль под ID: ${roleId}.`).catch(console.error);
-};
-
-// Отбирание роли
-function removeRole(member, roleId){
-    member.roles.remove(roleId, `Удалил роль под ID: ${roleId}.`).catch(console.error);
-};
-
-function cmdParametrs(msg,countS){
+function cmdParametrs(content,countS){
     var comand = {
-        com: '0', arg: '0', sarg: '0', carg: '0', oarg: '0'
+        com: '0', arg: '0', sarg: '0', carg: '0', oarg: '0', barg: '0'
     }
 
     if(countS == undefined) countS = 0
-    if(msg.content.slice(0,1) != prefix) return comand
+    if(content.slice(0,1) != prefix) return comand
 
     let regexp = /"(\\.|[^"\\])*"/g;
     
-    let com = msg.content.split(" ")[0].slice(prefix.length)
-    let arg = msg.content.slice(com.length+prefix.length+1)
+    let com = content.split(" ")[0].slice(prefix.length)
+    let arg = content.slice(com.length+prefix.length+1)
     let sarg = arg.split(" ")
     let carg = sarg.slice(countS).join(' ')
-    let oarg = arg.match(regexp)
+    let oarg = arg.match(/"(\\.|[^"\\])*"/g)
+    let barg = arg.match(/{"}(\\.|[^{}\\])*{"}/g)
     if(oarg != undefined){for(let i = 0; i < oarg.length; i++){
-        oarg[i] = oarg[i].replace( /"/g, "" )
+        oarg[i] = oarg[i].replace(/"/g, "")
     }}else{oarg='null'}
+    if(barg != undefined){for(let i = 0; i < barg.length; i++){
+        barg[i] = barg[i].replace(/{"}/g, "")
+    }}else{barg='null'}
     comand = {
         com: com, // команда, первый слитнонаписанный текст
         arg: arg, // все, что идет после команды
         sarg: sarg, // разбитый аргумент на пробелы
         carg: carg, // отрезанние от разбитого аргумента первых аргументов
-        oarg: oarg // аргументы в кавычках
+        oarg: oarg, // аргументы в кавычках
+        barg: barg, // аргументы в кавычках
     };
 
     return comand
@@ -112,60 +90,39 @@ function random(min, max) {
     return Math.floor(rand);
 }
 
-function roll(){
-    return random(0, 100)
-}
+function haveRole(member, role){
+    if(member == undefined){return false}
+    if(member.roles.cache.get(role) != null){
+        return true
+    }else if(member.roles.cache.find(roleF => roleF.name.toLowerCase() == role.toLowerCase()) != null){
+        return true
+    }
+    return false
+};
 
-function coinFlip(){
-    let rand = random(0, 1)
-    if(rand == 0) rand = 'Решка'
-    else if(rand == 1) rand = 'Орёл'
-    return rand
-}
+function giveRole(member, roleId){
+    member.roles.add(roleId, `Добавил роль под ID: ${roleId}.`).catch(console.error);
+};
 
-function card(){
-    let rand = random(1, 13)
-    if(rand == 1) rand = 'Двойка'
-    else if(rand == 2) rand = 'Тройка'
-    else if(rand == 3) rand = 'Четверка'
-    else if(rand == 4) rand = 'Пятерка'
-    else if(rand == 5) rand = 'Шестерка'
-    else if(rand == 6) rand = 'Семерка'
-    else if(rand == 7) rand = 'Восьмерка'
-    else if(rand == 8) rand = 'Девятка'
-    else if(rand == 9) rand = 'Десятка'
-    else if(rand == 10) rand = 'Валет'
-    else if(rand == 11) rand = 'Дама'
-    else if(rand == 12) rand = 'Король'
-    else if(rand == 13) rand = 'Туз'
+function removeRole(member, roleId){
+    member.roles.remove(roleId, `Удалил роль под ID: ${roleId}.`).catch(console.error);
+};
 
-    let rand_sec = random(1, 4)
-    if(rand_sec == 1) rand_sec = 'черви' 
-    else if(rand_sec == 2) rand_sec = 'буби'
-    else if(rand_sec == 3) rand_sec = 'трефы'
-    else if(rand_sec == 4) rand_sec = 'пики'
-    return `${rand} ${rand_sec}`
-}
+//
+// CREATE ФУНКЦИИ
+//
 
-function cube(){
-    let rand = random(0, 5)
-    console.log(rand)
-    if(rand == 0) rand = '1'
-    else if(rand == 1) rand = '2'
-    else if(rand == 2) rand = '3'
-    else if(rand == 3) rand = '4'
-    else if(rand == 4) rand = '5'
-    else if(rand == 5) rand = '6'
-    return rand
-}
+async function sendLog(member,channel,cat,act,status,add){
+    if (cat == 'admin'){var color = 4105807; var path = Config.channelsID.admin}
+    if (cat == 'other'){var color = 11645371; var path = Config.channelsID.other}
+    if (cat == 'rp'){var color = 11382073; var path = Config.channelsID.rp}
+    let nick = member.nickname
+    if(nick == null) nick = '<Без имени>'
+    let chnlLink = ''
+    if(channel != undefined) chnlLink = `\n[<#${channel.id}>]`
 
-async function sendLog(message,cat,act,status,add){
-    if (cat == 'admin'){var color = 4105807; var channel = Config.channelsID.admin}
-    if (cat == 'other'){var color = 11645371; var channel = Config.channelsID.other}
-    if (cat == 'rp'){var color = 11382073; var channel = Config.channelsID.rp}
-
-    let CChannel = guild.channels.cache.get(channel)
-    let webhook = await CChannel.fetchWebhooks()
+    path = guild.channels.cache.get(path)
+    let webhook = await path.fetchWebhooks()
     webhook = webhook.first()
 
     if (status == 0) status = '🟩'
@@ -175,10 +132,10 @@ async function sendLog(message,cat,act,status,add){
         embeds: [{
             color: color,
             author: {
-                name: `${message.author.username} – ${message.member.nickname}`,
-                icon_url: message.author.avatarURL()
+                name: `${member.user.username} – ${nick}`,
+                icon_url: member.user.avatarURL()
             },
-            description: `[${status}] **${act}:**\n${add}\n[<#${message.channel.id}>]`
+            description: `${status} **|** **${act}:**\n${add}${chnlLink}`
         }],
     });
 };
@@ -274,10 +231,20 @@ async function createCom(embd, message){
     return
 }
 
+//
+// БАЗА ДАННЫХ
+//
+
+function memberBD(id, user, data) {
+    this.id = id
+    this.user = user
+    this.data = data
+}
+
 async function GStats(allpath){
+    try{
     var project = allpath.split('/')[0]
     var path = allpath.split('/')[1]
-    var member = Config.BDs[`member_${project}_${path}`]
 
     var cat = guildBD.channels.cache.find(chl => chl.name.toLowerCase() == project.toLowerCase() && chl.type == "GUILD_CATEGORY")
     var chl = cat.children.find(chl => chl.name.toLowerCase() == path.toLowerCase())
@@ -285,16 +252,23 @@ async function GStats(allpath){
     var users = []
 
     for (let [id, msg] of msgs){
-        let cMsg = msg.content.split('^') 
-        users.push(new member(cMsg[0], msg.id, cMsg[1].slice(3,-1), cMsg.slice(2)))
+        let cMsg = eval(msg.content)
+        cMsg[0].mid = msg.id
+        users = users.concat(cMsg)
     }
     return users.reverse()
+    }catch{
+        guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь]**`).then(msg => {
+            setTimeout(() => {msg.delete()}, 10000)
+        })
+    }
 }
 
 async function AStats(allpath, user, data){
-    data = data.join('^')
+    try{
     var project = allpath.split('/')[0]
     var path = allpath.split('/')[1]
+    var structure = Config.BDs[`${project}_${path}`]
 
     var cat = guildBD.channels.cache.find(chl => chl.name.toLowerCase() == project.toLowerCase() && chl.type == "GUILD_CATEGORY")
     var chl = cat.children.find(chl => chl.name.toLowerCase() == path.toLowerCase())
@@ -305,10 +279,23 @@ async function AStats(allpath, user, data){
     if (users.length == 0){id = msgs.size}else{
         id = users[users.length-1].id
     }
-    chl.send(`${parseInt(id)+1}^<@!${user}>^${data}`)
+    
+    var returnData = {}
+    for (let i = 0; i < structure.length; i++){
+        returnData[structure[i]] = data[i]
+    }
+    var member = new memberBD(`${parseInt(id)+1}`, `<@!${user}>`, returnData)
+    member = [member]
+    chl.send(JSON.stringify(member, null, 4))
+    }catch{
+        guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, пользователя (id), значения]**`).then(msg => {
+            setTimeout(() => {msg.delete()}, 10000)
+        })
+    }
 }
 
 async function EStats(allpath, id, par, data){
+    try{
     var project = allpath.split('/')[0]
     var path = allpath.split('/')[1]
 
@@ -317,14 +304,20 @@ async function EStats(allpath, id, par, data){
     var BD = await GStats(allpath, path)
     var user = BD.find(user => user.id == id)
     var msg = await chl.messages.fetch(user.mid)
-    var oldMsg = msg.content.split('^')
-    oldMsg.splice(0,2)
-    oldMsg[par-1] = data
 
-    msg.edit(`${user.id}^<@!${user.user}>^${oldMsg.join('^')}`)
+    var dat = eval(`${msg.content}`)
+    dat[0].data[par] = data
+    
+    msg.edit(JSON.stringify(dat, null, 4))
+    }catch{
+        guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, id-ячейки, параметр, замену]**`).then(msg => {
+            setTimeout(() => {msg.delete()}, 10000)
+        })
+    }
 }
 
 async function DStats(allpath, id){
+    try{
     var project = allpath.split('/')[0]
     var path = allpath.split('/')[1]
     
@@ -334,69 +327,12 @@ async function DStats(allpath, id){
     var user = BD.find(user => user.id == id)
     var msg = await chl.messages.fetch(user.mid)
     setTimeout(() => msg.delete(), timeOfDelete)
-}
-
-async function Stats(message){
-    var AllStats = await GetStats();
-    var person = AllStats.find(pers => pers.user == `<@!${message.author.id}>`)
-    console.log(message)
-
-    function verificate(name, role){
-        guild.members.cache.get(message.author.id).setNickname(name);
-        AddStats(`<@!${message.author.id}>`,250,'Нет','Нет','111')
-        message.channel = {id: message.channel_id}
-
-        guild.members.fetch(message.author.id).then(member =>{
-            setTimeout(() => giveRole(member,`854315001543786507`), timeOfDelete); //role
-            setTimeout(() => giveRole(member,`836183994646921248`), timeOfDelete); //pushpin
-            setTimeout(() => giveRole(member,`836269090996879387`), timeOfDelete); //user
-            setTimeout(() => removeRole(member,`829423238169755658`), timeOfDelete); //ooc
-        });
-
-        sendLog(message,'Глобальное','Подтвердил(а) свой аккаунт.', 'Успешно', ``)
-        guild.channels.cache.get(`849709660579954748`).updateOverwrite(guild.members.cache.get(message.author.id),{'VIEW_CHANNEL': true});
-    };
-
-    let filter = m => m.author.id == message.author.id
-    function rpName(){
-        message.author.send('> Для окончания регистрации требуется лишь одна маленькая условность 👥\nПожалуйста, введите свое ролевое имя')
-        .then(msg => {
-            msg.channel.awaitMessages(filter, {
-                max: 1,
-                time: 25000,
-                errors: 'time',
-            })
-            .then(message => {
-                msgs = message.map(message => message)
-                if(msgs[0].content.length <= 32 && (msgs[0].content != " " || msgs[0].content != "")){
-                    msgs[0].author.send(`
-> **Успешно! Ваш аккаунт зарегистрирован** 🎉\nВы установили свое ролевое имя. Сменить его вы сможете только при помощи администратора.
-                    `)
-                    verificate(msgs[0].content);
-                }else{
-                    rpName()
-                }
-            })
-            .catch(() => {
-                message.author.send(`
-> **Вышло время ожидания** ⏳\nПовторите попытку ещё раз.
-                `)
-                rpName()
-            })
-        });
-    };
-
-    if(person == undefined && haveRole(guild.members.cache.get(message.author.id), `829423238169755658`)){
-        rpName()
-    }else if(person != undefined && haveRole(guild.members.cache.get(message.author.id), `829423238169755658`)){
-        rpName()
-    }else if(person == undefined && haveRole(guild.members.cache.get(message.author.id), `836269090996879387`)){
-        rpName()
-    }else{
-        message.author.send('> Вы уже зарегистрированы.')
+    }catch{
+        guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, id-ячейки]**`).then(msg => {
+            setTimeout(() => {msg.delete()}, 10000)
+        })
     }
-    
-};
+}
 
 async function minusMoney(member, money){
     stats = await GetStats();
@@ -461,21 +397,34 @@ async function pay(message, userDate, money, functionSend){
     return;
 };
 
+//
+// ОТВЕТЛЕНИЯ
+//
+
 async function roflBot(text, messageG){
-    let chnl = guild.channels.cache.get(BDchnl)
-    let msg = await chnl.messages.fetch(ROFLbdMsg)
-    let nMsg = msg.content.split('\n')
+    var users = await GStats("pushpin/rofl")
+    var dbMsg = users.find(db => db.data.quest.toLowerCase() == text.toLowerCase())
+    console.log(dbMsg)
 
-    let outF = nMsg.find(n => n.split('^')[0].toLowerCase() == text.toLowerCase())
-
-    if(outF != undefined && !waitingOutputRoflBot){
-        if(outF.split('^')[3] == undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`)
-        if(outF.split('^')[3] != undefined) messageG.channel.send(`${outF.split('^')[1]} (от ${outF.split('^')[2]})`, {files: [outF.split('^')[3]]})
+    if(dbMsg != undefined && !waitingOutputRoflBot){
+        if(dbMsg.data.imgs == '') messageG.channel.send({content: `${dbMsg.data.reply} (от ${dbMsg.user})`, reply: {messageReference: messageG}})
+        if(dbMsg.data.imgs != ''){
+            let imgs = []
+            for (url of dbMsg.data.imgs.split(';;')){
+                imgs.push({attachment: url})
+            }
+            messageG.channel.send({
+                content: `${dbMsg.data.reply} (от <@!${dbMsg.user}>)`, 
+                files: imgs,
+                reply: {messageReference: messageG}
+            })
+        }
     }
-    if(outF == undefined && !waitingOutputRoflBot){
+    if(dbMsg == undefined && !waitingOutputRoflBot){
         let filter = m => m.author.id == messageG.author.id
         waitingOutputRoflBot = true
-        messageG.channel.send(`Я не знаю как мне на это ответить. Напиши, как мне на это отвечать, <@!${messageG.author.id}>.`)
+
+        messageG.channel.send({content: `Я не знаю что мне сказать на это. \n> Напиши, как мне на это отвечать`, reply: {messageReference: messageG}})
         .then(() => {
             messageG.channel.awaitMessages({filter,
                 max: 1,
@@ -483,29 +432,25 @@ async function roflBot(text, messageG){
                 errors: ['time'],
             })
             .then(message => {
-                msgs = message.map(message => message)
-                let ed = `${msg.content}\n${messageG.content}^${msgs[0].content}^<@!${msgs[0].author.id}>`
-                console.log(msgs[0])
-                if(msgs[0].attachments.first() != undefined) ed = `${msg.content}\n${messageG.content}^${msgs[0].content}^<@!${msgs[0].author.id}>^${msgs[0].attachments.first().url}`
-
-                if(ed.length < 1800){
-                    messageG.channel.send(`Спасибо, <@!${messageG.author.id}>!`);
-                    msg.edit(ed)
+                message = message.map(message => message)[0]
+                let imgs = []
+                for ([id, img] of message.attachments){
+                    imgs.push(img.url)
                 }
-                if(ed.length > 1800){
-                    messageG.channel.send(`Ой... кажется моя память переполнена. Я все забыл. Давайте по новой, <@!${messageG.author.id}>.`);
-                    msg.edit(nMsg[0])
-                }
-                waitingOutputRoflBot = false
+                if(imgs.length == 0)
+                AStats("pushpin/rofl", message.author.id, [messageG.content, message.content, imgs.join(';;')])
+                messageG.channel.send({content: `Спасибо, буду знать!`, reply: {messageReference: message}}).then(() => waitingOutputRoflBot = false)
             })
             .catch(() => {
-                messageG.channel.send(`Вы так и не сказали, как мне на это отвечать, <@!${messageG.author.id}>.`);
-                waitingOutputRoflBot = false
+                messageG.channel.send({content: `Я так и не понял как мне на это отвечать 🤔`, reply: {messageReference: messageG}}).then(() => waitingOutputRoflBot = false)
             });
         });
     }
-    return msg
 }
+
+//
+// ХУКИ
+//
 
 client.on('ready', () => {
     console.log(`${client.user.tag} ready!`)
@@ -580,23 +525,20 @@ client.on('guildMemberAdd', (member) => {
     if(member.guild.id == Config.guilds.main){
         giveRole(member, '829423238169755658')
     }
+    sendLog(member, undefined, 'other', 'Новый пользователь', 0, `${member.user.tag} присоеденился к сообществу!`)
 });
 
-/* client.on('messageDelete', (message) => {
-    rpchannel = rpChannels.find(channel => channel == message.channel.id) != null;
-    let mb = message.author.bot;
-    let mg = message.guild == undefined;
-    if(!mb && !mg && rpchannel) sendLog(message, 'РП', "Сообщение удалено", "Успешно", `Содержимое сообщения: ${message.content}`)
-    if(!mb && !mg && !rpchannel) sendLog(message,'Общее',`Сообщение удалено`,'Успешно',`Содержимое сообщения: ${message.content}`)
+client.on('messageDelete', (message) => {
+    if(rpGuilds.find(guild => guild == message.guild.id) != null){
+        sendLog(message.member,message.channel,'rp','Сообщение удалено',0,`Содержимое сообщения: ${message.content}`)
+    }else{sendLog(message.member,message.channel,'other','Сообщение удалено',0,`Содержимое сообщения: ${message.content}`)}
 });
 
-client.on('messageUpdate', (messageOld, messageNew) =>{    
-    rpchannel = rpChannels.find(channel => channel == messageNew.channel.id) != null;
-    let mb = messageNew.author.bot;
-    let mg = messageNew.guild == undefined;
-    if(!mb && !mg && rpchannel) sendLog(messageNew, 'РП', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`)
-    if(!mb && !mg && !rpchannel) sendLog(messageNew, 'Общее', "Отредактировал сообщение", "Успешно", `**Старое сообщение:** ${messageOld.content}\n**Новое сообщение:** ${messageNew.content}`) 
-}) */
+client.on('messageUpdate', (messageOld, messageNew) =>{
+    if(rpGuilds.find(guild => guild == messageNew.guild.id) != null){
+        sendLog(messageNew.member,messageNew.channel,'rp','Сообщение отредактировано',0,`Старое соообщение:\n> ${messageOld.content}\nНовое сообщение:\n> ${messageNew.content}`)
+    }else{sendLog(messageNew.member,messageNew.channel,'other','Сообщение отредактировано',0,`Старое соообщение:\n> ${messageOld.content}\nНовое сообщение:\n> ${messageNew.content}`)}
+})
 
 client.on('messageCreate', message => {
     // ПЕРЕМЕННЫЕ
@@ -606,7 +548,7 @@ client.on('messageCreate', message => {
         cC = haveRole(message.member, "[C]")
     let mb = message.author.bot;
     let mg = message.channel.type == "DM";
-    let comand = cmdParametrs(message)
+    let comand = cmdParametrs(message.content)
 
     // ГЛОБАЛЬНЫЕ КОМАНДЫ
 
@@ -622,13 +564,12 @@ client.on('messageCreate', message => {
         
         if (arg > 0 && arg < 100){
             message.channel.bulkDelete(arg, true)
-            sendLog(message,`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`)
+            //sendLog(message,`Админ`,`Удалил сообщения.`,`Успешно`,`Удалено ${arg} сообщений.`)
         }else if (arg >= 100){
-            sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Попытка удалить более 100 сообщений.`)
+            //sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Попытка удалить более 100 сообщений.`)
         }else{
-            sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Неверный аргумент.`)
+            //sendLog(message,`Админ`,`Попытался удалить сообщения.`,`Ошибка`,`Неверный аргумент.`)
         }
-        setTimeout(() => message.delete(), timeOfDelete)
     }
     if(comand.com == `edit` && !mg && cA){
         message.channel.guild.channels.cache.find(id => id == `${comand.sarg[0]}`).messages.fetch(`${comand.sarg[1]}`)
@@ -655,7 +596,7 @@ client.on('messageCreate', message => {
     // ГЛАВНЫЙ СЕРВЕР
 
     if (message.guild.id == Config.guilds.main){
-        if(!mb && !mg) sendLog(message, 'other', 'Отправил сообщение', '0', message.content)
+        if(!mb && !mg) sendLog(message.member, message.channel, 'other', 'Отправил сообщение', '0', message.content)
 
         if(message.channel.id == Config.channelsID.dev_process && message.author.id != '822500483826450454' && !mg && mb){
             createCom(message.embeds[0],message)
@@ -714,19 +655,23 @@ client.on('messageCreate', message => {
             client.interaction.getApplicationCommands(config.guild_id).then(console.log);
         }
     }else if(message.guild.id == Config.guilds.ages){
-        if(!mb && !mg) sendLog(message, 'rp', 'Отправил сообщение', '0', message.content)
+        if(!mb && !mg) sendLog(message.member, message.channel, 'rp', 'Отправил сообщение', '0', message.content)
     }else if(message.guild.id == Config.guilds.BD){
         if(!mb && !mg && comand.com == "Add" && cA){
-            AStats(comand.oarg[0], comand.oarg[1], comand.oarg.slice(2))
+            AStats(comand.oarg[0], comand.oarg[1], comand.barg)
+            setTimeout(() => {message.delete()}, 15000)
         }
         if(!mb && !mg && comand.com == "Get" && cA){
             GStats(comand.oarg[0]).then(console.log)
+            setTimeout(() => {message.delete()}, 15000)
         }
         if(!mb && !mg && comand.com == "Edit" && cA){
-            EStats(comand.oarg[0], comand.oarg[1], comand.oarg[2], comand.oarg[3])
+            EStats(comand.oarg[0], comand.oarg[1], comand.oarg[2], comand.barg)
+            setTimeout(() => {message.delete()}, 15000)
         }
         if(!mb && !mg && comand.com == "Del" && cA){
             DStats(comand.oarg[0], comand.oarg[1])
+            setTimeout(() => {message.delete()}, 15000)
         }
     }else{
 
@@ -2083,8 +2028,6 @@ function checkIntegrations() {
     }, 200);*/
 }
 
-client.login(Config.discordTocens.main)
-
 /* client.on('error', err => {
     console.log('Ошибка!')
     guild.channels.cache.get(Config.channelsID.serverMsg).send('> Бот обнаружил ошибку!', {embed: {
@@ -2099,3 +2042,5 @@ client.login(Config.discordTocens.main)
         }
     )
 }); */
+
+client.login(Config.discordTocens.main)

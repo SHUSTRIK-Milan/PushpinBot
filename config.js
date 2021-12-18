@@ -50,12 +50,8 @@ module.exports.guilds = {
 };
 
 module.exports.BDs = {
-    member_pushpin_main: function (id, mid, user, data) {
-        this.id = id
-        this.mid = mid
-        this.user = user
-        this.money = data[0]
-    },
+    pushpin_main: ['money', 'test'],
+    pushpin_rofl: ['quest', 'reply', 'imgs']
 };
 
 module.exports.discordTocens = {
