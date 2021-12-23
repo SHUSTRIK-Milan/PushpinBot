@@ -50,7 +50,7 @@ module.exports.guilds = {
 };
 
 module.exports.BDs = {
-    pushpin_main: ['money', 'test'],
+    pushpin_main: ['money', 'pos'],
     pushpin_rofl: ['quest', 'reply', 'imgs']
 };
 
