@@ -232,6 +232,42 @@ async function createCom(embd, message){
 }
 
 //
+// СЛЭШ-КОМАНДЫ
+//
+
+async function GSlashCom(cguildId){
+    var commands
+    if(cguildId != undefined){
+        commands = await client.application.commands.fetch({guildId: cguildId})
+    }else{commands = await client.application.commands.fetch()}
+    return commands
+} 
+
+async function CSlashCom(data, cguildId){
+    var commands = await GSlashCom(cguildId)
+    if(commands.find(command => command.name == data.name) != undefined){return}
+    client.application.commands.create(data, cguildId)
+    console.log('create')
+}
+
+async function ESlashCom(data, cguildId){
+    var commands = await GSlashCom(cguildId)
+    if(commands.find(command => command.name == data.name) != undefined){return}
+    client.application.commands.create(data, cguildId)
+    console.log('create')
+}
+
+async function DSlashCom(name, cguildId){
+    var commands = await GSlashCom(cguildId)
+    var findCom = commands.find(command => command.name == name)
+
+    if(findCom != undefined){
+        findCom.delete()
+    }else{return}
+} 
+
+
+//
 // БАЗА ДАННЫХ
 //
 
@@ -247,6 +283,7 @@ async function GStats(allpath){
     var path = allpath.split('/')[1]
 
     var cat = guildBD.channels.cache.find(chl => chl.name.toLowerCase() == project.toLowerCase() && chl.type == "GUILD_CATEGORY")
+
     var chl = cat.children.find(chl => chl.name.toLowerCase() == path.toLowerCase())
     var msgs = await chl.messages.fetch()
     var users = []
@@ -257,7 +294,8 @@ async function GStats(allpath){
         users = users.concat(cMsg)
     }
     return users.reverse()
-    }catch{
+    }catch(err){
+        //console.log(err)
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь]**`).then(msg => {
             setTimeout(() => {msg.delete()}, 10000)
         })
@@ -294,7 +332,7 @@ async function AStats(allpath, user, data){
     }
 }
 
-async function EStats(allpath, id, par, data){
+async function EStats(allpath, id, par, data, deltb){
     try{
     var project = allpath.split('/')[0]
     var path = allpath.split('/')[1]
@@ -306,7 +344,9 @@ async function EStats(allpath, id, par, data){
     var msg = await chl.messages.fetch(user.mid)
 
     var dat = eval(`${msg.content}`)
-    dat[0].data[par] = data
+    if(!deltb){
+        dat[0].data[par] = data
+    }else if(deltb = 'del'){delete dat[0].data[par]}
     
     msg.edit(JSON.stringify(dat, null, 4))
     }catch{
@@ -437,7 +477,7 @@ async function roflBot(text, messageG){
                 for ([id, img] of message.attachments){
                     imgs.push(img.url)
                 }
-                if(imgs.length == 0)
+
                 AStats("pushpin/rofl", message.author.id, [messageG.content, message.content, imgs.join(';;')])
                 messageG.channel.send({content: `Спасибо, буду знать!`, reply: {messageReference: message}}).then(() => waitingOutputRoflBot = false)
             })
@@ -529,7 +569,7 @@ client.on('guildMemberAdd', (member) => {
 });
 
 client.on('messageDelete', (message) => {
-    if(!messageNew.author.bot){if(rpGuilds.find(guild => guild == message.guild.id) != null){
+    if(!message.author.bot){if(rpGuilds.find(guild => guild == message.guild.id) != null){
         sendLog(message.member,message.channel,'rp','Сообщение удалено',0,`Содержимое сообщения: ${message.content}`)
     }else{sendLog(message.member,message.channel,'other','Сообщение удалено',0,`Содержимое сообщения: ${message.content}`)}}
 });
@@ -666,7 +706,7 @@ client.on('messageCreate', message => {
             setTimeout(() => {message.delete()}, 15000)
         }
         if(!mb && !mg && comand.com == "Edit" && cA){
-            EStats(comand.oarg[0], comand.oarg[1], comand.oarg[2], comand.barg)
+            EStats(comand.oarg[0], comand.oarg[1], comand.oarg[2], comand.barg[0], comand.oarg[3])
             setTimeout(() => {message.delete()}, 15000)
         }
         if(!mb && !mg && comand.com == "Del" && cA){
