@@ -235,34 +235,25 @@ async function createCom(embd, message){
 // СЛЭШ-КОМАНДЫ
 //
 
-async function GSlashCom(cguildId){
+async function SlashCom(type, name, data, cguildId, permissions){
+    if(type == 'wait'){return}
+
     var commands
     if(cguildId != undefined){
         commands = await client.application.commands.fetch({guildId: cguildId})
     }else{commands = await client.application.commands.fetch()}
-    return commands
-} 
-
-async function CSlashCom(data, cguildId){
-    var commands = await GSlashCom(cguildId)
-    if(commands.find(command => command.name == data.name) != undefined){return}
-    client.application.commands.create(data, cguildId)
-    console.log('create')
-}
-
-async function ESlashCom(data, cguildId){
-    var commands = await GSlashCom(cguildId)
-    if(commands.find(command => command.name == data.name) != undefined){return}
-    client.application.commands.create(data, cguildId)
-    console.log('create')
-}
-
-async function DSlashCom(name, cguildId){
-    var commands = await GSlashCom(cguildId)
-    var findCom = commands.find(command => command.name == name)
-
-    if(findCom != undefined){
-        findCom.delete()
+    
+    var command = commands.find(command => command.name == name)
+    if(type == 'get'){
+        return commands
+    }else if(type == 'create' && command == undefined){
+        client.application.commands.create(data, cguildId)
+    }else if(type == 'del' && command != undefined){
+        command.delete()
+    }else if(type == 'edit' && command != undefined){
+        client.application.commands.edit(command.id, data, cguildId)
+    }else if(type == 'perm' && command != undefined){
+        client.application.commands.permissions.add({ guild: cguildId, command: command.id, permissions: permissions})
     }else{return}
 } 
 
