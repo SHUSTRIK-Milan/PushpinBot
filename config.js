@@ -50,8 +50,9 @@ module.exports.guilds = {
 };
 
 module.exports.BDs = {
-    pushpin_main: ['money', 'pos'],
-    pushpin_rofl: ['quest', 'reply', 'imgs']
+    pushpin_main: ['user', 'money', 'pos'],
+    pushpin_rofl: ['user', 'quest', 'reply', 'imgs'],
+    ages_items: []
 };
 
 module.exports.discordTocens = {

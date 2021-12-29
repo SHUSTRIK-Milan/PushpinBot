@@ -1,4 +1,6 @@
+const getUnicode = require('emoji-unicode')
 const { Client, Intents } = require('discord.js');
+
 const client = new Client({ intents: [
 "GUILDS",
 "GUILD_MEMBERS",
@@ -21,57 +23,84 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const Config = require('./config')
 
+var guild
+var guildAges
+var guildBD
+var rpGuilds = [Config.guilds.ages]
+
 function random(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
 }
 
-async function GSlashCom(cguildId){
+async function SlashCom(type, name, data, cguildId, permissions){
+    if(type == 'wait'){return}
+
     var commands
     if(cguildId != undefined){
         commands = await client.application.commands.fetch({guildId: cguildId})
     }else{commands = await client.application.commands.fetch()}
-    return commands
-} 
-
-async function CSlashCom(data, cguildId){
-    var commands = await GSlashCom(cguildId)
-    if(commands.find(command => command.name == data.name) != undefined){return}
-    client.application.commands.create(data, cguildId)
-    console.log('create')
-}
-
-async function ESlashCom(data, cguildId){
-    var commands = await GSlashCom(cguildId)
-    if(commands.find(command => command.name == data.name) != undefined){return}
-    client.application.commands.create(data, cguildId)
-    console.log('create')
-}
-
-async function DSlashCom(name, cguildId){
-    var commands = await GSlashCom(cguildId)
-    var findCom = commands.find(command => command.name == name)
-
-    if(findCom != undefined){
-        findCom.delete()
+    
+    var command = commands.find(command => command.name == name)
+    if(type == 'get'){
+        return commands
+    }else if(type == 'create' && command == undefined){
+        client.application.commands.create(data, cguildId)
+    }else if(type == 'del' && command != undefined){
+        command.delete()
+    }else if(type == 'edit' && command != undefined){
+        client.application.commands.edit(command.id, data, cguildId)
+    }else if(type == 'perm' && command != undefined){
+        client.application.commands.permissions.add({ guild: cguildId, command: command.id, permissions: permissions})
     }else{return}
 } 
 
 var guild;
 
 client.on('ready', () => {
-    console.log(`${client.user.tag} ready!`);
-    guild = client.guilds.cache.get('840180165665619998');
+    console.log(`${client.user.tag} ready!`)
+    guild = client.guilds.cache.get('840180165665619998')
+    guildBD = client.guilds.cache.get(Config.guilds.BD)
 
-    /* cSlashCom({
-        name: 'test2',
-        description: 'A test command',
-    }, '840180165665619998') */
+    SlashCom('wait', 'test', {
+        name: 'взлом',
+        description: 'Система взлома замков',
+        options: [
+            {
+                type: 'NUMBER',
+                name: 'пины',
+                description: 'Количество пинов',
+                required: true
+            },
+            {
+                type: 'NUMBER',
+                name: 'стадии',
+                description: 'Количество стадий',
+                required: true
+            }
+        ]
+    }, '840180165665619998')
 
-    //DSlashCom('test2', '840180165665619998')
+    SlashCom('wait', 'Репорт', {
+        name: 'Репорт',
+        description: '',
+        type: 'MESSAGE',
+        defaultPermission: false
+    }, '840180165665619998')
 
-    //SlashCom('840180165665619998').then(console.log)
-});
+    SlashCom('wait', 'Заплатить', {
+        name: 'Заплатить',
+        description: '',
+        type: 'USER',
+        defaultPermission: false,
+    }, '840180165665619998')
+
+    SlashCom('wait', 'инвентарь', {
+        name: 'инвентарь',
+        description: 'Показывает текущий инвентарь',
+        type: 'CHAT_INPUT'
+    }, '840180165665619998')
+})
 
 function comps(count, user){
     var comps = [{
@@ -91,80 +120,253 @@ function comps(count, user){
     return comps
 }
 
+var items = [
+    {
+        id: 'coins',
+        name: 'Коины',
+        description: 'Золотые монеты, за них можно что-то купить!',
+        emoji: '🪙',
+    },
+    {
+        id: 'beer',
+        name: 'Пиво',
+        description: 'Бутылка пива, спешил фор Петри',
+        emoji: '🍺',
+    },
+    {
+        id: 'knife',
+        name: 'Кинжал',
+        description: 'Острый кинжал, которым можно победить Брофсса',
+        emoji: '🗡',
+    },
+]
+
+var invent = [
+    {
+        id: 0,
+        item: 'coins',
+        count: 20
+    },
+    {
+        id: 1,
+        item: 'beer',
+        count: 1
+    },
+    {
+        id: 2,
+        item: 'knife',
+        count: 123
+    },
+]
+
+function joinItems(inv){
+    let returnItems = []
+    for (let item of inv){
+        let gItem = items.find(fItem => fItem.id == item.item)
+        returnItems.push({
+            label: `${gItem.name} (x${item.count})`,
+            description: gItem.description,
+            value: `${item.id}`,
+            emoji: {
+                id: null,
+                name: `${gItem.emoji}`
+            }
+        })
+    }
+    return returnItems
+}
+
 var lockpickCache = new Map()
 
 client.on('interactionCreate', async interaction => {
-    console.log(lockpickCache)
-    if(interaction.isApplicationCommand()){
-        if(interaction.commandName == 'test'){
+    var ping = client.ws.ping
+
+    if(interaction.isContextMenu()){
+        interaction.reply({
+            content: '> Выбери сумму, которую хочешь отправить 💵',
+            ephemeral: true,
+            components: [
+                {
+                    type: 'ACTION_ROW',
+                    components: [
+                        {
+                            type: 'BUTTON',
+                            label: '10',
+                            customId: `givemoney_10_${interaction.targetId}`,
+                            style: 'SUCCESS'
+                        },
+                        {
+                            type: 'BUTTON',
+                            label: '50',
+                            customId: `givemoney_50_${interaction.targetId}`,
+                            style: 'SUCCESS'
+                        },
+                        {
+                            type: 'BUTTON',
+                            label: '100',
+                            customId: `givemoney_100_${interaction.targetId}`,
+                            style: 'SUCCESS'
+                        },
+                    ]
+                }
+            ]
+        })
+    }
+
+    if(interaction.isCommand()){
+        if(interaction.commandName == 'взлом'){
+            let count = interaction.options.get('стадии').value
+            let pins = interaction.options.get('пины').value
+            if(pins > 5) pins = 5
+
             interaction.deferReply()
             setTimeout(() => {
                 interaction.editReply({
-                    content: '> [0/5] Процесс взлома... 🔏',
-                    components: comps(5, interaction.user.id)
+                    content: `> [0/${count}] Процесс взлома... 🔏`,
+                    components: comps(pins, interaction.user.id)
                 })
-                lockpickCache.set(interaction.user.id.toString(), {user: interaction.user.id, steps: 0, count: 5})
+                lockpickCache.set(interaction.user.id.toString(), {steps: 0, count: count, pins: pins})
+            }, 1000)
+        }
+
+        if(interaction.commandName == 'инвентарь'){
+            interaction.deferReply()
+            setTimeout(() => {
+                interaction.editReply({
+                    content: '> Ваш инвентарь 💼',
+                    components: [
+                        {
+                            type: 'ACTION_ROW',
+                            components: [
+                                {
+                                    type: 'SELECT_MENU',
+                                    customId: `invent_${interaction.user.id}_open`,
+                                    placeholder: 'Ваши предметы...',
+                                    options: joinItems(invent)
+                                }
+                            ]
+                        }
+                    ]
+                })
             }, 1000)
         }
     }
 
+    if(interaction.isSelectMenu()){
+        if(interaction.customId.split('_')[0] == 'invent' && interaction.customId.split('_')[2] == 'open'){
+            let item = items.find(fItem => fItem.id == invent[interaction.values[0]].item)
+            let emoji = getUnicode(item.emoji).split(' ').join('-')
+
+            interaction.update({
+                content: '> Ваш инвентарь 💼',
+                embeds: [
+                    {
+                        author: {name: item.name},
+                        description: item.description,
+                        thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji}.png`}
+                    }
+                ],
+                components: [
+                    {
+                        type: 'ACTION_ROW',
+                        components: [
+                            {
+                                type: 'BUTTON',
+                                label: 'Использовать',
+                                customId: `invent_${interaction.customId.split('_')[1]}_use`,
+                                style: 'PRIMARY'
+                            },
+                            {
+                                type: 'BUTTON',
+                                label: 'Передать',
+                                customId: `invent_${interaction.customId.split('_')[1]}_trade`,
+                                style: 'SUCCESS'
+                            },
+                            {
+                                type: 'BUTTON',
+                                label: 'Вернуться',
+                                customId: `invent_${interaction.customId.split('_')[1]}_back`,
+                                style: 'SECONDARY'
+                            },
+                            {
+                                type: 'BUTTON',
+                                label: 'Закрыть',
+                                customId: `invent_${interaction.customId.split('_')[1]}_close`,
+                                style: 'DANGER'
+                            }
+                        ]
+                    }
+                ]
+            })
+        }
+    }
+
     if(interaction.isButton()){
+        if(interaction.customId.split('_')[0] == 'invent' && interaction.customId.split('_')[2] == 'close'){
+            interaction.update({components: []}).then(() => {
+                interaction.deleteReply()
+            })
+        }
+        if(interaction.customId.split('_')[0] == 'givemoney'){
+            client.users.cache.find(user => user.id == interaction.customId.split('_')[2]).send(`> ${interaction.user.username} передал вам ${interaction.customId.split('_')[1]} коинов 💵`)
+            interaction.update({content: `> Вы успешно передали сумму денег 💵`, components: []})
+        }
         if(interaction.customId.split('_')[0] == 'lockpickButton'){
-            let status
-            let data = lockpickCache.get(interaction.user.id)
+            function breaking(){
+                let data = lockpickCache.get(interaction.user.id)
 
-            if(data != undefined && interaction.user.id == interaction.customId.split('_')[2]){
-                if(interaction.component.style == 'PRIMARY'){
-                    interaction.update({
-                        content: '> Взлом не удался! 🔴',
-                        components: []
-                    }).then(() => {
-                        lockpickCache.delete(interaction.user.id)
-                    })
-                    clearTimeout(data.timer)
-                    status = false
-                }
-                if(interaction.component.style == 'DANGER'){
-                    data.steps += 1
+                if(data != undefined && interaction.user.id == interaction.customId.split('_')[2]){
 
-                    if(data.steps < data.count){
+                    if(interaction.component.style == 'PRIMARY'){
+                        clearTimeout(data.timer)
                         interaction.update({
-                            content: `> [${data.steps}/${data.count}] Процесс взлома... 🔏`,
-                            components: comps(5, interaction.user.id)
-                        })
-                    }else{
-                        interaction.update({
-                            content: '> Взлом удался! 🟢',
+                            content: '> Взлом не удался! 🔴',
                             components: []
                         }).then(() => {
                             lockpickCache.delete(interaction.user.id)
                         })
-                        clearTimeout(data.timer)
-                        status = true
+                        return
                     }
+                    if(interaction.component.style == 'DANGER'){
+                        clearTimeout(data.timer)
+                        data.steps += 1
 
-                    if(data.steps == 1){
-                        let timer = setTimeout(() => {
-                            interaction.editReply({
-                                content: '> Взлом не удался! 🔴',
+                        if(data.steps < data.count){
+                            interaction.update({
+                                content: `> [${data.steps}/${data.count}] Процесс взлома... 🔏`,
+                                components: comps(data.pins, interaction.user.id)
+                            }).then(() => {
+                                data.timer = setTimeout(() => {
+                                    lockpickCache.delete(interaction.user.id)
+                                    interaction.editReply({
+                                        content: '> Взлом не удался! Закончилось время 🕐',
+                                        components: []
+                                    })
+                                    return
+                                }, (160*5)+ping)
+                            })
+                        }else{
+                            interaction.update({
+                                content: '> Взлом удался! 🟢',
                                 components: []
                             }).then(() => {
                                 lockpickCache.delete(interaction.user.id)
-                                status = false
                             })
-                        }, data.count*1000)
-
-                        data.timer = timer
+                            return
+                        }
                     }
+                }else if(data == undefined && interaction.user.id == interaction.customId.split('_')[2]){
+                    interaction.update({
+                        content: '> Взлом не удался! Закончилось время 🕐',
+                        components: []
+                    })
+                    return
+                }else if(interaction.user.id != interaction.customId.split('_')[2]){
+                    interaction.reply({content: '> Не вмешивайся в чужое пространтсво! 🛑', ephemeral: true})
+                    return
                 }
-            }else if(data != undefined && interaction.user.id != interaction.customId.split('_')[2]){
-                interaction.reply({content: '> Не вмешивайся в чужое пространтсво! 🛑', ephemeral: true})
-            }else{
-                interaction.message.delete()
-                interaction.reply({content: '> Ошибка, повторите попытку 🔁', ephemeral: true})
             }
-
-            console.log(status)
+            breaking()
         }
     }
 })

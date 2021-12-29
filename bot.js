@@ -5,6 +5,7 @@
 
 // Интеграции
 const { Client, Intents } = require('discord.js');
+
 const client = new Client({ intents: [
 "GUILDS",
 "GUILD_MEMBERS",
@@ -30,7 +31,6 @@ const Config = require('./config')
 
 // Системные переменные
 const prefix = '!'
-const BDpref = '^'
 var waitingOutputRoflBot = false
 const timeOfDelete = 350
 
@@ -262,9 +262,8 @@ async function SlashCom(type, name, data, cguildId, permissions){
 // БАЗА ДАННЫХ
 //
 
-function memberBD(id, user, data) {
+function BDentity(id, data) {
     this.id = id
-    this.user = user
     this.data = data
 }
 
@@ -293,7 +292,7 @@ async function GStats(allpath){
     }
 }
 
-async function AStats(allpath, user, data){
+async function AStats(allpath, data){
     try{
     var project = allpath.split('/')[0]
     var path = allpath.split('/')[1]
@@ -313,7 +312,7 @@ async function AStats(allpath, user, data){
     for (let i = 0; i < structure.length; i++){
         returnData[structure[i]] = data[i]
     }
-    var member = new memberBD(`${parseInt(id)+1}`, `<@!${user}>`, returnData)
+    var member = new BDentity(`${parseInt(id)+1}`, returnData)
     member = [member]
     chl.send(JSON.stringify(member, null, 4))
     }catch{
@@ -434,24 +433,23 @@ async function pay(message, userDate, money, functionSend){
 
 async function roflBot(text, messageG){
     var users = await GStats("pushpin/rofl")
-    var dbMsg = users.find(db => db.data.quest.toLowerCase() == text.toLowerCase())
-    console.log(dbMsg)
+    var bdMsg = users.find(bd => bd.data.quest.toLowerCase() == text.toLowerCase())
 
-    if(dbMsg != undefined && !waitingOutputRoflBot){
-        if(dbMsg.data.imgs == '') messageG.channel.send({content: `${dbMsg.data.reply} (от ${dbMsg.user})`, reply: {messageReference: messageG}})
-        if(dbMsg.data.imgs != ''){
+    if(bdMsg != undefined && !waitingOutputRoflBot){
+        if(bdMsg.data.imgs == '') messageG.channel.send({content: `${bdMsg.data.reply} (от ${bdMsg.data.user})`, reply: {messageReference: messageG}})
+        if(bdMsg.data.imgs != ''){
             let imgs = []
-            for (url of dbMsg.data.imgs.split(';;')){
+            for (url of bdMsg.data.imgs.split(';;')){
                 imgs.push({attachment: url})
             }
             messageG.channel.send({
-                content: `${dbMsg.data.reply} (от <@!${dbMsg.user}>)`, 
+                content: `${bdMsg.data.reply} (от <@!${bdMsg.data.user}>)`, 
                 files: imgs,
                 reply: {messageReference: messageG}
             })
         }
     }
-    if(dbMsg == undefined && !waitingOutputRoflBot){
+    if(bdMsg == undefined && !waitingOutputRoflBot){
         let filter = m => m.author.id == messageG.author.id
         waitingOutputRoflBot = true
 
@@ -469,13 +467,13 @@ async function roflBot(text, messageG){
                     imgs.push(img.url)
                 }
 
-                AStats("pushpin/rofl", message.author.id, [messageG.content, message.content, imgs.join(';;')])
+                AStats("pushpin/rofl", [message.author.id, messageG.content, message.content, imgs.join(';;')])
                 messageG.channel.send({content: `Спасибо, буду знать!`, reply: {messageReference: message}}).then(() => waitingOutputRoflBot = false)
             })
             .catch(() => {
                 messageG.channel.send({content: `Я так и не понял как мне на это отвечать 🤔`, reply: {messageReference: messageG}}).then(() => waitingOutputRoflBot = false)
-            });
-        });
+            })
+        })
     }
 }
 
@@ -484,11 +482,25 @@ async function roflBot(text, messageG){
 //
 
 client.on('ready', () => {
-    console.log(`${client.user.tag} ready!`)
+    console.log(`[bot-base ready]`)
 
     guild = client.guilds.cache.get(Config.guilds.main)
     guildAges = client.guilds.cache.get(Config.guilds.ages)
     guildBD = client.guilds.cache.get(Config.guilds.BD)
+
+    module.exports = {
+        client, REST, Routes,
+        Config, prefix, timeOfDelete,
+        guild, guildAges, guildBD, 
+        rpGuilds, cmdParametrs, random,
+        haveRole, giveRole, removeRole,
+        sendLog, createLore, createEx,
+        createCom, SlashCom, BDentity,
+        GStats, AStats, EStats,
+        DStats}
+    require('./projects/pushpin.js')
+    require('./projects/ages.js')
+    require('./projects/bd.js')
 
     function checkOnlineUsers(){
         members = guild.members.cache
@@ -622,90 +634,6 @@ client.on('messageCreate', message => {
     if(comand.com == `clore` && !mb && !mg && cA){
         createLore(comand.oarg[0],comand.oarg[1],comand.oarg[2],message)
         setTimeout(() => message.delete(), timeOfDelete)
-    }
-
-    // ГЛАВНЫЙ СЕРВЕР
-
-    if (message.guild.id == Config.guilds.main){
-        if(!mb && !mg) sendLog(message.member, message.channel, 'other', 'Отправил сообщение', '0', message.content)
-
-        if(message.channel.id == Config.channelsID.dev_process && message.author.id != '822500483826450454' && !mg && mb){
-            createCom(message.embeds[0],message)
-        }
-        if(message.channel.id == Config.channelsID.bot && !mb && !mg){
-            roflBot(message.content, message)
-        }
-
-        if(comand.com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
-            setTimeout(() => message.delete(), timeOfDelete);
-            let channel
-            let specialChannel = [
-                {id: guild.roles.everyone, deny: 'VIEW_CHANNEL'},
-                {id: `833226140755689483`, allow: 'VIEW_CHANNEL'},
-                {id: `833227050550296576`, allow: 'VIEW_CHANNEL'},
-                {id: `830061387849662515`, allow: 'VIEW_CHANNEL'},
-                {id: `856092976702816287`, allow: 'VIEW_CHANNEL'},
-            ]
-            try{
-                for(let channelID of guild.channels.cache){
-                    channel = guild.channels.cache.get(channelID[0])
-                    if(channel != undefined){
-                        if(channel.parentID == Config.channelsID.fast_access){channel.delete()}
-                    }
-                }
-                setTimeout(() =>{
-                    if(channel != undefined){
-                        for(let obj of Config.objects){
-                            if(obj.open){
-                                guild.channels.create(`«${obj.name}»`, {type: 'text', topic: `${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`, parent: Config.channelsID.fast_access})
-                            }else if(!obj.open){
-                                guild.channels.create(`«${obj.name}»`, {type: 'text', topic: `${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`, parent: Config.channelsID.fast_access, permissionOverwrites: specialChannel})
-                            }
-                        } 
-                    }
-                }, timeOfDelete*5)
-            }catch(error){console.log(error)}
-        }
-
-        if(comand.com == `refreshIDobj` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
-            setTimeout(() => message.delete(), timeOfDelete);
-            let channelsRefr = []
-            for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
-            try{
-                for(let obj of Config.objects){
-                    for(let room of obj.rooms){
-                        let channel = channelsRefr.find(channel => channel.name.toLowerCase() == room.toLowerCase() && channel.parent.id == obj.cId)
-                        channel.setTopic(`${obj.id}-${Config.globalObjects.find(gobj => gobj.id == obj.id).name}`)
-                    }
-                }
-            }catch(error){console.log(error)}
-        }
-
-        if(comand.com == `commands` && head && !mb && !mg){
-            setTimeout(() => message.delete(), timeOfDelete);
-            client.interaction.getApplicationCommands(config.guild_id).then(console.log);
-        }
-    }else if(message.guild.id == Config.guilds.ages){
-        if(!mb && !mg) sendLog(message.member, message.channel, 'rp', 'Отправил сообщение', '0', message.content)
-    }else if(message.guild.id == Config.guilds.BD){
-        if(!mb && !mg && comand.com == "Add" && cA){
-            AStats(comand.oarg[0], comand.oarg[1], comand.barg)
-            setTimeout(() => {message.delete()}, 15000)
-        }
-        if(!mb && !mg && comand.com == "Get" && cA){
-            GStats(comand.oarg[0]).then(console.log)
-            setTimeout(() => {message.delete()}, 15000)
-        }
-        if(!mb && !mg && comand.com == "Edit" && cA){
-            EStats(comand.oarg[0], comand.oarg[1], comand.oarg[2], comand.barg[0], comand.oarg[3])
-            setTimeout(() => {message.delete()}, 15000)
-        }
-        if(!mb && !mg && comand.com == "Del" && cA){
-            DStats(comand.oarg[0], comand.oarg[1])
-            setTimeout(() => {message.delete()}, 15000)
-        }
-    }else{
-
     }
 });
 
