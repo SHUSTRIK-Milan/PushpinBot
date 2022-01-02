@@ -7,7 +7,7 @@ const {
     sendLog, createLore, createEx,
     createCom, SlashCom, BDentity,
     GStats, AStats, EStats,
-    DStats} = require('../bot.js')
+    DStats, RPF} = require('../bot.js')
 
 const guild = guildAges
 const getUnicode = require('emoji-unicode')
@@ -48,25 +48,7 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
     let command = cmdParametrs(message.content)
 
     if(!mb && message.content == '!test'){
-        (async function (){
-            let objects = await GStats("ages/objects")
-            for (let object of objects){
-                let cat = guild.channels.cache.find(cat => cat.type == 'GUILD_CATEGORY' && cat.name == object.data.name && object.data.cid != undefined)
-                if(cat == undefined){
-                    cat = await guild.channels.create(object.data.name, {
-                        type: 'GUILD_CATEGORY'
-                    })
-                    for (let room of object.data.rooms){
-                        guild.channels.create(room, {
-                            type: 'GUILD_TEXT',
-                            parent: cat
-                        })
-                        EStats("ages/objects", object.id, "cid", false, [cat.id])
-                    }
-                }else{console.log('уже есть')}
-            }
-            setTimeout(() => {console.log(objects)}, 3000)
-        })()
+        RPF.createObjects("ages/objects", guild)
     }
 
     if(!mb && !mg) sendLog(message.member, message.channel, 'rp', 'Отправил сообщение', '0', message.content)
