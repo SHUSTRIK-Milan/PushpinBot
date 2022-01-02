@@ -46,6 +46,10 @@ async function SlashCom(type, name, data, cguildId, permissions){
         return commands
     }else if(type == 'create' && command == undefined){
         client.application.commands.create(data, cguildId)
+    }else if(type == 'create' && permissions != undefined && command == undefined){
+        client.application.commands.create(data, cguildId).then((cmd) => {
+            client.application.commands.permissions.add({ guild: cguildId, command: cmd.id, permissions: permissions})
+        })
     }else if(type == 'del' && command != undefined){
         command.delete()
     }else if(type == 'edit' && command != undefined){
@@ -120,63 +124,71 @@ function comps(count, user){
     return comps
 }
 
-var items = [
+var object = eval(
+    [{
+        "id": "1",
+        "data": {
+            "name": "Тест-комната",
+            "open": "true",
+            "radius": "['Тест-комната 2','Тест-комната 3']",
+            "rooms": "['Внутри']"
+        }
+    }]
+)
+
+var items = eval([
     {
-        id: 'coins',
-        name: 'Коины',
-        description: 'Золотые монеты, за них можно что-то купить!',
-        emoji: '🪙',
-    },
-    {
-        id: 'beer',
+      id: '1',
+      data: {
+        codename: 'beer',
         name: 'Пиво',
-        description: 'Бутылка пива, спешил фор Петри',
-        emoji: '🍺',
-    },
-    {
-        id: 'knife',
-        name: 'Кинжал',
-        description: 'Острый кинжал, которым можно победить Брофсса',
-        emoji: '🗡',
-    },
-]
+        description: 'Жидкое золото',
+        emoji: '🍻',
+        func: "(function(){console.log('test')})"
+      },
+      mid: '926858121861804062'
+    }
+])
+
+console.log(items)
 
 var invent = [
     {
         id: 0,
-        item: 'coins',
-        count: 20
-    },
-    {
-        id: 1,
-        item: 'beer',
+        codename: 'clown',
         count: 1
     },
     {
-        id: 2,
-        item: 'knife',
-        count: 123
+        id: 1,
+        codename: 'beer',
+        count: 1
     },
 ]
 
 function joinItems(inv){
     let returnItems = []
-    for (let item of inv){
-        let gItem = items.find(fItem => fItem.id == item.item)
-        returnItems.push({
-            label: `${gItem.name} (x${item.count})`,
-            description: gItem.description,
-            value: `${item.id}`,
-            emoji: {
-                id: null,
-                name: `${gItem.emoji}`
-            }
-        })
+    for (let lItem of inv){
+        let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
+        if(gItem != undefined){
+            returnItems.push({
+                label: `${gItem.data.name} (x${lItem.count})`,
+                description: gItem.data.description,
+                value: `${lItem.id}`,
+                emoji: {
+                    id: null,
+                    name: `${gItem.data.emoji}`
+                }
+            })
+        }
     }
     return returnItems
 }
 
 var lockpickCache = new Map()
+
+client.on('ready', () => {
+    
+})
 
 client.on('interactionCreate', async interaction => {
     var ping = client.ws.ping
@@ -236,7 +248,7 @@ client.on('interactionCreate', async interaction => {
                     content: '> Ваш инвентарь 💼',
                     components: [
                         {
-                            type: 'ACTION_ROW',
+                            type: 'ACTION_ROW', 
                             components: [
                                 {
                                     type: 'SELECT_MENU',
@@ -254,15 +266,17 @@ client.on('interactionCreate', async interaction => {
 
     if(interaction.isSelectMenu()){
         if(interaction.customId.split('_')[0] == 'invent' && interaction.customId.split('_')[2] == 'open'){
-            let item = items.find(fItem => fItem.id == invent[interaction.values[0]].item)
-            let emoji = getUnicode(item.emoji).split(' ').join('-')
+            let item = items.find(fItem => fItem.data.codename == invent.find(item => item.id == interaction.values[0]).codename)
+
+            console.log(item)
+            let emoji = getUnicode(item.data.emoji).split(' ').join('-')
 
             interaction.update({
                 content: '> Ваш инвентарь 💼',
                 embeds: [
                     {
-                        author: {name: item.name},
-                        description: item.description,
+                        author: {name: `${item.data.name}` },
+                        description: item.data.description,
                         thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji}.png`}
                     }
                 ],
@@ -307,6 +321,31 @@ client.on('interactionCreate', async interaction => {
                 interaction.deleteReply()
             })
         }
+        if(interaction.customId.split('_')[0] == 'invent' && interaction.customId.split('_')[2] == 'back'){
+            interaction.update({
+                content: '> Ваш инвентарь 💼',
+                embeds: [],
+                components: [
+                    {
+                        type: 'ACTION_ROW',
+                        components: [
+                            {
+                                type: 'SELECT_MENU',
+                                customId: `invent_${interaction.user.id}_open`,
+                                placeholder: 'Ваши предметы...',
+                                options: joinItems(invent)
+                            }
+                        ],
+                    }
+                ]
+            })
+        }
+        if(interaction.customId.split('_')[0] == 'invent' && interaction.customId.split('_')[2] == 'use'){
+            interaction.update({components: []}).then(() => {
+                interaction.deleteReply()
+            })
+        }
+
         if(interaction.customId.split('_')[0] == 'givemoney'){
             client.users.cache.find(user => user.id == interaction.customId.split('_')[2]).send(`> ${interaction.user.username} передал вам ${interaction.customId.split('_')[1]} коинов 💵`)
             interaction.update({content: `> Вы успешно передали сумму денег 💵`, components: []})
@@ -371,4 +410,4 @@ client.on('interactionCreate', async interaction => {
     }
 })
 
-client.login(Config.discordTocens.testBot);
+client.login(Config.discordTocens.testBot)
