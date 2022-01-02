@@ -4,7 +4,7 @@
 
 
 // Интеграции
-const { Client, Intents, Util } = require('discord.js');
+const { Client, Intents } = require('discord.js');
 
 const client = new Client({ intents: [
 "GUILDS",
@@ -21,7 +21,7 @@ const client = new Client({ intents: [
 "GUILD_MESSAGE_TYPING",
 "DIRECT_MESSAGES",
 "DIRECT_MESSAGE_REACTIONS",
-"DIRECT_MESSAGE_TYPING"
+"DIRECT_MESSAGE_TYPING",
 ]});
 
 const { REST } = require('@discordjs/rest');
@@ -269,7 +269,6 @@ async function SlashCom(type, name, data, cguildId, permissions){
     }else{return}
 } 
 
-
 //
 // БАЗА ДАННЫХ
 //
@@ -290,9 +289,14 @@ async function GStats(chl){
         var ents = []
 
         for (let [id, msg] of msgs){
-            let cMsg = eval(msg.content)
-            cMsg[0].mid = msg.id
-            ents = ents.concat(cMsg)
+            let ent = eval(`[${msg.content}]`)[0]
+            for (let dat in ent.data){
+                try{
+                    ent.data[dat] = eval(ent.data[dat])
+                }catch{}
+            }
+            ent.mid = msg.id
+            ents = ents.concat([ent])
         }
         return ents.reverse()
     }catch{
@@ -319,11 +323,16 @@ async function AStats(chl, structure, data){
         
         var returnData = {}
         for (let i = 0; i < structure.length; i++){
+            /* try{
+                returnData[structure[i]] = eval(data[i])
+            }catch(err){
+                returnData[structure[i]] = data[i]
+                console.log(err)
+            } */
             returnData[structure[i]] = data[i]
         }
         var ent = new BDentity(`${parseInt(id)+1}`, returnData)
-        console.log(ent)
-        ent = [ent]
+        ent = ent
         chl.send(JSON.stringify(ent, null, 4))
     }catch{
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, значения]**`).then(msg => {
@@ -343,13 +352,13 @@ async function EStats(chl, id, par, del, data){
         var entity = ents.find(entity => entity.id == id)
         var msg = await chl.messages.fetch(entity.mid)
 
-        var ent = eval(`${msg.content}`)
+        var ent = eval(`[${msg.content}]`)
         console.log(ent)
         if(!del){
             ent[0].data[par] = data[0]
         }else if(del){delete ent[0].data[par]}
         
-        msg.edit(JSON.stringify(ent, null, 4))
+        msg.edit(JSON.stringify(ent[0], null, 4))
     }catch{
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, id-ячейки, параметр, замену]**`).then(msg => {
             setTimeout(() => {msg.delete()}, 10000)
@@ -375,69 +384,6 @@ async function DStats(chl, id){
     }
 }
 
-async function minusMoney(member, money){
-    stats = await GetStats();
-    if (stats.length == 0){return};
-
-    let user = stats.find(stat => stat.user == `<@!${member.id}>`);
-    if(user == undefined){return}
-
-    if(parseInt(user.money) < parseInt(money)){return false}
-    EditStats(user.id,`money`,`${parseInt(user.money) - parseInt(money)}`);
-    return true;
-};
-
-async function plusMoney(member, money){
-    stats = await GetStats();
-    if (stats.length == 0){return};
-
-    let user = stats.find(stat => stat.user == `<@!${member.id}>`);
-    if(user == undefined){return false}
-
-    EditStats(user.id,`money`,`${parseInt(user.money) + parseInt(money)}`);
-    return true;
-};
-
-async function pay(message, userDate, money, functionSend){
-    stats = await GetStats();
-    if (stats.length == 0){return};
-
-    let moneyT = new Intl.NumberFormat("ru")
-
-    let user = stats.find(stat => stat.user == `<@!${message.author.id}>`);
-    let gUser = stats.find(stat => stat.user == `<@!${userDate}>`);
-    if(gUser == undefined){
-        functionSend(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
-        sendLog(message,'РП','Попробовал передать деньги.','Ошибка',`Вывод: Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
-        return;
-    };
-
-    console.log(user);
-    console.log(gUser)
-    
-    if (user.id == gUser.id){return};
-
-    let user_user = message.member;
-    let gUser_user = guild.members.cache.get(userDate);
-
-    if(gUser == undefined){
-        functionSend(`> Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
-        sendLog(message,'РП','Попробовал передать деньги.','Ошибка',`Вывод: Пользователь не найден, либо вы вводите его никнейм не правильно. Для корректной работы команды упомяните игрока, которому вы желаете переслать средства 🙅`);
-        return;
-    };
-    if(isNaN(parseInt(money))){ functionSend(`> Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: Деньги стоит записывать в цифрах, иначе ничего не удастся 🔢`); return};
-    if(parseInt(user.money) < parseInt(money)){ functionSend(`> У вас недостаточно средств.`); sendLog(message,'Общее','Попробовал передать деньги.','Ошибка',`Вывод: У вас недостаточно средств.`); return};
-
-    setTimeout(() => minusMoney(user_user, money), 500);
-    setTimeout(() => plusMoney(gUser_user, money), 1000);
-    
-    functionSend(`> Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`);
-    gUser_user.send(`> ${user_user.nickname} дал вам: ${moneyT.format(parseInt(money))}`);
-
-    sendLog(message,'РП','Передал деньги.','Успешно',`Вывод: Вы дали ${gUser_user.nickname}: ${moneyT.format(parseInt(money))}`)
-    return;
-};
-
 //
 // ХУКИ
 //
@@ -458,7 +404,7 @@ client.on('ready', () => {
         sendLog, createLore, createEx,
         createCom, SlashCom, BDentity,
         GStats, AStats, EStats,
-        DStats, roflBot}
+        DStats}
     require('./projects/pushpin.js')
     require('./projects/ages.js')
     require('./projects/bd.js')
