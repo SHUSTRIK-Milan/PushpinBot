@@ -150,8 +150,6 @@ var items = eval([
     }
 ])
 
-console.log(items)
-
 var invent = [
     {
         id: 0,
@@ -234,7 +232,15 @@ client.on('interactionCreate', async interaction => {
             interaction.deferReply()
             setTimeout(() => {
                 interaction.editReply({
-                    content: `> [0/${count}] Процесс взлома... 🔏`,
+                    /* content: `> [0/${count}] Процесс взлома... 🔏`,
+                    components: comps(pins, interaction.user.id) */
+                    content: `> Процесс взлома`,
+                    embeds: [
+                    {
+                        //author: {name: `[0/${count}]` },
+                        description: `Для успешного взлома вам следует успеть нажать на красный пин за опредленное время. При нажитии на синий, процесс будет завершен неудачей.\n\n**[0/${count}]**`,
+                        thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/1f50f.png`}
+                    }],
                     components: comps(pins, interaction.user.id)
                 })
                 lockpickCache.set(interaction.user.id.toString(), {steps: 0, count: count, pins: pins})
@@ -360,7 +366,8 @@ client.on('interactionCreate', async interaction => {
                         clearTimeout(data.timer)
                         interaction.update({
                             content: '> Взлом не удался! 🔴',
-                            components: []
+                            components: [],
+                            embeds: []
                         }).then(() => {
                             lockpickCache.delete(interaction.user.id)
                         })
@@ -372,14 +379,23 @@ client.on('interactionCreate', async interaction => {
 
                         if(data.steps < data.count){
                             interaction.update({
-                                content: `> [${data.steps}/${data.count}] Процесс взлома... 🔏`,
+                                /* content: `> [${data.steps}/${data.count}] Процесс взлома... 🔏`,
+                                components: comps(data.pins, interaction.user.id) */
+                                content: `> Процесс взлома`,
+                                embeds: [
+                                {
+                                    //author: {name: `[${data.steps}/${data.count}]`},
+                                    description: `Для успешного взлома вам следует успеть нажать на красный пин за опредленное время. При нажитии на синий, процесс будет завершен неудачей.\n\n**[${data.steps}/${data.count}]**`,
+                                    thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/1f50f.png`}
+                                }],
                                 components: comps(data.pins, interaction.user.id)
                             }).then(() => {
                                 data.timer = setTimeout(() => {
                                     lockpickCache.delete(interaction.user.id)
                                     interaction.editReply({
                                         content: '> Взлом не удался! Закончилось время 🕐',
-                                        components: []
+                                        components: [],
+                                        embeds: []
                                     })
                                     return
                                 }, (160*5)+ping)
@@ -387,7 +403,8 @@ client.on('interactionCreate', async interaction => {
                         }else{
                             interaction.update({
                                 content: '> Взлом удался! 🟢',
-                                components: []
+                                components: [],
+                                embeds: []
                             }).then(() => {
                                 lockpickCache.delete(interaction.user.id)
                             })
@@ -397,7 +414,8 @@ client.on('interactionCreate', async interaction => {
                 }else if(data == undefined && interaction.user.id == interaction.customId.split('_')[2]){
                     interaction.update({
                         content: '> Взлом не удался! Закончилось время 🕐',
-                        components: []
+                        components: [],
+                        embeds: []
                     })
                     return
                 }else if(interaction.user.id != interaction.customId.split('_')[2]){
