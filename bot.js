@@ -179,17 +179,18 @@ async function createCom(embd, message){
     };
 
     if(act == 'commit'){
-        let nTitle = embd.title.split(' ')[0].split(':')[1].slice();
-        let branch = nTitle.slice(0,nTitle.length-1);
-        let commits = await fork.listCommits({sha:branch});
+        let nTitle = embd.title.split(' ')[0].split(':')[1].slice()
+        let branch = nTitle.slice(0,nTitle.length-1)
+        let commits = await fork.listCommits({sha:branch})
         message.delete()
-        let countC = parseInt(embd.title.split(' ')[1]);
-        let lastcom = await commits.data[countC-1];
+        let countC = parseInt(embd.title.split(' ')[1])
+        let lastcom = await commits.data[countC-1]
+        console.log(lastcom)
 
         let nCommits = [];
         for (let i = countC-1; i > -1; i--) {
             lastcom = await commits.data[i]
-            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) — ${lastcom.commit.message}`);
+            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) | ${lastcom.commit.message}`)
         }
 
         let color = 11645371
