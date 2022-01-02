@@ -31,7 +31,6 @@ const Config = require('./config')
 
 // Системные переменные
 const prefix = '!'
-var waitingOutputRoflBot = false
 const timeOfDelete = 350
 
 // Глобальные переменные
@@ -322,13 +321,12 @@ async function AStats(chl, structure, data){
         
         var returnData = {}
         for (let i = 0; i < structure.length; i++){
-            /* try{
+            try{
                 returnData[structure[i]] = eval(data[i])
             }catch(err){
                 returnData[structure[i]] = data[i]
                 console.log(err)
-            } */
-            returnData[structure[i]] = data[i]
+            }
         }
         var ent = new BDentity(`${parseInt(id)+1}`, returnData)
         ent = ent
@@ -384,6 +382,31 @@ async function DStats(chl, id){
 }
 
 //
+// РП-ФУНКЦИИ
+//
+
+const RPF = {
+    createObjects: async function(path, guild){
+        let objects = await GStats(path)
+        for (let object of objects){
+            let cat = guild.channels.cache.find(cat => cat.type == 'GUILD_CATEGORY' && cat.name == object.data.name && object.data.cid != undefined)
+            if(cat == undefined){
+                cat = await guild.channels.create(object.data.name, {
+                    type: 'GUILD_CATEGORY'
+                })
+                for (let room of object.data.rooms){
+                    guild.channels.create(room, {
+                        type: 'GUILD_TEXT',
+                        parent: cat
+                    })
+                    EStats(path, object.id, "cid", false, [cat.id])
+                }
+            }else{console.log('уже есть')}
+        }
+    },
+}
+
+//
 // ХУКИ
 //
 
@@ -403,13 +426,13 @@ client.on('ready', () => {
         sendLog, createLore, createEx,
         createCom, SlashCom, BDentity,
         GStats, AStats, EStats,
-        DStats}
+        DStats, RPF}
     require('./projects/pushpin.js')
     require('./projects/ages.js')
     require('./projects/bd.js')
 
     function checkOnlineUsers(){
-        members = guild.members.cache
+        let members = guild.members.cache
         for (let [id, guild] of client.guilds.cache){
             members = guild.members.cache.concat(members)
         }
@@ -444,30 +467,6 @@ client.on('ready', () => {
     client.on('presenceUpdate', () => {
         checkOnlineUsers()
     });
-
-    // ОПОВЕЩЕНИЕ О СБОРАХ
-    /* setInterval(async () => {
-        var date = new Date()
-        if(date.getUTCDay() == 5 ||
-        date.getUTCDay() == 6 ||
-        date.getUTCDay() == 0){
-            let channel = guild.channels.cache.get(Config.channelsID.announcements)
-            let lastMessage = await channel.messages.fetch()
-
-            lastMessageBot = lastMessage.filter(msg => msg.author.bot)
-            if(lastMessageBot.size == 0){
-                lastMessage = lastMessage.first()
-            }else{
-                lastMessage = lastMessageBot.first()
-            }
-
-            let dateOfMessage = new Date(lastMessage.createdTimestamp)
-
-            if(date.getUTCHours()+3 == 17 && (dateOfMessage.getUTCFullYear() != date.getUTCFullYear() || dateOfMessage.getUTCMonth() != date.getUTCMonth() || dateOfMessage.getUTCDate() != date.getUTCDate())){
-                channel.send(`> <@&836269090996879387>, сбор, дамы и господа!\nВсем приятной и интересной игры! 📌`)
-            }
-        }
-    }, 60000) */
 });
 
 client.on('guildMemberAdd', (member) => {
