@@ -185,12 +185,12 @@ async function createCom(embd, message){
         message.delete()
         let countC = parseInt(embd.title.split(' ')[1])
         let lastcom = await commits.data[countC-1]
-        console.log(lastcom)
+        console.log(commits)
 
         let nCommits = [];
         for (let i = countC-1; i > -1; i--) {
             lastcom = await commits.data[i]
-            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) | ${lastcom.commit.message}`)
+            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) \`${}\` | ${lastcom.commit.message}\n<t:${Math.floor(new Date(lastcom.commit.author.date).getTime() / 1000)}>`)
         }
 
         let color = 11645371
