@@ -130,27 +130,27 @@ var objects = eval(
             "id": "1",
             "data": {
                 "name": "Тест-комната",
-                "open": "true",
-                "radius": "['2']",
-                "rooms": "['Внутри']"
+                "open": true,
+                "radius": ['2'],
+                "rooms": ['Внутри1']
             }
         },
         {
             "id": "2",
             "data": {
                 "name": "Тест-комната",
-                "open": "true",
-                "radius": "['1']",
-                "rooms": "['Внутри']"
+                "open": true,
+                "radius": ['1'],
+                "rooms": ['Внутри2']
             }
         },
         {
             "id": "3",
             "data": {
                 "name": "Тест-комната",
-                "open": "true",
-                "radius": "[]",
-                "rooms": "['Внутри']"
+                "open": true,
+                "radius": [],
+                "rooms": ['Внутри3']
             }
         },
     ]
@@ -205,7 +205,27 @@ function joinItems(inv){
 var lockpickCache = new Map()
 
 client.on('ready', () => {
-    client.channels.cache.find()
+    
+})
+
+client.on('messageCreate', () => {
+    for (let object of objects){
+        let cat = client.channels.cache.find(cat => cat.type == 'GUILD_CATEGORY' && cat.name == object.data.name && object.cid != undefined)
+        if(cat == undefined){
+            guild.channels.create(object.data.name, {
+                type: 'GUILD_CATEGORY'
+            }).then((cat) => {
+                for (let room of object.data.rooms){
+                    guild.channels.create(room, {
+                        type: 'GUILD_TEXT',
+                        parent: cat
+                    })
+                    object.cid = cat.id
+                }
+            })
+        }else{console.log('уже есть')}
+    }
+    setTimeout(() => {console.log(objects)}, 3000)
 })
 
 client.on('interactionCreate', async interaction => {
