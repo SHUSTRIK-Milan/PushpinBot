@@ -190,7 +190,7 @@ async function createCom(embd, message){
         let nCommits = [];
         for (let i = countC-1; i > -1; i--) {
             lastcom = await commits.data[i]
-            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) \`${}\` | ${lastcom.commit.message}\n<t:${Math.floor(new Date(lastcom.commit.author.date).getTime() / 1000)}>`)
+            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) <t:${Math.floor(new Date(lastcom.commit.author.date).getTime() / 1000)}:d> | ${lastcom.commit.message}`)
         }
 
         let color = 11645371
@@ -207,7 +207,6 @@ async function createCom(embd, message){
                     icon_url: lastcom.author.avatar_url
                 },
                 fields: [],
-                timestamp: new Date()
             }]
         })
     }else if(act == 'merge'){
@@ -225,7 +224,6 @@ async function createCom(embd, message){
                     icon_url: lastReq.user.avatar_url
                 },
                 fields: [],
-                timestamp: new Date()
             }]
         })
     }
