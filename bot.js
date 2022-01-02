@@ -185,7 +185,7 @@ async function createCom(embd, message){
         message.delete()
         let countC = parseInt(embd.title.split(' ')[1])
         let lastcom = await commits.data[countC-1]
-        console.log(lastcom)
+        console.log(commits)
 
         let nCommits = [];
         for (let i = countC-1; i > -1; i--) {
