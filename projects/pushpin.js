@@ -19,8 +19,6 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
     let mg = message.channel.type == "DM";
     let comand = cmdParametrs(message.content)
 
-    console.log(`${message.author.username} написал сообщение в ${guild.name}`)
-    
     if(!mb && !mg) sendLog(message.member, message.channel, 'other', 'Отправил сообщение', '0', message.content)
 
     if(message.channel.id == Config.channelsID.dev_process && message.author.id != '822500483826450454' && !mg && mb){

@@ -11,30 +11,180 @@ const {
 
 console.log(`[bot-bd ready]`)
 
+async function awaitPutInBD(structure, channel, authorId){
+    try{
+        let filter = m => m.author.id == authorId
+        let returnData = []
+
+        let collection = await channel.awaitMessages({filter, max: structure.length, time: 120000, errors: ['time']})
+        setTimeout(() => {
+            for(let [id, msg] of collection){
+                msg.delete()
+            }
+        }, 10000)
+
+        let values = collection.toJSON()
+        for(let i = 0; i < values.length; i++){
+            if(values[i].content == '_null'){
+                returnData[i] == undefined
+            }else{returnData[i] = values[i].content}
+        }
+        return returnData
+    }catch{
+        //channel.send('> Вышло время записи данных! ⏰')
+        return undefined
+    }
+}
+
+SlashCom('wait', 'add', {
+    name: 'add',
+    description: 'Добавить значение в базу данных',
+    type: 'CHAT_INPUT',
+    options: [
+        {
+            type: 'CHANNEL',
+            name: 'path',
+            description: 'Путь к файлу записи',
+            required: true,
+        }
+    ],
+    defaultPermission: false
+}, guildBD.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
+
+SlashCom('wait', 'get', {
+    name: 'get',
+    description: 'Получить данные в консоль',
+    type: 'CHAT_INPUT',
+    options: [
+        {
+            type: 'CHANNEL',
+            name: 'path',
+            description: 'Путь к файлу записи',
+            required: true,
+        }
+    ],
+    defaultPermission: false
+}, guildBD.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
+
+SlashCom('wait', 'edit', {
+    name: 'edit',
+    description: 'Изменить ячейку базы данных',
+    type: 'CHAT_INPUT',
+    options: [
+        {
+            type: 'CHANNEL',
+            name: 'path',
+            description: 'Путь к файлу записи',
+            required: true,
+        },
+        {
+            type: 'NUMBER',
+            name: 'id',
+            description: 'ID ячейки базы данных',
+            required: true,
+        },
+        {
+            type: 'STRING',
+            name: 'par',
+            description: 'Параметр, который требуется изменить',
+            required: true,
+        },
+        {
+            type: 'BOOLEAN',
+            name: 'del',
+            description: 'Нужно ли удалить параметр?',
+            required: true,
+        },
+    ],
+    defaultPermission: false
+}, guildBD.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
+
+SlashCom('wait', 'del', {
+    name: 'del',
+    description: 'Удалить значение ячейки базы данных',
+    type: 'CHAT_INPUT',
+    options: [
+        {
+            type: 'CHANNEL',
+            name: 'path',
+            description: 'Путь к файлу записи',
+            required: true,
+        },
+        {
+            type: 'NUMBER',
+            name: 'id',
+            description: 'ID ячейки базы данных',
+            required: true,
+        },
+    ],
+    defaultPermission: false
+}, guildBD.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
+
 client.on('messageCreate', message => { if(message.guild.id == guildBD.id){
     var cA = haveRole(message.member, "[A]"),
         cB = haveRole(message.member, "[B]"),
         cC = haveRole(message.member, "[C]")
-    let mb = message.author.bot;
-    let mg = message.channel.type == "DM";
+    let mb = message.author.bot
+    let mg = message.channel.type == "DM"
     let comand = cmdParametrs(message.content)
-
-    console.log(`${message.author.username} написал сообщение в ${guildBD.name}`)
-    
-    if(!mb && !mg && comand.com == "Add" && cA){
-        AStats(comand.oarg[0], comand.barg)
-        setTimeout(() => {message.delete()}, 15000)
-    }
-    if(!mb && !mg && comand.com == "Get" && cA){
-        GStats(comand.oarg[0]).then(console.log)
-        setTimeout(() => {message.delete()}, 15000)
-    }
-    if(!mb && !mg && comand.com == "Edit" && cA){
-        EStats(comand.oarg[0], comand.oarg[1], comand.oarg[2], comand.barg[0], comand.oarg[3])
-        setTimeout(() => {message.delete()}, 15000)
-    }
-    if(!mb && !mg && comand.com == "Del" && cA){
-        DStats(comand.oarg[0], comand.oarg[1])
-        setTimeout(() => {message.delete()}, 15000)
-    }
 }})
+
+client.on('interactionCreate', async interaction => {
+    if(interaction.isCommand()){
+        if(interaction.commandName == 'add'){
+            let channel = interaction.options.get('path').channel
+            if(channel.parent != undefined){
+                let structure = Config.BDs[`${channel.parent.name}_${channel.name}`]
+                interaction.reply(`> Вводите данные: [${structure.join(', ')}]`)
+                awaitPutInBD(structure, interaction.channel, interaction.user.id).then((data) => {
+                    if(data != undefined){
+                        AStats(channel, structure, data)
+                        interaction.editReply('> Данные добавлены!')
+                    }else{
+                        interaction.editReply('> Вышло время записи данных!')
+                    }
+                })
+            }else{
+                interaction.reply(`> Указывать можно лишь каналы, но не категории!`)
+            }
+        }
+        if(interaction.commandName == 'get'){
+            let channel = interaction.options.get('path').channel
+            if(channel.parent != undefined){
+                interaction.reply(`> Данные получены!`)
+                GStats(channel).then(console.log)
+            }else{
+                interaction.reply(`> Указывать можно лишь каналы, но не категории!`)
+            }
+        }
+        if(interaction.commandName == 'edit'){
+            let channel = interaction.options.get('path').channel
+            let id = interaction.options.get('id').value
+            let par = interaction.options.get('par').value
+            let del = interaction.options.get('del').value
+            if(channel.parent != undefined){
+                interaction.reply(`> Введите значение`)
+                awaitPutInBD(['entity'], interaction.channel, interaction.user.id).then((data) => {
+                    if(data != undefined){
+                        EStats(channel, id, par, del, data)
+                        interaction.editReply('> Данные изменены!')
+                    }else{
+                        interaction.editReply('> Вышло время изменения данных!')
+                    }
+                })
+            }else{
+                interaction.reply(`> Указывать можно лишь каналы, но не категории!`)
+            }
+        }
+        if(interaction.commandName == 'del'){
+            let channel = interaction.options.get('path').channel
+            let id = interaction.options.get('id').value
+            if(channel.parent != undefined){
+                interaction.reply(`> Данные удалены!`)
+                DStats(channel, id)
+            }else{
+                interaction.reply(`> Указывать можно лишь каналы, но не категории!`)
+            }
+        }
+    }
+})
