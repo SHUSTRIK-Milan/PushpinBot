@@ -33,7 +33,7 @@ module.exports.channelsID = {
     other: `905859556624703548`,
     admin: `905861294303871007`,
     rp: `905861380282925076`,
-};
+}
 
 module.exports.logChannels = {
     main: `837393382229409823`,
@@ -41,24 +41,27 @@ module.exports.logChannels = {
     qa: `837393416202878989`,
     offers: `837393458435063886`,
     voiceMain: `837397109463711744`
-};
+}
 
 module.exports.guilds = {
     main: `814795850885627964`,
     ages: `905150931274965052`,
     BD: `919494529072111637`,
-};
+}
 
 module.exports.BDs = {
-    pushpin_main: ['user', 'money', 'pos'],
-    pushpin_rofl: ['user', 'quest', 'reply', 'imgs'],
-    ages_items: []
-};
+    pushpin_main: ['user'],
+
+    ages_main: [],
+    ages_objects: ['name', 'open', 'radius', 'rooms', 'cid'],
+    ages_players: ['user', 'name', 'race', 'desc', 'inv', 'pos'],
+    ages_items: ['codename', 'name', 'description', 'emoji', 'convar'],
+}
 
 module.exports.discordTocens = {
     main: `ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.JS95C2U2Wgwzuq9kgZZQh2hQXks`,
 	testBot: `ODQwMjMwNTMxNjYwNTEzMjgw.YJVLqQ.Lr7HGn01gH50OUcHrHr4Rl-BpSM`
-};
+}
 
 module.exports.globalObjects = [
 	{
