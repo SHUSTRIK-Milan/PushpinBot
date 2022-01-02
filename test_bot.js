@@ -124,16 +124,36 @@ function comps(count, user){
     return comps
 }
 
-var object = eval(
-    [{
-        "id": "1",
-        "data": {
-            "name": "Тест-комната",
-            "open": "true",
-            "radius": "['Тест-комната 2','Тест-комната 3']",
-            "rooms": "['Внутри']"
-        }
-    }]
+var objects = eval(
+    [
+        {
+            "id": "1",
+            "data": {
+                "name": "Тест-комната",
+                "open": "true",
+                "radius": "['2']",
+                "rooms": "['Внутри']"
+            }
+        },
+        {
+            "id": "2",
+            "data": {
+                "name": "Тест-комната",
+                "open": "true",
+                "radius": "['1']",
+                "rooms": "['Внутри']"
+            }
+        },
+        {
+            "id": "3",
+            "data": {
+                "name": "Тест-комната",
+                "open": "true",
+                "radius": "[]",
+                "rooms": "['Внутри']"
+            }
+        },
+    ]
 )
 
 var items = eval([
@@ -185,7 +205,7 @@ function joinItems(inv){
 var lockpickCache = new Map()
 
 client.on('ready', () => {
-    
+    client.channels.cache.find()
 })
 
 client.on('interactionCreate', async interaction => {
