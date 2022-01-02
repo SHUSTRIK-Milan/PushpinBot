@@ -190,7 +190,7 @@ async function createCom(embd, message){
         let nCommits = [];
         for (let i = countC-1; i > -1; i--) {
             lastcom = await commits.data[i]
-            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) <t:${Math.floor(new Date(lastcom.commit.author.date).getTime() / 1000)}:d> | ${lastcom.commit.message}`)
+            nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) <t:${Math.floor(new Date(lastcom.commit.author.date).getTime() / 1000)}:d>\n${lastcom.commit.message}\n`)
         }
 
         let color = 11645371
