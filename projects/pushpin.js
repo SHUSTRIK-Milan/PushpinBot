@@ -1,13 +1,15 @@
 const {
     client, REST, Routes,
     Config, prefix, timeOfDelete,
-    guild, guildAges, guildBD, 
+    guildBase, guildAges, guildBD, 
     rpGuilds, cmdParametrs, random,
     haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
     createCom, SlashCom, BDentity,
     GStats, AStats, EStats,
     DStats} = require('../bot.js')
+
+const guild = guildBase
 
 console.log(`[bot-pushpin ready]`)
 
@@ -17,7 +19,7 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
         cC = haveRole(message.member, "[C]")
     let mb = message.author.bot;
     let mg = message.channel.type == "DM";
-    let comand = cmdParametrs(message.content)
+    let command = cmdParametrs(message.content)
 
     if(!mb && !mg) sendLog(message.member, message.channel, 'other', 'Отправил сообщение', '0', message.content)
 
@@ -28,7 +30,7 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
         roflBot(message.content, message)
     }
 
-    if(comand.com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
+    if(command.com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
         let channel
         let specialChannel = [
@@ -59,7 +61,7 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
         }catch(error){console.log(error)}
     }
 
-    if(comand.com == `refreshIDobj` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
+    if(command.com == `refreshIDobj` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
         let channelsRefr = []
         for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
@@ -73,7 +75,7 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
         }catch(error){console.log(error)}
     }
 
-    if(comand.com == `commands` && head && !mb && !mg){
+    if(command.com == `commands` && head && !mb && !mg){
         setTimeout(() => message.delete(), timeOfDelete);
         client.interaction.getApplicationCommands(config.guild_id).then(console.log);
     }

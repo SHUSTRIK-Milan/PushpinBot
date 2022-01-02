@@ -1,13 +1,15 @@
 const {
     client, REST, Routes,
     Config, prefix, timeOfDelete,
-    guild, guildAges, guildBD, 
+    guildBase, guildAges, guildBD, 
     rpGuilds, cmdParametrs, random,
     haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
     createCom, SlashCom, BDentity,
     GStats, AStats, EStats,
     DStats} = require('../bot.js')
+
+const guild = guildBD
 
 console.log(`[bot-bd ready]`)
 
@@ -30,13 +32,10 @@ async function awaitPutInBD(structure, channel, authorId){
             }else{returnData[i] = values[i].content}
         }
         return returnData
-    }catch{
-        //channel.send('> Вышло время записи данных! ⏰')
-        return undefined
-    }
+    }catch{}
 }
 
-SlashCom('wait', 'add', {
+SlashCom('edit', 'add', {
     name: 'add',
     description: 'Добавить значение в базу данных',
     type: 'CHAT_INPUT',
@@ -49,7 +48,7 @@ SlashCom('wait', 'add', {
         }
     ],
     defaultPermission: false
-}, guildBD.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
+}, guild.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
 
 SlashCom('wait', 'get', {
     name: 'get',
@@ -64,7 +63,7 @@ SlashCom('wait', 'get', {
         }
     ],
     defaultPermission: false
-}, guildBD.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
+}, guild.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
 
 SlashCom('wait', 'edit', {
     name: 'edit',
@@ -97,7 +96,7 @@ SlashCom('wait', 'edit', {
         },
     ],
     defaultPermission: false
-}, guildBD.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
+}, guild.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
 
 SlashCom('wait', 'del', {
     name: 'del',
@@ -118,21 +117,22 @@ SlashCom('wait', 'del', {
         },
     ],
     defaultPermission: false
-}, guildBD.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
+}, guild.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
 
-client.on('messageCreate', message => { if(message.guild.id == guildBD.id){
+client.on('messageCreate', message => { if(message.guild.id == guild.id){
     var cA = haveRole(message.member, "[A]"),
         cB = haveRole(message.member, "[B]"),
         cC = haveRole(message.member, "[C]")
     let mb = message.author.bot
     let mg = message.channel.type == "DM"
-    let comand = cmdParametrs(message.content)
+    let command = cmdParametrs(message.content)
 }})
 
 client.on('interactionCreate', async interaction => {
     if(interaction.isCommand()){
         if(interaction.commandName == 'add'){
             let channel = interaction.options.get('path').channel
+            let data = interaction.options.get('data').value
             if(channel.parent != undefined){
                 let structure = Config.BDs[`${channel.parent.name}_${channel.name}`]
                 interaction.reply(`> Вводите данные: [${structure.join(', ')}]`)
@@ -144,6 +144,10 @@ client.on('interactionCreate', async interaction => {
                         interaction.editReply('> Вышло время записи данных!')
                     }
                 })
+                /* if(data != undefined){
+                    AStats(channel, structure, eval(data))
+                    interaction.reply('> Данные добавлены!')
+                } */
             }else{
                 interaction.reply(`> Указывать можно лишь каналы, но не категории!`)
             }
