@@ -36,6 +36,7 @@ const timeOfDelete = 350
 
 // Глобальные переменные
 var guild
+
 var guildAges
 var guildBD
 var rpGuilds = [Config.guilds.ages]
@@ -185,7 +186,6 @@ async function createCom(embd, message){
         message.delete()
         let countC = parseInt(embd.title.split(' ')[1])
         let lastcom = await commits.data[countC-1]
-        console.log(commits)
 
         let nCommits = [];
         for (let i = countC-1; i > -1; i--) {
@@ -397,7 +397,7 @@ client.on('ready', () => {
     module.exports = {
         client, REST, Routes,
         Config, prefix, timeOfDelete,
-        guild, guildAges, guildBD, 
+        guildBase:guild, guildAges, guildBD, 
         rpGuilds, cmdParametrs, random,
         haveRole, giveRole, removeRole,
         sendLog, createLore, createEx,
@@ -495,39 +495,39 @@ client.on('messageCreate', message => {
         cC = haveRole(message.member, "[C]")
     let mb = message.author.bot;
     let mg = message.channel.type == "DM";
-    let comand = cmdParametrs(message.content)
+    let command = cmdParametrs(message.content)
 
     if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(comand.com == `send` && !mb && !mg && cA){		
-        message.channel.send(`${comand.arg}`)
+    if(command.com == `send` && !mb && !mg && cA){		
+        message.channel.send(`${command.arg}`)
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(comand.com == `clear` && !mb && !mg && (cA || cB)){
-        let arg = parseInt(comand.sarg[0])
+    if(command.com == `clear` && !mb && !mg && (cA || cB)){
+        let arg = parseInt(command.sarg[0])
         if (arg > 0 && arg < 100){
             message.channel.bulkDelete(arg, true)
         }
     }
-    if(comand.com == `edit` && !mg && cA){
-        message.channel.guild.channels.cache.find(id => id == `${comand.sarg[0]}`).messages.fetch(`${comand.sarg[1]}`)
+    if(command.com == `edit` && !mg && cA){
+        message.channel.guild.channels.cache.find(id => id == `${command.sarg[0]}`).messages.fetch(`${command.sarg[1]}`)
         .then(msg =>{
             if(!msg.author.bot) return
             msg.edit(cmdParametrs(message,2).carg)
         })
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(comand.com == `checkm` && !mb && !mg && cA){
-        console.log(comand)
+    if(command.com == `checkm` && !mb && !mg && cA){
+        console.log(command)
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(comand.com == `cex` && !mb && !mg && cA){
-        createEx(comand.oarg[0],comand.oarg[1],comand.oarg[2],comand.oarg[3],message)
+    if(command.com == `cex` && !mb && !mg && cA){
+        createEx(command.oarg[0],command.oarg[1],command.oarg[2],command.oarg[3],message)
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(comand.com == `clore` && !mb && !mg && cA){
-        createLore(comand.oarg[0],comand.oarg[1],comand.oarg[2],message)
+    if(command.com == `clore` && !mb && !mg && cA){
+        createLore(command.oarg[0],command.oarg[1],command.oarg[2],message)
         setTimeout(() => message.delete(), timeOfDelete)
     }
 })
