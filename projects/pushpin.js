@@ -18,17 +18,17 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
         cB = haveRole(message.member, "[B]"),
         cC = haveRole(message.member, "[C]")
     let mb = message.author.bot;
-    let mg = message.channel.type == "DM";
+    let dm = message.channel.type == "DM";
     let command = cmdParametrs(message.content)
 
-    if(!mb && !mg) sendLog(message.member, message.channel, 'other', 'Отправил сообщение', '0', message.content)
+    if(!mb && !dm) sendLog(message.member, message.channel, 'other', 'Отправил сообщение', '0', message.content)
 
-    if(message.channel.id == Config.channelsID.dev_process && message.webhookId != '822500483826450454' && !mg && mb){
+    if(message.channel.id == Config.channelsID.dev_process && message.webhookId == '822500483826450454' && !dm && mb){
         createCom(message.embeds[0],message)
         setTimeout(() =>{message.delete()}, timeOfDelete)
     }
 
-    if(command.com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
+    if(command.com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !dm){
         setTimeout(() => message.delete(), timeOfDelete);
         let channel
         let specialChannel = [
@@ -59,7 +59,7 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
         }catch(error){console.log(error)}
     }
 
-    if(command.com == `refreshIDobj` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
+    if(command.com == `refreshIDobj` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !dm){
         setTimeout(() => message.delete(), timeOfDelete);
         let channelsRefr = []
         for(let channel of guild.channels.cache) if(channel[1].parentID != undefined) channelsRefr.push(channel[1])
@@ -73,7 +73,7 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
         }catch(error){console.log(error)}
     }
 
-    if(command.com == `commands` && head && !mb && !mg){
+    if(command.com == `commands` && head && !mb && !dm){
         setTimeout(() => message.delete(), timeOfDelete);
         client.interaction.getApplicationCommands(config.guild_id).then(console.log);
     }

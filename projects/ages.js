@@ -44,14 +44,14 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
         cB = haveRole(message.member, "[B]"),
         cC = haveRole(message.member, "[C]")
     let mb = message.author.bot;
-    let mg = message.channel.type == "DM";
+    let dm = message.channel.type == "DM";
     let command = cmdParametrs(message.content)
 
     if(!mb && message.content == '!test'){
         RPF.createObjects("ages/objects", guild)
     }
 
-    if(!mb && !mg) sendLog(message.member, message.channel, 'rp', 'Отправил сообщение', '0', message.content)
+    if(!mb && !dm) sendLog(message.member, message.channel, 'rp', 'Отправил сообщение', '0', message.content)
 }})
 
 client.on('interactionCreate', async interaction => {
