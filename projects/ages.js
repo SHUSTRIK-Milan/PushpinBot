@@ -136,32 +136,7 @@ client.on('interactionCreate', async interaction => {
                 components: [
                     {
                         type: 'ACTION_ROW',
-                        components: [
-                            {
-                                type: 'BUTTON',
-                                label: 'Использовать',
-                                customId: `invent_${interaction.customId.split('_')[1]}_use`,
-                                style: 'PRIMARY'
-                            },
-                            {
-                                type: 'BUTTON',
-                                label: 'Передать',
-                                customId: `invent_${interaction.customId.split('_')[1]}_trade`,
-                                style: 'SUCCESS'
-                            },
-                            {
-                                type: 'BUTTON',
-                                label: 'Вернуться',
-                                customId: `invent_${interaction.customId.split('_')[1]}_back`,
-                                style: 'SECONDARY'
-                            },
-                            {
-                                type: 'BUTTON',
-                                label: 'Закрыть',
-                                customId: `invent_${interaction.customId.split('_')[1]}_close`,
-                                style: 'DANGER'
-                            }
-                        ]
+                        components: itemComponents
                     }
                 ]
             })

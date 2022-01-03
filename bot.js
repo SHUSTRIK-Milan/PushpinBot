@@ -337,7 +337,6 @@ async function AStats(chl, structure, data){
         }else{
             id = ents[ents.length-1].id
         }
-        console.log(id)
         
         var returnData = {}
         for (let i = 0; i < structure.length; i++){
@@ -347,7 +346,7 @@ async function AStats(chl, structure, data){
                 returnData[structure[i]] = data[i]
             }
         }
-        var ent = new BDentity(id, returnData)
+        var ent = new BDentity(id+1, returnData)
         ent = ent
         chl.send(JSON.stringify(ent, null, 4))
     }catch(err){
