@@ -25,9 +25,7 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
 
     if(message.channel.id == Config.channelsID.dev_process && message.author.id != '822500483826450454' && !mg && mb){
         createCom(message.embeds[0],message)
-    }
-    if(message.channel.id == Config.channelsID.bot && !mb && !mg){
-        roflBot(message.content, message)
+        setTimeout(() =>{message.delete()}, timeOfDelete)
     }
 
     if(command.com == `refreshFA` && (haveRole(message.member, `833778527609552918`) || head || rpCreator) && !mb && !mg){
