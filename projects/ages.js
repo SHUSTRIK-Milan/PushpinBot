@@ -137,11 +137,13 @@ client.on('interactionCreate', async interaction => {
                     }
                 ]
             }).then(() => {
-                if(interaction.message.embeds[0].thumbnail.height == 0){
-                    interaction.editReply({
-                        embeds: [interaction.message.embeds[0].setThumbnail(`https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji.split('-')[0]}.png`)]
-                    })
-                }
+                try{
+                    if(interaction.message.embeds[0].thumbnail.height == 0){
+                        interaction.editReply({
+                            embeds: [interaction.message.embeds[0].setThumbnail(`https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji.split('-')[0]}.png`)]
+                        })
+                    }
+                }catch{}
             })
         }
     }
@@ -177,9 +179,7 @@ client.on('interactionCreate', async interaction => {
             }else{interaction.update({content: "> Ваш инвентарь пуст ⛔", embeds: [], components: []})}
         }
         if(interaction.customId.split('_')[0] == 'invent' && interaction.customId.split('_')[2] == 'use'){
-            interaction.update({components: []}).then(() => {
-                interaction.deleteReply()
-            })
+            if()
         }
     }
 })
