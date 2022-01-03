@@ -23,7 +23,7 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
 
     if(!mb && !mg) sendLog(message.member, message.channel, 'other', 'Отправил сообщение', '0', message.content)
 
-    if(message.channel.id == Config.channelsID.dev_process && message.author.id != '822500483826450454' && !mg && mb){
+    if(message.channel.id == Config.channelsID.dev_process && message.webhookId != '822500483826450454' && !mg && mb){
         createCom(message.embeds[0],message)
         setTimeout(() =>{message.delete()}, timeOfDelete)
     }
