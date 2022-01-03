@@ -521,23 +521,23 @@ client.on('messageCreate', message => {
         cB = haveRole(message.member, "[B]"),
         cC = haveRole(message.member, "[C]")
     let mb = message.author.bot;
-    let mg = message.channel.type == "DM";
+    let dm = message.channel.type == "DM";
     let command = cmdParametrs(message.content)
 
     if(message.content == '⠀' && message.author.bot){
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(command.com == `send` && !mb && !mg && cA){		
+    if(command.com == `send` && !mb && !dm && cA){		
         message.channel.send(`${command.arg}`)
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(command.com == `clear` && !mb && !mg && (cA || cB)){
+    if(command.com == `clear` && !mb && !dm && (cA || cB)){
         let arg = parseInt(command.sarg[0])
         if (arg > 0 && arg < 100){
             message.channel.bulkDelete(arg, true)
         }
     }
-    if(command.com == `edit` && !mg && cA){
+    if(command.com == `edit` && !dm && cA){
         message.channel.guild.channels.cache.find(id => id == `${command.sarg[0]}`).messages.fetch(`${command.sarg[1]}`)
         .then(msg =>{
             if(!msg.author.bot) return
@@ -545,15 +545,15 @@ client.on('messageCreate', message => {
         })
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(command.com == `checkm` && !mb && !mg && cA){
+    if(command.com == `checkm` && !mb && !dm && cA){
         console.log(command)
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(command.com == `cex` && !mb && !mg && cA){
+    if(command.com == `cex` && !mb && !dm && cA){
         createEx(command.oarg[0],command.oarg[1],command.oarg[2],command.oarg[3],message)
         setTimeout(() => message.delete(), timeOfDelete)
     }
-    if(command.com == `clore` && !mb && !mg && cA){
+    if(command.com == `clore` && !mb && !dm && cA){
         createLore(command.oarg[0],command.oarg[1],command.oarg[2],message)
         setTimeout(() => message.delete(), timeOfDelete)
     }
