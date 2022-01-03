@@ -345,7 +345,6 @@ async function AStats(chl, structure, data){
                 returnData[structure[i]] = eval(data[i])
             }catch{
                 returnData[structure[i]] = data[i]
-                console.log(err)
             }
         }
         var ent = new BDentity(id, returnData)
