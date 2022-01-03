@@ -102,7 +102,8 @@ client.on('interactionCreate', async interaction => {
                     {
                         author: {name: `${item.data.name}` },
                         description: item.data.description,
-                        thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji}.png`}
+                        thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji}.png`},
+                        color: Config.itemTypes[item.type].color
                     }
                 ],
                 components: [
