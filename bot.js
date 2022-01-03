@@ -294,7 +294,7 @@ function BDentity(id, data) {
     this.data = data
 }
 
-async function GStats(chl){
+async function GStats(chl, id){
     try{
         if(chl.id == undefined){
             let path = chl.split('/')
@@ -308,13 +308,17 @@ async function GStats(chl){
             let ent = eval(`[${msg.content}]`)[0]
             for (let dat in ent.data){
                 try{
-                    ent.data[dat] = eval(ent.data[dat])
+                    ent.data[dat] = JSON.parse(ent.data[dat])
                 }catch{}
             }
             ent.mid = `${msg.id}`
             ents = ents.concat([ent])
         }
-        return ents.reverse()
+        if(id != undefined){
+            return ents.reverse().find(ent => ent.id == id)
+        }else{
+            return ents.reverse()
+        }
     }catch{
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь]**`).then(msg => {
             setTimeout(() => {msg.delete()}, 10000)
@@ -341,11 +345,21 @@ async function AStats(chl, structure, data){
         
         var returnData = {}
         for (let i = 0; i < structure.length; i++){
-            returnData[structure[i]] = data[i]
+           /*  try{
+                returnData[structure[i]] = eval(data[i])
+                console.log(`Old: ${data[i]}\nNew: ${eval(data[i])}`)
+            }catch{
+                returnData[structure[i]] = data[i]
+            } */
+            if(typeof(data[i]) != 'string'){
+                returnData[structure[i]] = JSON.stringify(data[i])
+            }else{
+                returnData[structure[i]] = data[i]
+            }
         }
         var ent = new BDentity(id+1, returnData)
-        ent = ent
-        chl.send(JSON.stringify(ent, null, 4))
+
+        chl.send(JSON.stringify(ent, null, 2))
     }catch(err){
         console.log(err)
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, значения]**`).then(msg => {

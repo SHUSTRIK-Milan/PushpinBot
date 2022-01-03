@@ -88,6 +88,7 @@ client.on('interactionCreate', async interaction => {
     }
 
     if(interaction.isSelectMenu()){
+        console.log(interaction.isButton())
         if(interaction.customId.split('_')[0] == 'invent' && interaction.customId.split('_')[2] == 'open'){
             let item = items.find(fItem => fItem.data.codename == player.data.inv.find(item => item.id == interaction.values[0]).codename)
 
@@ -96,13 +97,19 @@ client.on('interactionCreate', async interaction => {
                 {
                     type: 'BUTTON',
                     label: 'Использовать',
-                    customId: `invent_${interaction.customId.split('_')[1]}_use`,
+                    customId: `invent_${interaction.customId.split('_')[1]}_use_${interaction.values[0]}`,
                     style: 'PRIMARY'
                 },
                 {
                     type: 'BUTTON',
+                    label: 'Выбросить',
+                    customId: `invent_${interaction.customId.split('_')[1]}_drop_${interaction.values[0]}`,
+                    style: 'DANGER'
+                },
+                {
+                    type: 'BUTTON',
                     label: 'Передать',
-                    customId: `invent_${interaction.customId.split('_')[1]}_trade`,
+                    customId: `invent_${interaction.customId.split('_')[1]}_trade_${interaction.values[0]}`,
                     style: 'SUCCESS'
                 },
                 {
@@ -179,7 +186,12 @@ client.on('interactionCreate', async interaction => {
             }else{interaction.update({content: "> Ваш инвентарь пуст ⛔", embeds: [], components: []})}
         }
         if(interaction.customId.split('_')[0] == 'invent' && interaction.customId.split('_')[2] == 'use'){
-            if()
+            let item = items.find(fItem => fItem.data.codename == player.data.inv.find(item => item.id == interaction.customId.split('_')[3]).codename)
+            if(item.data.type == 'key'){
+                let objects = await GStats("ages/objects")
+                let cat = objects.find(object => object.cid == interaction.channelId)
+                console.log(cat.name)
+            }
         }
     }
 })

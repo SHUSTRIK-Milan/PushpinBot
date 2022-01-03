@@ -13,6 +13,8 @@ const guild = guildBD
 
 console.log(`[bot-bd ready]`)
 
+AStats('pushpin/main', undefined, [{name: 1}])
+
 async function awaitPutInBD(structure, channel, authorId){
     try{
         let filter = m => m.author.id == authorId
@@ -35,7 +37,7 @@ async function awaitPutInBD(structure, channel, authorId){
     }catch{}
 }
 
-SlashCom('edit', 'add', {
+SlashCom('wait', 'add', {
     name: 'add',
     description: 'Добавить значение в базу данных',
     type: 'CHAT_INPUT',
@@ -60,7 +62,13 @@ SlashCom('wait', 'get', {
             name: 'path',
             description: 'Путь к файлу записи',
             required: true,
-        }
+        },
+        {
+            type: 'NUMBER',
+            name: 'id',
+            description: 'ID ячейки данных',
+            required: false,
+        },
     ],
     defaultPermission: false
 }, guild.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
@@ -153,9 +161,11 @@ client.on('interactionCreate', async interaction => {
         }
         if(interaction.commandName == 'get'){
             let channel = interaction.options.get('path').channel
+            let id = interaction.options.get('id')
+            
             if(channel.parent != undefined){
                 interaction.reply(`> Данные получены!`)
-                GStats(channel).then(console.log)
+                GStats(channel, id.value).then(console.log)
             }else{
                 interaction.reply(`> Указывать можно лишь каналы, но не категории!`)
             }
