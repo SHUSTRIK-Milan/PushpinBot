@@ -132,7 +132,6 @@ client.on('interactionCreate', async interaction => {
     if(interaction.isCommand()){
         if(interaction.commandName == 'add'){
             let channel = interaction.options.get('path').channel
-            let data = interaction.options.get('data').value
             if(channel.parent != undefined){
                 let structure = Config.BDs[`${channel.parent.name}_${channel.name}`]
                 interaction.reply(`> Вводите данные: [${structure.join(', ')}]`)

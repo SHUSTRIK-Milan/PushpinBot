@@ -293,7 +293,7 @@ async function GStats(chl){
                     ent.data[dat] = eval(ent.data[dat])
                 }catch{}
             }
-            ent.mid = msg.id
+            ent.mid = `${msg.id}`
             ents = ents.concat([ent])
         }
         return ents.reverse()
@@ -315,23 +315,27 @@ async function AStats(chl, structure, data){
         var msgs = await chl.messages.fetch()
         var ents = await GStats(chl)
         var id
-        if (ents.length == 0){id = msgs.size}else{
+        if (ents.length == 0){
+            id = msgs.size
+        }else{
             id = ents[ents.length-1].id
         }
+        console.log(id)
         
         var returnData = {}
         for (let i = 0; i < structure.length; i++){
             try{
                 returnData[structure[i]] = eval(data[i])
-            }catch(err){
+            }catch{
                 returnData[structure[i]] = data[i]
                 console.log(err)
             }
         }
-        var ent = new BDentity(`${parseInt(id)+1}`, returnData)
+        var ent = new BDentity(id, returnData)
         ent = ent
         chl.send(JSON.stringify(ent, null, 4))
-    }catch{
+    }catch(err){
+        console.log(err)
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, значения]**`).then(msg => {
             setTimeout(() => {msg.delete()}, 10000)
         })
@@ -350,7 +354,6 @@ async function EStats(chl, id, par, del, data){
         var msg = await chl.messages.fetch(entity.mid)
 
         var ent = eval(`[${msg.content}]`)
-        console.log(ent)
         if(!del){
             ent[0].data[par] = data[0]
         }else if(del){delete ent[0].data[par]}
@@ -389,21 +392,29 @@ const RPF = {
     createObjects: async function(path, guild){
         let objects = await GStats(path)
         for (let object of objects){
-            let cat = guild.channels.cache.find(cat => cat.type == 'GUILD_CATEGORY' && cat.name == object.data.name && object.data.cid != undefined)
+            let cat = guild.channels.cache.find(cat => cat.type == 'GUILD_CATEGORY' && cat.name == object.data.name && object.data.cid == cat.id)
             if(cat == undefined){
                 cat = await guild.channels.create(object.data.name, {
                     type: 'GUILD_CATEGORY'
                 })
-                for (let room of object.data.rooms){
-                    guild.channels.create(room, {
+                EStats(path, object.id, "cid", false, [cat.id])
+            }
+            cat.setPosition(cat.position+1)
+            
+            for(let room of object.data.rooms){
+                let chnl = cat.children.toJSON().find(chnl => chnl.name == room.toLowerCase().split(' ').join('-'))
+                if(chnl == undefined){
+                    let chnl = await guild.channels.create(room, {
                         type: 'GUILD_TEXT',
-                        parent: cat
+                        parent: cat,
+                        topic: `${object.data.rooms.indexOf(room)}`
                     })
-                    EStats(path, object.id, "cid", false, [cat.id])
+                    chnl.setPosition(object.data.rooms.indexOf(room))
                 }
-            }else{console.log('уже есть')}
+            }
         }
     },
+
 }
 
 //
@@ -513,7 +524,7 @@ client.on('messageCreate', message => {
         message.channel.guild.channels.cache.find(id => id == `${command.sarg[0]}`).messages.fetch(`${command.sarg[1]}`)
         .then(msg =>{
             if(!msg.author.bot) return
-            msg.edit(cmdParametrs(message,2).carg)
+            msg.edit(cmdParametrs(message.content,2).carg)
         })
         setTimeout(() => message.delete(), timeOfDelete)
     }
