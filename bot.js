@@ -113,17 +113,30 @@ function removeRole(member, roleId){
 //
 
 async function sendLog(member,channel,cat,act,status,add){
-    if (cat == 'admin'){var color = '#3EA64F'; var path = Config.channelsID.admin}
-    if (cat == 'other'){var color = '#B1B1BB'; var path = Config.channelsID.other}
-    if (cat == 'rp'){var color = '#ADAD39'; var path = Config.channelsID.rp}
-    let nick = member.nickname
+    if (cat == 'admin'){
+        var color = '#3EA64F'
+        var path = Config.channelsID.admin
+        var webhook = Config.webhooks.adminLog
+    }
+    if (cat == 'other'){
+        var color = '#B1B1BB'
+        var path = Config.channelsID.other
+        var webhook = Config.webhooks.otherLog
+    }
+    if (cat == 'rp'){
+        var color = '#ADAD39'
+        var path = Config.channelsID.rp
+        var webhook = Config.webhooks.rpLog
+    }
+    var nick = member.nickname
     if(nick == null) nick = '<Без имени>'
-    let chnlLink = ''
+
+    var chnlLink = ''
     if(channel != undefined) chnlLink = `\n[<#${channel.id}>]`
 
     path = guild.channels.cache.get(path)
-    let webhook = await path.fetchWebhooks()
-    webhook = webhook.first()
+    var webhooks = await path.fetchWebhooks()
+    webhook = webhooks.get(webhook)
 
     if (status == 0) status = '🟩'
     if (status == 1) status = '🟥'
@@ -154,8 +167,14 @@ async function createLore(title,img,desc,message){
 };
 
 async function createEx(rule,num,status,add,message){
-    if (status == 0){status = '🟩'; var color = '#95D6A4'}
-    if (status == 1){status = '🟥'; var color = '#DD636E'}
+    if (status == 0){
+        status = '🟩'
+        var color = '#95D6A4'
+    }
+    if (status == 1){
+        status = '🟥'
+        var color = '#DD636E'
+    }
 
     message.channel.send({embeds: [{
             color: color,
@@ -164,14 +183,14 @@ async function createEx(rule,num,status,add,message){
                 value: `${add}`
             }]
         }]
-    });
-    return;
+    })
+    return
 };
 
 async function createCom(embd, message){
-    let CChannel = guild.channels.cache.get(Config.channelsID.dev_process)
-    let webhook = await CChannel.fetchWebhooks()
-    webhook = webhook.find(web => web.id == '906144022588956692')
+    var CChannel = guild.channels.cache.get(Config.channelsID.dev_process)
+    var webhooks = await CChannel.fetchWebhooks()
+    var webhook = webhooks.get(Config.webhooks.commits)
 
     for(let a of embd.title.split(':')){
         if(a.slice(-6) == 'closed') var act = 'merge';
