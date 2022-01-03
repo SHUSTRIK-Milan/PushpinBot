@@ -77,7 +77,7 @@ module.exports.itemTypes = {
     },
     other: {
         usable: false,
-        color: '#C9C9C9'
+        color: 'RANDOM'
     }
 }
 
