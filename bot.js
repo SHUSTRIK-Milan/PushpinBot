@@ -340,11 +340,7 @@ async function AStats(chl, structure, data){
         
         var returnData = {}
         for (let i = 0; i < structure.length; i++){
-            try{
-                returnData[structure[i]] = eval(data[i])
-            }catch{
-                returnData[structure[i]] = data[i]
-            }
+            returnData[structure[i]] = data[i]
         }
         var ent = new BDentity(id+1, returnData)
         ent = ent
