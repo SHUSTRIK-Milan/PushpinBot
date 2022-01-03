@@ -49,6 +49,14 @@ module.exports.guilds = {
     BD: `919494529072111637`,
 }
 
+module.exports.webhooks = {
+    github: `905828362184978513`,
+    commits: `906144022588956692`,
+    otherLog: `909062452694638613`,
+    adminLog: `909067383455494164`,
+    rpLog: `911277251625103432`,
+}
+
 module.exports.BDs = {
     pushpin_main: ['user'],
 
