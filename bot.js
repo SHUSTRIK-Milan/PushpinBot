@@ -4,9 +4,10 @@
 
 
 // Интеграции
-const { Client, Intents } = require('discord.js');
+const Discord = require('discord.js')
+const Intents = new Discord.Intents()
 
-const client = new Client({ intents: [
+const client = new Discord.Client({ intents: [
 "GUILDS",
 "GUILD_MEMBERS",
 "GUILD_BANS",
