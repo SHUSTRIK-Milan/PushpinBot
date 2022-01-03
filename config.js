@@ -58,6 +58,21 @@ module.exports.BDs = {
     ages_items: ['codename', 'name', 'description', 'emoji', 'convar'],
 }
 
+module.exports.itemTypes = {
+    money: {
+        usable: false,
+        color: '#22CB66'
+    },
+    key: {
+        usable: true,
+        color: '#CBBD22'
+    },
+    other: {
+        usable: false,
+        color: '#C9C9C9'
+    }
+}
+
 module.exports.discordTocens = {
     main: `ODIyNTAwNDgzODI2NDUwNDU0.YFTLRA.JS95C2U2Wgwzuq9kgZZQh2hQXks`,
 	testBot: `ODQwMjMwNTMxNjYwNTEzMjgw.YJVLqQ.Lr7HGn01gH50OUcHrHr4Rl-BpSM`

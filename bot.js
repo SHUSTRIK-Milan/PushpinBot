@@ -113,9 +113,9 @@ function removeRole(member, roleId){
 //
 
 async function sendLog(member,channel,cat,act,status,add){
-    if (cat == 'admin'){var color = 4105807; var path = Config.channelsID.admin}
-    if (cat == 'other'){var color = 11645371; var path = Config.channelsID.other}
-    if (cat == 'rp'){var color = 11382073; var path = Config.channelsID.rp}
+    if (cat == 'admin'){var color = '#3EA64F'; var path = Config.channelsID.admin}
+    if (cat == 'other'){var color = '#B1B1BB'; var path = Config.channelsID.other}
+    if (cat == 'rp'){var color = '#ADAD39'; var path = Config.channelsID.rp}
     let nick = member.nickname
     if(nick == null) nick = '<Без имени>'
     let chnlLink = ''
@@ -142,7 +142,7 @@ async function sendLog(member,channel,cat,act,status,add){
 
 async function createLore(title,img,desc,message){
     message.channel.send({embeds: [{
-            color: 15521158,
+            color: '#ECD586',
             fields: [{
                 name: `${title}`,
                 value: `${desc}`
@@ -154,8 +154,8 @@ async function createLore(title,img,desc,message){
 };
 
 async function createEx(rule,num,status,add,message){
-    if (status == 0){status = '🟩'; var color = 9819812}
-    if (status == 1){status = '🟥'; var color = 14508910}
+    if (status == 0){status = '🟩'; var color = '#95D6A4'}
+    if (status == 1){status = '🟥'; var color = '#DD636E'}
 
     message.channel.send({embeds: [{
             color: color,
@@ -182,7 +182,6 @@ async function createCom(embd, message){
         let nTitle = embd.title.split(' ')[0].split(':')[1].slice()
         let branch = nTitle.slice(0,nTitle.length-1)
         let commits = await fork.listCommits({sha:branch})
-        message.delete()
         let countC = parseInt(embd.title.split(' ')[1])
         let lastcom = await commits.data[countC-1]
 
@@ -192,8 +191,8 @@ async function createCom(embd, message){
             nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) <t:${Math.floor(new Date(lastcom.commit.author.date).getTime() / 1000)}>\n${lastcom.commit.message}\n`)
         }
 
-        let color = 11645371
-        if(countC>0) color = 8506509
+        let color = '#B1B1BB'
+        if(countC>0) color = '#81CC8D'
         
         webhook.send({
             embeds: [{
@@ -211,13 +210,12 @@ async function createCom(embd, message){
     }else if(act == 'merge'){
         let req = await fork.listPullRequests({state:'close'})
         let lastReq = await req.data[0];
-        message.delete();
         webhook.send({
             embeds: [{
                 title: `[PushpinBot:${lastReq.head.ref}] Новое слияние веток.`,
                 description: `\`(${lastReq.head.ref} → ${lastReq.base.ref})\` ${lastReq.title}`,
                 url: lastReq.url,
-                color: 13158471,
+                color: '#C8C847',
                 author: {
                     name: lastReq.user.login,
                     icon_url: lastReq.user.avatar_url
