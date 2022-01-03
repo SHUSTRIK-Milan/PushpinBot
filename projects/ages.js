@@ -64,25 +64,22 @@ client.on('interactionCreate', async interaction => {
             if(player != undefined){
                 if(player.data.inv != undefined){
                     let options = await joinItems(items, player.data.inv)
-                    interaction.deferReply()
-                    setTimeout(() => {
-                        interaction.editReply({
-                            content: '> Ваш инвентарь 💼',
-                            components: [
-                                {
-                                    type: 'ACTION_ROW', 
-                                    components: [
-                                        {
-                                            type: 'SELECT_MENU',
-                                            customId: `invent_${interaction.user.id}_open`,
-                                            placeholder: 'Ваши предметы...',
-                                            options: options
-                                        }
-                                    ]
-                                }
-                            ]
-                        })
-                    }, 1000)
+                    interaction.reply({
+                        content: '> Ваш инвентарь 💼',
+                        components: [
+                            {
+                                type: 'ACTION_ROW', 
+                                components: [
+                                    {
+                                        type: 'SELECT_MENU',
+                                        customId: `invent_${interaction.user.id}_open`,
+                                        placeholder: 'Ваши предметы...',
+                                        options: options
+                                    }
+                                ]
+                            }
+                        ]
+                    })
                 }else{
                     interaction.reply({content: "> Ваш инвентарь пуст ⛔", embeds: [], components: []})
                 }
@@ -121,7 +118,7 @@ client.on('interactionCreate', async interaction => {
                     style: 'DANGER'
                 }
             ]
-            if(!Config.itemTypes[item.type].usable) itemComponents.splice(0,1)
+            if(!Config.itemTypes[item.data.type].usable) itemComponents.splice(0,1)
 
             interaction.update({
                 content: '> Ваш инвентарь 💼',
@@ -130,7 +127,7 @@ client.on('interactionCreate', async interaction => {
                         author: {name: `${item.data.name}` },
                         description: item.data.description,
                         thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji}.png`},
-                        color: Config.itemTypes[item.type].color
+                        color: Config.itemTypes[item.data.type].color
                     }
                 ],
                 components: [
@@ -139,6 +136,12 @@ client.on('interactionCreate', async interaction => {
                         components: itemComponents
                     }
                 ]
+            }).then(() => {
+                if(interaction.message.embeds[0].thumbnail.height == 0){
+                    interaction.editReply({
+                        embeds: [interaction.message.embeds[0].setThumbnail(`https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji.split('-')[0]}.png`)]
+                    })
+                }
             })
         }
     }
