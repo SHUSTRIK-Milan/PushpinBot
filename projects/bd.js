@@ -12,6 +12,11 @@ const {
 const guild = guildBD
 
 console.log(`[bot-bd ready]`)
+AStats('pushpin/main',undefined,[{
+    name: "milan",
+    second: "shust",
+    age: 15
+    }])
 
 async function awaitPutInBD(structure, channel, authorId){
     try{

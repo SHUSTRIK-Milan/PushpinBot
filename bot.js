@@ -308,7 +308,11 @@ async function GStats(chl, id){
             let ent = eval(`[${msg.content}]`)[0]
             for (let dat in ent.data){
                 try{
-                    ent.data[dat] = eval(ent.data[dat])
+                    try{
+                        ent.data[dat] = eval(ent.data[dat]) 
+                    }catch{
+                        ent.data[dat] = JSON.parse(ent.data[dat])
+                    }
                 }catch{}
             }
             ent.mid = `${msg.id}`
@@ -345,15 +349,16 @@ async function AStats(chl, structure, data){
         
         var returnData = {}
         for (let i = 0; i < structure.length; i++){
-           /*  try{
-                returnData[structure[i]] = eval(data[i])
-                console.log(`Old: ${data[i]}\nNew: ${eval(data[i])}`)
+            try{
+                if(typeof(data[i]) != 'string'){
+                    returnData[structure[i]] = eval(data[i])
+                }else{
+                    returnData[structure[i]] = eval(`[${data[i]}]`)[0]
+                }
+                if(typeof(returnData[structure[i]]) == 'object'){
+                    returnData[structure[i]] = JSON.stringify(returnData[structure[i]])
+                }
             }catch{
-                returnData[structure[i]] = data[i]
-            } */
-            if(typeof(data[i]) != 'string'){
-                returnData[structure[i]] = JSON.stringify(data[i])
-            }else{
                 returnData[structure[i]] = data[i]
             }
         }
@@ -381,9 +386,16 @@ async function EStats(chl, id, par, del, data){
 
         var ent = eval(`[${msg.content}]`)
         if(!del){
-            if(typeof(data[0]) != 'string'){
-                ent[0].data[par] = JSON.stringify(data[0])
-            }else{
+            try{
+                if(typeof(data[0]) != 'string'){
+                    ent[0].data[par] = eval(data[0])
+                }else{
+                    ent[0].data[par] = eval(`[${data[0]}]`)[0]
+                }
+                if(typeof(ent[0].data[par]) == 'object'){
+                    ent[0].data[par] = JSON.stringify(ent[0].data[par])
+                }
+            }catch{
                 ent[0].data[par] = data[0]
             }
         }else if(del){delete ent[0].data[par]}
@@ -447,7 +459,7 @@ const RPF = {
     radiusSelectMenu: function(objectId, objects){
         let returnObjects = []
         for(let object of objects){
-            if(object.data.radius.find(object => object.name == objectId) != undefined || objectId == object.id){
+            if(object.data.radius.find(object => object.id == objectId) != undefined || objectId == object.id){
                 returnObjects.push({
                     label: `${object.data.name}`,
                     value: `${object.data.cid}`,
