@@ -116,7 +116,7 @@ function removeRole(member, roleId){
 // CREATE ФУНКЦИИ
 //
 
-async function sendLog(member,channel,cat,act,status,add){
+async function sendLog(member,channel,cat,act,pat,add){
     if (cat == 'admin'){
         var color = '#3EA64F'
         var path = Config.channelsID.admin
@@ -142,8 +142,8 @@ async function sendLog(member,channel,cat,act,status,add){
     var webhooks = await path.fetchWebhooks()
     webhook = webhooks.get(webhook)
 
-    if (status == 0) status = '🟩'
-    if (status == 1) status = '🟥'
+    if (pat) pat = '🟩'
+    if (!pat) pat = '🟥'
     
     webhook.send({
         embeds: [{
@@ -152,7 +152,7 @@ async function sendLog(member,channel,cat,act,status,add){
                 name: `${member.user.username} – ${nick}`,
                 icon_url: member.user.avatarURL()
             },
-            description: `${status} **|** **${act}:**\n${add}${chnlLink}`
+            description: `${pat} **|** **${act}:**\n${add}${chnlLink}`
         }],
     })
 }
@@ -170,20 +170,20 @@ async function createLore(title,img,desc,message){
     return
 }
 
-async function createEx(rule,num,status,add,message){
-    if (status == 0){
-        status = '🟩'
+async function createEx(rule,num,pat,add,message){
+    if (pat){
+        pat = '🟩'
         var color = '#95D6A4'
     }
-    if (status == 1){
-        status = '🟥'
+    if (!pat){
+        pat = '🟥'
         var color = '#DD636E'
     }
 
     message.channel.send({embeds: [{
             color: color,
             fields: [{
-                name: `\\${status} ${rule} [Пример #${num}]`,
+                name: `\\${pat} ${rule} [Пример #${num}]`,
                 value: `${add}`
             }]
         }]
