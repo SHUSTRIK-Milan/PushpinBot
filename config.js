@@ -60,8 +60,8 @@ module.exports.webhooks = {
 module.exports.BDs = {
     pushpin_main: ['user'],
 
-    ages_main: [],
-    ages_objects: ['name', 'open', 'radius', 'rooms', 'cid'],
+    ages_main: ['user'],
+    ages_objects: ['name', 'status', 'radius', 'rooms', 'cid'],
     ages_players: ['user', 'name', 'race', 'desc', 'inv', 'pos'],
     ages_items: ['codename', 'type', 'name', 'description', 'emoji', 'convar'],
 }

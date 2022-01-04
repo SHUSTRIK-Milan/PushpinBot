@@ -84,7 +84,11 @@ function cmdParametrs(content,countS){
     };
 
     return comand
-};
+}
+
+function toChannelName(text){
+    return text.toLowerCase().split(' ').join('-')
+}
 
 function random(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
@@ -99,15 +103,15 @@ function haveRole(member, role){
         return true
     }
     return false
-};
+}
 
 function giveRole(member, roleId){
     member.roles.add(roleId, `Добавил роль под ID: ${roleId}.`).catch(console.error);
-};
+}
 
 function removeRole(member, roleId){
     member.roles.remove(roleId, `Удалил роль под ID: ${roleId}.`).catch(console.error);
-};
+}
 
 //
 // CREATE ФУНКЦИИ
@@ -151,8 +155,8 @@ async function sendLog(member,channel,cat,act,status,add){
             },
             description: `${status} **|** **${act}:**\n${add}${chnlLink}`
         }],
-    });
-};
+    })
+}
 
 async function createLore(title,img,desc,message){
     message.channel.send({embeds: [{
@@ -163,9 +167,9 @@ async function createLore(title,img,desc,message){
             }],
             image:{url:img}
         }]
-    });
-    return;
-};
+    })
+    return
+}
 
 async function createEx(rule,num,status,add,message){
     if (status == 0){
@@ -186,7 +190,7 @@ async function createEx(rule,num,status,add,message){
         }]
     })
     return
-};
+}
 
 async function createCom(embd, message){
     var CChannel = guild.channels.cache.get(Config.channelsID.dev_process)
@@ -373,7 +377,7 @@ async function AStats(chl, structure, data){
     }
 }
 
-async function EStats(chl, id, par, del, data){
+async function EStats(chl, id, par, data){
     try{
         if(chl.id == undefined){
             let path = chl.split('/')
@@ -385,20 +389,18 @@ async function EStats(chl, id, par, del, data){
         var msg = await chl.messages.fetch(entity.mid)
 
         var ent = eval(`[${msg.content}]`)
-        if(!del){
-            try{
-                if(typeof(data[0]) != 'string'){
-                    ent[0].data[par] = eval(data[0])
-                }else{
-                    ent[0].data[par] = eval(`[${data[0]}]`)[0]
-                }
-                if(typeof(ent[0].data[par]) == 'object'){
-                    ent[0].data[par] = JSON.stringify(ent[0].data[par])
-                }
-            }catch{
-                ent[0].data[par] = data[0]
+        try{
+            if(typeof(data[0]) != 'string'){
+                ent[0].data[par] = eval(data[0])
+            }else{
+                ent[0].data[par] = eval(`[${data[0]}]`)[0]
             }
-        }else if(del){delete ent[0].data[par]}
+            if(typeof(ent[0].data[par]) == 'object'){
+                ent[0].data[par] = JSON.stringify(ent[0].data[par])
+            }
+        }catch{
+            ent[0].data[par] = data[0]
+        }
         
         msg.edit(JSON.stringify(ent[0], null, 4))
     }catch{
@@ -439,12 +441,12 @@ const RPF = {
                 cat = await guild.channels.create(object.data.name, {
                     type: 'GUILD_CATEGORY'
                 })
-                EStats(path, object.id, "cid", false, [cat.id])
+                EStats(path, object.id, "cid", false, [`${cat.id}`])
             }
             cat.setPosition(cat.position+1)
             
             for(let room of object.data.rooms){
-                let chnl = cat.children.toJSON().find(chnl => chnl.name == room.name.toLowerCase().split(' ').join('-'))
+                let chnl = cat.children.toJSON().find(chnl => chnl.name == toChannelName(room.name))
                 if(chnl == undefined){
                     let chnl = await guild.channels.create(room.name, {
                         type: 'GUILD_TEXT',
@@ -489,7 +491,7 @@ client.on('ready', () => {
         client, REST, Routes,
         Config, prefix, timeOfDelete,
         guildBase:guild, guildAges, guildBD, 
-        rpGuilds, cmdParametrs, random,
+        rpGuilds, cmdParametrs, toChannelName, random,
         haveRole, giveRole, removeRole,
         sendLog, createLore, createEx,
         createCom, SlashCom, BDentity,

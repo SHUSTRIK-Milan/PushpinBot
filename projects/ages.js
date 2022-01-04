@@ -2,7 +2,7 @@ const {
     client, REST, Routes,
     Config, prefix, timeOfDelete,
     guildBase, guildAges, guildBD, 
-    rpGuilds, cmdParametrs, random,
+    rpGuilds, cmdParametrs, toChannelName, random,
     haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
     createCom, SlashCom, BDentity,
@@ -73,7 +73,7 @@ client.on('interactionCreate', async interaction => {
                                 components: [
                                     {
                                         type: 'SELECT_MENU',
-                                        customId: `invent_${interaction.user.id}_open`,
+                                        customId: `invent_open`,
                                         placeholder: 'Ваши предметы...',
                                         options: options
                                     }
@@ -91,8 +91,8 @@ client.on('interactionCreate', async interaction => {
 
     if(interaction.isSelectMenu()){
         let type = interaction.customId.split('_')[0]
-        let user = interaction.customId.split('_')[1]
-        let act = interaction.customId.split('_')[2]
+        let act = interaction.customId.split('_')[1]
+        let data = interaction.customId.split('_')[2]
         let value = interaction.values[0]
 
         if(type == 'invent' && act == 'open'){
@@ -104,25 +104,25 @@ client.on('interactionCreate', async interaction => {
                 {
                     type: 'BUTTON',
                     label: 'Использовать',
-                    customId: `invent_${user}_use_${value}`,
+                    customId: `invent_use_${value}`,
                     style: 'PRIMARY'
                 },
                 {
                     type: 'BUTTON',
                     label: 'Выбросить',
-                    customId: `invent_${user}_drop_${value}`,
+                    customId: `invent_drop_${value}`,
                     style: 'DANGER'
                 },
                 {
                     type: 'BUTTON',
                     label: 'Передать',
-                    customId: `invent_${user}_trade_${value}`,
+                    customId: `invent_trade_${value}`,
                     style: 'SUCCESS'
                 },
                 {
                     type: 'BUTTON',
                     label: 'Вернуться',
-                    customId: `invent_${user}_back`,
+                    customId: `invent_back_${value}`,
                     style: 'SECONDARY'
                 }
             ]
@@ -153,21 +153,21 @@ client.on('interactionCreate', async interaction => {
                     }
                 }catch{}
             })
-        }else if(type == 'key'){
+        }else if(type == 'invent' && act == 'key'){
             let object = objects.find(object => object.data.cid == value)
-            let lItem = player.data.inv.find(item => item.codename == user)
+            let lItem = player.data.inv.find(item => item.codename == data)
             let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
 
-            if(object.data.open != undefined){
+            if(object.data.status.open != undefined){
                 if(gItem.data.convar == object.id){
                     interaction.update({content: "> Процесс... 🔐", embeds: [], components: []})
                     setTimeout(() => {
-                        if(object.data.open){
+                        if(object.data.status.open){
                             interaction.editReply({content: "> Вы закрыли объект 🔒"})
-                            EStats("ages/objects", object.id, "open", false, [false])
-                        }else if(!object.data.open){
+                            EStats("ages/objects", object.id, "status", [{open: false, ex: object.data.status.ex}])
+                        }else if(!object.data.status.open){
                             interaction.editReply({content: "> Вы открыли объект 🔓"})
-                            EStats("ages/objects", object.id, "open", false, [true])
+                            EStats("ages/objects", object.id, "status", [{open: true, ex: object.data.status.ex}])
                         }
                     }, 5000)
                 }else{
@@ -181,15 +181,9 @@ client.on('interactionCreate', async interaction => {
 
     if(interaction.isButton()){
         let type = interaction.customId.split('_')[0]
-        let user = interaction.customId.split('_')[1]
-        let act = interaction.customId.split('_')[2]
-        let itemCodename = interaction.customId.split('_')[3]
+        let act = interaction.customId.split('_')[1]
+        let data = interaction.customId.split('_')[2]
 
-        if(type == 'invent' && act == 'close'){
-            interaction.update({components: []}).then(() => {
-                interaction.deleteReply()
-            })
-        }
         if(type == 'invent' && act == 'back'){
             if(player != undefined){
                 if(player.data.inv != undefined){
@@ -203,7 +197,7 @@ client.on('interactionCreate', async interaction => {
                                 components: [
                                     {
                                         type: 'SELECT_MENU',
-                                        customId: `invent_${user}_open`,
+                                        customId: `invent_open`,
                                         placeholder: 'Ваши предметы...',
                                         options: options
                                     }
@@ -213,11 +207,10 @@ client.on('interactionCreate', async interaction => {
                     })
                 }else{interaction.update({content: "> Ваш инвентарь пуст ⛔", embeds: [], components: []})}
             }else{interaction.update({content: "> Ваш инвентарь пуст ⛔", embeds: [], components: []})}
-        }
-        if(type == 'invent' && act == 'use'){
+        }else if(type == 'invent' && act == 'use'){
             let object = objects.find(object => object.data.cid == interaction.channel.parentId)
             let options = RPF.radiusSelectMenu(object.id, objects)
-            let lItem = player.data.inv.find(item => item.codename == itemCodename)
+            let lItem = player.data.inv.find(item => item.codename == data)
             let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
 
             if(gItem.data.type == 'key'){
@@ -230,7 +223,7 @@ client.on('interactionCreate', async interaction => {
                             components: [
                                 {
                                     type: 'SELECT_MENU',
-                                    customId: `key_${itemCodename}_${gItem.data.convar}`,
+                                    customId: `invent_key_${data}`,
                                     placeholder: 'Объекты...',
                                     options: options
                                 }

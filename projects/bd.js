@@ -2,7 +2,7 @@ const {
     client, REST, Routes,
     Config, prefix, timeOfDelete,
     guildBase, guildAges, guildBD, 
-    rpGuilds, cmdParametrs, random,
+    rpGuilds, cmdParametrs, toChannelName, random,
     haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
     createCom, SlashCom, BDentity,
@@ -12,11 +12,6 @@ const {
 const guild = guildBD
 
 console.log(`[bot-bd ready]`)
-AStats('pushpin/main',undefined,[{
-    name: "milan",
-    second: "shust",
-    age: 15
-    }])
 
 async function awaitPutInBD(structure, channel, authorId){
     try{
@@ -34,7 +29,7 @@ async function awaitPutInBD(structure, channel, authorId){
         for(let i = 0; i < values.length; i++){
             if(values[i].content == '_null'){
                 returnData[i] == undefined
-            }if(values[i].content == '_stop'){
+            }else if(values[i].content == '_stop'){
                 return 'stop'
             }else{returnData[i] = values[i].content}
         }
@@ -100,13 +95,7 @@ SlashCom('wait', 'edit', {
             name: 'par',
             description: 'Параметр, который требуется изменить',
             required: true,
-        },
-        {
-            type: 'BOOLEAN',
-            name: 'del',
-            description: 'Нужно ли удалить параметр?',
-            required: true,
-        },
+        }
     ],
     defaultPermission: false
 }, guild.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
@@ -180,12 +169,11 @@ client.on('interactionCreate', async interaction => {
             let channel = interaction.options.get('path').channel
             let id = interaction.options.get('id').value
             let par = interaction.options.get('par').value
-            let del = interaction.options.get('del').value
             if(channel.parent != undefined){
                 interaction.reply(`> Введите значение`)
                 awaitPutInBD(['entity'], interaction.channel, interaction.user.id).then((data) => {
                     if(data != undefined && data != 'stop'){
-                        EStats(channel, id, par, del, data)
+                        EStats(channel, id, par, data)
                         interaction.editReply('> Данные изменены!')
                     }else{
                         interaction.editReply('> Вышло время изменения данных!')
