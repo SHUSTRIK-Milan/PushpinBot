@@ -13,8 +13,6 @@ const guild = guildBD
 
 console.log(`[bot-bd ready]`)
 
-AStats('pushpin/main', undefined, [{name: 1}])
-
 async function awaitPutInBD(structure, channel, authorId){
     try{
         let filter = m => m.author.id == authorId
@@ -31,6 +29,8 @@ async function awaitPutInBD(structure, channel, authorId){
         for(let i = 0; i < values.length; i++){
             if(values[i].content == '_null'){
                 returnData[i] == undefined
+            }if(values[i].content == '_stop'){
+                return 'stop'
             }else{returnData[i] = values[i].content}
         }
         return returnData
@@ -144,7 +144,7 @@ client.on('interactionCreate', async interaction => {
                 let structure = Config.BDs[`${channel.parent.name}_${channel.name}`]
                 interaction.reply(`> Вводите данные: [${structure.join(', ')}]`)
                 awaitPutInBD(structure, interaction.channel, interaction.user.id).then((data) => {
-                    if(data != undefined){
+                    if(data != undefined && data != 'stop'){
                         AStats(channel, structure, data)
                         interaction.editReply('> Данные добавлены!')
                     }else{
@@ -162,10 +162,11 @@ client.on('interactionCreate', async interaction => {
         if(interaction.commandName == 'get'){
             let channel = interaction.options.get('path').channel
             let id = interaction.options.get('id')
+            if(id != undefined){id = id.value}
             
             if(channel.parent != undefined){
                 interaction.reply(`> Данные получены!`)
-                GStats(channel, id.value).then(console.log)
+                GStats(channel, id).then(console.log)
             }else{
                 interaction.reply(`> Указывать можно лишь каналы, но не категории!`)
             }
@@ -178,7 +179,7 @@ client.on('interactionCreate', async interaction => {
             if(channel.parent != undefined){
                 interaction.reply(`> Введите значение`)
                 awaitPutInBD(['entity'], interaction.channel, interaction.user.id).then((data) => {
-                    if(data != undefined){
+                    if(data != undefined && data != 'stop'){
                         EStats(channel, id, par, del, data)
                         interaction.editReply('> Данные изменены!')
                     }else{

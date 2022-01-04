@@ -308,7 +308,7 @@ async function GStats(chl, id){
             let ent = eval(`[${msg.content}]`)[0]
             for (let dat in ent.data){
                 try{
-                    ent.data[dat] = JSON.parse(ent.data[dat])
+                    ent.data[dat] = eval(ent.data[dat])
                 }catch{}
             }
             ent.mid = `${msg.id}`
@@ -381,7 +381,11 @@ async function EStats(chl, id, par, del, data){
 
         var ent = eval(`[${msg.content}]`)
         if(!del){
-            ent[0].data[par] = data[0]
+            if(typeof(data[0]) != 'string'){
+                ent[0].data[par] = JSON.stringify(data[0])
+            }else{
+                ent[0].data[par] = data[0]
+            }
         }else if(del){delete ent[0].data[par]}
         
         msg.edit(JSON.stringify(ent[0], null, 4))
@@ -440,7 +444,22 @@ const RPF = {
             }
         }
     },
-
+    radiusSelectMenu: function(objectId, objects){
+        let returnObjects = []
+        for(let object of objects){
+            if(object.data.radius.find(object => object == objectId) != undefined || objectId == object.id){
+                returnObjects.push({
+                    label: `${object.data.name}`,
+                    value: `${object.data.cid}`,
+                    emoji: {
+                        id: null,
+                        name: `${['🏠','🏢','🏛','🏡','🏭'][random(0,4)]}`
+                    }
+                })
+            }
+        }
+        return returnObjects
+    }
 }
 
 //
