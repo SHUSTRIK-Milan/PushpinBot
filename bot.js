@@ -368,7 +368,11 @@ async function AStats(chl, structure, data){
         }
         var ent = new BDentity(id+1, returnData)
 
-        chl.send(JSON.stringify(ent, null, 2))
+        try{
+            chl.send(JSON.stringify(ent, null, 2))
+        }catch{
+            console.log('Ошибка при создании ячейки')
+        }
     }catch(err){
         console.log(err)
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, значения]**`).then(msg => {
@@ -402,7 +406,11 @@ async function EStats(chl, id, par, data){
             ent[0].data[par] = data[0]
         }
         
-        msg.edit(JSON.stringify(ent[0], null, 4))
+        try{
+            msg.edit(JSON.stringify(ent[0], null, 4))
+        }catch{
+            console.log('Ошибка при редактировании ячейки')
+        }
     }catch{
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, id-ячейки, параметр, замену]**`).then(msg => {
             setTimeout(() => {msg.delete()}, 10000)
