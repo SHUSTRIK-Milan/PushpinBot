@@ -447,7 +447,7 @@ const RPF = {
     radiusSelectMenu: function(objectId, objects){
         let returnObjects = []
         for(let object of objects){
-            if(object.data.radius.find(object => object == objectId) != undefined || objectId == object.id){
+            if(object.data.radius.find(object => object.name == objectId) != undefined || objectId == object.id){
                 returnObjects.push({
                     label: `${object.data.name}`,
                     value: `${object.data.cid}`,
