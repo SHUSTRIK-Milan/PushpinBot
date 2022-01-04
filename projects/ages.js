@@ -158,7 +158,7 @@ client.on('interactionCreate', async interaction => {
             let lItem = player.data.inv.find(item => item.codename == data)
             let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
 
-            if(object.data.status.open != undefined){
+            if(object.data.status != undefined){
                 if(gItem.data.convar == object.id){
                     interaction.update({content: "> Процесс... 🔐", embeds: [], components: []})
                     setTimeout(() => {
