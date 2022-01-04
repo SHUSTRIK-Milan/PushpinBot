@@ -342,11 +342,11 @@ async function AStats(chl, structure, data){
             chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
             structure = Config.BDs[`${cat.name}_${chl.name}`]
         }
-        var msgs = await chl.messages.fetch()
+        var messages = await chl.messages.fetch()
         var ents = await GStats(chl)
         var id
         if (ents.length == 0){
-            id = msgs.size
+            id = messages.size
         }else{
             id = ents[ents.length-1].id
         }
@@ -367,11 +367,11 @@ async function AStats(chl, structure, data){
             }
         }
         var ent = new BDentity(id+1, returnData)
-
-        try{
-            chl.send(JSON.stringify(ent, null, 2))
-        }catch{
-            console.log('Ошибка при создании ячейки')
+        var message = JSON.stringify(ent, null, 2)
+        if(message.length <= 2000){
+            chl.send(message)
+        }else{
+            console.log('> Ошибка при создании ячейки')
         }
     }catch(err){
         console.log(err)
@@ -406,10 +406,11 @@ async function EStats(chl, id, par, data){
             ent[0].data[par] = data[0]
         }
         
-        try{
-            msg.edit(JSON.stringify(ent[0], null, 4))
-        }catch{
-            console.log('Ошибка при редактировании ячейки')
+        var message = JSON.stringify(ent[0], null, 4)
+        if(message.length <= 2000){
+            msg.edit(message)
+        }else{
+            console.log('> Ошибка при редактировании ячейки')
         }
     }catch{
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, id-ячейки, параметр, замену]**`).then(msg => {
