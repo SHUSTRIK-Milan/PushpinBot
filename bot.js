@@ -432,9 +432,9 @@ const RPF = {
             cat.setPosition(cat.position+1)
             
             for(let room of object.data.rooms){
-                let chnl = cat.children.toJSON().find(chnl => chnl.name == room.toLowerCase().split(' ').join('-'))
+                let chnl = cat.children.toJSON().find(chnl => chnl.name == room.name.toLowerCase().split(' ').join('-'))
                 if(chnl == undefined){
-                    let chnl = await guild.channels.create(room, {
+                    let chnl = await guild.channels.create(room.name, {
                         type: 'GUILD_TEXT',
                         parent: cat,
                         topic: `${object.data.rooms.indexOf(room)}`
