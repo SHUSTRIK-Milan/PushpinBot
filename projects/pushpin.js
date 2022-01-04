@@ -27,9 +27,4 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
         createCom(message.embeds[0],message)
         setTimeout(() =>{message.delete()}, timeOfDelete)
     }
-
-    if(command.com == `commands` && head && !mb && !dm){
-        setTimeout(() => message.delete(), timeOfDelete);
-        client.interaction.getApplicationCommands(config.guild_id).then(console.log);
-    }
 }})
