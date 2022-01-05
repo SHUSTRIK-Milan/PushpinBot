@@ -29,9 +29,9 @@ const { Routes } = require('discord-api-types/v9');
 
 const Config = require('./config')
 
-const {DataBaseClient} = require('pg')
+const {Client} = require('pg')
 
-const dataClient = new DataBaseClient({
+const dataClient = new Client({
     host: "ec2-3-209-234-80.compute-1.amazonaws.com",
     user: "szairfmtltxgrr",
     port: 5432,
