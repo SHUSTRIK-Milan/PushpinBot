@@ -31,7 +31,7 @@ const Config = require('./config')
 
 const {Client} = require('pg')
 
-/* const dataClient = new Client({
+const dataClient = new Client({
     host: "ec2-3-209-234-80.compute-1.amazonaws.com",
     user: "szairfmtltxgrr",
     port: 5432,
@@ -48,7 +48,7 @@ dataClient.query(`SELECT * FROM "public".testtable`, (err, res) =>{
         console.log(err)
     }
     dataClient.end
-}) */
+})
 
 // Системные переменные
 const prefix = '!'
