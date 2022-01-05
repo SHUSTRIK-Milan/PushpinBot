@@ -26,6 +26,7 @@
     "discord.js": "^13.3.1",
     "emoji-unicode": "^2.0.1",
     "github-api": "^3.4.0",
+    "pg": "^8.7.1",
     "slash-commands": "^1.4.0"
   }
 }

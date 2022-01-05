@@ -22,12 +22,33 @@ const client = new Discord.Client({ intents: [
 "DIRECT_MESSAGES",
 "DIRECT_MESSAGE_REACTIONS",
 "DIRECT_MESSAGE_TYPING",
-]});
+]})
 
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 
 const Config = require('./config')
+
+const {DataBaseClient} = require('pg')
+
+const dataClient = new DataBaseClient({
+    host: "ec2-3-209-234-80.compute-1.amazonaws.com",
+    user: "szairfmtltxgrr",
+    port: 5432,
+    password: "6dc86eff35f9ca0b54dba5d2d1e746055f1abe41349bacd70df2c839c5a0a0df",
+    database: "dfkmv8u4f2gth2"
+})
+
+dataClient.connect()
+
+dataClient.query(`SELECT * FROM "public".testtable`, (err, res) =>{
+    if(!err){
+        console.log(res)
+    }else{
+        console.log(err)
+    }
+    dataClient.end
+})
 
 // Системные переменные
 const prefix = '!'
