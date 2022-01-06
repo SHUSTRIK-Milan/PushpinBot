@@ -546,18 +546,11 @@ client.on('ready', () => {
     });
 });
 
-client.on('guildMemberAdd', (member) => {
-    if(member.guild.id == Config.guilds.main){
-        giveRole(member, '829423238169755658')
-    }
-    sendLog(member, undefined, 'other', 'Новый пользователь', 0, `${member.user.tag} присоеденился к сообществу!`)
-});
-
 client.on('messageDelete', (message) => {
     if(!message.author.bot){if(rpGuilds.find(guild => guild == message.guild.id) != null){
         sendLog(message.member,message.channel,'rp','Сообщение удалено',0,`Содержимое сообщения: ${message.content}`)
     }else{sendLog(message.member,message.channel,'other','Сообщение удалено',0,`Содержимое сообщения: ${message.content}`)}}
-});
+})
 
 client.on('messageUpdate', (messageOld, messageNew) =>{
     if(!messageNew.author.bot){if(rpGuilds.find(guild => guild == messageNew.guild.id) != null){
