@@ -24,8 +24,8 @@ const client = new Discord.Client({ intents: [
 "DIRECT_MESSAGE_TYPING",
 ]})
 
-// const { REST } = require('@discordjs/rest');
-// const { Routes } = require('discord-api-types/v9');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
 const Config = require('./config')
 
 // Системные переменные
@@ -495,7 +495,7 @@ client.on('ready', () => {
     guildBD = client.guilds.cache.get(Config.guilds.BD)
 
     module.exports = {
-        client,
+        client, REST, Routes,
         Config, prefix, timeOfDelete,
         guildBase:guild, guildAges, guildBD, 
         rpGuilds, cmdParametrs, toChannelName, random,

@@ -1,5 +1,5 @@
 const {
-    client,
+    client, REST, Routes,
     Config, prefix, timeOfDelete,
     guildBase, guildAges, guildBD, 
     rpGuilds, cmdParametrs, toChannelName, random,
