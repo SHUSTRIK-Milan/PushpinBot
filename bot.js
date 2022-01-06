@@ -24,12 +24,8 @@ const client = new Discord.Client({ intents: [
 "DIRECT_MESSAGE_TYPING",
 ]})
 
-/* const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9'); */
-
-const Config = require('./config')
-
-const {Client} = require('pg')
+//const { REST } = require('@discordjs/rest');
+// const { Routes } = require('discord-api-types/v9');
 
 // Системные переменные
 const prefix = '!'
