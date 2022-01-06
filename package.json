@@ -20,10 +20,7 @@
   },
   "homepage": "https://github.com/SHUSTRIK-Milan/PushpinBot#readme",
   "dependencies": {
-    "@discordjs/rest": "^0.1.0-canary.0",
     "@discordjs/voice": "^0.7.5",
-    "discord-api-types": "^0.25.2",
-    "discord.js": "^13.3.1",
     "emoji-unicode": "^2.0.1",
     "github-api": "^3.4.0",
     "slash-commands": "^1.4.0"
