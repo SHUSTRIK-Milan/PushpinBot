@@ -3,7 +3,7 @@ const {
     Config, prefix, timeOfDelete,
     guildBase, guildAges, guildBD, 
     rpGuilds, cmdParametrs, toChannelName, random,
-    haveRole, giveRole, removeRole,
+    getRoleId, haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
     createCom, SlashCom, BDentity,
     GStats, AStats, EStats,
