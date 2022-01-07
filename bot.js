@@ -149,10 +149,10 @@ async function sendLog(member,channel,cat,act,pat,add){
         embeds: [{
             color: color,
             author: {
-                name: `${member.user.username} – ${nick}`,
+                name: `${pat} ${member.user.username} – ${nick}`,
                 icon_url: member.user.avatarURL()
             },
-            description: `${pat} **${act}:**\n${add}${chnlLink}`
+            description: `**${act}:**\n${add}${chnlLink}`
         }],
     })
 }
@@ -171,21 +171,22 @@ async function createLore(title,img,desc,message){
 }
 
 async function createEx(rule,num,pat,add,message){
-    if (pat){
-        pat = '🟩'
+    if (pat == "true"){
+        pat = 'https://i.imgur.com/cjSSwtu.png'
         var color = '#95D6A4'
     }
-    if (!pat){
-        pat = '🟥'
+    if (pat == "false"){
+        pat = 'https://i.imgur.com/utuBexR.png'
         var color = '#DD636E'
     }
 
     message.channel.send({embeds: [{
             color: color,
             fields: [{
-                name: `\\${pat} ${rule} [Пример #${num}]`,
+                name: `${rule} [Пример #${num}]`,
                 value: `${add}`
-            }]
+            }],
+            thumbnail: {url: pat}
         }]
     })
     return
