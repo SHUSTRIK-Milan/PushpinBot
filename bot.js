@@ -51,14 +51,7 @@ var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot')
 //
 
 function cmdParametrs(content,countS){
-    var comand = {
-        com: '0', arg: '0', sarg: '0', carg: '0', oarg: '0', barg: '0'
-    }
-
     if(countS == undefined) countS = 0
-    if(content.slice(0,1) != prefix) return comand
-
-    let regexp = /"(\\.|[^"\\])*"/g;
     
     let com = content.split(" ")[0].slice(prefix.length)
     let arg = content.slice(com.length+prefix.length+1)
@@ -70,7 +63,7 @@ function cmdParametrs(content,countS){
         boundArg[i] = boundArg[i].replaceAll(/"/, "")
     }}else{boundArg='null'}
 
-    comand = {
+    var comand = {
         com: com, // команда, первый слитнонаписанный текст
         arg: arg, // все, что идет после команды
         splitArg: splitArg, // разбитый аргумент на пробелы
