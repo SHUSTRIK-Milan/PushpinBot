@@ -327,8 +327,7 @@ async function GStats(chl, id, par){
         if(id != undefined){
             let idEnt = ents.reverse().find(ent => ent.id == id)
             if(par != undefined){
-                par = par.split('.')[0]
-                console.log(par)
+                par = par.split('.')
                 if(par[0] != 'data'){
                     return idEnt[par[0]]
                 }else{

@@ -55,7 +55,7 @@ SlashCom('wait', 'add', {
     {id: getRoleId(guild, '[B]'), type: 'ROLE', permission: true}
 ])
 
-SlashCom('edit', 'get', {
+SlashCom('wait', 'get', {
     name: 'get',
     description: 'Получить данные в консоль',
     type: 'CHAT_INPUT',
