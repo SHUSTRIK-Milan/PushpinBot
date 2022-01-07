@@ -157,10 +157,6 @@ client.on('interactionCreate', async interaction => {
                         interaction.editReply('> Вышло время записи данных!')
                     }
                 })
-                /* if(data != undefined){
-                    AStats(channel, structure, eval(data))
-                    interaction.reply('> Данные добавлены!')
-                } */
             }else{
                 interaction.reply(`> Указывать можно лишь каналы, но не категории!`)
             }
