@@ -55,7 +55,7 @@ SlashCom('wait', 'add', {
     {id: getRoleId(guild, '[B]'), type: 'ROLE', permission: true}
 ])
 
-SlashCom('wait', 'get', {
+SlashCom('edit', 'get', {
     name: 'get',
     description: 'Получить данные в консоль',
     type: 'CHAT_INPUT',
@@ -70,6 +70,12 @@ SlashCom('wait', 'get', {
             type: 'NUMBER',
             name: 'id',
             description: 'ID ячейки данных',
+            required: false,
+        },
+        {
+            type: 'STRING',
+            name: 'par',
+            description: 'Параметр, который требуется узнать',
             required: false,
         },
     ],
@@ -162,11 +168,12 @@ client.on('interactionCreate', async interaction => {
         if(interaction.commandName == 'get'){
             let channel = interaction.options.get('path').channel
             let id = interaction.options.get('id')
+            let par = interaction.options.get('par')
             if(id != undefined){id = id.value}
             
             if(channel.parent != undefined){
                 interaction.reply(`> Данные получены!`)
-                GStats(channel, id).then(console.log)
+                GStats(channel, id, par).then(console.log)
             }else{
                 interaction.reply(`> Указывать можно лишь каналы, но не категории!`)
             }

@@ -300,7 +300,7 @@ function BDentity(id, data) {
     this.data = data
 }
 
-async function GStats(chl, id){
+async function GStats(chl, id, par){
     try{
         if(chl.id == undefined){
             let path = chl.split('/')
@@ -325,7 +325,15 @@ async function GStats(chl, id){
             ents = ents.concat([ent])
         }
         if(id != undefined){
-            return ents.reverse().find(ent => ent.id == id)
+            if(par != undefined){
+                if(par.split('.')[0] != 'data'){
+                    return ents.reverse().find(ent => ent.id == id)[par]
+                }else{
+                    return ents.reverse().find(ent => ent.id == id).data[par]
+                }
+            }else{
+                return ents.reverse().find(ent => ent.id == id)
+            }
         }else{
             return ents.reverse()
         }
