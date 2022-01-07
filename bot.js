@@ -24,8 +24,8 @@ const client = new Discord.Client({ intents: [
 "DIRECT_MESSAGE_TYPING",
 ]})
 
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
+const { REST } = require('@discordjs/rest')
+const { Routes } = require('discord-api-types/v9')
 const Config = require('./config')
 
 // Системные переменные
@@ -43,7 +43,7 @@ var rpGuilds = [Config.guilds.ages]
 var GitHub = require('github-api')
 var gitA = new GitHub({
     token: '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'
-});
+})
 var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot')
 
 //
@@ -73,7 +73,7 @@ function cmdParametrs(content,countS){
         splitArg: splitArg,
         sliceArg: sliceArg,
         boundArg: boundArg,
-    };
+    }
 
     return comand
 }
@@ -83,8 +83,8 @@ function toChannelName(text){
 }
 
 function random(min, max) {
-    let rand = min + Math.random() * (max + 1 - min);
-    return Math.floor(rand);
+    let rand = min + Math.random() * (max + 1 - min)
+    return Math.floor(rand)
 }
 
 function haveRole(member, role){
@@ -98,11 +98,11 @@ function haveRole(member, role){
 }
 
 function giveRole(member, roleId){
-    member.roles.add(roleId, `Добавил роль под ID: ${roleId}.`).catch(console.error);
+    member.roles.add(roleId, `Добавил роль под ID: ${roleId}.`).catch(console.error)
 }
 
 function removeRole(member, roleId){
-    member.roles.remove(roleId, `Удалил роль под ID: ${roleId}.`).catch(console.error);
+    member.roles.remove(roleId, `Удалил роль под ID: ${roleId}.`).catch(console.error)
 }
 
 //
@@ -190,9 +190,12 @@ async function createCom(embd, message){
     var webhook = webhooks.get(Config.webhooks.commits)
 
     for(let a of embd.title.split(':')){
-        if(a.slice(-6) == 'closed') var act = 'merge';
-        if(a.slice(-7) == 'commits' || a.slice(-6) == 'commit') var act = 'commit';
-    };
+        if(a.slice(-6) == 'closed'){
+            var act = 'merge'
+        }else if (a.slice(-7) == 'commits' || a.slice(-6) == 'commit'){
+            var act = 'commit'
+        }
+    }
 
     if(act == 'commit'){
         let nTitle = embd.title.split(' ')[0].split(':')[1].slice()
@@ -201,7 +204,7 @@ async function createCom(embd, message){
         let countC = parseInt(embd.title.split(' ')[1])
         let lastcom = await commits.data[countC-1]
 
-        let nCommits = [];
+        let nCommits = []
         for (let i = countC-1; i > -1; i--) {
             lastcom = await commits.data[i]
             nCommits.push(`[\`${lastcom.html_url.slice(52).slice(0,7)}\`](${lastcom.html_url}) <t:${Math.floor(new Date(lastcom.commit.author.date).getTime() / 1000)}>\n${lastcom.commit.message}\n`)
@@ -225,7 +228,7 @@ async function createCom(embd, message){
         })
     }else if(act == 'merge'){
         let req = await fork.listPullRequests({state:'close'})
-        let lastReq = await req.data[0];
+        let lastReq = await req.data[0]
         webhook.send({
             embeds: [{
                 title: `[PushpinBot:${lastReq.head.ref}] Новое слияние веток.`,
@@ -537,8 +540,8 @@ client.on('ready', () => {
     checkOnlineUsers()
     client.on('presenceUpdate', () => {
         checkOnlineUsers()
-    });
-});
+    })
+})
 
 client.on('messageDelete', (message) => {
     if(!message.author.bot){if(rpGuilds.find(guild => guild == message.guild.id) != null){
@@ -556,8 +559,8 @@ client.on('messageCreate', message => {
     var cA = haveRole(message.member, "[A]"),
         cB = haveRole(message.member, "[B]"),
         cC = haveRole(message.member, "[C]")
-    let mb = message.author.bot;
-    let dm = message.channel.type == "DM";
+    let mb = message.author.bot
+    let dm = message.channel.type == "DM"
     let command = cmdParametrs(message.content)
 
     if(message.content == '⠀' && message.author.bot){

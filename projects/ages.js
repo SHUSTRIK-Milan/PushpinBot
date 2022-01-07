@@ -43,8 +43,8 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
     var cA = haveRole(message.member, "[A]"),
         cB = haveRole(message.member, "[B]"),
         cC = haveRole(message.member, "[C]")
-    let mb = message.author.bot;
-    let dm = message.channel.type == "DM";
+    let mb = message.author.bot
+    let dm = message.channel.type == "DM"
     let command = cmdParametrs(message.content)
 
     if(!mb && message.content == '!test'){
