@@ -37,7 +37,7 @@ async function awaitPutInBD(structure, channel, authorId){
     }catch{}
 }
 
-SlashCom('edit', 'add', {
+SlashCom('wait', 'add', {
     name: 'add',
     description: 'Добавить значение в базу данных',
     type: 'CHAT_INPUT',
@@ -55,7 +55,7 @@ SlashCom('edit', 'add', {
     {id: getRoleId(guild, '[B]'), type: 'ROLE', permission: true}
 ])
 
-SlashCom('edit', 'get', {
+SlashCom('wait', 'get', {
     name: 'get',
     description: 'Получить данные в консоль',
     type: 'CHAT_INPUT',
@@ -76,7 +76,7 @@ SlashCom('edit', 'get', {
     defaultPermission: false
 }, guild.id, [{id: getRoleId(guild, '[A]'), type: 'ROLE', permission: true}])
 
-SlashCom('edit', 'edit', {
+SlashCom('wait', 'edit', {
     name: 'edit',
     description: 'Изменить ячейку базы данных',
     type: 'CHAT_INPUT',
@@ -106,7 +106,7 @@ SlashCom('edit', 'edit', {
     {id: getRoleId(guild, '[B]'), type: 'ROLE', permission: true}
 ])
 
-SlashCom('edit', 'del', {
+SlashCom('wait', 'del', {
     name: 'del',
     description: 'Удалить значение ячейки базы данных',
     type: 'CHAT_INPUT',
