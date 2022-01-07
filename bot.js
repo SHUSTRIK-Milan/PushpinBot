@@ -64,7 +64,7 @@ function cmdParametrs(content,countS){
     }
 
     if(boundArg != undefined){for(let i = 0; i < boundArg.length; i++){
-        boundArg[i] = boundArg[i].replaceAll(/"/, "")
+        boundArg[i] = boundArg[i].replaceAll(/"/g, "")
     }}else{boundArg='null'}
 
     var comand = {
@@ -85,6 +85,13 @@ function toChannelName(text){
 function random(min, max) {
     let rand = min + Math.random() * (max + 1 - min)
     return Math.floor(rand)
+}
+
+function getRoleId(guild, roleName){
+    var role = guild.roles.cache.find(role => role.name == roleName)
+    if(role != undefined){
+        return role.id
+    }
 }
 
 function haveRole(member, role){
@@ -496,7 +503,7 @@ client.on('ready', () => {
         Config, prefix, timeOfDelete,
         guildBase:guild, guildAges, guildBD, 
         rpGuilds, cmdParametrs, toChannelName, random,
-        haveRole, giveRole, removeRole,
+        getRoleId, haveRole, giveRole, removeRole,
         sendLog, createLore, createEx,
         createCom, SlashCom, BDentity,
         GStats, AStats, EStats,
