@@ -37,7 +37,7 @@ async function awaitPutInBD(structure, channel, authorId){
     }catch{}
 }
 
-SlashCom('wait', 'add', {
+SlashCom('edit', 'add', {
     name: 'add',
     description: 'Добавить значение в базу данных',
     type: 'CHAT_INPUT',
@@ -50,9 +50,12 @@ SlashCom('wait', 'add', {
         }
     ],
     defaultPermission: false
-}, guild.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
+}, guild.id, [
+    {id: getRoleId(guild, '[A]'), type: 'ROLE', permission: true},
+    {id: getRoleId(guild, '[B]'), type: 'ROLE', permission: true}
+])
 
-SlashCom('wait', 'get', {
+SlashCom('edit', 'get', {
     name: 'get',
     description: 'Получить данные в консоль',
     type: 'CHAT_INPUT',
@@ -71,9 +74,9 @@ SlashCom('wait', 'get', {
         },
     ],
     defaultPermission: false
-}, guild.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
+}, guild.id, [{id: getRoleId(guild, '[A]'), type: 'ROLE', permission: true}])
 
-SlashCom('wait', 'edit', {
+SlashCom('edit', 'edit', {
     name: 'edit',
     description: 'Изменить ячейку базы данных',
     type: 'CHAT_INPUT',
@@ -98,9 +101,12 @@ SlashCom('wait', 'edit', {
         }
     ],
     defaultPermission: false
-}, guild.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
+}, guild.id, [
+    {id: getRoleId(guild, '[A]'), type: 'ROLE', permission: true},
+    {id: getRoleId(guild, '[B]'), type: 'ROLE', permission: true}
+])
 
-SlashCom('wait', 'del', {
+SlashCom('edit', 'del', {
     name: 'del',
     description: 'Удалить значение ячейки базы данных',
     type: 'CHAT_INPUT',
@@ -119,7 +125,7 @@ SlashCom('wait', 'del', {
         },
     ],
     defaultPermission: false
-}, guild.id, [{id: '921059115281821776', type: 'ROLE', permission: true}])
+}, guild.id, [{id: getRoleId(guild, '[A]'), type: 'ROLE', permission: true}])
 
 client.on('messageCreate', message => { if(message.guild.id == guild.id){
     var cA = haveRole(message.member, "[A]"),
