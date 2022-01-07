@@ -109,15 +109,15 @@ client.on('interactionCreate', async interaction => {
                 },
                 {
                     type: 'BUTTON',
-                    label: 'Выбросить',
-                    customId: `invent_drop_${value}`,
-                    style: 'DANGER'
-                },
-                {
-                    type: 'BUTTON',
                     label: 'Передать',
                     customId: `invent_trade_${value}`,
                     style: 'SUCCESS'
+                },
+                {
+                    type: 'BUTTON',
+                    label: 'Выбросить',
+                    customId: `invent_drop_${value}`,
+                    style: 'DANGER'
                 },
                 {
                     type: 'BUTTON',
@@ -184,30 +184,7 @@ client.on('interactionCreate', async interaction => {
         let act = interaction.customId.split('_')[1]
         let data = interaction.customId.split('_')[2]
 
-        if(type == 'invent' && act == 'back'){
-            if(player != undefined){
-                if(player.data.inv != undefined){
-                    let options = await joinItems(items, player.data.inv)
-                    interaction.update({
-                        content: '> Ваш инвентарь 💼',
-                        embeds: [],
-                        components: [
-                            {
-                                type: 'ACTION_ROW',
-                                components: [
-                                    {
-                                        type: 'SELECT_MENU',
-                                        customId: `invent_open`,
-                                        placeholder: 'Ваши предметы...',
-                                        options: options
-                                    }
-                                ],
-                            }
-                        ]
-                    })
-                }else{interaction.update({content: "> Ваш инвентарь пуст ⛔", embeds: [], components: []})}
-            }else{interaction.update({content: "> Ваш инвентарь пуст ⛔", embeds: [], components: []})}
-        }else if(type == 'invent' && act == 'use'){
+        if(type == 'invent' && act == 'use'){
             let object = objects.find(object => object.data.cid == interaction.channel.parentId)
             let options = RPF.radiusSelectMenu(object.id, objects)
             let lItem = player.data.inv.find(item => item.codename == data)
@@ -232,6 +209,33 @@ client.on('interactionCreate', async interaction => {
                     ]
                 })
             }
+        }else if(type == 'invent' && act == 'use'){
+
+        }else if(type == 'invent' && act == 'use'){
+            
+        }else if(type == 'invent' && act == 'back'){
+            if(player != undefined){
+                if(player.data.inv != undefined){
+                    let options = await joinItems(items, player.data.inv)
+                    interaction.update({
+                        content: '> Ваш инвентарь 💼',
+                        embeds: [],
+                        components: [
+                            {
+                                type: 'ACTION_ROW',
+                                components: [
+                                    {
+                                        type: 'SELECT_MENU',
+                                        customId: `invent_open`,
+                                        placeholder: 'Ваши предметы...',
+                                        options: options
+                                    }
+                                ],
+                            }
+                        ]
+                    })
+                }else{interaction.update({content: "> Ваш инвентарь пуст ⛔", embeds: [], components: []})}
+            }else{interaction.update({content: "> Ваш инвентарь пуст ⛔", embeds: [], components: []})}
         }
     }
 })
