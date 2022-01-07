@@ -184,41 +184,16 @@ client.on('interactionCreate', async interaction => {
         let act = interaction.customId.split('_')[1]
         let data = interaction.customId.split('_')[2]
 
-        if(type == 'invent' && act == 'use'){
+        if(type == 'invent'){
             let object = objects.find(object => object.data.cid == interaction.channel.parentId)
             let options = RPF.radiusSelectMenu(object.id, objects)
             let lItem = player.data.inv.find(item => item.codename == data)
             let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
 
-            if(gItem.data.type == 'key'){
-                interaction.update({
-                    content: '> Выберите объект 🏘',
-                    embeds: [],
-                    components: [
-                        {
-                            type: 'ACTION_ROW',
-                            components: [
-                                {
-                                    type: 'SELECT_MENU',
-                                    customId: `invent_key_${data}`,
-                                    placeholder: 'Объекты...',
-                                    options: options
-                                }
-                            ],
-                        }
-                    ]
-                })
-            }
-        }else if(type == 'invent' && act == 'trade'){
-
-        }else if(type == 'invent' && act == 'drop'){
-            
-        }else if(type == 'invent' && act == 'back'){
-            if(player != undefined){
-                if(player.data.inv != undefined){
-                    let options = await joinItems(items, player.data.inv)
+            if(act == 'use'){
+                if(gItem.data.type == 'key'){
                     interaction.update({
-                        content: '> Ваш инвентарь 💼',
+                        content: '> Выберите объект 🏘',
                         embeds: [],
                         components: [
                             {
@@ -226,16 +201,70 @@ client.on('interactionCreate', async interaction => {
                                 components: [
                                     {
                                         type: 'SELECT_MENU',
-                                        customId: `invent_open`,
-                                        placeholder: 'Ваши предметы...',
+                                        customId: `invent_key_${data}`,
+                                        placeholder: 'Объекты...',
                                         options: options
                                     }
                                 ],
                             }
                         ]
                     })
+                }
+            }else if(act == 'trade'){
+    
+            }else if(act == 'drop'){
+                let room = object.data.rooms[parseInt(interaction.channel.topic)]
+                if((lItem != undefined || lItem.count > 0) && room != undefined){
+                    if(room.items == undefined){
+                        room.items = [{codename: lItem.codename, count: 1}]
+                        object.data.rooms.splice(parseInt(interaction.channel.topic), 1, room)
+                        EStats('ages/objects', object.id, 'rooms', [object.data.rooms])
+                    }else{
+                        let fItem = room.items.find(item => item.codename == lItem.codename)
+                        if(fItem == undefined){
+                            room.items.push({codename: lItem.codename, count: 1})
+                            object.data.rooms.splice(parseInt(interaction.channel.topic), 1, room)
+                        }else{
+                            let id = room.items.indexOf(fItem)
+                            fItem.count += 1
+                            room.items.splice(id, 1, fItem)
+                            object.data.rooms.splice(parseInt(interaction.channel.topic), 1, room)
+                        }
+                    }
+                    try{
+                        EStats('ages/objects', object.id, 'rooms', [object.data.rooms])
+                        interaction.update(`> Вы выбросили предмет ${gItem.data.emoji}`)
+                    }catch{
+                        interaction.update(`> Комната переполнена 📦`)
+                    }
+                    
+                }else{
+                    interaction.update('> Искомый предмет отсутствует ⛔')
+                }
+            }else if(act == 'back'){
+                if(player != undefined){
+                    if(player.data.inv != undefined){
+                        let options = await joinItems(items, player.data.inv)
+                        interaction.update({
+                            content: '> Ваш инвентарь 💼',
+                            embeds: [],
+                            components: [
+                                {
+                                    type: 'ACTION_ROW',
+                                    components: [
+                                        {
+                                            type: 'SELECT_MENU',
+                                            customId: `invent_open`,
+                                            placeholder: 'Ваши предметы...',
+                                            options: options
+                                        }
+                                    ],
+                                }
+                            ]
+                        })
+                    }else{interaction.update({content: "> Ваш инвентарь пуст ⛔", embeds: [], components: []})}
                 }else{interaction.update({content: "> Ваш инвентарь пуст ⛔", embeds: [], components: []})}
-            }else{interaction.update({content: "> Ваш инвентарь пуст ⛔", embeds: [], components: []})}
+            }
         }
     }
 })
