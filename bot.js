@@ -64,11 +64,11 @@ function cmdParametrs(content,countS){
     }}else{boundArg='null'}
 
     var comand = {
-        com: com, // команда, первый слитнонаписанный текст
-        arg: arg, // все, что идет после команды
-        splitArg: splitArg, // разбитый аргумент на пробелы
-        sliceArg: sliceArg, // отрезанние от разбитого аргумента первых аргументов
-        boundArg: boundArg, // аргументы в кавычках
+        com: com,
+        arg: arg,
+        splitArg: splitArg,
+        sliceArg: sliceArg,
+        boundArg: boundArg,
     };
 
     return comand
