@@ -56,10 +56,12 @@ function cmdParametrs(content,countS){
     if(content.slice(0,1) == prefix){
         var com = content.split(" ")[0].slice(prefix.length) 
         var arg = content.slice(com.length+prefix.length+1)
+        var splitArg = arg.split(" ")
+        var sliceArg = splitArg.slice(countS).join(' ')
+        var boundArg = arg.match(/"(\\.|[^"\\])*"/g)
+    }else{
+        var boundArg = content.match(/"(\\.|[^"\\])*"/g)
     }
-    var splitArg = arg.split(" ")
-    var sliceArg = splitArg.slice(countS).join(' ')
-    var boundArg = arg.match(/"(\\.|[^"\\])*"/g)
 
     if(boundArg != undefined){for(let i = 0; i < boundArg.length; i++){
         boundArg[i] = boundArg[i].replaceAll(/"/, "")
