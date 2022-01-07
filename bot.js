@@ -564,29 +564,28 @@ client.on('messageCreate', message => {
         setTimeout(() => message.delete(), timeOfDelete)
     }
     if(command.com == `clear` && !mb && !dm && (cA || cB)){
-        let arg = parseInt(command.sarg[0])
+        let arg = parseInt(command.splitArg[0])
         if (arg > 0 && arg < 100){
             message.channel.bulkDelete(arg, true)
         }
     }
     if(command.com == `edit` && !dm && cA){
-        message.channel.guild.channels.cache.find(id => id == `${command.sarg[0]}`).messages.fetch(`${command.sarg[1]}`)
+        message.channel.guild.channels.cache.find(id => id == `${command.splitArg[0]}`).messages.fetch(`${command.splitArg[1]}`)
         .then(msg =>{
             if(!msg.author.bot) return
-            msg.edit(cmdParametrs(message.content,2).carg)
+            msg.edit(cmdParametrs(message.content,2).sliceArg)
         })
         setTimeout(() => message.delete(), timeOfDelete)
-    }
-    if(command.com == `checkm` && !mb && !dm && cA){
+    }else if(command.com == `checkm` && !mb && !dm && cA){
         console.log(command)
         setTimeout(() => message.delete(), timeOfDelete)
     }
     if(command.com == `cex` && !mb && !dm && cA){
-        createEx(command.oarg[0],command.oarg[1],command.oarg[2],command.oarg[3],message)
+        createEx(command.boundArg[0],command.boundArg[1],command.boundArg[2],command.boundArg[3],message)
         setTimeout(() => message.delete(), timeOfDelete)
     }
     if(command.com == `clore` && !mb && !dm && cA){
-        createLore(command.oarg[0],command.oarg[1],command.oarg[2],message)
+        createLore(command.boundArg[0],command.boundArg[1],command.boundArg[2],message)
         setTimeout(() => message.delete(), timeOfDelete)
     }
 })
