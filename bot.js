@@ -51,26 +51,19 @@ var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot')
 //
 
 function cmdParametrs(content,countS){
-    var comand = {
-        com: '0', arg: '0', sarg: '0', carg: '0', oarg: '0', barg: '0'
-    }
-
     if(countS == undefined) countS = 0
-    if(content.slice(0,1) != prefix) return comand
-
-    let regexp = /"(\\.|[^"\\])*"/g;
     
-    let com = content.split(" ")[0].slice(prefix.length)
-    let arg = content.slice(com.length+prefix.length+1)
-    let splitArg = arg.split(" ")
-    let sliceArg = splitArg.slice(countS).join(' ')
-    let boundArg = arg.match(/"(\\.|[^"\\])*"/g)
+    if(content.slice(0,1) == prefix) var com = content.split(" ")[0].slice(prefix.length) 
+    var arg = content.slice(com.length+prefix.length+1)
+    var splitArg = arg.split(" ")
+    var sliceArg = splitArg.slice(countS).join(' ')
+    var boundArg = arg.match(/"(\\.|[^"\\])*"/g)
 
     if(boundArg != undefined){for(let i = 0; i < boundArg.length; i++){
         boundArg[i] = boundArg[i].replaceAll(/"/, "")
     }}else{boundArg='null'}
 
-    comand = {
+    var comand = {
         com: com, // команда, первый слитнонаписанный текст
         arg: arg, // все, что идет после команды
         splitArg: splitArg, // разбитый аргумент на пробелы
@@ -571,29 +564,28 @@ client.on('messageCreate', message => {
         setTimeout(() => message.delete(), timeOfDelete)
     }
     if(command.com == `clear` && !mb && !dm && (cA || cB)){
-        let arg = parseInt(command.sarg[0])
+        let arg = parseInt(command.splitArg[0])
         if (arg > 0 && arg < 100){
             message.channel.bulkDelete(arg, true)
         }
     }
     if(command.com == `edit` && !dm && cA){
-        message.channel.guild.channels.cache.find(id => id == `${command.sarg[0]}`).messages.fetch(`${command.sarg[1]}`)
+        message.channel.guild.channels.cache.find(id => id == `${command.splitArg[0]}`).messages.fetch(`${command.splitArg[1]}`)
         .then(msg =>{
             if(!msg.author.bot) return
-            msg.edit(cmdParametrs(message.content,2).carg)
+            msg.edit(cmdParametrs(message.content,2).sliceArg)
         })
         setTimeout(() => message.delete(), timeOfDelete)
-    }
-    if(command.com == `checkm` && !mb && !dm && cA){
+    }else if(command.com == `checkm` && !mb && !dm && cA){
         console.log(command)
         setTimeout(() => message.delete(), timeOfDelete)
     }
     if(command.com == `cex` && !mb && !dm && cA){
-        createEx(command.oarg[0],command.oarg[1],command.oarg[2],command.oarg[3],message)
+        createEx(command.boundArg[0],command.boundArg[1],command.boundArg[2],command.boundArg[3],message)
         setTimeout(() => message.delete(), timeOfDelete)
     }
     if(command.com == `clore` && !mb && !dm && cA){
-        createLore(command.oarg[0],command.oarg[1],command.oarg[2],message)
+        createLore(command.boundArg[0],command.boundArg[1],command.boundArg[2],message)
         setTimeout(() => message.delete(), timeOfDelete)
     }
 })
