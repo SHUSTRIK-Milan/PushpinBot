@@ -325,14 +325,17 @@ async function GStats(chl, id, par){
             ents = ents.concat([ent])
         }
         if(id != undefined){
+            let idEnt = ents.reverse().find(ent => ent.id == id)
             if(par != undefined){
-                if(par.split('.')[0] != 'data'){
-                    return ents.reverse().find(ent => ent.id == id)[par]
+                par = par.split('.')[0]
+                console.log(par)
+                if(par[0] != 'data'){
+                    return idEnt[par[0]]
                 }else{
-                    return ents.reverse().find(ent => ent.id == id).data[par]
+                    return idEnt.data[par[1]]
                 }
             }else{
-                return ents.reverse().find(ent => ent.id == id)
+                return idEnt
             }
         }else{
             return ents.reverse()

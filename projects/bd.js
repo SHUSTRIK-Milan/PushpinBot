@@ -170,6 +170,7 @@ client.on('interactionCreate', async interaction => {
             let id = interaction.options.get('id')
             let par = interaction.options.get('par')
             if(id != undefined){id = id.value}
+            if(par != undefined){par = par.value}
             
             if(channel.parent != undefined){
                 interaction.reply(`> Данные получены!`)
