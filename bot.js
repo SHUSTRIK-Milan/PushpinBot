@@ -53,8 +53,10 @@ var fork = gitA.getRepo('SHUSTRIK-Milan','PushpinBot')
 function cmdParametrs(content,countS){
     if(countS == undefined) countS = 0
     
-    if(content.slice(0,1) == prefix) var com = content.split(" ")[0].slice(prefix.length) 
-    var arg = content.slice(com.length+prefix.length+1)
+    if(content.slice(0,1) == prefix){
+        var com = content.split(" ")[0].slice(prefix.length) 
+        var arg = content.slice(com.length+prefix.length+1)
+    }
     var splitArg = arg.split(" ")
     var sliceArg = splitArg.slice(countS).join(' ')
     var boundArg = arg.match(/"(\\.|[^"\\])*"/g)
