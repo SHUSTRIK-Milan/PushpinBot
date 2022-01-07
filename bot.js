@@ -62,23 +62,20 @@ function cmdParametrs(content,countS){
     
     let com = content.split(" ")[0].slice(prefix.length)
     let arg = content.slice(com.length+prefix.length+1)
-    let sarg = arg.split(" ")
-    let carg = sarg.slice(countS).join(' ')
-    let oarg = arg.match(/"(\\.|[^"\\])*"/g)
-    let barg = arg.match(/{"}(\\.|[^{}\\])*{"}/g)
-    if(oarg != undefined){for(let i = 0; i < oarg.length; i++){
-        oarg[i] = oarg[i].replace(/"/g, "")
-    }}else{oarg='null'}
-    if(barg != undefined){for(let i = 0; i < barg.length; i++){
-        barg[i] = barg[i].replace(/{"}/g, "")
-    }}else{barg='null'}
+    let splitArg = arg.split(" ")
+    let sliceArg = splitArg.slice(countS).join(' ')
+    let boundArg = arg.match(/"(\\.|[^"\\])*"/g)
+
+    if(boundArg != undefined){for(let i = 0; i < boundArg.length; i++){
+        boundArg[i] = boundArg[i].replaceAll(/"/, "")
+    }}else{boundArg='null'}
+
     comand = {
         com: com, // команда, первый слитнонаписанный текст
         arg: arg, // все, что идет после команды
-        sarg: sarg, // разбитый аргумент на пробелы
-        carg: carg, // отрезанние от разбитого аргумента первых аргументов
-        oarg: oarg, // аргументы в кавычках
-        barg: barg, // аргументы в кавычках
+        splitArg: splitArg, // разбитый аргумент на пробелы
+        sliceArg: sliceArg, // отрезанние от разбитого аргумента первых аргументов
+        boundArg: boundArg, // аргументы в кавычках
     };
 
     return comand
