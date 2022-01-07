@@ -152,7 +152,7 @@ async function sendLog(member,channel,cat,act,pat,add){
                 name: `${member.user.username} – ${nick}`,
                 icon_url: member.user.avatarURL()
             },
-            description: `${pat} **|** **${act}:**\n${add}${chnlLink}`
+            description: `${pat} **${act}:**\n${add}${chnlLink}`
         }],
     })
 }
@@ -561,15 +561,23 @@ client.on('ready', () => {
 })
 
 client.on('messageDelete', (message) => {
-    if(!message.author.bot){if(rpGuilds.find(guild => guild == message.guild.id) != null){
-        sendLog(message.member,message.channel,'rp','Сообщение удалено',0,`Содержимое сообщения: ${message.content}`)
-    }else{sendLog(message.member,message.channel,'other','Сообщение удалено',0,`Содержимое сообщения: ${message.content}`)}}
+    if(!message.author.bot){
+        if(rpGuilds.find(guild => guild == message.guild.id) != null){
+            sendLog(message.member, message.channel, 'rp', 'Сообщение удалено', true, `Содержимое сообщения: ${message.content}`)
+        }else{
+            sendLog(message.member, message.channel, 'other', 'Сообщение удалено', true, `Содержимое сообщения: ${message.content}`)
+        }
+    }
 })
 
 client.on('messageUpdate', (messageOld, messageNew) =>{
-    if(!messageNew.author.bot){if(rpGuilds.find(guild => guild == messageNew.guild.id) != null){
-        sendLog(messageNew.member,messageNew.channel,'rp','Сообщение отредактировано',0,`Старое соообщение:\n> ${messageOld.content}\nНовое сообщение:\n> ${messageNew.content}`)
-    }else{sendLog(messageNew.member,messageNew.channel,'other','Сообщение отредактировано',0,`Старое соообщение:\n> ${messageOld.content}\nНовое сообщение:\n> ${messageNew.content}`)}}
+    if(!messageNew.author.bot){
+        if(rpGuilds.find(guild => guild == messageNew.guild.id) != null){
+            sendLog(messageNew.member,messageNew.channel,'rp','Сообщение отредактировано', true,`> Старое соообщение:\n${messageOld.content}\n> Новое сообщение:\n${messageNew.content}`)
+        }else{
+            sendLog(messageNew.member,messageNew.channel,'other','Сообщение отредактировано', true,`> Старое соообщение:\n${messageOld.content}\n> Новое сообщение:\n${messageNew.content}`)
+        }
+    }
 })
 
 client.on('messageCreate', message => {
