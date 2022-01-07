@@ -209,9 +209,9 @@ client.on('interactionCreate', async interaction => {
                     ]
                 })
             }
-        }else if(type == 'invent' && act == 'use'){
+        }else if(type == 'invent' && act == 'trade'){
 
-        }else if(type == 'invent' && act == 'use'){
+        }else if(type == 'invent' && act == 'drop'){
             
         }else if(type == 'invent' && act == 'back'){
             if(player != undefined){
