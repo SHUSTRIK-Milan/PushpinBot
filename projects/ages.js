@@ -157,8 +157,8 @@ client.on('interactionCreate', async interaction => {
                 interaction.update({content: `> Искомый предмет отсутствует ⛔`, embeds: [], components: []})
             }
         }else if(type == 'invent' && act == 'key'){
-            let object = objects.find(object => object.data.cid == value)
             try{
+                let object = objects.find(object => object.data.cid == value)
                 let lItem = player.data.inv.find(item => item.codename == data)
                 let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
                 if(object.data.status != undefined){
@@ -191,9 +191,9 @@ client.on('interactionCreate', async interaction => {
         let data = interaction.customId.split('_')[2]
 
         if(type == 'invent'){
-            let object = objects.find(object => object.data.cid == interaction.channel.parentId)
-            let options = RPF.radiusSelectMenu(object.id, objects)
             try{
+                let object = objects.find(object => object.data.cid == interaction.channel.parentId)
+                let options = RPF.radiusSelectMenu(object.id, objects)
                 let lItem = player.data.inv.find(item => item.codename == data)    
                 let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
                 if(act == 'use'){
@@ -221,25 +221,24 @@ client.on('interactionCreate', async interaction => {
                 }else if(act == 'drop'){
                     let roomId = parseInt(interaction.channel.topic)
                     let room = object.data.rooms[roomId]
-
-                    let count = 1
-                    if(lItem.count > 1){
-                        interaction.update({content: `> Введите количество предметов, которое вы хотите выбросить 📥`, embeds: [], components: []})
-                        let filter = message => message.author.id == interaction.user.id
-                        let message = await interaction.channel.awaitMessages({filter, max: 1, time: 120000, errors: ['time']})
-
-                        count = parseInt(message.first().content)
-                        setTimeout(() => {message.first().delete()}, timeOfDelete)
-                    }
-                    if(interaction.replied){
-                        interaction.editReply({content: `> Процесс... 📦`, embeds: [], components: []})
-                    }else{
-                        interaction.update({content: `> Процесс... 📦`, embeds: [], components: []})
-                    }
                     
-                    setTimeout(() => {
-                        if(room != undefined && lItem.count > 0){
-                            if(count != NaN && count <= lItem.count && count > 0){
+                    if(room != undefined && lItem.count > 0){
+                        let count = 1
+                        if(lItem.count > 1){
+                            interaction.update({content: `> Введите количество предметов, которое вы хотите выбросить 📥`, embeds: [], components: []})
+                            let filter = message => message.author.id == interaction.user.id
+                            let message = await interaction.channel.awaitMessages({filter, max: 1, time: 120000, errors: ['time']})
+
+                            count = parseInt(message.first().content)
+                            setTimeout(() => {message.first().delete()}, timeOfDelete)
+                        }
+                        if(count != NaN && lItem.count >= count && count > 0){
+                            if(interaction.replied){
+                                interaction.editReply({content: `> Процесс... 📦`, embeds: [], components: []})
+                            }else{
+                                interaction.update({content: `> Процесс... 📦`, embeds: [], components: []})
+                            }
+                            setTimeout(() => {
                                 let itemId = player.data.inv.indexOf(lItem)
                                 let roomItem = room.items.find(item => item.codename == lItem.codename)
                                 let roomItemId = room.items.indexOf(roomItem)
@@ -255,7 +254,7 @@ client.on('interactionCreate', async interaction => {
                                 if(room.items.length <= 25){
                                     try{
                                         object.data.rooms.splice(roomId, count, room)
-    
+
                                         if(lItem.count <= count){
                                             player.data.inv.splice(itemId, 1)
                                         }else{
@@ -263,9 +262,9 @@ client.on('interactionCreate', async interaction => {
                                             player.data.inv.splice(itemId, 1, lItem)
                                         }
                                         if(player.data.inv.length == 0) player.data.inv = undefined
-    
+
+                                        EStats('ages/players', player.id, 'inv', [player.data.inv])
                                         EStats('ages/objects', object.id, 'rooms', [object.data.rooms])
-                                        EStats('ages/players', object.id, 'inv', [player.data.inv])
                                         interaction.editReply({content: `> Вы выбросили предмет ${gItem.data.emoji}`, embeds: [], components: []})
                                     }catch{
                                         interaction.editReply({content: `> Комната переполнена 📦`, embeds: [], components: []})
@@ -273,11 +272,11 @@ client.on('interactionCreate', async interaction => {
                                 }else{
                                     interaction.editReply({content: `> Комната переполнена 📦`, embeds: [], components: []})
                                 }
-                            }else{
-                                interaction.editReply({content: `> Вы указали неверное число 🔢`, embeds: [], components: []})
-                            }
+                            }, 2500)
+                        }else{
+                            interaction.editReply({content: `> Вы указали неверное число 🔢`, embeds: [], components: []})
                         }
-                    }, 2500)
+                    }
                 }else if(act == 'back'){
                     try{
                         let options = await joinItems(items, player.data.inv)
