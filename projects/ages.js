@@ -221,38 +221,59 @@ client.on('interactionCreate', async interaction => {
                 }else if(act == 'drop'){
                     let roomId = parseInt(interaction.channel.topic)
                     let room = object.data.rooms[roomId]
-                    if((lItem != undefined || lItem.count > 0) && room != undefined){
-                        let itemId = player.data.inv.indexOf(lItem)
-                        let roomItem = room.items.find(item => item.codename == lItem.codename)
-                        let roomItemId = room.items.indexOf(roomItem)
 
-                        if(room.items == undefined){
-                            room.items = [{codename: lItem.codename, count: 1}]
-                        }else if(roomItem == undefined){
-                            room.items.push({codename: lItem.codename, count: 1})
-                        }else{
-                            roomItem.count += 1
-                            room.items.splice(roomItemId, 1, roomItem)
-                        }
-                        try{
-                            object.data.rooms.splice(roomId, 1, room)
-                            
-                            if(lItem.count <= 1){
-                                player.data.inv.splice(itemId, 1)
+                    let count = 1
+                    if(lItem.count > 1){
+                        interaction.update({content: `> Введите количество предметов, которое вы хотите выбросить 📥`, embeds: [], components: []})
+                        let filter = message => message.author.id == interaction.user.id
+                        let message = await interaction.channel.awaitMessages({filter, max: 1, time: 120000, errors: ['time']})
+
+                        count = parseInt(message.first().content)
+                        setTimeout(() => {message.first().delete()}, timeOfDelete)
+                    }
+
+                    if(room != undefined && lItem.count > 0){
+                        if(count != NaN && count <= lItem.count && count > 0){
+                            let itemId = player.data.inv.indexOf(lItem)
+                            let roomItem = room.items.find(item => item.codename == lItem.codename)
+                            let roomItemId = room.items.indexOf(roomItem)
+
+                            if(room.items == undefined){
+                                room.items = [{codename: lItem.codename, count: count}]
+                            }else if(roomItem == undefined){
+                                room.items.push({codename: lItem.codename, count: count})
                             }else{
-                                lItem.count -= 1
-                                player.data.inv.splice(itemId, 1, lItem)
+                                roomItem.count += count
+                                room.items.splice(roomItemId, count, roomItem)
                             }
-                            if(player.data.inv.length == 0) player.data.inv = undefined
+                            try{
+                                object.data.rooms.splice(roomId, count, room)
 
-                            EStats('ages/objects', object.id, 'rooms', [object.data.rooms])
-                            EStats('ages/players', object.id, 'inv', [player.data.inv])
-                            interaction.update({content: `> Вы выбросили предмет ${gItem.data.emoji}`, embeds: [], components: []})
-                        }catch{
-                            interaction.update({content: `> Комната переполнена 📦`, embeds: [], components: []})
+                                if(lItem.count <= count){
+                                    player.data.inv.splice(itemId, 1)
+                                }else{
+                                    lItem.count -= count
+                                    player.data.inv.splice(itemId, 1, lItem)
+                                }
+                                if(player.data.inv.length == 0) player.data.inv = undefined
+
+                                EStats('ages/objects', object.id, 'rooms', [object.data.rooms])
+                                EStats('ages/players', object.id, 'inv', [player.data.inv])
+                                try{
+                                    interaction.editReply({content: `> Вы выбросили предмет ${gItem.data.emoji}`, embeds: [], components: []})
+                                }catch{
+                                    interaction.update({content: `> Вы выбросили предмет ${gItem.data.emoji}`, embeds: [], components: []})
+                                }
+                            }catch{
+                                try{
+                                    interaction.editReply({content: `> Комната переполнена 📦`, embeds: [], components: []})
+                                }catch{
+                                    interaction.update({content: `> Комната переполнена 📦`, embeds: [], components: []})
+                                }
+                            }
+                        }else{
+                            interaction.editReply({content: `> Вы указали неверное число 🔢`, embeds: [], components: []})
                         }
-                    }else{
-                        interaction.update({content: `> Искомый предмет отсутствует ⛔`, embeds: [], components: []})
                     }
                 }else if(act == 'back'){
                     try{
