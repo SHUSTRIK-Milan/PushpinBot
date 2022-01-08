@@ -172,7 +172,7 @@ client.on('interactionCreate', async interaction => {
                                 interaction.editReply({content: `> Вы открыли объект 🔓`})
                                 EStats("ages/objects", object.id, "status", [{open: true, ex: object.data.status.ex}])
                             }
-                        }, 5000)
+                        }, 2500)
                     }else{
                         interaction.update({content: `> Ключ не подходит к объекту 🔐`, embeds: [], components: []})
                     }
@@ -231,50 +231,53 @@ client.on('interactionCreate', async interaction => {
                         count = parseInt(message.first().content)
                         setTimeout(() => {message.first().delete()}, timeOfDelete)
                     }
-
-                    if(room != undefined && lItem.count > 0){
-                        if(count != NaN && count <= lItem.count && count > 0){
-                            let itemId = player.data.inv.indexOf(lItem)
-                            let roomItem = room.items.find(item => item.codename == lItem.codename)
-                            let roomItemId = room.items.indexOf(roomItem)
-
-                            if(room.items == undefined){
-                                room.items = [{codename: lItem.codename, count: count}]
-                            }else if(roomItem == undefined){
-                                room.items.push({codename: lItem.codename, count: count})
-                            }else{
-                                roomItem.count += count
-                                room.items.splice(roomItemId, count, roomItem)
-                            }
-                            try{
-                                object.data.rooms.splice(roomId, count, room)
-
-                                if(lItem.count <= count){
-                                    player.data.inv.splice(itemId, 1)
-                                }else{
-                                    lItem.count -= count
-                                    player.data.inv.splice(itemId, 1, lItem)
-                                }
-                                if(player.data.inv.length == 0) player.data.inv = undefined
-
-                                EStats('ages/objects', object.id, 'rooms', [object.data.rooms])
-                                EStats('ages/players', object.id, 'inv', [player.data.inv])
-                                try{
-                                    interaction.editReply({content: `> Вы выбросили предмет ${gItem.data.emoji}`, embeds: [], components: []})
-                                }catch{
-                                    interaction.update({content: `> Вы выбросили предмет ${gItem.data.emoji}`, embeds: [], components: []})
-                                }
-                            }catch{
-                                try{
-                                    interaction.editReply({content: `> Комната переполнена 📦`, embeds: [], components: []})
-                                }catch{
-                                    interaction.update({content: `> Комната переполнена 📦`, embeds: [], components: []})
-                                }
-                            }
-                        }else{
-                            interaction.editReply({content: `> Вы указали неверное число 🔢`, embeds: [], components: []})
-                        }
+                    if(interaction.replied){
+                        interaction.editReply({content: `> Процесс... 📦`, embeds: [], components: []})
+                    }else{
+                        interaction.update({content: `> Процесс... 📦`, embeds: [], components: []})
                     }
+                    
+                    setTimeout(() => {
+                        if(room != undefined && lItem.count > 0){
+                            if(count != NaN && count <= lItem.count && count > 0){
+                                let itemId = player.data.inv.indexOf(lItem)
+                                let roomItem = room.items.find(item => item.codename == lItem.codename)
+                                let roomItemId = room.items.indexOf(roomItem)
+
+                                if(room.items == undefined){
+                                    room.items = [{codename: lItem.codename, count: count}]
+                                }else if(roomItem == undefined){
+                                    room.items.push({codename: lItem.codename, count: count})
+                                }else{
+                                    roomItem.count += count
+                                    room.items.splice(roomItemId, count, roomItem)
+                                }
+                                if(room.items.length <= 25){
+                                    try{
+                                        object.data.rooms.splice(roomId, count, room)
+    
+                                        if(lItem.count <= count){
+                                            player.data.inv.splice(itemId, 1)
+                                        }else{
+                                            lItem.count -= count
+                                            player.data.inv.splice(itemId, 1, lItem)
+                                        }
+                                        if(player.data.inv.length == 0) player.data.inv = undefined
+    
+                                        EStats('ages/objects', object.id, 'rooms', [object.data.rooms])
+                                        EStats('ages/players', object.id, 'inv', [player.data.inv])
+                                        interaction.editReply({content: `> Вы выбросили предмет ${gItem.data.emoji}`, embeds: [], components: []})
+                                    }catch{
+                                        interaction.editReply({content: `> Комната переполнена 📦`, embeds: [], components: []})
+                                    }
+                                }else{
+                                    interaction.editReply({content: `> Комната переполнена 📦`, embeds: [], components: []})
+                                }
+                            }else{
+                                interaction.editReply({content: `> Вы указали неверное число 🔢`, embeds: [], components: []})
+                            }
+                        }
+                    }, 2500)
                 }else if(act == 'back'){
                     try{
                         let options = await joinItems(items, player.data.inv)
