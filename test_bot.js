@@ -66,7 +66,7 @@ client.on('ready', () => {
     guild = client.guilds.cache.get('840180165665619998')
     guildBD = client.guilds.cache.get(Config.guilds.BD)
 
-    SlashCom('wait', 'test', {
+    SlashCom('edit', 'взлом', {
         name: 'взлом',
         description: 'Система взлома замков',
         options: [
@@ -78,10 +78,16 @@ client.on('ready', () => {
             },
             {
                 type: 'NUMBER',
+                name: 'ряды',
+                description: 'Количество рядов',
+                required: true
+            },
+            {
+                type: 'NUMBER',
                 name: 'стадии',
                 description: 'Количество стадий',
                 required: true
-            }
+            },
         ]
     }, '840180165665619998')
 
@@ -106,21 +112,27 @@ client.on('ready', () => {
     }, '840180165665619998')
 })
 
-function comps(count, user){
-    var comps = [{
-        type: 'ACTION_ROW',
-        components: []
-    }]
+function comps(count, rows, user){
+    var comps = []
 
-    for (let i = 0; i < count; i++){
-        comps[0].components.push({
-            type: 'BUTTON',
-            label: ' ',
-            customId: `lockpickButton_${i}_${user}`,
-            style: 'PRIMARY'
+    for (let r = 0; r < rows; r++){
+        comps.push({
+            type: 'ACTION_ROW',
+            components: []
         })
+        for (let i = 0; i < count; i++){
+            comps[r].components.push({
+                type: 'BUTTON',
+                label: ' ',
+                customId: `lockpickButton_${r}-${i}_${user}`,
+                style: 'PRIMARY'
+            })
+        }
     }
-    comps[0].components[random(0, comps[0].components.length-1)].style = 'DANGER'
+    let randomRowId = random(0, comps.length-1)
+    let randomCompId = random(0, comps[randomRowId].components.length-1)
+    comps[randomRowId].components[randomCompId].style = 'DANGER'
+
     return comps
 }
 
@@ -208,7 +220,7 @@ client.on('ready', () => {
     
 })
 
-client.on('messageCreate', () => {
+/* client.on('messageCreate', () => {
     for (let object of objects){
         let cat = client.channels.cache.find(cat => cat.type == 'GUILD_CATEGORY' && cat.name == object.data.name && object.cid != undefined)
         if(cat == undefined){
@@ -226,7 +238,7 @@ client.on('messageCreate', () => {
         }else{console.log('уже есть')}
     }
     setTimeout(() => {console.log(objects)}, 3000)
-})
+}) */
 
 client.on('interactionCreate', async interaction => {
     var ping = client.ws.ping
@@ -267,23 +279,22 @@ client.on('interactionCreate', async interaction => {
         if(interaction.commandName == 'взлом'){
             let count = interaction.options.get('стадии').value
             let pins = interaction.options.get('пины').value
+            let rows = interaction.options.get('ряды').value
             if(pins > 5) pins = 5
+            if(rows > 5) rows = 5
 
             interaction.deferReply()
             setTimeout(() => {
                 interaction.editReply({
-                    /* content: `> [0/${count}] Процесс взлома... 🔏`,
-                    components: comps(pins, interaction.user.id) */
-                    content: `> Процесс взлома`,
+                    content: `> Процесс взлома 🔓`,
                     embeds: [
                     {
-                        //author: {name: `[0/${count}]` },
                         description: `Для успешного взлома вам следует успеть нажать на красный пин за опредленное время. При нажитии на синий, процесс будет завершен неудачей.\n\n**[0/${count}]**`,
                         thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/1f50f.png`}
                     }],
-                    components: comps(pins, interaction.user.id)
+                    components: comps(pins, rows, interaction.user.id)
                 })
-                lockpickCache.set(interaction.user.id.toString(), {steps: 0, count: count, pins: pins})
+                lockpickCache.set(interaction.user.id.toString(), {steps: 0, count: count, pins: pins, rows: rows})
             }, 1000)
         }
 
@@ -401,14 +412,9 @@ client.on('interactionCreate', async interaction => {
                 let data = lockpickCache.get(interaction.user.id)
 
                 if(data != undefined && interaction.user.id == interaction.customId.split('_')[2]){
-
                     if(interaction.component.style == 'PRIMARY'){
                         clearTimeout(data.timer)
-                        interaction.update({
-                            content: '> Взлом не удался! 🔴',
-                            components: [],
-                            embeds: []
-                        }).then(() => {
+                        interaction.update({content: '> Взлом не удался! 🔴', components: [], embeds: []}).then(() => {
                             lockpickCache.delete(interaction.user.id)
                         })
                         return
@@ -419,44 +425,29 @@ client.on('interactionCreate', async interaction => {
 
                         if(data.steps < data.count){
                             interaction.update({
-                                /* content: `> [${data.steps}/${data.count}] Процесс взлома... 🔏`,
-                                components: comps(data.pins, interaction.user.id) */
-                                content: `> Процесс взлома`,
+                                content: `> Процесс взлома 🔓`,
                                 embeds: [
                                 {
-                                    //author: {name: `[${data.steps}/${data.count}]`},
                                     description: `Для успешного взлома вам следует успеть нажать на красный пин за опредленное время. При нажитии на синий, процесс будет завершен неудачей.\n\n**[${data.steps}/${data.count}]**`,
                                     thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/1f50f.png`}
                                 }],
-                                components: comps(data.pins, interaction.user.id)
+                                components: comps(data.pins, data.rows, interaction.user.id)
                             }).then(() => {
                                 data.timer = setTimeout(() => {
                                     lockpickCache.delete(interaction.user.id)
-                                    interaction.editReply({
-                                        content: '> Взлом не удался! Закончилось время 🕐',
-                                        components: [],
-                                        embeds: []
-                                    })
+                                    interaction.editReply({content: '> Взлом не удался! Закончилось время 🕐', components: [], embeds: []})
                                     return
-                                }, (160*5)+ping)
+                                }, (150*5)+ping)
                             })
                         }else{
-                            interaction.update({
-                                content: '> Взлом удался! 🟢',
-                                components: [],
-                                embeds: []
-                            }).then(() => {
+                            interaction.update({content: '> Взлом удался! 🟢', components: [], embeds: []}).then(() => {
                                 lockpickCache.delete(interaction.user.id)
                             })
                             return
                         }
                     }
                 }else if(data == undefined && interaction.user.id == interaction.customId.split('_')[2]){
-                    interaction.update({
-                        content: '> Взлом не удался! Закончилось время 🕐',
-                        components: [],
-                        embeds: []
-                    })
+                    interaction.update({content: '> Взлом не удался! Закончилось время 🕐', components: [], embeds: []})
                     return
                 }else if(interaction.user.id != interaction.customId.split('_')[2]){
                     interaction.reply({content: '> Не вмешивайся в чужое пространтсво! 🛑', ephemeral: true})

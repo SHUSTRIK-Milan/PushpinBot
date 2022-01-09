@@ -16,18 +16,20 @@ console.log(`[bot-ages ready]`)
 
 async function joinItems(items, inv){
     let returnItems = []
-    for (let lItem of inv){
-        let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
-        if(gItem != undefined){
-            returnItems.push({
-                label: `${gItem.data.name} (x${lItem.count})`,
-                description: gItem.data.description,
-                value: `${lItem.codename}`,
-                emoji: {
-                    id: null,
-                    name: `${gItem.data.emoji}`
-                }
-            })
+    if(items != undefined && inv != undefined){
+        for (let lItem of inv){
+            let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
+            if(gItem != undefined){
+                returnItems.push({
+                    label: `${gItem.data.name} (x${lItem.count})`,
+                    description: gItem.data.description,
+                    value: `${lItem.codename}`,
+                    emoji: {
+                        id: null,
+                        name: `${gItem.data.emoji}`
+                    }
+                })
+            }
         }
     }
     return returnItems
@@ -37,6 +39,20 @@ SlashCom('wait', 'инвентарь', {
     name: 'инвентарь',
     description: 'Показывает текущий инвентарь',
     type: 'CHAT_INPUT'
+}, guild.id)
+
+SlashCom('wait', 'осмотреть', {
+    name: 'осмотреть',
+    description: 'Позволяет осмотреть территорию вокруг, а также человека поблизости',
+    type: 'CHAT_INPUT',
+    options: [
+        {
+            type: 'USER',
+            name: 'человек',
+            description: 'Человек, которого следует осмотреть',
+            required: false,
+        }
+    ],
 }, guild.id)
 
 client.on('messageCreate', message => { if(message.guild.id == guild.id){
@@ -63,28 +79,42 @@ client.on('interactionCreate', async interaction => {
     if(interaction.isCommand()){
         if(interaction.commandName == 'инвентарь'){
             try{
+                let object = objects.find(object => object.data.cid == interaction.channel.parentId)
+                if(object == undefined) throw new Error("Функция используется вне ролевого поля")
+
                 let options = await joinItems(items, player.data.inv)
-                if(options.length != 0){
-                    interaction.reply({
-                        content: '> Ваш инвентарь 💼',
-                        components: [
-                            {
-                                type: 'ACTION_ROW', 
-                                components: [
-                                    {
-                                        type: 'SELECT_MENU',
-                                        customId: `invent_open`,
-                                        placeholder: 'Ваши предметы...',
-                                        options: options
-                                    }
-                                ]
-                            }
-                        ],
-                        ephemeral: true
-                    })
-                }
+                if(options.length == 0) throw new Error("Ваш инвентарь пуст")
+
+                interaction.reply({
+                    content: '> Ваш инвентарь 💼',
+                    components: [
+                        {
+                            type: 'ACTION_ROW', 
+                            components: [
+                                {
+                                    type: 'SELECT_MENU',
+                                    customId: `invent_open`,
+                                    placeholder: 'Ваши предметы...',
+                                    options: options
+                                }
+                            ]
+                        }
+                    ],
+                    ephemeral: true
+                })
+            }catch(error){
+                interaction.reply({content: `> Ошибка. ${error.message} ⛔`, ephemeral: true})
+            }
+        }
+
+        if(interaction.commandName == 'осмотреть'){
+            try{
+                let object = objects.find(object => object.data.cid == interaction.channel.parentId)
+                if(object == undefined) throw new Error("Функция используется вне ролевого поля")
+
+                
             }catch{
-                interaction.reply({content: "> Ваш инвентарь пуст ⛔", ephemeral: true})
+                interaction.reply({content: `> Ошибка. ${error.message} ⛔`, ephemeral: true})
             }
         }
     }
@@ -97,7 +127,12 @@ client.on('interactionCreate', async interaction => {
 
         if(type == 'invent' && act == 'open'){
             try{
+                let object = objects.find(object => object.data.cid == interaction.channel.parentId)
+                if(object == undefined) throw new Error("Функция используется вне ролевого поля")
+
                 let lItem = player.data.inv.find(item => item.codename == value)
+                if(lItem == undefined) throw new Error("Предмет не удалось найти")
+
                 let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
                 let emoji = getUnicode(gItem.data.emoji).split(' ').join('-')
                 let itemComponents = [
@@ -126,7 +161,7 @@ client.on('interactionCreate', async interaction => {
                         style: 'SECONDARY'
                     }
                 ]
-                if(!Config.itemTypes[gItem.data.type].usable) itemComponents.splice(0,1)
+                if(!Config.itemTypes[gItem.data.type].usable) itemComponents[0].disabled = true
 
                 interaction.update({
                     content: '> Ваш инвентарь 💼',
@@ -153,13 +188,17 @@ client.on('interactionCreate', async interaction => {
                         }
                     }catch{}
                 })
-            }catch{
-                interaction.update({content: `> Искомый предмет отсутствует ⛔`, embeds: [], components: []})
+            }catch(error){
+                interaction.update({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
             }
         }else if(type == 'invent' && act == 'key'){
             try{
                 let object = objects.find(object => object.data.cid == value)
+                if(object == undefined) throw new Error("Функция используется вне ролевого поля")
+
                 let lItem = player.data.inv.find(item => item.codename == data)
+                if(lItem == undefined) throw new Error("Предмет не удалось найти")
+
                 let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
                 if(object.data.status != undefined){
                     if(gItem.data.convar == object.id){
@@ -179,8 +218,8 @@ client.on('interactionCreate', async interaction => {
                 }else{
                     interaction.update({content: `> Этот объект невозможно закрыть ⛔`, embeds: [], components: []})
                 }
-            }catch{
-                interaction.update({content: `> Искомый предмет отсутствует ⛔`, embeds: [], components: []})
+            }catch(error){
+                interaction.update({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
             }
         }
     }
@@ -193,9 +232,17 @@ client.on('interactionCreate', async interaction => {
         if(type == 'invent'){
             try{
                 let object = objects.find(object => object.data.cid == interaction.channel.parentId)
-                let options = RPF.radiusSelectMenu(object.id, objects)
-                let lItem = player.data.inv.find(item => item.codename == data)    
+                if(object == undefined) throw new Error("Функция используется вне ролевого поля")
+
+                let lItem = player.data.inv.find(item => item.codename == data)
+                if(lItem == undefined) throw new Error("Предмет не удалось найти")
+
                 let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
+
+                let roomId = parseInt(interaction.channel.topic)
+                let room = object.data.rooms[roomId]
+                let options = RPF.radiusSelectMenu(object.id, objects)
+
                 if(act == 'use'){
                     if(gItem.data.type == 'key'){
                         interaction.update({
@@ -219,92 +266,88 @@ client.on('interactionCreate', async interaction => {
                 }else if(act == 'trade'){
         
                 }else if(act == 'drop'){
-                    let roomId = parseInt(interaction.channel.topic)
-                    let room = object.data.rooms[roomId]
-                    
-                    if(room != undefined && lItem.count > 0){
-                        let count = 1
-                        if(lItem.count > 1){
-                            interaction.update({content: `> Введите количество предметов, которое вы хотите выбросить 📥`, embeds: [], components: []})
-                            let filter = message => message.author.id == interaction.user.id
-                            let message = await interaction.channel.awaitMessages({filter, max: 1, time: 120000, errors: ['time']})
+                    let count = 1
+                    if(lItem.count > 1){
+                        interaction.update({content: `> Введите количество предметов, которое вы хотите выбросить 📥`, embeds: [], components: []})
+                        let filter = message => message.author.id == interaction.user.id
+                        let message = await interaction.channel.awaitMessages({filter, max: 1, time: 120000, errors: ['time']})
 
-                            count = parseInt(message.first().content)
-                            setTimeout(() => {message.first().delete()}, timeOfDelete)
+                        count = parseInt(message.first().content)
+                        setTimeout(() => {message.first().delete()}, timeOfDelete)
+                    }
+                    if(count != NaN && lItem.count >= count && count > 0){
+                        if(interaction.replied){
+                            interaction.editReply({content: `> Процесс... 📦`, embeds: [], components: []})
+                        }else{
+                            interaction.update({content: `> Процесс... 📦`, embeds: [], components: []})
                         }
-                        if(count != NaN && lItem.count >= count && count > 0){
-                            if(interaction.replied){
-                                interaction.editReply({content: `> Процесс... 📦`, embeds: [], components: []})
+                        setTimeout(() => {
+                            let itemId = player.data.inv.indexOf(lItem)
+                            let roomItem = room.items.find(item => item.codename == lItem.codename)
+                            let roomItemId = room.items.indexOf(roomItem)
+
+                            if(room.items == undefined){
+                                room.items = [{codename: lItem.codename, count: count}]
+                            }else if(roomItem == undefined){
+                                room.items.push({codename: lItem.codename, count: count})
                             }else{
-                                interaction.update({content: `> Процесс... 📦`, embeds: [], components: []})
+                                roomItem.count += count
+                                room.items.splice(roomItemId, count, roomItem)
                             }
-                            setTimeout(() => {
-                                let itemId = player.data.inv.indexOf(lItem)
-                                let roomItem = room.items.find(item => item.codename == lItem.codename)
-                                let roomItemId = room.items.indexOf(roomItem)
 
-                                if(room.items == undefined){
-                                    room.items = [{codename: lItem.codename, count: count}]
-                                }else if(roomItem == undefined){
-                                    room.items.push({codename: lItem.codename, count: count})
-                                }else{
-                                    roomItem.count += count
-                                    room.items.splice(roomItemId, count, roomItem)
-                                }
-                                if(room.items.length <= 25){
-                                    try{
-                                        object.data.rooms.splice(roomId, count, room)
+                            if(room.items.length <= 25){
+                                try{
+                                    object.data.rooms.splice(roomId, count, room)
 
-                                        if(lItem.count <= count){
-                                            player.data.inv.splice(itemId, 1)
-                                        }else{
-                                            lItem.count -= count
-                                            player.data.inv.splice(itemId, 1, lItem)
-                                        }
-                                        if(player.data.inv.length == 0) player.data.inv = undefined
-
-                                        EStats('ages/players', player.id, 'inv', [player.data.inv])
-                                        EStats('ages/objects', object.id, 'rooms', [object.data.rooms])
-                                        interaction.editReply({content: `> Вы выбросили предмет ${gItem.data.emoji}`, embeds: [], components: []})
-                                    }catch{
-                                        interaction.editReply({content: `> Комната переполнена 📦`, embeds: [], components: []})
+                                    if(lItem.count <= count){
+                                        player.data.inv.splice(itemId, 1)
+                                    }else{
+                                        lItem.count -= count
+                                        player.data.inv.splice(itemId, 1, lItem)
                                     }
-                                }else{
+                                    if(player.data.inv.length == 0) player.data.inv = undefined
+
+                                    EStats('ages/players', player.id, 'inv', [player.data.inv])
+                                    EStats('ages/objects', object.id, 'rooms', [object.data.rooms])
+                                    interaction.editReply({content: `> Вы выбросили предмет ${gItem.data.emoji}`, embeds: [], components: []})
+                                }catch{
                                     interaction.editReply({content: `> Комната переполнена 📦`, embeds: [], components: []})
                                 }
-                            }, 2500)
-                        }else{
-                            interaction.editReply({content: `> Вы указали неверное число 🔢`, embeds: [], components: []})
-                        }
+                            }else{
+                                interaction.editReply({content: `> Комната переполнена 📦`, embeds: [], components: []})
+                            }
+                        }, 2500)
+                    }else{
+                        interaction.editReply({content: `> Вы указали неверное число 🔢`, embeds: [], components: []})
                     }
                 }else if(act == 'back'){
                     try{
                         let options = await joinItems(items, player.data.inv)
-                        if(options.length != 0){
-                            interaction.reply({
-                                content: '> Ваш инвентарь 💼',
-                                components: [
-                                    {
-                                        type: 'ACTION_ROW', 
-                                        components: [
-                                            {
-                                                type: 'SELECT_MENU',
-                                                customId: `invent_open`,
-                                                placeholder: 'Ваши предметы...',
-                                                options: options
-                                            }
-                                        ]
-                                    }
-                                ],
-                                ephemeral: true
-                            })
-                        }
-                    }catch{
-                        interaction.reply({content: "> Ваш инвентарь пуст ⛔", ephemeral: true})
+                        if(options.length == 0) throw new Error("Ваш инвентарь пуст")
+        
+                        interaction.update({
+                            content: '> Ваш инвентарь 💼',
+                            embeds: [],
+                            components: [ 
+                                {
+                                    type: 'ACTION_ROW', 
+                                    components: [
+                                        {
+                                            type: 'SELECT_MENU',
+                                            customId: `invent_open`,
+                                            placeholder: 'Ваши предметы...',
+                                            options: options
+                                        }
+                                    ]
+                                }
+                            ]
+                        })
+                    }catch(error){
+                        interaction.update({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
                     }
                 }
-            }catch{
-                interaction.update({content: `> Искомый предмет отсутствует ⛔`, embeds: [], components: []})
+            }catch(error){
+                interaction.update({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
             }
         }
     }
