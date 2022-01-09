@@ -405,6 +405,11 @@ async function EStats(chl, id, par, data){
         var entity = ents.find(entity => entity.id == id)
         var msg = await chl.messages.fetch(entity.mid)
 
+        if(data[0] != undefined){
+            if(data[0].length == 0) data[0] = undefined
+        }
+        console.log(data[0])
+        console.log(data[0].length)
         var ent = eval(`[${msg.content}]`)
         try{
             if(typeof(data[0]) != 'string'){
@@ -425,7 +430,8 @@ async function EStats(chl, id, par, data){
         }else{
             console.log('> Ошибка при редактировании ячейки')
         }
-    }catch{
+    }catch(error){
+        console.log(error)
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, id-ячейки, параметр, замену]**`).then(msg => {
             setTimeout(() => {msg.delete()}, 10000)
         })
@@ -455,7 +461,10 @@ async function DStats(chl, id){
 //
 
 const RPF = {
-    createObjects: async function(path, guild){
+    randomHomeEmoji: () => {
+        return ['🏠','🏢','🏛','🏡','🏭','🏘'][random(0,5)]
+    },
+    createObjects: async (path, guild) => {
         let objects = await GStats(path)
         for (let object of objects){
             let cat = guild.channels.cache.find(cat => cat.type == 'GUILD_CATEGORY' && cat.name == object.data.name && object.data.cid == cat.id)
@@ -480,7 +489,7 @@ const RPF = {
             }
         }
     },
-    radiusSelectMenu: function(objectId, objects){
+    radiusSelectMenu: (objectId, objects) => {
         let returnObjects = []
         for(let object of objects){
             if(object.data.radius.find(object => object.id == objectId) != undefined || objectId == object.id){
@@ -489,13 +498,109 @@ const RPF = {
                     value: `${object.data.cid}`,
                     emoji: {
                         id: null,
-                        name: `${['🏠','🏢','🏛','🏡','🏭'][random(0,4)]}`
+                        name: RPF.randomHomeEmoji()
                     }
                 })
             }
         }
         return returnObjects
-    }
+    },
+    roomItemManager: (get, project, object, room, gItem, count, act) => {
+        try{
+            var roomId = object.data.rooms.indexOf(room)
+            try{
+                var roomItem = room.items.find(item => item.codename == gItem.data.codename)
+                var rItemId = room.items.indexOf(roomItem)
+            }catch{}
+
+            if(!get){
+                if(room.items == undefined){
+                    throw new Error(`Комната пуста`)
+                }else if(roomItem != undefined){
+                    if(roomItem.count <= count){
+                        room.items.splice(roomItem, 1)
+                    }else{
+                        room.items[rItemId].count -= count
+                    }
+                }else{
+                    throw new Error(`Предмет не удалось найти`)
+                }
+
+                object.data.rooms[roomId] = room
+                EStats(`${project}/objects`, object.id, 'rooms', [object.data.rooms])
+                return {content: act, embeds: [], components: []}
+            }else if(get){
+                if(room.items == undefined){
+                    room.items = [{codename: gItem.data.codename, count: count}]
+                }else if(roomItem == undefined){
+                    room.items.push({codename: gItem.data.codename, count: count})
+                }else{
+                    room.items[rItemId].count += count
+                }
+
+                if(room.items.length <= 25){
+                    try{
+                        object.data.rooms[roomId] = room
+                        EStats(`${project}/objects`, object.id, 'rooms', [object.data.rooms])
+                        return {content: act, embeds: [], components: []}
+                    }catch{
+                        throw new Error(`Комната переполнена`)
+                    }
+                }else{
+                    throw new Error(`Комната переполнена`)
+                }
+            }
+        }catch(error){
+            return new Error(`${error.message}`)
+        }
+    },
+    playerItemManager: (get, project, player, gItem, count, act) => {
+        try{
+            try{
+                var playerItem = player.data.items.find(item => item.codename == gItem.data.codename)
+                var itemId = player.data.items.indexOf(playerItem)
+            }catch{}
+
+            if(!get){
+                if(player.data.items == undefined){
+                    throw new Error(`Ваш инвентарь пуст`)
+                }else if(playerItem != undefined){
+                    if(playerItem.count <= count){
+                        player.data.items.splice(itemId, 1)
+                    }else{
+                        player.data.items[itemId].count -= count
+                    }
+                }else{
+                    throw new Error(`Предмет не удалось найти`)
+                }
+
+                EStats(`${project}/players`, player.id, 'items', [player.data.items])
+                return {content: act, embeds: [], components: []}
+            }else if(get){
+                if(player.data.items == undefined){
+                    player.data.items = [{codename: gItem.data.codename, count: count}]
+                }else if(playerItem == undefined){
+                    player.data.items.push({codename: gItem.data.codename, count: count})
+                }else{
+                    player.data.items[itemId].count += count
+                }
+
+                if(player.data.items.length <= 25){
+                    try{
+                        EStats(`${project}/players`, player.id, 'items', [player.data.items])
+                        return {content: act, embeds: [], components: []}
+                    }catch(error){
+                        console.log(error)
+                        throw new Error(`Инвентарь переполнен`)
+                    }
+                }else{
+                    throw new Error(`Инвентарь переполнен`)
+                }
+            }
+        }catch(error){
+            return new Error(`${error.message}`)
+        }
+    },
 }
 
 //
