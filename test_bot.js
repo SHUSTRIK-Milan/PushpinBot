@@ -125,7 +125,7 @@ function comps(count, rows, user){
                 type: 'BUTTON',
                 label: ' ',
                 customId: `lockpickButton_${r}-${i}_${user}`,
-                style: 'PRIMARY'
+                style: ['PRIMARY', 'SECONDARY'][(random(0,1))]
             })
         }
     }
