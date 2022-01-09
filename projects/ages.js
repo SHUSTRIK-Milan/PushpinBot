@@ -355,9 +355,9 @@ client.on('interactionCreate', async interaction => {
                     try{
                         if(item.count > 1){
                             if(get){
-                                interaction.update({content: `> Введите количество предметов, которое вы хотите поднять 📤`, embeds: [], components: []})
+                                interaction.update({content: `> Введите количество предметов, которое вы хотите поднять 📥`, embeds: [], components: []})
                             }else{
-                                interaction.update({content: `> Введите количество предметов, которое вы хотите выбросить 📥`, embeds: [], components: []})
+                                interaction.update({content: `> Введите количество предметов, которое вы хотите выбросить 📤`, embeds: [], components: []})
                             }
                             
                             let filter = message => message.author.id == interaction.user.id
