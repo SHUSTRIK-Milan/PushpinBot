@@ -290,7 +290,8 @@ client.on('interactionCreate', async interaction => {
                     embeds: [
                     {
                         description: `Для успешного взлома вам следует успеть нажать на красный пин за опредленное время. При нажитии на другой цвет, процесс будет завершен неудачей.\n\n**[0/${count}]**`,
-                        thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/1f50f.png`}
+                        thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/1f50f.png`},
+                        color: 'ED4245'
                     }],
                     components: comps(pins, rows, interaction.user.id)
                 })
@@ -429,7 +430,8 @@ client.on('interactionCreate', async interaction => {
                                 embeds: [
                                 {
                                     description: `Для успешного взлома вам следует успеть нажать на красный пин за опредленное время. При нажитии на другой цвет, процесс будет завершен неудачей.\n\n**[${data.steps}/${data.count}]**`,
-                                    thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/1f50f.png`}
+                                    thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/1f50f.png`},
+                                    color: 'ED4245'
                                 }],
                                 components: comps(data.pins, data.rows, interaction.user.id)
                             }).then(() => {
