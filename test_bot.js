@@ -277,26 +277,31 @@ client.on('interactionCreate', async interaction => {
 
     if(interaction.isCommand()){
         if(interaction.commandName == 'взлом'){
-            let count = interaction.options.get('стадии').value
-            let pins = interaction.options.get('пины').value
-            let rows = interaction.options.get('ряды').value
-            if(pins > 5) pins = 5
-            if(rows > 5) rows = 5
+            console.log(!lockpickCache.has(interaction.user.id))
+            if(!lockpickCache.has(interaction.user.id)){
+                let count = interaction.options.get('стадии').value
+                let pins = interaction.options.get('пины').value
+                let rows = interaction.options.get('ряды').value
+                if(pins > 5) pins = 5
+                if(rows > 5) rows = 5
 
-            interaction.deferReply()
-            setTimeout(() => {
-                interaction.editReply({
-                    content: `> Процесс взлома 🔓`,
-                    embeds: [
-                    {
-                        description: `Для успешного взлома вам следует успеть нажать на красный пин за опредленное время. При нажитии на другой цвет, процесс будет завершен неудачей.\n\n**[0/${count}]**`,
-                        thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/1f50f.png`},
-                        color: 'ED4245'
-                    }],
-                    components: comps(pins, rows, interaction.user.id)
-                })
-                lockpickCache.set(interaction.user.id.toString(), {steps: 0, count: count, pins: pins, rows: rows})
-            }, 1000)
+                interaction.deferReply()
+                setTimeout(() => {
+                    interaction.editReply({
+                        content: `> Процесс взлома 🔓`,
+                        embeds: [
+                        {
+                            description: `Для успешного взлома вам следует успеть нажать на красный пин за опредленное время. При нажитии на другой цвет, процесс будет завершен неудачей.\n\n**[0/${count}]**`,
+                            thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/1f50f.png`},
+                            color: 'ED4245'
+                        }],
+                        components: comps(pins, rows, interaction.user.id)
+                    })
+                    lockpickCache.set(interaction.user.id, {steps: 0, count: count, pins: pins, rows: rows})
+                }, 1000)
+            }else{
+                interaction.reply({content: '> Вы уже начали взлом! 🔏', ephemeral: true})
+            }
         }
 
         if(interaction.commandName == 'инвентарь'){
