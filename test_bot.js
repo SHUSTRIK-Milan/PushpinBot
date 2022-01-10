@@ -88,6 +88,12 @@ client.on('ready', () => {
                 description: 'Количество стадий',
                 required: true
             },
+            {
+                type: 'NUMBER',
+                name: 'время',
+                description: 'Время на один пин (в секундах)',
+                required: false
+            },
         ]
     }, '840180165665619998')
 
@@ -125,7 +131,7 @@ function comps(count, rows, user){
                 type: 'BUTTON',
                 label: ' ',
                 customId: `lockpickButton_${r}-${i}_${user}`,
-                style: ['PRIMARY', 'SECONDARY'][(random(0,1))]
+                style: ['PRIMARY', 'SECONDARY'][(random(0,1))],
             })
         }
     }
@@ -282,6 +288,12 @@ client.on('interactionCreate', async interaction => {
                 let count = interaction.options.get('стадии').value
                 let pins = interaction.options.get('пины').value
                 let rows = interaction.options.get('ряды').value
+                let time
+                if(interaction.options.get('время') != undefined){
+                    time = interaction.options.get('время').value*1000
+                }else{
+                    time = 150*5
+                }
                 if(pins > 5) pins = 5
                 if(rows > 5) rows = 5
 
@@ -297,7 +309,7 @@ client.on('interactionCreate', async interaction => {
                         }],
                         components: comps(pins, rows, interaction.user.id)
                     })
-                    lockpickCache.set(interaction.user.id, {steps: 0, count: count, pins: pins, rows: rows})
+                    lockpickCache.set(interaction.user.id, {steps: 0, count: count, pins: pins, rows: rows, time: time})
                 }, 1000)
             }else{
                 interaction.reply({content: '> Вы уже начали взлом! 🔏', ephemeral: true})
@@ -444,7 +456,7 @@ client.on('interactionCreate', async interaction => {
                                     lockpickCache.delete(interaction.user.id)
                                     interaction.editReply({content: '> Взлом не удался! Закончилось время 🕐', components: [], embeds: []})
                                     return
-                                }, (150*5)+ping)
+                                }, data.time+ping)
                             })
                         }else{
                             interaction.update({content: '> Взлом удался! 🟢', components: [], embeds: []}).then(() => {
