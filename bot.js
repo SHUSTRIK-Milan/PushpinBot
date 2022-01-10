@@ -405,10 +405,6 @@ async function EStats(chl, id, par, data){
         var unit = units.find(unit => unit.id == id)
         var msg = await chl.messages.fetch(unit.mid)
 
-        if(data[0] != undefined){
-            if(data[0].length == 0) data[0] = undefined
-        }
-        console.log(data[0].length)
         var unit = eval(`[${msg.content}]`)
         try{
             if(typeof(data[0]) != 'string'){
@@ -524,8 +520,10 @@ const RPF = {
                 }else{
                     throw new Error(`Предмет не удалось найти`)
                 }
+                console.log(room)
 
                 object.data.rooms[roomId] = room
+                if(room.items.length == 0) room.items = undefined
                 EStats(`${project}/objects`, object.id, 'rooms', [object.data.rooms])
                 return true
             }else if(get){
@@ -572,7 +570,9 @@ const RPF = {
                 }else{
                     throw new Error(`Предмет не удалось найти`)
                 }
+                console.log(player.data)
 
+                if(player.data.items.length == 0) player.data.items = undefined
                 EStats(`${project}/players`, player.id, 'items', [player.data.items])
                 return true
             }else if(get){

@@ -76,6 +76,7 @@ client.on('interactionCreate', async interaction => {
         var players = await GStats("ages/players")
         var objects = await GStats("ages/objects")
         var player = players.find(player => player.data.user == interaction.user.id)
+        if(items == undefined) throw new Error("Предметы отсутствуют")
 
         if(interaction.isCommand()){
             if(interaction.commandName == 'инвентарь'){
@@ -211,6 +212,9 @@ client.on('interactionCreate', async interaction => {
                     }
                 ]
 
+                let options = await joinItems(items, player.data.items)
+                if(options.length == 0) throw new Error("Ваш инвентарь пуст")
+
                 for(let value of values){
                     let gItem = items.find(fItem => fItem.data.codename == value)
                     if(gItem == undefined) throw new Error("Предмет не удалось найти среди глобальных предметов")
@@ -229,9 +233,6 @@ client.on('interactionCreate', async interaction => {
                     })
                 }
                 if(values.length > 1 || !Config.itemTypes[gItems[0].data.type].usable) itemComponents[0].disabled = true
-
-                let options = await joinItems(items, player.data.items)
-                if(options.length == 0) throw new Error("Ваш инвентарь пуст")
 
                 interaction.update({
                     content: '> Ваш инвентарь 💼',
@@ -259,6 +260,9 @@ client.on('interactionCreate', async interaction => {
                 let gItems = []
                 let roomItems = []
                 let embeds = []
+
+                let options = await joinItems(items, room.items)
+                if(options.length == 0) throw new Error("Комната пуста")
                 
                 for(let value of values){
                     let gItem = items.find(fItem => fItem.data.codename == value)
@@ -277,9 +281,6 @@ client.on('interactionCreate', async interaction => {
                         color: Config.itemTypes[gItem.data.type].color
                     })
                 }
-
-                let options = await joinItems(items, room.items)
-                if(options.length == 0) throw new Error("Комната пуста")
 
                 interaction.update({
                     content: '> Предметы 📦',
@@ -310,7 +311,7 @@ client.on('interactionCreate', async interaction => {
                                 {
                                     type: 'BUTTON',
                                     label: 'Взять',
-                                    customId: `invent_take_${value}`,
+                                    customId: `invent_take_${values.join(',')}`,
                                     style: 'SUCCESS'
                                 }
                             ]
@@ -356,42 +357,44 @@ client.on('interactionCreate', async interaction => {
 
                 let roomId = parseInt(interaction.channel.topic)
                 let room = object.data.rooms[roomId]
-                if(object == undefined) throw new Error("Функция используется вне ролевого поля")
                 
-                let options = RPF.radiusSelectMenu(object.id, objects)
-
                 let gItems = []
                 let playerItems = []
                 let roomItems = []
+
+                let options = RPF.radiusSelectMenu(object.id, objects)
 
                 for(let value of data.split(',')){
                     let gItem = items.find(fItem => fItem.data.codename == value)
                     if(gItem == undefined) throw new Error("Предмет не удалось найти среди глобальных предметов")
                     gItems.push(gItem)
 
-                    let playerItem = player.data.items.find(item => item.codename == gItem.data.codename)
-                    if(playerItem != undefined) playerItems.push(playerItem)
+                    if(player.data.items != undefined){
+                        let playerItem = player.data.items.find(item => item.codename == gItem.data.codename)
+                        playerItems.push(playerItem)
+                    }
 
-                    let roomItem = room.items.find(item => item.codename == gItem.data.codename)
-                    if(roomItem != undefined) roomItems.push(roomItem)
+                    if(room.items != undefined)
+                        let roomItem = room.items.find(item => item.codename == gItem.data.codename)
+                        roomItems.push(roomItem)
+                    }
                 }
 
                 async function getCount(get, gItem, item){
                     try{
                         let count = 1
                         if(item.count > 1){
+                            let reply
                             if(get){
-                                if(interaction.replied){
-                                    interaction.editReply({content: `> Введите количество **${gItem.data.emoji} ${gItem.data.name}**, которое вы хотите поднять 📥\n**(Всего: ${item.count})**`, embeds: [], components: []})
-                                }else{
-                                    interaction.update({content: `> Введите количество **${gItem.data.emoji} ${gItem.data.name}**, которое вы хотите поднять 📥\n**(Всего: ${item.count})**`, embeds: [], components: []})
-                                }
+                                reply = `> Введите количество **${gItem.data.emoji} ${gItem.data.name}**, которое вы хотите поднять **(Всего: ${item.count})** 📥`
                             }else{
-                                if(interaction.replied){
-                                    interaction.editReply({content: `> Введите количество **${gItem.data.emoji} ${gItem.data.name}**, которое вы хотите выбросить 📤\n**(Всего: ${item.count})**`, embeds: [], components: []})
-                                }else{
-                                    interaction.update({content: `> Введите количество **${gItem.data.emoji} ${gItem.data.name}**, которое вы хотите выбросить 📤\n**(Всего: ${item.count})**`, embeds: [], components: []})
-                                }
+                                reply = `> Введите количество **${gItem.data.emoji} ${gItem.data.name}**, которое вы хотите выбросить **(Всего: ${item.count})** 📤`
+                            }
+
+                            if(interaction.replied){
+                                interaction.editReply({content: reply, embeds: [], components: []})
+                            }else{
+                                interaction.update({content: reply, embeds: [], components: []})
                             }
                             
                             let filter = message => message.author.id == interaction.user.id
@@ -407,6 +410,7 @@ client.on('interactionCreate', async interaction => {
                 }
 
                 if(act == 'use'){
+                    if(playerItems.length == 0) throw new Error("Предмет не удалось найти среди вашего инвентаря")
                     if(gItems[0].data.type == 'key'){
                         interaction.update({
                             content: '> Выберите объект 🏘',
@@ -435,21 +439,21 @@ client.on('interactionCreate', async interaction => {
                     let get
 
                     if(act == 'drop'){
+                        if(playerItems.length == 0) throw new Error("Предмет не удалось найти среди вашего инвентаря")
                         fArray = playerItems
                         lAct = `> Вы выбросили 📤`
                         get = false
                     }else{
+                        if(roomItems.length == 0) throw new Error("Предмет не удалось найти среди комнаты")
                         fArray = roomItems
                         lAct = `> Вы подняли 📥`
                         get = true
                     }
 
-                    for(let i = 0; i < gItems.length; i++){
-                        console.log(i)
-                        let gItem = gItems[i]
+                    for(let gItem of gItems){
                         let lItem = fArray.find(fItem => fItem.codename == gItem.data.codename)
                         if(lItem == undefined) throw new Error("Предмет не удалось найти")
-                        let count = await getCount(false, gItem, lItem)
+                        let count = await getCount(get, gItem, lItem)
 
                         if(count != NaN && lItem.count >= count && count > 0){
                             if(interaction.replied){
@@ -457,32 +461,39 @@ client.on('interactionCreate', async interaction => {
                             }else{
                                 interaction.update({content: `> Процесс... 📦`, embeds: [], components: []})
                             }
-                            setTimeout(() => {
-                                let action = [RPF.playerItemManager(get, 'ages', player, gItem, count),
-                                RPF.roomItemManager(!get, 'ages', object, room, gItem, count)]
-                                
-                                for(let act of action){
-                                    if(act != true){
-                                        throw act
-                                    }
+                            
+                            let action = [RPF.playerItemManager(get, 'ages', player, gItem, count),
+                            RPF.roomItemManager(!get, 'ages', object, room, gItem, count)]
+                            
+                            for(let act of action){
+                                if(act != true){
+                                    throw act
                                 }
+                            }
 
-                                dropInfo.push(`\◽ **${gItem.data.emoji}** ${gItem.data.name} (x${count})`)
-                                if(i == gItems.length - 1) interaction.editReply(`${lAct}\n${dropInfo.join('\n')}`)
+                            dropInfo.push(`**${gItem.data.emoji}** ${gItem.data.name} (x${count})`)
+                            
+                            setTimeout(() => {
+                                if(gItems.indexOf(gItem) == gItems.length - 1){
+                                    interaction.editReply(`${lAct}\n${dropInfo.join('\n')}`)
+                                }
                             }, 2500)
                         }else{
                             throw new Error("Вы указали неверное число")
-                        } 
+                        }
                     }
                 }
             }
         }
     }catch(error){
+        console.log(error)
         if(error.message == undefined) error.message = ''
-        if(interaction.replied){
-            interaction.editReply({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
+        if(!interaction.replied){
+            interaction.reply({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: [], ephemeral: true})
+        }else if(interaction.replied){
+            interaction.editReply({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: [], ephemeral: true})
         }else{
-            interaction.update({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
+            interaction.update({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: [], ephemeral: true})
         }
     }
 })
