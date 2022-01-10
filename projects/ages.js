@@ -71,14 +71,14 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
 }})
 
 client.on('interactionCreate', async interaction => {
-    var items = await GStats("ages/items")
-    var players = await GStats("ages/players")
-    var objects = await GStats("ages/objects")
-    var player = players.find(player => player.data.user == interaction.user.id)
+    try{
+        var items = await GStats("ages/items")
+        var players = await GStats("ages/players")
+        var objects = await GStats("ages/objects")
+        var player = players.find(player => player.data.user == interaction.user.id)
 
-    if(interaction.isCommand()){
-        if(interaction.commandName == 'инвентарь'){
-            try{
+        if(interaction.isCommand()){
+            if(interaction.commandName == 'инвентарь'){
                 let object = objects.find(object => object.data.cid == interaction.channel.parentId)
                 if(object == undefined) throw new Error("Функция используется вне ролевого поля")
 
@@ -110,13 +110,9 @@ client.on('interactionCreate', async interaction => {
                     ],
                     ephemeral: true
                 })
-            }catch(error){
-                interaction.reply({content: `> Ошибка. ${error.message} ⛔`, ephemeral: true})
             }
-        }
 
-        if(interaction.commandName == 'осмотреть'){
-            try{
+            if(interaction.commandName == 'осмотреть'){
                 let object = objects.find(object => object.data.cid == interaction.channel.parentId)
                 if(object == undefined) throw new Error("Функция используется вне ролевого поля")
 
@@ -173,19 +169,15 @@ client.on('interactionCreate', async interaction => {
                     })(),
                     ephemeral: true
                 })
-            }catch(error){
-                interaction.reply({content: `> Ошибка. ${error.message} ⛔`, ephemeral: true})
             }
         }
-    }
 
-    if(interaction.isSelectMenu()){
-        let type = interaction.customId.split('_')[0]
-        let act = interaction.customId.split('_')[1]
-        let data = interaction.customId.split('_')[2]
-        let value = interaction.values[0]
+        if(interaction.isSelectMenu()){
+            let type = interaction.customId.split('_')[0]
+            let act = interaction.customId.split('_')[1]
+            let data = interaction.customId.split('_')[2]
+            let value = interaction.values[0]
 
-        try{
             let object = objects.find(object => object.data.cid == interaction.channel.parentId)
             if(object == undefined) throw new Error("Функция используется вне ролевого поля")
 
@@ -351,18 +343,14 @@ client.on('interactionCreate', async interaction => {
                     interaction.update({content: `> Этот объект невозможно закрыть ⛔`, embeds: [], components: []})
                 }
             }
-        }catch(error){
-            interaction.update({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
         }
-    }
 
-    if(interaction.isButton()){
-        let type = interaction.customId.split('_')[0]
-        let act = interaction.customId.split('_')[1]
-        let data = interaction.customId.split('_')[2]
+        if(interaction.isButton()){
+            let type = interaction.customId.split('_')[0]
+            let act = interaction.customId.split('_')[1]
+            let data = interaction.customId.split('_')[2]
 
-        if(type == 'invent'){
-            try{
+            if(type == 'invent'){
                 let object = objects.find(object => object.data.cid == interaction.channel.parentId)
                 if(object == undefined) throw new Error("Функция используется вне ролевого поля")
 
@@ -487,14 +475,14 @@ client.on('interactionCreate', async interaction => {
                         } 
                     }
                 }
-            }catch(error){
-                if(error.message == undefined) error.message = ''
-                if(interaction.replied){
-                    interaction.editReply({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
-                }else{
-                    interaction.update({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
-                }
             }
+        }
+    }catch(error){
+        if(error.message == undefined) error.message = ''
+        if(interaction.replied){
+            interaction.editReply({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
+        }else{
+            interaction.update({content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
         }
     }
 })
