@@ -374,7 +374,7 @@ client.on('interactionCreate', async interaction => {
                         playerItems.push(playerItem)
                     }
 
-                    if(room.items != undefined)
+                    if(room.items != undefined){
                         let roomItem = room.items.find(item => item.codename == gItem.data.codename)
                         roomItems.push(roomItem)
                     }
