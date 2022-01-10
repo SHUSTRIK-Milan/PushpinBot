@@ -96,7 +96,13 @@ client.on('interactionCreate', async interaction => {
                                     customId: `invent_open`,
                                     placeholder: 'Ваши предметы...',
                                     minValues: 1,
-                                    maxValues: 2,
+                                    maxValues: (() =>{
+                                        if(options.length < 5){
+                                            return options.length
+                                        }else{
+                                            return 5
+                                        }
+                                    })(),
                                     options: options
                                 }
                             ]
@@ -151,6 +157,14 @@ client.on('interactionCreate', async interaction => {
                                         type: 'SELECT_MENU',
                                         customId: `invent_pick`,
                                         placeholder: 'Предметы...',
+                                        minValues: 1,
+                                        maxValues: (() =>{
+                                            if(options.length < 5){
+                                                return options.length
+                                            }else{
+                                                return 5
+                                            }
+                                        })(),
                                         options: options
                                     }
                                 ]
@@ -247,36 +261,37 @@ client.on('interactionCreate', async interaction => {
                             components: itemComponents
                         },
                     ]
-                })/* .then(() => {
-                    try{
-                        if(interaction.message.embeds[0].thumbnail.height == 0){
-                            interaction.editReply({
-                                embeds: [interaction.message.embeds[0].setThumbnail(`https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji.split('-')[0]}.png`)]
-                            })
-                        }
-                    }catch{}
-                }) */
+                })
             }else if(type == 'invent' && act == 'pick'){
-                let gItem = items.find(fItem => fItem.data.codename == value)
-                if(gItem == undefined) throw new Error("Предмет не удалось найти")
+                let values = interaction.values
+                let gItems = []
+                let roomItems = []
+                let embeds = []
+                
+                for(let value of values){
+                    let gItem = items.find(fItem => fItem.data.codename == value)
+                    if(gItem == undefined) throw new Error("Предмет не удалось найти среди глобальных предметов")
+                    gItems.push(gItem)
 
-                let roomItem = room.items.find(item => item.codename == gItem.data.codename)
-                if(roomItem == undefined) throw new Error("Предмет не удалось найти")
+                    let roomItem = room.items.find(item => item.codename == gItem.data.codename)
+                    if(roomItem == undefined) throw new Error("Предмет не удалось найти среди комнаты")
+                    roomItems.push(roomItem)
+
+                    let emoji = getUnicode(gItem.data.emoji).split(' ').join('-')
+                    embeds.push({
+                        author: {name: `${gItem.data.name} (x${roomItem.count})` },
+                        description: gItem.data.description,
+                        thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji}.png`},
+                        color: Config.itemTypes[gItem.data.type].color
+                    })
+                }
 
                 let options = await joinItems(items, room.items)
                 if(options.length == 0) throw new Error("Комната пуста")
 
-                let emoji = getUnicode(gItem.data.emoji).split(' ').join('-')
                 interaction.update({
                     content: '> Предметы 📦',
-                    embeds: [
-                        {
-                            author: {name: `${gItem.data.name} (x${roomItem.count})` },
-                            description: gItem.data.description,
-                            thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji}.png`},
-                            color: Config.itemTypes[gItem.data.type].color
-                        }
-                    ],
+                    embeds: embeds,
                     components: [
                         {
                             type: 'ACTION_ROW', 
@@ -285,6 +300,14 @@ client.on('interactionCreate', async interaction => {
                                     type: 'SELECT_MENU',
                                     customId: `invent_pick`,
                                     placeholder: 'Предметы...',
+                                    minValues: 1,
+                                    maxValues: (() =>{
+                                        if(options.length < 5){
+                                            return options.length
+                                        }else{
+                                            return 5
+                                        }
+                                    })(),
                                     options: options
                                 }
                             ]
@@ -301,14 +324,6 @@ client.on('interactionCreate', async interaction => {
                             ]
                         },
                     ]
-                }).then(() => {
-                    try{
-                        if(interaction.message.embeds[0].thumbnail.height == 0){
-                            interaction.editReply({
-                                embeds: [interaction.message.embeds[0].setThumbnail(`https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji.split('-')[0]}.png`)]
-                            })
-                        }
-                    }catch{}
                 })
             }else if(type == 'invent' && act == 'key'){
                 let object = objects.find(object => object.data.cid == value)
@@ -353,48 +368,58 @@ client.on('interactionCreate', async interaction => {
 
                 let roomId = parseInt(interaction.channel.topic)
                 let room = object.data.rooms[roomId]
+                if(object == undefined) throw new Error("Функция используется вне ролевого поля")
+                
                 let options = RPF.radiusSelectMenu(object.id, objects)
 
-                let gItem = items.find(fItem => fItem.data.codename == data)
-                if(gItem == undefined) throw new Error("Предмет не удалось найти")
+                let gItems = []
+                let playerItems = []
+                let roomItems = []
 
-                let playerItem = player.data.items.find(item => item.codename == gItem.data.codename)
-                let roomItem = room.items.find(item => item.codename == gItem.data.codename)
-
-                for(let data of data.split(',')){
-                    /* let gItem = items.find(fItem => fItem.data.codename == value)
+                for(let value of data.split(',')){
+                    let gItem = items.find(fItem => fItem.data.codename == value)
                     if(gItem == undefined) throw new Error("Предмет не удалось найти среди глобальных предметов")
                     gItems.push(gItem)
 
                     let playerItem = player.data.items.find(item => item.codename == gItem.data.codename)
-                    if(playerItem == undefined) throw new Error("Предмет не удалось найти среди вашего инвентаря")
-                    playerItems.push(playerItem) */
+                    if(playerItem != undefined) playerItems.push(playerItem)
+
+                    let roomItem = room.items.find(item => item.codename == gItem.data.codename)
+                    if(roomItem != undefined) roomItems.push(roomItem)
                 }
 
-                async function getCount(get, item){
-                    let count = 1
+                async function getCount(get, gItem, item){
                     try{
+                        let count = 1
                         if(item.count > 1){
                             if(get){
-                                interaction.update({content: `> Введите количество предметов, которое вы хотите поднять (Всего: ${item.count}) 📥`, embeds: [], components: []})
+                                if(interaction.replied){
+                                    interaction.editReply({content: `> Введите количество **${gItem.data.emoji} ${gItem.data.name}**, которое вы хотите поднять 📥\n**(Всего: ${item.count})**`, embeds: [], components: []})
+                                }else{
+                                    interaction.update({content: `> Введите количество **${gItem.data.emoji} ${gItem.data.name}**, которое вы хотите поднять 📥\n**(Всего: ${item.count})**`, embeds: [], components: []})
+                                }
                             }else{
-                                interaction.update({content: `> Введите количество предметов, которое вы хотите выбросить (Всего: ${item.count}) 📤`, embeds: [], components: []})
+                                if(interaction.replied){
+                                    interaction.editReply({content: `> Введите количество **${gItem.data.emoji} ${gItem.data.name}**, которое вы хотите выбросить 📤\n**(Всего: ${item.count})**`, embeds: [], components: []})
+                                }else{
+                                    interaction.update({content: `> Введите количество **${gItem.data.emoji} ${gItem.data.name}**, которое вы хотите выбросить 📤\n**(Всего: ${item.count})**`, embeds: [], components: []})
+                                }
                             }
                             
                             let filter = message => message.author.id == interaction.user.id
-                            let message = await interaction.channel.awaitMessages({filter, max: 1, time: 20000, errors: ['time']})
+                            let message = await interaction.channel.awaitMessages({filter, max: 1, time: 10000, errors: ['time']})
 
                             count = parseInt(message.first().content)
                             setTimeout(() => {message.first().delete()}, timeOfDelete)
                         }
-                    }catch{}
-                    return count
+                        return count
+                    }catch{
+                        throw new Error("Время записи числа вышло")
+                    }
                 }
 
                 if(act == 'use'){
-                    if(playerItem == undefined) throw new Error("Предмет не удалось найти")
-
-                    if(gItem.data.type == 'key'){
+                    if(gItems[0].data.type == 'key'){
                         interaction.update({
                             content: '> Выберите объект 🏘',
                             embeds: [],
@@ -415,57 +440,51 @@ client.on('interactionCreate', async interaction => {
                     }
                 }else if(act == 'trade'){
         
-                }else if(act == 'drop'){
-                    if(playerItem == undefined) throw new Error("Предмет не удалось найти")
-                    let count = await getCount(false, playerItem)
-                    let act = `Вы выбросили предмет ${gItem.data.emoji}`
+                }else if(act == 'drop' || act == 'take'){
+                    let dropInfo = []
+                    let fArray
+                    let lAct
+                    let get
 
-                    if(count != NaN && playerItem.count >= count && count > 0){
-                        if(interaction.replied){
-                            interaction.editReply({content: `> Процесс... 📦`, embeds: [], components: []})
-                        }else{
-                            interaction.update({content: `> Процесс... 📦`, embeds: [], components: []})
-                        }
-                        setTimeout(() => {
-                            let actions = [
-                                RPF.playerItemManager(false, 'ages', player, gItem, count, act),
-                                RPF.roomItemManager(true, 'ages', object, room, gItem, count, act)
-                            ]
-                            for(let act of actions){
-                                if(act.constructor == Error){
-                                    throw act
-                                }
-                            }
-                            interaction.editReply(actions[1])
-                        }, 2500)
+                    if(act == 'drop'){
+                        fArray = playerItems
+                        lAct = `> Вы выбросили 📤`
+                        get = false
                     }else{
-                        interaction.editReply({content: `> Вы указали неверное число 🔢`, embeds: [], components: []})
+                        fArray = roomItems
+                        lAct = `> Вы подняли 📥`
+                        get = true
                     }
-                }else if(act == 'take'){
-                    if(roomItem == undefined) throw new Error("Предмет не удалось найти")
-                    let count = await getCount(true, roomItem)
-                    let act = `Вы подняли предмет ${gItem.data.emoji}`
 
-                    if(count != NaN && roomItem.count >= count && count > 0){
-                        if(interaction.replied){
-                            interaction.editReply({content: `> Процесс... 📦`, embeds: [], components: []})
-                        }else{
-                            interaction.update({content: `> Процесс... 📦`, embeds: [], components: []})
-                        }
-                        setTimeout(() => {
-                            let actions = [
-                                RPF.roomItemManager(false, 'ages', object, room, gItem, count, act),
-                                RPF.playerItemManager(true, 'ages', player, gItem, count, act)
-                            ]
-                            for(let act of actions){
-                                if(act.constructor == Error){
-                                    throw act
-                                }
+                    for(let i = 0; i < gItems.length; i++){
+                        console.log(i)
+                        let gItem = gItems[i]
+                        let lItem = fArray.find(fItem => fItem.codename == gItem.data.codename)
+                        if(lItem == undefined) throw new Error("Предмет не удалось найти")
+                        let count = await getCount(false, gItem, lItem)
+
+                        if(count != NaN && lItem.count >= count && count > 0){
+                            if(interaction.replied){
+                                interaction.editReply({content: `> Процесс... 📦`, embeds: [], components: []})
+                            }else{
+                                interaction.update({content: `> Процесс... 📦`, embeds: [], components: []})
                             }
-                            interaction.editReply(actions[1])
-                        }, 2500)
-                    }else{
-                        interaction.editReply({content: `> Вы указали неверное число 🔢`, embeds: [], components: []})
+                            setTimeout(() => {
+                                let action = [RPF.playerItemManager(get, 'ages', player, gItem, count),
+                                RPF.roomItemManager(!get, 'ages', object, room, gItem, count)]
+                                
+                                for(let act of action){
+                                    if(act != true){
+                                        throw act
+                                    }
+                                }
+
+                                dropInfo.push(`\◽ **${gItem.data.emoji}** ${gItem.data.name} (x${count})`)
+                                if(i == gItems.length - 1) interaction.editReply(`${lAct}\n${dropInfo.join('\n')}`)
+                            }, 2500)
+                        }else{
+                            throw new Error("Вы указали неверное число")
+                        } 
                     }
                 }
             }catch(error){

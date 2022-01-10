@@ -309,7 +309,7 @@ async function GStats(chl, id, par){
             chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
         }
         var msgs = await chl.messages.fetch()
-        var ents = []
+        var units = []
 
         for (let [id, msg] of msgs){
             let unit = eval(`[${msg.content}]`)[0]
@@ -323,10 +323,10 @@ async function GStats(chl, id, par){
                 }catch{}
             }
             unit.mid = `${msg.id}`
-            ents = ents.concat([unit])
+            units = units.concat([unit])
         }
         if(id != undefined){
-            let idEnt = ents.reverse().find(unit => unit.id == id)
+            let idEnt = units.reverse().find(unit => unit.id == id)
             if(par != undefined){
                 par = par.split('.')
                 if(par[0] != 'data'){
@@ -338,7 +338,7 @@ async function GStats(chl, id, par){
                 return idEnt
             }
         }else{
-            return ents.reverse()
+            return units.reverse()
         }
     }catch{
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь]**`).then(msg => {
@@ -356,12 +356,12 @@ async function AStats(chl, structure, data){
             structure = Config.BDs[`${cat.name}_${chl.name}`]
         }
         var messages = await chl.messages.fetch()
-        var ents = await GStats(chl)
+        var units = await GStats(chl)
         var id
-        if (ents.length == 0){
+        if (units.length == 0){
             id = messages.size
         }else{
-            id = ents[ents.length-1].id
+            id = units[units.length-1].id
         }
         
         var returnData = {}
@@ -402,13 +402,12 @@ async function EStats(chl, id, par, data){
             chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
         }
         var units = await GStats(chl)
-        var unit = units.find(unit => unut.id == id)
+        var unit = units.find(unit => unit.id == id)
         var msg = await chl.messages.fetch(unit.mid)
 
         if(data[0] != undefined){
             if(data[0].length == 0) data[0] = undefined
         }
-        console.log(data[0])
         console.log(data[0].length)
         var unit = eval(`[${msg.content}]`)
         try{
@@ -446,7 +445,7 @@ async function DStats(chl, id){
             chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
         }
         var units = await GStats(chl)
-        var unit = ents.find(unit => unit.id == id)
+        var unit = units.find(unit => unit.id == id)
         var msg = await chl.messages.fetch(unit.mid)
         setTimeout(() => msg.delete(), timeOfDelete)
     }catch{
@@ -505,7 +504,7 @@ const RPF = {
         }
         return returnObjects
     },
-    roomItemManager: (get, project, object, room, gItem, count, act) => {
+    roomItemManager: (get, project, object, room, gItem, count) => {
         try{
             var roomId = object.data.rooms.indexOf(room)
             try{
@@ -528,7 +527,7 @@ const RPF = {
 
                 object.data.rooms[roomId] = room
                 EStats(`${project}/objects`, object.id, 'rooms', [object.data.rooms])
-                return {content: act, embeds: [], components: []}
+                return true
             }else if(get){
                 if(room.items == undefined){
                     room.items = [{codename: gItem.data.codename, count: count}]
@@ -542,7 +541,7 @@ const RPF = {
                     try{
                         object.data.rooms[roomId] = room
                         EStats(`${project}/objects`, object.id, 'rooms', [object.data.rooms])
-                        return {content: act, embeds: [], components: []}
+                        return true
                     }catch{
                         throw new Error(`Комната переполнена`)
                     }
@@ -554,7 +553,7 @@ const RPF = {
             return new Error(`${error.message}`)
         }
     },
-    playerItemManager: (get, project, player, gItem, count, act) => {
+    playerItemManager: (get, project, player, gItem, count) => {
         try{
             try{
                 var playerItem = player.data.items.find(item => item.codename == gItem.data.codename)
@@ -575,7 +574,7 @@ const RPF = {
                 }
 
                 EStats(`${project}/players`, player.id, 'items', [player.data.items])
-                return {content: act, embeds: [], components: []}
+                return true
             }else if(get){
                 if(player.data.items == undefined){
                     player.data.items = [{codename: gItem.data.codename, count: count}]
@@ -588,7 +587,7 @@ const RPF = {
                 if(player.data.items.length <= 25){
                     try{
                         EStats(`${project}/players`, player.id, 'items', [player.data.items])
-                        return {content: act, embeds: [], components: []}
+                        return true
                     }catch(error){
                         console.log(error)
                         throw new Error(`Инвентарь переполнен`)
