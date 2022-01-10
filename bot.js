@@ -296,7 +296,7 @@ async function SlashCom(type, name, data, cguildId, permissions){
 // БАЗА ДАННЫХ
 //
 
-function BDentity(id, data) {
+function BDunit(id, data) {
     this.id = id
     this.data = data
 }
@@ -312,21 +312,21 @@ async function GStats(chl, id, par){
         var ents = []
 
         for (let [id, msg] of msgs){
-            let ent = eval(`[${msg.content}]`)[0]
-            for (let dat in ent.data){
+            let unit = eval(`[${msg.content}]`)[0]
+            for (let dat in unit.data){
                 try{
                     try{
-                        ent.data[dat] = eval(ent.data[dat]) 
+                        unit.data[dat] = eval(unit.data[dat]) 
                     }catch{
-                        ent.data[dat] = JSON.parse(ent.data[dat])
+                        unit.data[dat] = JSON.parse(unit.data[dat])
                     }
                 }catch{}
             }
-            ent.mid = `${msg.id}`
-            ents = ents.concat([ent])
+            unit.mid = `${msg.id}`
+            ents = ents.concat([unit])
         }
         if(id != undefined){
-            let idEnt = ents.reverse().find(ent => ent.id == id)
+            let idEnt = ents.reverse().find(unit => unit.id == id)
             if(par != undefined){
                 par = par.split('.')
                 if(par[0] != 'data'){
@@ -379,8 +379,8 @@ async function AStats(chl, structure, data){
                 returnData[structure[i]] = data[i]
             }
         }
-        var ent = new BDentity(id+1, returnData)
-        var message = JSON.stringify(ent, null, 2)
+        var unit = new BDunit(id+1, returnData)
+        var message = JSON.stringify(unit, null, 2)
         if(message.length <= 2000){
             chl.send(message)
         }else{
@@ -401,30 +401,30 @@ async function EStats(chl, id, par, data){
             let cat = guildBD.channels.cache.find(cat => cat.name.toLowerCase() == path[0].toLowerCase() && cat.type == "GUILD_CATEGORY")
             chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
         }
-        var ents = await GStats(chl)
-        var entity = ents.find(entity => entity.id == id)
-        var msg = await chl.messages.fetch(entity.mid)
+        var units = await GStats(chl)
+        var unit = units.find(unit => unut.id == id)
+        var msg = await chl.messages.fetch(unit.mid)
 
         if(data[0] != undefined){
             if(data[0].length == 0) data[0] = undefined
         }
         console.log(data[0])
         console.log(data[0].length)
-        var ent = eval(`[${msg.content}]`)
+        var unit = eval(`[${msg.content}]`)
         try{
             if(typeof(data[0]) != 'string'){
-                ent[0].data[par] = eval(data[0])
+                unit[0].data[par] = eval(data[0])
             }else{
-                ent[0].data[par] = eval(`[${data[0]}]`)[0]
+                unit[0].data[par] = eval(`[${data[0]}]`)[0]
             }
-            if(typeof(ent[0].data[par]) == 'object'){
-                ent[0].data[par] = JSON.stringify(ent[0].data[par])
+            if(typeof(unit[0].data[par]) == 'object'){
+                unit[0].data[par] = JSON.stringify(unit[0].data[par])
             }
         }catch{
-            ent[0].data[par] = data[0]
+            unit[0].data[par] = data[0]
         }
         
-        var message = JSON.stringify(ent[0], null, 4)
+        var message = JSON.stringify(unit[0], null, 4)
         if(message.length <= 2000){
             msg.edit(message)
         }else{
@@ -445,9 +445,9 @@ async function DStats(chl, id){
             let cat = guildBD.channels.cache.find(cat => cat.name.toLowerCase() == path[0].toLowerCase() && cat.type == "GUILD_CATEGORY")
             chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
         }
-        var ents = await GStats(chl)
-        var entity = ents.find(entity => entity.id == id)
-        var msg = await chl.messages.fetch(entity.mid)
+        var units = await GStats(chl)
+        var unit = ents.find(unit => unit.id == id)
+        var msg = await chl.messages.fetch(unit.mid)
         setTimeout(() => msg.delete(), timeOfDelete)
     }catch{
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, id-ячейки]**`).then(msg => {
@@ -621,7 +621,7 @@ client.on('ready', () => {
         rpGuilds, cmdParametrs, toChannelName, random,
         getRoleId, haveRole, giveRole, removeRole,
         sendLog, createLore, createEx,
-        createCom, SlashCom, BDentity,
+        createCom, SlashCom, BDunit,
         GStats, AStats, EStats,
         DStats, RPF}
     require('./projects/pushpin.js')

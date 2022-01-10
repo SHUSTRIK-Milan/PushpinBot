@@ -5,7 +5,7 @@ const {
     rpGuilds, cmdParametrs, toChannelName, random,
     getRoleId, haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
-    createCom, SlashCom, BDentity,
+    createCom, SlashCom, BDunit,
     GStats, AStats, EStats,
     DStats} = require('../bot.js')
 
@@ -181,7 +181,7 @@ client.on('interactionCreate', async interaction => {
             let par = interaction.options.get('par').value
             if(channel.parent != undefined){
                 interaction.reply(`> Введите значение`)
-                awaitPutInBD(['entity'], interaction.channel, interaction.user.id).then((data) => {
+                awaitPutInBD(['unit'], interaction.channel, interaction.user.id).then((data) => {
                     if(data != undefined && data != 'stop'){
                         EStats(channel, id, par, data)
                         interaction.editReply('> Данные изменены!')

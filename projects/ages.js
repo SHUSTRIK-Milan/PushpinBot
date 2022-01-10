@@ -5,7 +5,7 @@ const {
     rpGuilds, cmdParametrs, toChannelName, random,
     getRoleId, haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
-    createCom, SlashCom, BDentity,
+    createCom, SlashCom, BDunit,
     GStats, AStats, EStats,
     DStats, RPF} = require('../bot.js')
 
@@ -95,6 +95,8 @@ client.on('interactionCreate', async interaction => {
                                     type: 'SELECT_MENU',
                                     customId: `invent_open`,
                                     placeholder: 'Ваши предметы...',
+                                    minValues: 1,
+                                    maxValues: 2,
                                     options: options
                                 }
                             ]
@@ -177,48 +179,57 @@ client.on('interactionCreate', async interaction => {
             let room = object.data.rooms[roomId]
             
             if(type == 'invent' && act == 'open'){
-                let gItem = items.find(fItem => fItem.data.codename == value)
-                if(gItem == undefined) throw new Error("Предмет не удалось найти")
+                let values = interaction.values
+                let gItems = []
+                let playerItems = []
+                let embeds = []
 
-                let playerItem = player.data.items.find(item => item.codename == gItem.data.codename)
-                if(playerItem == undefined) throw new Error("Предмет не удалось найти")
-
-                let options = await joinItems(items, player.data.items)
-                if(options.length == 0) throw new Error("Ваш инвентарь пуст")
-
-                let emoji = getUnicode(gItem.data.emoji).split(' ').join('-')
                 let itemComponents = [
                     {
                         type: 'BUTTON',
                         label: 'Использовать',
-                        customId: `invent_use_${value}`,
+                        customId: `invent_use_${values.join(',')}`,
                         style: 'PRIMARY'
                     },
                     {
                         type: 'BUTTON',
                         label: 'Передать',
-                        customId: `invent_trade_${value}`,
+                        customId: `invent_trade_${values.join(',')}`,
                         style: 'SUCCESS'
                     },
                     {
                         type: 'BUTTON',
                         label: 'Выбросить',
-                        customId: `invent_drop_${value}`,
+                        customId: `invent_drop_${values.join(',')}`,
                         style: 'DANGER'
                     }
                 ]
-                if(!Config.itemTypes[gItem.data.type].usable) itemComponents[0].disabled = true
+
+                for(let value of values){
+                    let gItem = items.find(fItem => fItem.data.codename == value)
+                    if(gItem == undefined) throw new Error("Предмет не удалось найти среди глобальных предметов")
+                    gItems.push(gItem)
+
+                    let playerItem = player.data.items.find(item => item.codename == gItem.data.codename)
+                    if(playerItem == undefined) throw new Error("Предмет не удалось найти среди вашего инвентаря")
+                    playerItems.push(playerItem)
+
+                    let emoji = getUnicode(gItem.data.emoji).split(' ').join('-')
+                    embeds.push({
+                        author: {name: `${gItem.data.name} (x${playerItem.count})` },
+                        description: gItem.data.description,
+                        thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji}.png`},
+                        color: Config.itemTypes[gItem.data.type].color
+                    })
+                }
+                if(values.length > 1 || !Config.itemTypes[gItems[0].data.type].usable) itemComponents[0].disabled = true
+
+                let options = await joinItems(items, player.data.items)
+                if(options.length == 0) throw new Error("Ваш инвентарь пуст")
 
                 interaction.update({
                     content: '> Ваш инвентарь 💼',
-                    embeds: [
-                        {
-                            author: {name: `${gItem.data.name} (x${playerItem.count})` },
-                            description: gItem.data.description,
-                            thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji}.png`},
-                            color: Config.itemTypes[gItem.data.type].color
-                        }
-                    ],
+                    embeds: embeds,
                     components: [
                         {
                             type: 'ACTION_ROW', 
@@ -236,7 +247,7 @@ client.on('interactionCreate', async interaction => {
                             components: itemComponents
                         },
                     ]
-                }).then(() => {
+                })/* .then(() => {
                     try{
                         if(interaction.message.embeds[0].thumbnail.height == 0){
                             interaction.editReply({
@@ -244,7 +255,7 @@ client.on('interactionCreate', async interaction => {
                             })
                         }
                     }catch{}
-                })
+                }) */
             }else if(type == 'invent' && act == 'pick'){
                 let gItem = items.find(fItem => fItem.data.codename == value)
                 if(gItem == undefined) throw new Error("Предмет не удалось найти")
@@ -349,6 +360,16 @@ client.on('interactionCreate', async interaction => {
 
                 let playerItem = player.data.items.find(item => item.codename == gItem.data.codename)
                 let roomItem = room.items.find(item => item.codename == gItem.data.codename)
+
+                for(let data of data.split(',')){
+                    /* let gItem = items.find(fItem => fItem.data.codename == value)
+                    if(gItem == undefined) throw new Error("Предмет не удалось найти среди глобальных предметов")
+                    gItems.push(gItem)
+
+                    let playerItem = player.data.items.find(item => item.codename == gItem.data.codename)
+                    if(playerItem == undefined) throw new Error("Предмет не удалось найти среди вашего инвентаря")
+                    playerItems.push(playerItem) */
+                }
 
                 async function getCount(get, item){
                     let count = 1
