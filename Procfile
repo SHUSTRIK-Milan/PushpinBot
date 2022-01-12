@@ -1,1 +1,1 @@
-worker: node bot.js & node test_bot.js & wait -n
+worker: node bot.js && node test_bot.js
