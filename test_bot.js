@@ -294,7 +294,7 @@ client.on('interactionCreate', async interaction => {
                 if(interaction.options.get('время') != undefined){
                     time = interaction.options.get('время').value*1000
                 }else{
-                    time = 160*5
+                    time = 180*5
                 }
                 if(pins > 5) pins = 5
                 if(rows > 5) rows = 5
