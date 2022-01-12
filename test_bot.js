@@ -248,7 +248,8 @@ client.on('ready', () => {
 
 client.on('interactionCreate', async interaction => {
     var ping = client.ws.ping
-    console.log(new Date().getUTCMilliseconds() + ": обработка дискордом")
+    console.log(ping + ": пинг")
+
 
     if(interaction.isContextMenu()){
         interaction.reply({
@@ -293,7 +294,7 @@ client.on('interactionCreate', async interaction => {
                 if(interaction.options.get('время') != undefined){
                     time = interaction.options.get('время').value*1000
                 }else{
-                    time = 150*5
+                    time = 160*5
                 }
                 if(pins > 5) pins = 5
                 if(rows > 5) rows = 5
