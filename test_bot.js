@@ -248,6 +248,7 @@ client.on('ready', () => {
 
 client.on('interactionCreate', async interaction => {
     var ping = client.ws.ping
+    console.log(new Date().getUTCMilliseconds() + ": обработка дискордом")
 
     if(interaction.isContextMenu()){
         interaction.reply({
@@ -297,9 +298,11 @@ client.on('interactionCreate', async interaction => {
                 if(pins > 5) pins = 5
                 if(rows > 5) rows = 5
 
-                interaction.deferReply()
-                setTimeout(() => {
-                    interaction.editReply({
+                
+
+                //interaction.deferReply()
+                //setTimeout(() => {
+                    interaction.reply({
                         content: `> Процесс взлома 🔓`,
                         embeds: [
                         {
@@ -308,34 +311,31 @@ client.on('interactionCreate', async interaction => {
                             color: '#ED4245'
                         }],
                         components: comps(pins, rows, interaction.user.id)
-                    })
+                    }).then(console.log(new Date().getUTCMilliseconds() + ": открытие"))
                     lockpickCache.set(interaction.user.id, {steps: 0, count: count, pins: pins, rows: rows, time: time})
-                }, 1000)
+                //}, 1000)
             }else{
                 interaction.reply({content: '> Вы уже начали взлом! 🔏', ephemeral: true})
             }
         }
 
         if(interaction.commandName == 'инвентарь'){
-            interaction.deferReply()
-            setTimeout(() => {
-                interaction.editReply({
-                    content: '> Ваш инвентарь 💼',
-                    components: [
-                        {
-                            type: 'ACTION_ROW', 
-                            components: [
-                                {
-                                    type: 'SELECT_MENU',
-                                    customId: `invent_${interaction.user.id}_open`,
-                                    placeholder: 'Ваши предметы...',
-                                    options: joinItems(invent)
-                                }
-                            ]
-                        }
-                    ]
-                })
-            }, 1000)
+            interaction.reply({
+                content: '> Ваш инвентарь 💼',
+                components: [
+                    {
+                        type: 'ACTION_ROW', 
+                        components: [
+                            {
+                                type: 'SELECT_MENU',
+                                customId: `invent_${interaction.user.id}_open`,
+                                placeholder: 'Ваши предметы...',
+                                options: joinItems(invent)
+                            }
+                        ]
+                    }
+                ]
+            })
         }
     }
 

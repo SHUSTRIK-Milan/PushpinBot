@@ -308,10 +308,11 @@ async function GStats(chl, id, par){
             let cat = guildBD.channels.cache.find(cat => cat.name.toLowerCase() == path[0].toLowerCase() && cat.type == "GUILD_CATEGORY")
             chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
         }
+        console.log(new Date().getUTCMilliseconds() + '\n')
         var msgs = await chl.messages.fetch()
         var units = []
 
-        for (let [id, msg] of msgs){
+        for (let [id,msg] of msgs){
             let unit = eval(`[${msg.content}]`)[0]
             for (let dat in unit.data){
                 try{
@@ -322,9 +323,11 @@ async function GStats(chl, id, par){
                     }
                 }catch{}
             }
-            unit.mid = `${msg.id}`
-            units = units.concat([unit])
+            unit.mid = `${id}`
+            units.push(unit)
+            console.log(new Date().getUTCMilliseconds())
         }
+
         if(id != undefined){
             let idEnt = units.reverse().find(unit => unit.id == id)
             if(par != undefined){
@@ -340,7 +343,8 @@ async function GStats(chl, id, par){
         }else{
             return units.reverse()
         }
-    }catch{
+    }catch(error){
+        console.log(error)
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь]**`).then(msg => {
             setTimeout(() => {msg.delete()}, 10000)
         })
@@ -368,12 +372,12 @@ async function AStats(chl, structure, data){
         for (let i = 0; i < structure.length; i++){
             try{
                 if(typeof(data[i]) != 'string'){
-                    returnData[structure[i]] = eval(data[i])
+                    returnData[structure[i]] = data[i]
                 }else{
                     returnData[structure[i]] = eval(`[${data[i]}]`)[0]
                 }
                 if(typeof(returnData[structure[i]]) == 'object'){
-                    returnData[structure[i]] = JSON.stringify(returnData[structure[i]])
+                    returnData[structure[i]] = JSON.stringify(returnData[structure[i]]) //если массив или объект, то стилизуем под JSON
                 }
             }catch{
                 returnData[structure[i]] = data[i]
@@ -386,8 +390,8 @@ async function AStats(chl, structure, data){
         }else{
             console.log('> Ошибка при создании ячейки')
         }
-    }catch(err){
-        console.log(err)
+    }catch(error){
+        console.log(error)
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, значения]**`).then(msg => {
             setTimeout(() => {msg.delete()}, 10000)
         })
@@ -444,7 +448,8 @@ async function DStats(chl, id){
         var unit = units.find(unit => unit.id == id)
         var msg = await chl.messages.fetch(unit.mid)
         setTimeout(() => msg.delete(), timeOfDelete)
-    }catch{
+    }catch(error){
+        console.log(error)
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, id-ячейки]**`).then(msg => {
             setTimeout(() => {msg.delete()}, 10000)
         })

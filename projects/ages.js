@@ -71,11 +71,13 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
 }})
 
 client.on('interactionCreate', async interaction => {
-    try{
+    if(interaction.guildId == guild.id) try{
         var items = await GStats("ages/items")
         var players = await GStats("ages/players")
         var objects = await GStats("ages/objects")
+        
         var player = players.find(player => player.data.user == interaction.user.id)
+        if(player == undefined) throw new Error("Игрок отсутствуют")
         if(items == undefined) throw new Error("Предметы отсутствуют")
 
         if(interaction.isCommand()){
