@@ -290,7 +290,25 @@ async function SlashCom(type, name, data, cguildId, permissions){
     }else if(type == 'perm' && command != undefined){
         client.application.commands.permissions.add({ guild: cguildId, command: command.id, permissions: permissions})
     }else{return}
-} 
+}
+
+async function EditInteraction(interaction, parametrs){
+    try{
+        await interaction.update(parametrs)
+    }catch(error){
+        if(interaction.replied){
+            interaction.editReply(parametrs)
+        }else{
+            interaction.reply(parametrs)
+        }
+    }
+}
+
+function ErrorInteraction(interaction, error){
+    console.log(error)
+    if(error.message == undefined) error.message = ''
+    EditInteraction(interaction, {content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
+}
 
 //
 // БАЗА ДАННЫХ
@@ -308,7 +326,6 @@ async function GStats(chl, id, par){
             let cat = guildBD.channels.cache.find(cat => cat.name.toLowerCase() == path[0].toLowerCase() && cat.type == "GUILD_CATEGORY")
             chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
         }
-        console.log(new Date().getUTCMilliseconds() + '\n')
         var msgs = await chl.messages.fetch()
         var units = []
 
@@ -316,6 +333,9 @@ async function GStats(chl, id, par){
             let unit = eval(`[${msg.content}]`)[0]
             for (let dat in unit.data){
                 try{
+                    if(Number.isInteger(parseInt(unit.data[dat])) && parseInt(unit.data[dat]) > 16){
+                        throw new Error
+                    }
                     try{
                         unit.data[dat] = eval(unit.data[dat]) 
                     }catch{
@@ -325,7 +345,6 @@ async function GStats(chl, id, par){
             }
             unit.mid = `${id}`
             units.push(unit)
-            console.log(new Date().getUTCMilliseconds())
         }
 
         if(id != undefined){
@@ -373,11 +392,13 @@ async function AStats(chl, structure, data){
             try{
                 if(typeof(data[i]) != 'string'){
                     returnData[structure[i]] = data[i]
+                }else if(Number.isInteger(parseInt(data[i])) && data[i].length > 16){
+                    returnData[structure[i]] = data[i]
                 }else{
                     returnData[structure[i]] = eval(`[${data[i]}]`)[0]
                 }
                 if(typeof(returnData[structure[i]]) == 'object'){
-                    returnData[structure[i]] = JSON.stringify(returnData[structure[i]]) //если массив или объект, то стилизуем под JSON
+                    returnData[structure[i]] = JSON.stringify(returnData[structure[i]])
                 }
             }catch{
                 returnData[structure[i]] = data[i]
@@ -408,22 +429,24 @@ async function EStats(chl, id, par, data){
         var units = await GStats(chl)
         var unit = units.find(unit => unit.id == id)
         var msg = await chl.messages.fetch(unit.mid)
+        unit = eval(`[${msg.content}]`)[0]
 
-        var unit = eval(`[${msg.content}]`)
         try{
             if(typeof(data[0]) != 'string'){
-                unit[0].data[par] = eval(data[0])
+                unit.data[par] = data[0]
+            }else if(Number.isInteger(parseInt(data[0])) && data[0].length > 16){
+                unit.data[par] = data[0]
             }else{
-                unit[0].data[par] = eval(`[${data[0]}]`)[0]
+                unit.data[par] = eval(`[${data[0]}]`)[0]
             }
-            if(typeof(unit[0].data[par]) == 'object'){
-                unit[0].data[par] = JSON.stringify(unit[0].data[par])
+            if(typeof(unit.data[par]) == 'object'){
+                unit.data[par] = JSON.stringify(unit.data[par])
             }
         }catch{
-            unit[0].data[par] = data[0]
+            unit.data[par] = data[0]
         }
-        
-        var message = JSON.stringify(unit[0], null, 4)
+
+        var message = JSON.stringify(unit, null, 2)
         if(message.length <= 2000){
             msg.edit(message)
         }else{
@@ -470,9 +493,13 @@ const RPF = {
             let cat = guild.channels.cache.find(cat => cat.type == 'GUILD_CATEGORY' && cat.name == object.data.name && object.data.cid == cat.id)
             if(cat == undefined){
                 cat = await guild.channels.create(object.data.name, {
-                    type: 'GUILD_CATEGORY'
+                    type: 'GUILD_CATEGORY',
+                    permissionOverwrites: [{
+                        id: guild.roles.everyone,
+                        deny: ['VIEW_CHANNEL','READ_MESSAGE_HISTORY', 'SEND_MESSAGES']
+                    }]
                 })
-                EStats(path, object.id, "cid", false, [`${cat.id}`])
+                EStats(path, object.id, "cid", [cat.id])
             }
             cat.setPosition(cat.position+1)
             
@@ -482,17 +509,17 @@ const RPF = {
                     let chnl = await guild.channels.create(room.name, {
                         type: 'GUILD_TEXT',
                         parent: cat,
-                        topic: `${object.data.rooms.indexOf(room)}`
+                        topic: `${object.data.rooms.indexOf(room)}`,
                     })
                     chnl.setPosition(object.data.rooms.indexOf(room))
                 }
             }
         }
     },
-    radiusSelectMenu: (objectId, objects) => {
+    radiusSelectMenu: (objectId, objects, inside) => {
         let returnObjects = []
         for(let object of objects){
-            if(object.data.radius.find(object => object.id == objectId) != undefined || objectId == object.id){
+            if(object.data.radius.find(object => object.id == objectId) != undefined || (objectId == object.id) == inside){
                 returnObjects.push({
                     label: `${object.data.name}`,
                     value: `${object.data.cid}`,
@@ -525,7 +552,6 @@ const RPF = {
                 }else{
                     throw new Error(`Предмет не удалось найти`)
                 }
-                console.log(room)
 
                 object.data.rooms[roomId] = room
                 if(room.items.length == 0) room.items = undefined
@@ -575,7 +601,6 @@ const RPF = {
                 }else{
                     throw new Error(`Предмет не удалось найти`)
                 }
-                console.log(player.data)
 
                 if(player.data.items.length == 0) player.data.items = undefined
                 EStats(`${project}/players`, player.id, 'items', [player.data.items])
@@ -625,7 +650,7 @@ client.on('ready', () => {
         rpGuilds, cmdParametrs, toChannelName, random,
         getRoleId, haveRole, giveRole, removeRole,
         sendLog, createLore, createEx,
-        createCom, SlashCom, BDunit,
+        createCom, SlashCom, EditInteraction, ErrorInteraction, BDunit,
         GStats, AStats, EStats,
         DStats, RPF}
     require('./projects/pushpin.js')

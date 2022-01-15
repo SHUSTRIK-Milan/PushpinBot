@@ -5,7 +5,7 @@ const {
     rpGuilds, cmdParametrs, toChannelName, random,
     getRoleId, haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
-    createCom, SlashCom, BDunit,
+    createCom, SlashCom, EditInteraction, ErrorInteraction, BDunit,
     GStats, AStats, EStats,
     DStats} = require('../bot.js')
 
@@ -26,12 +26,14 @@ async function awaitPutInBD(structure, channel, authorId){
         }, 10000)
 
         let values = collection.toJSON()
-        for(let i = 0; i < values.length; i++){
-            if(values[i].content == '_null'){
-                returnData[i] == undefined
-            }else if(values[i].content == '_stop'){
+        for(let value of values){
+            if(value.content == '_null'){
+                returnData.push(undefined)
+            }else if(value.content == '_stop'){
                 return 'stop'
-            }else{returnData[i] = values[i].content}
+            }else{
+                returnData.push(value.content)
+            }
         }
         return returnData
     }catch{}
