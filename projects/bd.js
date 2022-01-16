@@ -2,7 +2,7 @@ const {
     client, REST, Routes,
     Config, prefix, timeOfDelete,
     guildBase, guildAges, guildBD, 
-    rpGuilds, cmdParametrs, toChannelName, random,
+    rpGuilds, cmdParametrs, getMessages, toChannelName, random,
     getRoleId, haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
     createCom, SlashCom, ReplyInteraction, ErrorInteraction, BDunit,

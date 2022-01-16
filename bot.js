@@ -78,6 +78,27 @@ function cmdParametrs(content,countS){
     return comand
 }
 
+async function getMessages(chnanel, limit){
+    let allMessages = []
+    let last_id
+    
+    while(true){
+        let options = {limit: 100}
+        if(last_id){
+            options.before = last_id
+        }
+
+        let messages = await chnanel.messages.fetch(options)
+        allMessages.push(...messages.values())
+        last_id = messages.last().id
+
+        if(messages.size != 100 || allMessages >= limit){
+            break
+        }
+    }
+    return allMessages.slice(0, limit)
+}
+
 function toChannelName(text){
     return text.toLowerCase().split(' ').join('-')
 }
@@ -350,7 +371,7 @@ async function GStats(chl, id, par){
             let cat = guildBD.channels.cache.find(cat => cat.name.toLowerCase() == path[0].toLowerCase() && cat.type == "GUILD_CATEGORY")
             chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
         }
-        var msgs = await chl.messages.fetch()
+        var msgs = await chl.messages.fetch({limit: 100})
         var units = []
 
         for (let [id,msg] of msgs){
@@ -430,6 +451,7 @@ async function AStats(chl, structure, data){
         }
         var unit = new BDunit(id+1, returnData)
         var message = JSON.stringify(unit, null, 2)
+
         if(message.length <= 2000){
             chl.send(message)
         }else{
@@ -591,14 +613,13 @@ const RPF = {
                 stage = selectMenu.options.length/25
             }
             for(let i = 0; i <= stage; i++){
-                if(i != page){
-                    buttons.push({
-                        type: 'BUTTON',
-                        label: `${i+1}`,
-                        customId: `switchPage_${id}_${i}_${add}`,
-                        style: ['SUCCESS', 'PRIMARY', 'DANGER'][random(0,3)]
-                    })
-                }
+                buttons.push({
+                    type: 'BUTTON',
+                    label: `${i+1}`,
+                    customId: `switchPage_${id}_${i}_${add}`,
+                    style: ['SUCCESS', 'PRIMARY', 'DANGER'][random(0,2)],
+                    disabled: (() => {if(i == page) return true})()
+                })
             }
         }else{
             returnComponents.splice(1,1)
@@ -722,7 +743,7 @@ client.on('ready', () => {
         client, REST, Routes,
         Config, prefix, timeOfDelete,
         guildBase:guild, guildAges, guildBD, 
-        rpGuilds, cmdParametrs, toChannelName, random,
+        rpGuilds, cmdParametrs, getMessages, toChannelName, random,
         getRoleId, haveRole, giveRole, removeRole,
         sendLog, createLore, createEx,
         createCom, SlashCom, ReplyInteraction, ErrorInteraction, BDunit,
