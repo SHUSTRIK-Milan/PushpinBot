@@ -292,7 +292,7 @@ async function SlashCom(type, name, data, cguildId, permissions){
     }else{return}
 }
 
-async function EditInteraction(interaction, parametrs){
+async function ReplyInteraction(interaction, parametrs){
     try{
         await interaction.update(parametrs)
     }catch(error){
@@ -304,10 +304,34 @@ async function EditInteraction(interaction, parametrs){
     }
 }
 
-function ErrorInteraction(interaction, error){
+function ErrorInteraction(interaction, error, ephemeral){
     console.log(error)
     if(error.message == undefined) error.message = ''
-    EditInteraction(interaction, {content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: []})
+    ReplyInteraction(interaction, {content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: [], ephemeral: ephemeral})
+    guild.channels.cache.get(Config.channelsID.errors).send({
+        embeds: [
+            {
+                title: `Ошибка "${error.message}"`,
+                description: `${error.stack}`,
+                timestamp: new Date(),
+                color: "#DD2C2C",
+                thumbnail: {url: 'https://i.imgur.com/YTXH8fJ.png'}
+            }
+        ],
+        components: [
+            {
+                type: 'ACTION_ROW',
+                components: [
+                    {
+                        type: 'BUTTON',
+                        label: 'Канал',
+                        style: 'LINK',
+                        url: `discord:///channels/${interaction.guildId}/${interaction.channelId}`
+                    }
+                ]
+            }
+        ]
+    })
 }
 
 //
@@ -516,21 +540,72 @@ const RPF = {
             }
         }
     },
-    radiusSelectMenu: (objectId, objects, inside) => {
-        let returnObjects = []
+    radiusSelectMenu: (objectId, objects, inside, page, id, options, add) => {
+        let returnComponents = [
+            {
+                type: 'ACTION_ROW', 
+                components: [
+                    {
+                        type: 'SELECT_MENU',
+                        customId: options.customId,
+                        placeholder: options.placeholder,
+                        options: []
+                    }
+                ]
+            },
+            {
+                type: 'ACTION_ROW',
+                components: []
+            }
+        ]
+        let selectMenu = returnComponents[0].components[0]
+        let buttons = returnComponents[1].components
+
         for(let object of objects){
             if(object.data.radius.find(object => object.id == objectId) != undefined || (objectId == object.id) == inside){
-                returnObjects.push({
+                if(object.data.cid == undefined || selectMenu.options.find(returnObject => returnObject.value == object.data.cid)){
+                    object.data.cid = `${object.id}_undefined`
+                }
+
+                let emoji = RPF.randomHomeEmoji()
+                if(object.data.status != undefined){
+                    if(!object.data.status.open){
+                        emoji = '🔒'
+                    }
+                }
+
+                selectMenu.options.push({
                     label: `${object.data.name}`,
                     value: `${object.data.cid}`,
                     emoji: {
                         id: null,
-                        name: RPF.randomHomeEmoji()
+                        name: emoji
                     }
                 })
             }
         }
-        return returnObjects
+
+        if(selectMenu.options.length > 25){
+            let stage = 1
+            if(selectMenu.options.length % 25 == 0){
+                stage = selectMenu.options.length/25
+            }
+            for(let i = 0; i <= stage; i++){
+                if(i != page){
+                    buttons.push({
+                        type: 'BUTTON',
+                        label: `${i+1}`,
+                        customId: `switchPage_${id}_${i}_${add}`,
+                        style: ['SUCCESS', 'PRIMARY', 'DANGER'][random(0,3)]
+                    })
+                }
+            }
+        }else{
+            returnComponents.splice(1,1)
+        }
+
+        selectMenu.options = selectMenu.options.slice(0+(page*25), 25*(page+1))
+        return returnComponents
     },
     roomItemManager: (get, project, object, room, gItem, count) => {
         try{
@@ -650,7 +725,7 @@ client.on('ready', () => {
         rpGuilds, cmdParametrs, toChannelName, random,
         getRoleId, haveRole, giveRole, removeRole,
         sendLog, createLore, createEx,
-        createCom, SlashCom, EditInteraction, ErrorInteraction, BDunit,
+        createCom, SlashCom, ReplyInteraction, ErrorInteraction, BDunit,
         GStats, AStats, EStats,
         DStats, RPF}
     require('./projects/pushpin.js')

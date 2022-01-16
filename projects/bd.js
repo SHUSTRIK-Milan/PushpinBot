@@ -5,7 +5,7 @@ const {
     rpGuilds, cmdParametrs, toChannelName, random,
     getRoleId, haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
-    createCom, SlashCom, EditInteraction, ErrorInteraction, BDunit,
+    createCom, SlashCom, ReplyInteraction, ErrorInteraction, BDunit,
     GStats, AStats, EStats,
     DStats} = require('../bot.js')
 

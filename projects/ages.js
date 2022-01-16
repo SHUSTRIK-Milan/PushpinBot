@@ -5,7 +5,7 @@ const {
     rpGuilds, cmdParametrs, toChannelName, random,
     getRoleId, haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
-    createCom, SlashCom, EditInteraction, ErrorInteraction, BDunit,
+    createCom, SlashCom, ReplyInteraction, ErrorInteraction, BDunit,
     GStats, AStats, EStats,
     DStats, RPF} = require('../bot.js')
 
@@ -55,7 +55,7 @@ SlashCom('wait', 'осмотреть', {
     ],
 }, guild.id)
 
-SlashCom('create', 'идти', {
+SlashCom('wait', 'идти', {
     name: 'идти',
     description: 'Позволяет пройти в локацию, находящуюся в окружении',
     type: 'CHAT_INPUT',
@@ -178,22 +178,15 @@ client.on('interactionCreate', async interaction => {
             }
 
             if(interaction.commandName == 'идти'){
-                let options = RPF.radiusSelectMenu(object.id, objects, false)
-                if(options == undefined) throw new Error("Объектов по близости нет")
+                let components = RPF.radiusSelectMenu(object.id, objects, false, 0, 'walk', {
+                    customId: 'walk_select',
+                    placeholder: 'Объекты...'
+                })
+                if(components == undefined) throw new Error("Объектов по близости нет")
                 
                 interaction.reply({
-                    content: '> Выберите направление 🚶‍♂️',
-                    components: [{
-                        type: 'ACTION_ROW', 
-                        components: [
-                            {
-                                type: 'SELECT_MENU',
-                                customId: `walk_select`,
-                                placeholder: 'Объекты...',
-                                options: options
-                            }
-                        ]
-                    }],
+                    content: '> Выберите направление 🚶',
+                    components: components,
                     ephemeral: true
                 })
             }
@@ -358,7 +351,7 @@ client.on('interactionCreate', async interaction => {
                                     EStats("ages/objects", object.id, "status", [{open: true, ex: object.data.status.ex}])
                                 }
                             }catch(error){
-                                ErrorInteraction(interaction, error)
+                                ErrorInteraction(interaction, error, true)
                             }
                         }, 2500)
                     }else{
@@ -375,18 +368,12 @@ client.on('interactionCreate', async interaction => {
                 if(channelObject == undefined) throw new Error("Объект не найден")
 
                 function step(){
-                    channelObject.permissionOverwrites.create(interaction.user.id, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true}).then(() => {
-                        setTimeout(() => {
-                            try{
-                                interaction.channel.parent.permissionOverwrites.delete(interaction.user.id)
-                            }catch(error){
-                                ErrorInteraction(interaction, error)
-                            }
-                        }, timeOfDelete*3)
-                    })
+                    ReplyInteraction(interaction, {content: `> Вы успешно перешли в **${channelObject.name}** 🚶`, embeds: [], components: []})
+                    channelObject.permissionOverwrites.create(interaction.user.id, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true})
+                    interaction.channel.parent.permissionOverwrites.delete(interaction.user.id)
                 }
 
-                interaction.update({content: `> Процесс... 🚶‍♂️`, embeds: [], components: []})
+                interaction.update({content: `> Процесс... 🚶`, embeds: [], components: []})
                 setTimeout(() => {
                     try{
                         if(object.data.status != undefined){
@@ -408,7 +395,7 @@ client.on('interactionCreate', async interaction => {
                             step()
                         }
                     }catch(error){
-                        ErrorInteraction(interaction, error)
+                        ErrorInteraction(interaction, error, true)
                     }
                 }, 2500)
             }
@@ -418,13 +405,12 @@ client.on('interactionCreate', async interaction => {
             let type = interaction.customId.split('_')[0]
             let act = interaction.customId.split('_')[1]
             let data = interaction.customId.split('_')[2]
+            let add = interaction.customId.split('_')[3]
 
             if(type == 'invent'){
                 let gItems = []
                 let playerItems = []
                 let roomItems = []
-
-                let options = RPF.radiusSelectMenu(object.id, objects, true)
 
                 for(let value of data.split(',')){
                     let gItem = items.find(fItem => fItem.data.codename == value)
@@ -453,7 +439,7 @@ client.on('interactionCreate', async interaction => {
                                 reply = `> Введите количество **${gItem.data.emoji} ${gItem.data.name}**, которое вы хотите выбросить **(Всего: ${item.count})** 📤`
                             }
 
-                            EditInteraction(interaction, {content: reply, embeds: [], components: []})
+                            ReplyInteraction(interaction, {content: reply, embeds: [], components: []})
                             
                             let filter = message => message.author.id == interaction.user.id
                             let message = await interaction.channel.awaitMessages({filter, max: 1, time: 10000, errors: ['time']})
@@ -463,7 +449,7 @@ client.on('interactionCreate', async interaction => {
                                 try{
                                     message.first().delete()
                                 }catch(error){
-                                    ErrorInteraction(interaction, error)
+                                    ErrorInteraction(interaction, error, true)
                                 }
                             }, timeOfDelete)
                         }
@@ -476,22 +462,16 @@ client.on('interactionCreate', async interaction => {
                 if(act == 'use'){
                     if(playerItems.length == 0) throw new Error("Предмет не удалось найти среди вашего инвентаря")
                     if(gItems[0].data.type == 'key'){
+                        let components = RPF.radiusSelectMenu(object.id, objects, true, 0, 'key', {
+                            customId: `invent_key_${data}`,
+                            placeholder: 'Объекты...',
+                        }, `${data}`)
+                        if(components == undefined) throw new Error("Объектов по близости нет")
+
                         interaction.update({
                             content: '> Выберите объект 🏘',
                             embeds: [],
-                            components: [
-                                {
-                                    type: 'ACTION_ROW',
-                                    components: [
-                                        {
-                                            type: 'SELECT_MENU',
-                                            customId: `invent_key_${data}`,
-                                            placeholder: 'Объекты...',
-                                            options: options
-                                        }
-                                    ],
-                                }
-                            ]
+                            components: components
                         })
                     }
                 }else if(act == 'trade'){
@@ -520,7 +500,7 @@ client.on('interactionCreate', async interaction => {
                         let count = await getCount(get, gItem, lItem)
 
                         if(count != NaN && lItem.count >= count && count > 0){
-                            EditInteraction(interaction, {content: `> Процесс... 📦`, embeds: [], components: []})
+                            ReplyInteraction(interaction, {content: `> Процесс... 📦`, embeds: [], components: []})
                             
                             let action = [RPF.playerItemManager(get, 'ages', player, gItem, count),
                             RPF.roomItemManager(!get, 'ages', object, room, gItem, count)]
@@ -539,7 +519,7 @@ client.on('interactionCreate', async interaction => {
                                         interaction.editReply(`${lAct}\n${dropInfo.join('\n')}`)
                                     }
                                 }catch(error){
-                                    ErrorInteraction(interaction, error)
+                                    ErrorInteraction(interaction, error, true)
                                 }
                             }, 2500)
                         }else{
@@ -548,8 +528,36 @@ client.on('interactionCreate', async interaction => {
                     }
                 }
             }
+
+            if(type == 'switchPage'){
+                if(act == 'walk'){
+                    let components = RPF.radiusSelectMenu(object.id, objects, false, parseInt(data), 'walk', {
+                        customId: 'walk_select',
+                        placeholder: 'Объекты...'
+                    })
+                    if(components == undefined) throw new Error("Объектов по близости нет")
+
+                    ReplyInteraction(interaction, {
+                        content: '> Выберите направление 🚶',
+                        components: components,
+                        ephemeral: true
+                    })
+                }else if(act == 'key'){
+                    let components = RPF.radiusSelectMenu(object.id, objects, true, parseInt(data), 'key', {
+                        customId: `invent_key_${add}`,
+                        placeholder: 'Объекты...',
+                    }, `${add}`)
+                    if(components == undefined) throw new Error("Объектов по близости нет")
+
+                    ReplyInteraction(interaction, {
+                        content: '> Выберите объект 🏘',
+                        embeds: [],
+                        components: components
+                    })
+                }
+            }
         }
     }catch(error){
-        ErrorInteraction(interaction, error)
+        ErrorInteraction(interaction, error, true)
     }
 })

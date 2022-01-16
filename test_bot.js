@@ -116,6 +116,20 @@ client.on('ready', () => {
         description: 'Показывает текущий инвентарь',
         type: 'CHAT_INPUT'
     }, '840180165665619998')
+
+    SlashCom('create', 'test', {
+        name: 'test',
+        description: 'test',
+        type: 'CHAT_INPUT',
+        options: [
+            {
+                type: 'CHANNEL',
+                name: 'test',
+                description: 'test',
+                required: true
+            },
+        ]
+    }, '840180165665619998')
 })
 
 function comps(count, rows, user){
