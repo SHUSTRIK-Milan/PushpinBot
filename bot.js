@@ -371,10 +371,10 @@ async function GStats(chl, id, par){
             let cat = guildBD.channels.cache.find(cat => cat.name.toLowerCase() == path[0].toLowerCase() && cat.type == "GUILD_CATEGORY")
             chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
         }
-        var msgs = await chl.messages.fetch({limit: 100})
+        var msgs = await getMessages(chl, 10000)
         var units = []
 
-        for (let [id,msg] of msgs){
+        for (let msg of msgs){
             let unit = eval(`[${msg.content}]`)[0]
             for (let dat in unit.data){
                 try{
@@ -388,7 +388,7 @@ async function GStats(chl, id, par){
                     }
                 }catch{}
             }
-            unit.mid = `${id}`
+            unit.mid = `${msg.id}`
             units.push(unit)
         }
 
