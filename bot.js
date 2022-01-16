@@ -608,16 +608,19 @@ const RPF = {
         }
 
         if(selectMenu.options.length > 25){
-            let stage = 1
-            if(selectMenu.options.length % 25 == 0){
-                stage = selectMenu.options.length/25
-            }
+            let stage = Math.floor(selectMenu.options.length/25)
             for(let i = 0; i <= stage; i++){
                 buttons.push({
                     type: 'BUTTON',
                     label: `${i+1}`,
                     customId: `switchPage_${id}_${i}_${add}`,
-                    style: ['SUCCESS', 'PRIMARY', 'DANGER'][random(0,2)],
+                    style: (() => {
+                        if(i == page){
+                            return 'SUCCESS'
+                        }else{
+                            return 'PRIMARY'
+                        }
+                    })(),
                     disabled: (() => {if(i == page) return true})()
                 })
             }

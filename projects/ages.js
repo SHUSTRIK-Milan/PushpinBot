@@ -73,8 +73,6 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
         RPF.createObjects("ages/objects", guild)
     }
 
-    AStats('ages/main', undefined, ['test'])
-
     if(!mb && !dm) sendLog(message.member, message.channel, 'rp', 'Отправил сообщение', true, message.content)
 }})
 
@@ -89,7 +87,6 @@ client.on('interactionCreate', async interaction => {
         if(items == undefined) throw new Error("Предметы отсутствуют")
 
         let object = objects.find(object => object.data.cid == interaction.channel.parentId)
-        console.log(objects)
         if(object == undefined) throw new Error("Функция используется вне ролевого поля")
 
         let roomId = parseInt(interaction.channel.topic)
