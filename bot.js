@@ -84,7 +84,7 @@ async function getMessages(chnanel, limit){
     
     while(true){
         let options = {limit: 100}
-        if(last_id){
+        if(last_id != undefined){
             options.before = last_id
         }
 
@@ -382,7 +382,7 @@ async function GStats(chl, id, par){
                         throw new Error
                     }
                     try{
-                        unit.data[dat] = eval(unit.data[dat]) 
+                        unit.data[dat] = eval(unit.data[dat])
                     }catch{
                         unit.data[dat] = JSON.parse(unit.data[dat])
                     }
@@ -562,7 +562,20 @@ const RPF = {
             }
         }
     },
-    radiusSelectMenu: (objectId, objects, inside, page, id, options, add) => {
+    radiusSelectMenu: (options = {
+        act: "",
+        add: "",
+        componentsData: {
+            customId: "",
+            placeholder: ""
+        },
+        unitsData: {
+            global: [],
+            local: []
+        },
+        inside: true,
+        page: 0
+    }) => {
         let returnComponents = [
             {
                 type: 'ACTION_ROW', 
@@ -830,7 +843,7 @@ client.on('messageCreate', message => {
         setTimeout(() => message.delete(), timeOfDelete)
     }
     if(command.com == `clear` && !mb && !dm && (cA || cB)){
-        let arg = parseInt(command.splitArg[0])
+        let arg = parseInt(command.splitArg[0])+1
         if (arg > 0 && arg < 100){
             message.channel.bulkDelete(arg, true)
         }
