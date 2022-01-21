@@ -63,7 +63,8 @@ module.exports.BDs = {
 
     ages_main: ['user'],
     ages_objects: ['name', 'status', 'radius', 'rooms', 'cid'],
-    ages_players: ['user', 'name', 'race', 'desc', 'items', 'pos'],
+    ages_players: ['user', 'limit', 'chars', 'char'],
+    ages_chars: ['name', 'race', 'desc', 'items', 'pos'],
     ages_items: ['codename', 'type', 'name', 'description', 'emoji', 'convar'],
 }
 

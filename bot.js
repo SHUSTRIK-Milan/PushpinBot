@@ -89,6 +89,9 @@ async function getMessages(chnanel, limit){
         }
 
         let messages = await chnanel.messages.fetch(options)
+        if(messages.size == 0){
+            break
+        }
         allMessages.push(...messages.values())
         last_id = messages.last().id
 
@@ -547,7 +550,6 @@ const RPF = {
                 })
                 EStats(path, object.id, "cid", [cat.id])
             }
-            cat.setPosition(cat.position+1)
             
             for(let room of object.data.rooms){
                 let chnl = cat.children.toJSON().find(chnl => chnl.name == toChannelName(room.name))
@@ -562,71 +564,87 @@ const RPF = {
             }
         }
     },
-    radiusSelectMenu: (options = {
-        act: "",
-        add: "",
-        componentsData: {
-            customId: "",
-            placeholder: ""
-        },
-        unitsData: {
-            global: [],
-            local: []
-        },
-        inside: true,
-        page: 0
-    }) => {
-        let returnComponents = [
-            {
-                type: 'ACTION_ROW', 
-                components: [
-                    {
-                        type: 'SELECT_MENU',
-                        customId: options.customId,
-                        placeholder: options.placeholder,
-                        options: []
-                    }
-                ]
-            },
-            {
-                type: 'ACTION_ROW',
-                components: []
-            }
-        ]
-        let selectMenu = returnComponents[0].components[0]
-        let buttons = returnComponents[1].components
-
-        for(let object of objects){
-            if(object.data.radius.find(object => object.id == objectId) != undefined || (objectId == object.id) == inside){
-                if(object.data.cid == undefined || selectMenu.options.find(returnObject => returnObject.value == object.data.cid)){
-                    object.data.cid = `${object.id}_undefined`
+    objectsSelectMenuOptions: (object, objects, radius, inside = true) => {
+        var returnOptions = []
+        
+        for(let fObject of objects){
+            if((radius && object.data.radius.find(object => object.id == fObject.id) != undefined) || (!radius && object.id != fObject.id) || (inside && object.id == fObject.id)){
+                if(fObject.data.cid == undefined){
+                    fObject.data.cid = `${fObject.id}_undefined`
                 }
 
                 let emoji = RPF.randomHomeEmoji()
-                if(object.data.status != undefined){
-                    if(!object.data.status.open){
+                if(fObject.data.status != undefined){
+                    if(!fObject.data.status.open && fObject.data.status.ex.find(ex => ex == object.id) != undefined){
+                        emoji = '🔓'
+                    }else if(!fObject.data.status.open){
                         emoji = '🔒'
                     }
                 }
 
-                selectMenu.options.push({
-                    label: `${object.data.name}`,
-                    value: `${object.data.cid}`,
+                let position = returnOptions.length
+                let category = guildAges.channels.cache.get(fObject.data.cid)
+                if(category != undefined){
+                    position = category.position
+                }
+
+                returnOptions[position] = {
+                    label: `${fObject.data.name}`,
+                    value: `${fObject.data.cid}`,
                     emoji: {
                         id: null,
                         name: emoji
                     }
-                })
+                }
             }
         }
+        return returnOptions.filter(unit => unit)
+    },
+    itemsSelectMenuOptions: (items, inventory) => {
+        let returnItems = []
+        if(items != undefined && inventory != undefined){
+            for (let lItem of inventory){
+                let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
+                if(gItem != undefined){
+                    returnItems.push({
+                        label: `${gItem.data.name} (x${lItem.count})`,
+                        description: gItem.data.description,
+                        value: `${gItem.data.codename}`,
+                        emoji: {
+                            id: null,
+                            name: `${gItem.data.emoji}`
+                        }
+                    })
+                }
+            }
+        }
+        return returnItems
+    },
+    pageButtonsSelectMenu: (customId, placeholder, options, act, page = 0, data = "") => {
+        let returnComponents = [{
+            type: 'ACTION_ROW', 
+            components: [
+                {
+                    type: 'SELECT_MENU',
+                    customId: customId,
+                    placeholder: placeholder,
+                    options: options.slice(0+(page*25), 25*(page+1))
+                }
+            ],
+        }]
 
-        if(selectMenu.options.length > 25){
-            let stage = Math.floor(selectMenu.options.length/25)
+        let act_row = {
+            type: 'ACTION_ROW',
+            components: []
+        }
+        
+        if(options.length > 25){
+            let stage = Math.floor(returnOptions.length/25)
             for(let i = 0; i <= stage; i++){
-                buttons.push({
+                act_row.components.push({
                     type: 'BUTTON',
                     label: `${i+1}`,
-                    customId: `switchPage_${id}_${i}_${add}`,
+                    customId: `switchPage_${act}_${data}_${i}`,
                     style: (() => {
                         if(i == page){
                             return 'SUCCESS'
@@ -637,11 +655,9 @@ const RPF = {
                     disabled: (() => {if(i == page) return true})()
                 })
             }
-        }else{
-            returnComponents.splice(1,1)
         }
+        if(act_row.components.length != 0) returnComponents.push(act_row)
 
-        selectMenu.options = selectMenu.options.slice(0+(page*25), 25*(page+1))
         return returnComponents
     },
     roomItemManager: (get, project, object, room, gItem, count) => {
@@ -694,41 +710,41 @@ const RPF = {
             return new Error(`${error.message}`)
         }
     },
-    playerItemManager: (get, project, player, gItem, count) => {
+    charItemManager: (get, project, char, gItem, count) => {
         try{
             try{
-                var playerItem = player.data.items.find(item => item.codename == gItem.data.codename)
-                var itemId = player.data.items.indexOf(playerItem)
+                var charItem = char.data.items.find(item => item.codename == gItem.data.codename)
+                var itemId = char.data.items.indexOf(charItem)
             }catch{}
 
             if(!get){
-                if(player.data.items == undefined){
+                if(char.data.items == undefined){
                     throw new Error(`Ваш инвентарь пуст`)
-                }else if(playerItem != undefined){
-                    if(playerItem.count <= count){
-                        player.data.items.splice(itemId, 1)
+                }else if(charItem != undefined){
+                    if(charItem.count <= count){
+                        char.data.items.splice(itemId, 1)
                     }else{
-                        player.data.items[itemId].count -= count
+                        char.data.items[itemId].count -= count
                     }
                 }else{
                     throw new Error(`Предмет не удалось найти`)
                 }
 
-                if(player.data.items.length == 0) player.data.items = undefined
-                EStats(`${project}/players`, player.id, 'items', [player.data.items])
+                if(char.data.items.length == 0) char.data.items = undefined
+                EStats(`${project}/chars`, char.id, 'items', [char.data.items])
                 return true
             }else if(get){
-                if(player.data.items == undefined){
-                    player.data.items = [{codename: gItem.data.codename, count: count}]
-                }else if(playerItem == undefined){
-                    player.data.items.push({codename: gItem.data.codename, count: count})
+                if(char.data.items == undefined){
+                    char.data.items = [{codename: gItem.data.codename, count: count}]
+                }else if(charItem == undefined){
+                    char.data.items.push({codename: gItem.data.codename, count: count})
                 }else{
-                    player.data.items[itemId].count += count
+                    char.data.items[itemId].count += count
                 }
 
-                if(player.data.items.length <= 25){
+                if(char.data.items.length <= 25){
                     try{
-                        EStats(`${project}/players`, player.id, 'items', [player.data.items])
+                        EStats(`${project}/chars`, char.id, 'items', [char.data.items])
                         return true
                     }catch(error){
                         console.log(error)
