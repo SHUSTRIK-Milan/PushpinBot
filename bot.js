@@ -476,9 +476,16 @@ async function EStats(chl, id, par, data){
         var unit = units.find(unit => unit.id == id)
         var msg = await chl.messages.fetch(unit.mid)
         delete unit.mid
-        
-        console.log(`"${data[0]}"`)
-        eval(`unit.data${par} = \`${data[0]}\``)
+
+        try{
+            eval(`unit.data${par} = ${data[0]}`)
+        }catch{
+            eval(`unit.data${par} = \`${data[0]}\``)
+        }
+
+        if(typeof(data[0]) == 'object'){
+            eval(`unit.data${par} = ${JSON.stringify(data[0])}`)
+        }
         
         for(let key in unit.data){
             try{
@@ -603,12 +610,17 @@ const RPF = {
         let returnItems = []
         if(items != undefined && inventory != undefined){
             for (let lItem of inventory){
+                let convar = ''
+                if(lItem.convar){
+                    convar = `-${lItem.convar}`
+                }
+
                 let gItem = items.find(fItem => fItem.id == lItem.id)
                 if(gItem != undefined){
                     returnItems.push({
-                        label: `${gItem.data.name} (x${lItem.count})`,
+                        label: `[${inventory.indexOf(lItem)+1}] ${gItem.data.name} (x${lItem.count})`,
                         description: gItem.data.description,
-                        value: `${gItem.id}`,
+                        value: `${lItem.id}${convar}`,
                         emoji: {
                             id: null,
                             name: `${gItem.data.emoji}`
@@ -659,132 +671,40 @@ const RPF = {
 
         return returnComponents
     },
-    roomItemManager: (get, project, object, room, gItem, count) => {
+    ItemManager: (get, path, par, id, origin, sourceItem, count) => {
         try{
-            var roomId = object.data.rooms.indexOf(room)
-            var roomItem = room.items?.find(item => item.id == gItem.id)
-            var rItemId = room.items?.indexOf(roomItem)
+            let lItem = origin?.find(fItem => (!sourceItem.convar && fItem.id == sourceItem.id) || (sourceItem.convar && fItem.id == sourceItem.id && fItem.convar == sourceItem.convar))
+            let itemId = origin?.indexOf(lItem)
 
             if(!get){
-                if(room.items == undefined){
-                    throw new Error(`Комната пуста`)
-                }else if(roomItem != undefined){
-                    if(roomItem.count <= count){
-                        room.items.splice(roomItem, 1)
-                    }else{
-                        room.items[rItemId].count -= count
-                    }
-                }else{
-                    throw new Error(`Предмет не удалось найти`)
-                }
-
-                object.data.rooms[roomId] = room
-                if(room.items.length == 0) room.items = undefined
-                EStats(`${project}/objects`, object.id, 'rooms', [object.data.rooms])
-                return true
-            }else if(get){
-                if(room.items == undefined){
-                    room.items = [{id: gItem.id, convar: gItem.convar, count: count}]
-                }else if(roomItem == undefined){
-                    room.items.push({id: gItem.id, convar: gItem.convar, count: count})
-                }else{
-                    room.items[rItemId].count += count
-                }
-
-                if(room.items.length <= 25){
-                    try{
-                        object.data.rooms[roomId] = room
-                        EStats(`${project}/objects`, object.id, 'rooms', [object.data.rooms])
-                        return true
-                    }catch{
-                        throw new Error(`Комната переполнена`)
-                    }
-                }else{
-                    throw new Error(`Комната переполнена`)
-                }
-            }
-        }catch(error){
-            return new Error(`${error.message}`)
-        }
-    },
-    charItemManager: (get, project, char, gItem, count) => {
-        try{
-            var charItem = char.data.items?.find(item => item.id == gItem.id)
-            var itemId = char.data.items?.indexOf(charItem)
-
-            if(!get){
-                if(char.data.items == undefined){
-                    throw new Error(`Ваш инвентарь пуст`)
-                }else if(charItem != undefined){
-                    if(charItem.count <= count){
-                        char.data.items.splice(itemId, 1)
-                    }else{
-                        char.data.items[itemId].count -= count
-                    }
-                }else{
-                    throw new Error(`Предмет не удалось найти`)
-                }
-
-                if(char.data.items.length == 0) char.data.items = undefined
-                EStats(`${project}/chars`, char.id, 'items', [char.data.items])
-                return true
-            }else if(get){
-                if(char.data.items == undefined){
-                    char.data.items = [{id: gItem.id, convar: gItem.convar, count: count}]
-                }else if(charItem == undefined){
-                    char.data.items.push({id: gItem.id, convar: gItem.convar, count: count})
-                }else{
-                    char.data.items[itemId].count += count
-                }
-
-                if(char.data.items.length <= 25){
-                    try{
-                        EStats(`${project}/chars`, char.id, 'items', [char.data.items])
-                        return true
-                    }catch(error){
-                        console.log(error)
-                        throw new Error(`Инвентарь переполнен`)
-                    }
-                }else{
-                    throw new Error(`Инвентарь переполнен`)
-                }
-            }
-        }catch(error){
-            return new Error(`${error.message}`)
-        }
-    },
-    ItemManager: (get, path, par, id, source, lItem, gItem, count) => {
-        try{
-            var itemId = source?.indexOf(lItem)
-
-            if(!get){
-                if(!source.length){
+                if(!origin.length){
                     throw new Error(`Контейнер пуст`)
                 }else if(lItem){
                     if(lItem.count <= count){
-                        source.splice(itemId, 1)
+                        origin.splice(itemId, 1)
                     }else{
-                        source[itemId].count -= count
+                        lItem.count -= count
                     }
                 }else{
                     throw new Error(`Предмет не удалось найти`)
                 }
 
-                if(source.length == 0) source = undefined
-                EStats(`${path}`, id, par, [source])
+                if(!origin.length) origin = undefined
+                EStats(`${path}`, id, par, [origin])
                 return true
             }else if(get){
-                if(!source.length){
-                    source = [{id: gItem.id, convar: lItem.convar, count: count}]
+                if(!origin.length){
+                    origin = [{id: lItem.id, convar: lItem.convar, count: count}]
                 }else if(!lItem){
-                    source.push({id: gItem.id, convar: lItem.convar, count: count})
+                    origin.push({id: lItem.id, convar: lItem.convar, count: count})
                 }else{
-                    source[itemId].count += count
+                    lItem.count += count
                 }
 
-                if(source.length <= 25){
+                if(origin.length <= 25){
                     try{
-                        EStats(`${path}`, id, par, [source])
+                        if(!origin.length) origin = undefined
+                        EStats(`${path}`, id, par, [origin])
                         return true
                     }catch(error){
                         console.log(error)

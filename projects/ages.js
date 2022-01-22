@@ -101,6 +101,8 @@ client.on('interactionCreate', async interaction => {
         var char = chars.find(char => char.id == player.data.char && player.data.chars.find(fChar => fChar == char.id))
         if(!char) throw new Error("Персонаж отсутствует")
 
+        //RPF.ItemManager(get, 'ages/chars', 'items', char.id, char.data.items, {id: 5, }, convar, count)
+
         let object = objects.find(object => object.data.cid == interaction.channel.parentId)
         if(!object) throw new Error("Функция используется вне ролевого поля")
 
@@ -215,8 +217,6 @@ client.on('interactionCreate', async interaction => {
                 let options = RPF.objectsSelectMenuOptions(object, objects, false, false)
                 if(options.length == 0) throw new Error("Объектов нет")
 
-                console.log(options)
-
                 let components = RPF.pageButtonsSelectMenu('tp_select', 'Объекты...', options, 'tp', 0, interaction.options?.get('человек')?.value ?? interaction.user.id)
                 
                 interaction.reply({
@@ -259,7 +259,7 @@ client.on('interactionCreate', async interaction => {
                 if(options.length == 0) throw new Error("Ваш инвентарь пуст")
 
                 for(let value of values){
-                    let gItem = items.find(fItem => fItem.id == value)
+                    let gItem = items.find(fItem => fItem.id == value.split('-')[0])
                     if(!gItem) throw new Error("Предмет не удалось найти среди глобальных предметов")
                     gItems.push(gItem)
 
@@ -316,7 +316,7 @@ client.on('interactionCreate', async interaction => {
                 if(options.length == 0) throw new Error("Комната пуста")
                 
                 for(let value of values){
-                    let gItem = items.find(fItem => fItem.id == value)
+                    let gItem = items.find(fItem => fItem.id == value.split('-')[0])
                     if(!gItem) throw new Error("Предмет не удалось найти среди глобальных предметов")
                     gItems.push(gItem)
 
@@ -375,9 +375,12 @@ client.on('interactionCreate', async interaction => {
 
                 let gItem = items.find(fItem => fItem.id == data)
                 if(!gItem) throw new Error("Предмет не удалось найти")
+
+                let lItem = char.data.items.find(fItem => fItem.id == gItem.id)
+                if(!lItem) throw new Error("Предмет не удалось найти")
                 
                 if(object.data.status){
-                    if(gItem.data.convar == object.id){
+                    if(lItem.convar == object.id){
                         interaction.update({content: `> Процесс... 🔐`, embeds: [], components: []})
                         setTimeout(() => {
                             try{
@@ -430,9 +433,6 @@ client.on('interactionCreate', async interaction => {
                     }
                 }, 2500)
             }else if(type == 'tp' && act == 'select'){
-                console.log('test')
-                console.log(value)
-
                 let targetObject = objects.find(object => object.id == value)
                 if(!targetObject) throw new Error("Объект не найден")
                 
@@ -450,7 +450,7 @@ client.on('interactionCreate', async interaction => {
                 let roomItems = []
 
                 for(let value of data.split(',')){
-                    let gItem = items.find(fItem => fItem.id == value)
+                    let gItem = items.find(fItem => fItem.id == value.split('-')[0])
                     if(!gItem) throw new Error("Предмет не удалось найти среди глобальных предметов")
                     gItems.push(gItem)
 
@@ -464,8 +464,6 @@ client.on('interactionCreate', async interaction => {
                         roomItems.push(roomItem)
                     }
                 }
-
-                console.log(roomItems)
 
                 async function getCount(get, gItem, item){
                     try{
@@ -521,12 +519,12 @@ client.on('interactionCreate', async interaction => {
                     let get
 
                     if(act == 'drop'){
-                        if(charItems.length == 0) throw new Error("Предмет не удалось найти среди вашего инвентаря")
+                        if(!charItems.length) throw new Error("Предмет не удалось найти среди вашего инвентаря")
                         fArray = charItems
                         lAct = `> Вы выбросили 📤`
                         get = false
                     }else{
-                        if(roomItems.length == 0) throw new Error("Предмет не удалось найти среди комнаты")
+                        if(!roomItems.length) throw new Error("Предмет не удалось найти среди комнаты")
                         fArray = roomItems
                         lAct = `> Вы подняли 📥`
                         get = true
@@ -535,19 +533,15 @@ client.on('interactionCreate', async interaction => {
                     for(let lItem of fArray){
                         let gItem = gItems.find(fItem => fItem.id == lItem.id)
                         if(!gItem) throw new Error("Предмет не удалось найти")
-                        console.log(lItem)
 
                         let count = await getCount(get, gItem, lItem)
 
                         if(count != NaN && lItem.count >= count && count > 0){
                             ReplyInteraction(interaction, {content: `> Процесс... 📦`, embeds: [], components: []})
                             
-                            /* let action = [RPF.charItemManager(get, 'ages', char, gItem, count),
-                            RPF.roomItemManager(!get, 'ages', object, room, gItem, count)] */
-
                             let action = [
-                                RPF.ItemManager(get, 'ages/chars', 'items', char.id, charItems, lItem, gItem, count),
-                                RPF.ItemManager(!get, 'ages/objects', 'rooms', object.id, roomItems, lItem, gItem, count),
+                                RPF.ItemManager(get, 'ages/chars', 'items', char.id, char.data.items, lItem, count),
+                                RPF.ItemManager(!get, 'ages/objects', `rooms.${roomId}.items`, object.id, room.items, lItem, count),
                             ]
                             
                             for(let act of action){
