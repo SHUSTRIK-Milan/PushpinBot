@@ -11,10 +11,8 @@ const {
 
 const guild = guildAges
 const getUnicode = require('emoji-unicode')
-const { CDN } = require('@discordjs/rest')
 
 console.log(`[bot-ages ready]`)
-
 
 SlashCom('wait', 'инвентарь', {
     name: 'инвентарь',
@@ -48,6 +46,20 @@ SlashCom('wait', 'персонажи', {
     type: 'CHAT_INPUT',
 }, guild.id)
 
+SlashCom('create', 'телепорт', {
+    name: 'телепорт',
+    description: 'Телепортирует в выбранную локацию',
+    type: 'CHAT_INPUT',
+    options: [
+        {
+            type: 'USER',
+            name: 'человек',
+            description: 'Цель, которую нужно телепортировать (по умолчанию: вы)',
+            required: false,
+        }
+    ],
+}, guild.id)
+
 client.on('messageCreate', message => { if(message.guild.id == guild.id){
     var cA = haveRole(message.member, "[A]"),
         cB = haveRole(message.member, "[B]"),
@@ -65,6 +77,12 @@ client.on('messageCreate', message => { if(message.guild.id == guild.id){
 
 client.on('interactionCreate', async interaction => {
     if(interaction.guildId == guild.id) try{
+        let type = interaction.customId?.split('_')[0]
+        let act = interaction.customId?.split('_')[1]
+        let data = interaction.customId?.split('_')[2]
+        let add = interaction.customId?.split('_')[3]
+        let value = interaction.values?.[0]
+
         var items = await GStats("ages/items")
         if(!items) throw new Error("Предметы отсутствуют")
 
@@ -175,10 +193,7 @@ client.on('interactionCreate', async interaction => {
             }
 
             if(interaction.commandName == 'идти'){
-                if(char.data.pos != object.id && char.data.pos) throw new Error(`Вы находитесь вне объекта, в котором находитесь (**${objects.find(object => object.id == char.data.pos)?.data.name}**). Вы очень похожи на кота Шрёдингера 🐈‍⬛`)
-                if(!object.data.status?.open){
-                    throw new Error("Ваш объект закрыт")
-                }
+                if(char.data.pos != object.id && char.data.pos) throw new Error(`Вы находитесь вне объекта, в котором находитесь (**${objects.find(object => object.id == char.data.pos)?.data.name ?? "Неизвестно"}**). Вы очень похожи на кота Шрёдингера 🐈‍⬛`)
                 
                 let options = RPF.objectsSelectMenuOptions(object, objects, true, false)
                 if(options.length == 0) throw new Error("Объектов поблизости нет")
@@ -195,14 +210,24 @@ client.on('interactionCreate', async interaction => {
             if(interaction.commandName == 'персонажи'){
 
             }
+
+            if(interaction.commandName == 'телепорт'){
+                let options = RPF.objectsSelectMenuOptions(object, objects, false, false)
+                if(options.length == 0) throw new Error("Объектов нет")
+
+                console.log(options)
+
+                let components = RPF.pageButtonsSelectMenu('tp_select', 'Объекты...', options, 'tp', 0, interaction.options?.get('человек')?.value ?? interaction.user.id)
+                
+                interaction.reply({
+                    content: '> Выберите направление 🛸',
+                    components: components,
+                    ephemeral: true
+                })
+            }
         }
 
         if(interaction.isSelectMenu()){
-            let type = interaction.customId.split('_')[0]
-            let act = interaction.customId.split('_')[1]
-            let data = interaction.customId.split('_')[2]
-            let value = interaction.values[0]
-            
             if(type == 'invent' && act == 'open'){
                 let values = interaction.values
                 let gItems = []
@@ -234,11 +259,11 @@ client.on('interactionCreate', async interaction => {
                 if(options.length == 0) throw new Error("Ваш инвентарь пуст")
 
                 for(let value of values){
-                    let gItem = items.find(fItem => fItem.data.codename == value)
+                    let gItem = items.find(fItem => fItem.id == value)
                     if(!gItem) throw new Error("Предмет не удалось найти среди глобальных предметов")
                     gItems.push(gItem)
 
-                    let charItem = char.data.items.find(item => item.codename == gItem.data.codename)
+                    let charItem = char.data.items?.find(item => item.id == gItem.id)
                     if(!charItem) throw new Error("Предмет не удалось найти среди вашего инвентаря")
                     charItems.push(charItem)
 
@@ -263,6 +288,14 @@ client.on('interactionCreate', async interaction => {
                                     type: 'SELECT_MENU',
                                     customId: `invent_open`,
                                     placeholder: 'Ваши предметы...',
+                                    minValues: 1,
+                                    maxValues: (() =>{
+                                        if(options.length < 5){
+                                            return options.length
+                                        }else{
+                                            return 5
+                                        }
+                                    })(),
                                     options: options
                                 }
                             ]
@@ -283,11 +316,11 @@ client.on('interactionCreate', async interaction => {
                 if(options.length == 0) throw new Error("Комната пуста")
                 
                 for(let value of values){
-                    let gItem = items.find(fItem => fItem.data.codename == value)
+                    let gItem = items.find(fItem => fItem.id == value)
                     if(!gItem) throw new Error("Предмет не удалось найти среди глобальных предметов")
                     gItems.push(gItem)
 
-                    let roomItem = room.items.find(item => item.codename == gItem.data.codename)
+                    let roomItem = room.items?.find(item => item.id == gItem.id)
                     if(!roomItem) throw new Error("Предмет не удалось найти среди комнаты")
                     roomItems.push(roomItem)
 
@@ -337,13 +370,13 @@ client.on('interactionCreate', async interaction => {
                     ]
                 })
             }else if(type == 'invent' && act == 'key'){
-                let object = objects.find(object => object.data.cid == value)
+                let object = objects.find(object => object.id == value)
                 if(!object) throw new Error("Объект не найден")
 
-                let gItem = items.find(fItem => fItem.data.codename == data)
+                let gItem = items.find(fItem => fItem.id == data)
                 if(!gItem) throw new Error("Предмет не удалось найти")
                 
-                if(!object.data.status){
+                if(object.data.status){
                     if(gItem.data.convar == object.id){
                         interaction.update({content: `> Процесс... 🔐`, embeds: [], components: []})
                         setTimeout(() => {
@@ -366,53 +399,29 @@ client.on('interactionCreate', async interaction => {
                     interaction.update({content: `> Этот объект невозможно закрыть ⛔`, embeds: [], components: []})
                 }
             }else if(type == 'walk' && act == 'select'){
-                let targetObject = objects.find(object => object.data.cid == value)
+                let targetObject = objects.find(object => object.id == value)
                 if(!targetObject) throw new Error("Объект не найден")
                 
                 let channelTargetObject = guild.channels.cache.get(targetObject.data.cid)
                 if(!channelTargetObject) throw new Error("Объект не найден")
 
-                function step(){
-                    ReplyInteraction(interaction, {content: `> Вы успешно перешли в **${channelTargetObject.name}** 🚶`, embeds: [], components: []})
-
-                    for(let [id, channel] of guild.channels.cache){
-                        let overwrites = channel.permissionOverwrites
-                        overwrites?.delete(interaction.user.id)
-                    }
-                    channelTargetObject.permissionOverwrites.create(interaction.user.id, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true}).then(() => {
-                        for(let [id, children] of channelTargetObject.children){
-                            children.permissionOverwrites.create(interaction.user.id, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true})
-                        }
-                    })
-                    EStats('ages/chars', char.id, 'pos', [targetObject.id])
-
-                    for(let targetObjectRadius of targetObject.data.radius){
-                        let lObject = objects.find(object => object.id == targetObjectRadius.id)
-                        let addRooms = targetObjectRadius.rooms?.filter(fRoom => lObject.data.rooms.find(oRoom => oRoom.name == fRoom))
-
-                        if(addRooms){
-                            for(room of addRooms){
-                                let channelRooms = guild.channels.cache.filter(channel => channel.name == toChannelName(room) && channel.parentId == lObject.data.cid)
-                                for(let [id, channel] of channelRooms){
-                                    channel.permissionOverwrites.create(interaction.user.id, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true})
-                                }
-                            }
-                        }
-                    }
-                }
-
                 interaction.update({content: `> Процесс... 🚶`, embeds: [], components: []})
                 setTimeout(() => {
                     try{
-                        
-                        if(!object.data.status?.open){
+                        function walk(){
+                            RPF.step(interaction, char, objects, targetObject, channelTargetObject, `> Вы успешно перешли в **${channelTargetObject.name}** 🚶`)
+                        }
+
+                        if(!object.data.status){
+                            walk()
+                        }else if(!object.data.status?.open && !targetObject.data.status?.ex?.find(ex => ex == object.id)){
                             throw new Error("Ваш объект закрыт")
                         }else if(!targetObject.data.status){
-                            step()
+                            walk()
                         }else if(targetObject.data.status?.open){
-                            step()
+                            walk()
                         }else if(targetObject.data.status?.ex?.find(ex => ex == object.id)){
-                            step()
+                            walk()
                         }else{
                             throw new Error("Объект закрыт")
                         }
@@ -420,31 +429,43 @@ client.on('interactionCreate', async interaction => {
                         ErrorInteraction(interaction, error, true)
                     }
                 }, 2500)
+            }else if(type == 'tp' && act == 'select'){
+                console.log('test')
+                console.log(value)
+
+                let targetObject = objects.find(object => object.id == value)
+                if(!targetObject) throw new Error("Объект не найден")
+                
+                let channelTargetObject = guild.channels.cache.get(targetObject.data.cid)
+                if(!channelTargetObject) throw new Error("Объект не найден")
+
+                RPF.step(interaction, char, objects, targetObject, channelTargetObject, `> Вы успешно перелетели в **${channelTargetObject.name}** 🛸`)
             }
         }
 
         if(interaction.isButton()){
-            let type = interaction.customId.split('_')[0]
-            let act = interaction.customId.split('_')[1]
-            let data = interaction.customId.split('_')[2]
-            let add = interaction.customId.split('_')[3]
-
             if(type == 'invent'){
                 let gItems = []
                 let charItems = []
                 let roomItems = []
 
                 for(let value of data.split(',')){
-                    let gItem = items.find(fItem => fItem.data.codename == value)
+                    let gItem = items.find(fItem => fItem.id == value)
                     if(!gItem) throw new Error("Предмет не удалось найти среди глобальных предметов")
                     gItems.push(gItem)
 
-                    let charItem = char.data.items?.find(item => item.codename == gItem.data.codename)
-                    charItems?.push(charItem)
+                    let charItem = char.data.items?.find(item => item.id == gItem.id)
+                    if(charItem){
+                        charItems.push(charItem)
+                    }
 
-                    let roomItem = room.items?.find(item => item.codename == gItem.data.codename)
-                    roomItems?.push(roomItem)
+                    let roomItem = room.items?.find(item => item.id == gItem.id)
+                    if(roomItem){
+                        roomItems.push(roomItem)
+                    }
                 }
+
+                console.log(roomItems)
 
                 async function getCount(get, gItem, item){
                     try{
@@ -511,17 +532,23 @@ client.on('interactionCreate', async interaction => {
                         get = true
                     }
 
-                    for(let gItem of gItems){
-                        let lItem = fArray.find(fItem => fItem.codename == gItem.data.codename)
-                        if(!lItem) throw new Error("Предмет не удалось найти")
+                    for(let lItem of fArray){
+                        let gItem = gItems.find(fItem => fItem.id == lItem.id)
+                        if(!gItem) throw new Error("Предмет не удалось найти")
+                        console.log(lItem)
 
                         let count = await getCount(get, gItem, lItem)
 
                         if(count != NaN && lItem.count >= count && count > 0){
                             ReplyInteraction(interaction, {content: `> Процесс... 📦`, embeds: [], components: []})
                             
-                            let action = [RPF.charItemManager(get, 'ages', char, gItem, count),
-                            RPF.roomItemManager(!get, 'ages', object, room, gItem, count)]
+                            /* let action = [RPF.charItemManager(get, 'ages', char, gItem, count),
+                            RPF.roomItemManager(!get, 'ages', object, room, gItem, count)] */
+
+                            let action = [
+                                RPF.ItemManager(get, 'ages/chars', 'items', char.id, charItems, lItem, gItem, count),
+                                RPF.ItemManager(!get, 'ages/objects', 'rooms', object.id, roomItems, lItem, gItem, count),
+                            ]
                             
                             for(let act of action){
                                 if(act != true){
@@ -533,7 +560,7 @@ client.on('interactionCreate', async interaction => {
                             
                             setTimeout(() => {
                                 try{
-                                    if(gItems.indexOf(gItem) == gItems.length - 1){
+                                    if(fArray.indexOf(lItem) == fArray.length - 1){
                                         interaction.editReply(`${lAct}\n${dropInfo.join('\n')}`)
                                     }
                                 }catch(error){
@@ -562,12 +589,23 @@ client.on('interactionCreate', async interaction => {
                     let options = RPF.objectsSelectMenuOptions(object, objects, true, true)
                     if(options.length == 0) throw new Error("Объектов поблизости нет")
 
-                    let components = RPF.pageButtonsSelectMenu(`invent_key_${data}`, 'Объекты...', options, parseInt(add), data)
+                    let components = RPF.pageButtonsSelectMenu(`invent_key_${data}`, 'Объекты...', options, 'key', parseInt(add), data)
 
                     ReplyInteraction(interaction, {
                         content: '> Выберите объект 🏘',
                         embeds: [],
                         components: components
+                    })
+                }else if(act == 'tp'){
+                    let options = RPF.objectsSelectMenuOptions(object, objects, false, false)
+                    if(options.length == 0) throw new Error("Объектов нет")
+
+                    let components = RPF.pageButtonsSelectMenu('tp_select', 'Объекты...', options, 'tp', parseInt(add), data)
+                    
+                    ReplyInteraction(interaction, {
+                        content: '> Выберите направление 🛸',
+                        components: components,
+                        ephemeral: true
                     })
                 }
             }

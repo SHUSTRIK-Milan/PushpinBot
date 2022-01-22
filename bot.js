@@ -391,7 +391,7 @@ async function GStats(chl, id, par){
                     }
                 }catch{}
             }
-            unit.mid = `${msg.id}`
+            unit.mid = msg.id
             units.push(unit)
         }
 
@@ -429,7 +429,7 @@ async function AStats(chl, structure, data){
         var messages = await chl.messages.fetch()
         var units = await GStats(chl)
         var id
-        if (units.length == 0){
+        if (!units.length){
             id = messages.size
         }else{
             id = units[units.length-1].id
@@ -438,14 +438,14 @@ async function AStats(chl, structure, data){
         var returnData = {}
         for (let i = 0; i < structure.length; i++){
             try{
-                if(typeof(data[i]) != 'string'){
+                if(typeof(data[i]) != 'string'){ // если данные внесены не человеком, то оставляем их неизменными
                     returnData[structure[i]] = data[i]
-                }else if(Number.isInteger(parseInt(data[i])) && data[i].length > 16){
+                }else if(Number.isInteger(parseInt(data[i])) && data[i].length > 16){ // если строка может стать числом и его длина больше 16, то оставляем все как есть
                     returnData[structure[i]] = data[i]
-                }else{
+                }else{ // иначе, если данные внесены человеком, мы превращаем их в код, запихивая его в array, а затем доставая, чтобы исключить ошибки eval
                     returnData[structure[i]] = eval(`[${data[i]}]`)[0]
                 }
-                if(typeof(returnData[structure[i]]) == 'object'){
+                if(typeof(returnData[structure[i]]) == 'object'){ // если по итогу мы получаем object, тогда мы переделываем его в JSON, чтобы исключить кучу пробелов
                     returnData[structure[i]] = JSON.stringify(returnData[structure[i]])
                 }
             }catch{
@@ -475,27 +475,33 @@ async function EStats(chl, id, par, data){
             let cat = guildBD.channels.cache.find(cat => cat.name.toLowerCase() == path[0].toLowerCase() && cat.type == "GUILD_CATEGORY")
             chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
         }
+        par = `['${par.split('.').join(`']['`)}']`
         var units = await GStats(chl)
         var unit = units.find(unit => unit.id == id)
         var msg = await chl.messages.fetch(unit.mid)
-        unit = eval(`[${msg.content}]`)[0]
-
-        try{
-            if(typeof(data[0]) != 'string'){
-                unit.data[par] = data[0]
-            }else if(Number.isInteger(parseInt(data[0])) && data[0].length > 16){
-                unit.data[par] = data[0]
-            }else{
-                unit.data[par] = eval(`[${data[0]}]`)[0]
-            }
-            if(typeof(unit.data[par]) == 'object'){
-                unit.data[par] = JSON.stringify(unit.data[par])
-            }
-        }catch{
-            unit.data[par] = data[0]
+        delete unit.mid
+        
+        console.log(`"${data[0]}"`)
+        eval(`unit.data${par} = \`${data[0]}\``)
+        
+        for(let key in unit.data){
+            try{
+                if(typeof(unit.data[key]) != 'string'){
+                    unit.data[key] = unit.data[key]
+                }else if(Number.isInteger(parseInt(unit.data[key])) && unit.data[key].length > 16){
+                    unit.data[key] = unit.data[key]
+                }else{
+                    unit.data[key] = eval(`[${unit.data[key]}]`)[0]
+                }
+                
+                if(typeof(unit.data[key]) == 'object'){
+                    unit.data[key] = JSON.stringify(unit.data[key])
+                }
+            }catch{}
         }
 
         var message = JSON.stringify(unit, null, 2)
+        
         if(message.length <= 2000){
             msg.edit(message)
         }else{
@@ -568,29 +574,26 @@ const RPF = {
         var returnOptions = []
         
         for(let fObject of objects){
-            if((radius && object.data.radius.find(object => object.id == fObject.id) != undefined) || (!radius && object.id != fObject.id) || (inside && object.id == fObject.id)){
+            if((radius && object.data.radius?.find(object => object.id == fObject.id)) || (!radius && object.id != fObject.id) || (inside && object.id == fObject.id)){
                 if(fObject.data.cid == undefined){
                     fObject.data.cid = `${fObject.id}_undefined`
                 }
 
                 let emoji = RPF.randomHomeEmoji()
-                if(fObject.data.status != undefined){
-                    if(!fObject.data.status.open && fObject.data.status.ex.find(ex => ex == object.id) != undefined){
+                if(fObject.data.status && radius){
+                    if(!fObject.data.status?.open && fObject.data.status?.ex?.find(ex => ex == object.id)){
                         emoji = '🔓'
-                    }else if(!fObject.data.status.open){
+                    }else if(!fObject.data.status?.open && !fObject.data.status?.ex?.find(ex => ex == object.id)){
                         emoji = '🔒'
                     }
                 }
 
-                let position = returnOptions.length
                 let category = guildAges.channels.cache.get(fObject.data.cid)
-                if(category != undefined){
-                    position = category.position
-                }
+                let position = category?.position ?? returnOptions.length
 
                 returnOptions[position] = {
                     label: `${fObject.data.name}`,
-                    value: `${fObject.data.cid}`,
+                    value: `${fObject.id}`,
                     emoji: {
                         id: null,
                         name: emoji
@@ -604,12 +607,12 @@ const RPF = {
         let returnItems = []
         if(items != undefined && inventory != undefined){
             for (let lItem of inventory){
-                let gItem = items.find(fItem => fItem.data.codename == lItem.codename)
+                let gItem = items.find(fItem => fItem.id == lItem.id)
                 if(gItem != undefined){
                     returnItems.push({
                         label: `${gItem.data.name} (x${lItem.count})`,
                         description: gItem.data.description,
-                        value: `${gItem.data.codename}`,
+                        value: `${gItem.id}`,
                         emoji: {
                             id: null,
                             name: `${gItem.data.emoji}`
@@ -663,10 +666,8 @@ const RPF = {
     roomItemManager: (get, project, object, room, gItem, count) => {
         try{
             var roomId = object.data.rooms.indexOf(room)
-            try{
-                var roomItem = room.items.find(item => item.codename == gItem.data.codename)
-                var rItemId = room.items.indexOf(roomItem)
-            }catch{}
+            var roomItem = room.items?.find(item => item.id == gItem.id)
+            var rItemId = room.items?.indexOf(roomItem)
 
             if(!get){
                 if(room.items == undefined){
@@ -687,9 +688,9 @@ const RPF = {
                 return true
             }else if(get){
                 if(room.items == undefined){
-                    room.items = [{codename: gItem.data.codename, count: count}]
+                    room.items = [{id: gItem.id, convar: gItem.convar, count: count}]
                 }else if(roomItem == undefined){
-                    room.items.push({codename: gItem.data.codename, count: count})
+                    room.items.push({id: gItem.id, convar: gItem.convar, count: count})
                 }else{
                     room.items[rItemId].count += count
                 }
@@ -712,10 +713,8 @@ const RPF = {
     },
     charItemManager: (get, project, char, gItem, count) => {
         try{
-            try{
-                var charItem = char.data.items.find(item => item.codename == gItem.data.codename)
-                var itemId = char.data.items.indexOf(charItem)
-            }catch{}
+            var charItem = char.data.items?.find(item => item.id == gItem.id)
+            var itemId = char.data.items?.indexOf(charItem)
 
             if(!get){
                 if(char.data.items == undefined){
@@ -735,9 +734,9 @@ const RPF = {
                 return true
             }else if(get){
                 if(char.data.items == undefined){
-                    char.data.items = [{codename: gItem.data.codename, count: count}]
+                    char.data.items = [{id: gItem.id, convar: gItem.convar, count: count}]
                 }else if(charItem == undefined){
-                    char.data.items.push({codename: gItem.data.codename, count: count})
+                    char.data.items.push({id: gItem.id, convar: gItem.convar, count: count})
                 }else{
                     char.data.items[itemId].count += count
                 }
@@ -758,6 +757,80 @@ const RPF = {
             return new Error(`${error.message}`)
         }
     },
+    ItemManager: (get, path, par, id, source, lItem, gItem, count) => {
+        try{
+            var itemId = source?.indexOf(lItem)
+
+            if(!get){
+                if(!source.length){
+                    throw new Error(`Контейнер пуст`)
+                }else if(lItem){
+                    if(lItem.count <= count){
+                        source.splice(itemId, 1)
+                    }else{
+                        source[itemId].count -= count
+                    }
+                }else{
+                    throw new Error(`Предмет не удалось найти`)
+                }
+
+                if(source.length == 0) source = undefined
+                EStats(`${path}`, id, par, [source])
+                return true
+            }else if(get){
+                if(!source.length){
+                    source = [{id: gItem.id, convar: lItem.convar, count: count}]
+                }else if(!lItem){
+                    source.push({id: gItem.id, convar: lItem.convar, count: count})
+                }else{
+                    source[itemId].count += count
+                }
+
+                if(source.length <= 25){
+                    try{
+                        EStats(`${path}`, id, par, [source])
+                        return true
+                    }catch(error){
+                        console.log(error)
+                        throw new Error(`Контейнер переполнен`)
+                    }
+                }else{
+                    throw new Error(`Контейнер полон`)
+                }
+            }
+        }catch(error){
+            console.log(error)
+            return new Error(`${error.message}`)
+        }
+    },
+    step: (interaction, char, objects, targetObject, channelTargetObject, text = "") => {
+        ReplyInteraction(interaction, {content: text, embeds: [], components: []})
+
+        for(let [id, channel] of interaction.guild.channels.cache){
+            let overwrites = channel.permissionOverwrites
+            overwrites?.delete(interaction.user.id)
+        }
+        channelTargetObject.permissionOverwrites.create(interaction.user.id, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true}).then(() => {
+            for(let [id, children] of channelTargetObject.children){
+                children.permissionOverwrites.create(interaction.user.id, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true})
+            }
+        })
+        EStats('ages/chars', char.id, 'pos', [targetObject.id])
+
+        for(let targetObjectRadius of targetObject.data.radius ?? []){
+            let lObject = objects.find(object => object.id == targetObjectRadius.id)
+            let addRooms = targetObjectRadius.rooms?.filter(fRoom => lObject.data.rooms.find(oRoom => oRoom.name == fRoom))
+
+            if(addRooms){
+                for(room of addRooms){
+                    let channelRooms = interaction.guild.channels.cache.filter(channel => channel.name == toChannelName(room) && channel.parentId == lObject.data.cid)
+                    for(let [id, channel] of channelRooms){
+                        channel.permissionOverwrites.create(interaction.user.id, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true})
+                    }
+                }
+            }
+        }
+    }
 }
 
 //
