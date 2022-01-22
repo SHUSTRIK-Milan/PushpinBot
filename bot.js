@@ -610,17 +610,14 @@ const RPF = {
         let returnItems = []
         if(items != undefined && inventory != undefined){
             for (let lItem of inventory){
-                let convar = ''
-                if(lItem.convar){
-                    convar = `-${lItem.convar}`
-                }
+                let convar = lItem.convar
 
                 let gItem = items.find(fItem => fItem.id == lItem.id)
                 if(gItem != undefined){
                     returnItems.push({
                         label: `[${inventory.indexOf(lItem)+1}] ${gItem.data.name} (x${lItem.count})`,
                         description: gItem.data.description,
-                        value: `${lItem.id}${convar}`,
+                        value: `${lItem.id}-`+(convar ?? ''),
                         emoji: {
                             id: null,
                             name: `${gItem.data.emoji}`
@@ -677,6 +674,8 @@ const RPF = {
             let itemId = origin?.indexOf(lItem)
 
             if(!get){
+                if(!lItem) throw new Error(`Предмет не удалось найти`)
+
                 if(!origin.length){
                     throw new Error(`Контейнер пуст`)
                 }else if(lItem){
@@ -685,8 +684,6 @@ const RPF = {
                     }else{
                         lItem.count -= count
                     }
-                }else{
-                    throw new Error(`Предмет не удалось найти`)
                 }
 
                 if(!origin.length) origin = undefined
@@ -694,9 +691,9 @@ const RPF = {
                 return true
             }else if(get){
                 if(!origin.length){
-                    origin = [{id: lItem.id, convar: lItem.convar, count: count}]
+                    origin = [{id: sourceItem.id, convar: sourceItem.convar, count: count}]
                 }else if(!lItem){
-                    origin.push({id: lItem.id, convar: lItem.convar, count: count})
+                    origin.push({id: sourceItem.id, convar: sourceItem.convar, count: count})
                 }else{
                     lItem.count += count
                 }

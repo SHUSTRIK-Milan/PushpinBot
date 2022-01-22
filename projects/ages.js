@@ -101,8 +101,6 @@ client.on('interactionCreate', async interaction => {
         var char = chars.find(char => char.id == player.data.char && player.data.chars.find(fChar => fChar == char.id))
         if(!char) throw new Error("Персонаж отсутствует")
 
-        //RPF.ItemManager(get, 'ages/chars', 'items', char.id, char.data.items, {id: 5, }, convar, count)
-
         let object = objects.find(object => object.data.cid == interaction.channel.parentId)
         if(!object) throw new Error("Функция используется вне ролевого поля")
 
@@ -259,11 +257,12 @@ client.on('interactionCreate', async interaction => {
                 if(options.length == 0) throw new Error("Ваш инвентарь пуст")
 
                 for(let value of values){
+                    console.log(value)
                     let gItem = items.find(fItem => fItem.id == value.split('-')[0])
                     if(!gItem) throw new Error("Предмет не удалось найти среди глобальных предметов")
                     gItems.push(gItem)
 
-                    let charItem = char.data.items?.find(item => item.id == gItem.id)
+                    let charItem = char.data.items?.find(item => (!value.split('-')[1] && item.id == gItem.id) || (value.split('-')[1] && item.id == gItem.id && item.convar == value.split('-')[1]))
                     if(!charItem) throw new Error("Предмет не удалось найти среди вашего инвентаря")
                     charItems.push(charItem)
 
@@ -320,7 +319,7 @@ client.on('interactionCreate', async interaction => {
                     if(!gItem) throw new Error("Предмет не удалось найти среди глобальных предметов")
                     gItems.push(gItem)
 
-                    let roomItem = room.items?.find(item => item.id == gItem.id)
+                    let roomItem = room.items?.find(item => (!value.split('-')[1] && item.id == gItem.id) || (value.split('-')[1] && item.id == gItem.id && item.convar == value.split('-')[1]))
                     if(!roomItem) throw new Error("Предмет не удалось найти среди комнаты")
                     roomItems.push(roomItem)
 
@@ -454,12 +453,12 @@ client.on('interactionCreate', async interaction => {
                     if(!gItem) throw new Error("Предмет не удалось найти среди глобальных предметов")
                     gItems.push(gItem)
 
-                    let charItem = char.data.items?.find(item => item.id == gItem.id)
+                    let charItem = char.data.items?.find(item => (!value.split('-')[1] && item.id == gItem.id) || (value.split('-')[1] && item.id == gItem.id && item.convar == value.split('-')[1]))
                     if(charItem){
                         charItems.push(charItem)
                     }
 
-                    let roomItem = room.items?.find(item => item.id == gItem.id)
+                    let roomItem = room.items?.find(item => (!value.split('-')[1] && item.id == gItem.id) || (value.split('-')[1] && item.id == gItem.id && item.convar == value.split('-')[1]))
                     if(roomItem){
                         roomItems.push(roomItem)
                     }
@@ -479,7 +478,7 @@ client.on('interactionCreate', async interaction => {
                             ReplyInteraction(interaction, {content: reply, embeds: [], components: []})
                             
                             let filter = message => message.author.id == interaction.user.id
-                            let message = await interaction.channel.awaitMessages({filter, max: 1, time: 10000, errors: ['time']})
+                            let message = await interaction.channel.awaitMessages({filter, max: 1, time: 15000, errors: ['time']})
 
                             count = parseInt(message.first().content)
                             setTimeout(() => {
@@ -533,6 +532,7 @@ client.on('interactionCreate', async interaction => {
                     for(let lItem of fArray){
                         let gItem = gItems.find(fItem => fItem.id == lItem.id)
                         if(!gItem) throw new Error("Предмет не удалось найти")
+                        console.log(lItem)
 
                         let count = await getCount(get, gItem, lItem)
 
