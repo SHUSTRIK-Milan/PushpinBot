@@ -2,7 +2,7 @@ const {
     client, REST, Routes,
     Config, prefix, timeOfDelete,
     guildBase, guildAges, guildBD, 
-    rpGuilds, cmdParametrs, getMessages, toChannelName, random,
+    rpGuilds, cmdParametrs, getMessages, toChannelName, betterLimitText, random,
     getRoleId, haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
     createCom, SlashCom, ReplyInteraction, ErrorInteraction, BDunit,
@@ -19,20 +19,19 @@ async function awaitPutInBD(structure, channel, authorId){
         let returnData = []
 
         let collection = await channel.awaitMessages({filter, max: structure.length, time: 120000, errors: ['time']})
-        setTimeout(() => {
+        /* setTimeout(() => {
             for(let [id, msg] of collection){
                 msg.delete()
             }
-        }, 10000)
+        }, 10000) */
 
-        let values = collection.toJSON()
-        for(let value of values){
-            if(value.content == '_null'){
+        for(let [id, msg] of collection){
+            if(msg.content == '_null'){
                 returnData.push(undefined)
-            }else if(value.content == '_stop'){
+            }else if(msg.content == '_stop'){
                 return 'stop'
             }else{
-                returnData.push(value.content)
+                returnData.push(msg.content)
             }
         }
         return returnData
@@ -135,7 +134,7 @@ SlashCom('wait', 'del', {
     defaultPermission: false
 }, guild.id, [{id: getRoleId(guild, '[A]'), type: 'ROLE', permission: true}])
 
-client.on('messageCreate', message => { if(message.guild.id == guild.id){
+client.on('messageCreate', message => { if(message.guild?.id == guild.id){
     var cA = haveRole(message.member, "[A]"),
         cB = haveRole(message.member, "[B]"),
         cC = haveRole(message.member, "[C]")

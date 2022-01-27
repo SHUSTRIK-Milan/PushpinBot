@@ -62,10 +62,10 @@ module.exports.BDs = {
     pushpin_main: ['user'],
 
     ages_main: ['user'],
-    ages_objects: ['name', 'status', 'radius', 'rooms', 'cid'],
+    ages_objects: ['name', 'status', 'radius', 'rooms', 'emoji', 'cid'],
     ages_players: ['user', 'limit', 'chars', 'char'],
-    ages_chars: ['name', 'race', 'desc', 'items', 'pos'],
-    ages_items: ['codename', 'type', 'name', 'description', 'emoji'],
+    ages_chars: ['name', 'race', 'desc', 'emoji', 'items', 'pos'],
+    ages_items: ['type', 'name', 'desc', 'emoji', 'color'],
 }
 
 module.exports.itemTypes = {

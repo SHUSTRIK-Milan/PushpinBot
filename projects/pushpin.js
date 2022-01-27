@@ -2,7 +2,7 @@ const {
     client, REST, Routes,
     Config, prefix, timeOfDelete,
     guildBase, guildAges, guildBD, 
-    rpGuilds, cmdParametrs, getMessages, toChannelName, random,
+    rpGuilds, cmdParametrs, getMessages, toChannelName, betterLimitText, random,
     getRoleId, haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
     createCom, SlashCom, ReplyInteraction, ErrorInteraction, BDunit,
@@ -20,7 +20,7 @@ client.on('guildMemberAdd', (member) => {
     sendLog(member, undefined, 'other', 'Новый пользователь', true, `${member.user.tag} присоеденился к сообществу!`)
 })
 
-client.on('messageCreate', message => { if(message.guild.id == guild.id){
+client.on('messageCreate', message => { if(message.guild?.id == guild.id){
     var cA = haveRole(message.member, "[A]"),
         cB = haveRole(message.member, "[B]"),
         cC = haveRole(message.member, "[C]")

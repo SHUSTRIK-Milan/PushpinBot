@@ -106,6 +106,13 @@ function toChannelName(text){
     return text.toLowerCase().split(' ').join('-')
 }
 
+function betterLimitText(text, limit){
+    if(text.length > limit){
+        text = `${text.slice(0,limit-3)}...`
+    }
+    return text
+}
+
 function random(min, max) {
     let rand = min + Math.random() * (max + 1 - min)
     return Math.floor(rand)
@@ -433,19 +440,24 @@ async function AStats(chl, structure, data){
         
         var returnData = {}
         for (let i = 0; i < structure.length; i++){
+            let _data = {
+                struct: structure[i],
+                data: data[i]
+            }
+
             try{
-                if(typeof(data[i]) != 'string'){ // если данные внесены не человеком, то оставляем их неизменными
-                    returnData[structure[i]] = data[i]
-                }else if(Number.isInteger(parseInt(data[i])) && data[i].length > 16){ // если строка может стать числом и его длина больше 16, то оставляем все как есть
-                    returnData[structure[i]] = data[i]
+                if(typeof(_data.data) != 'string'){ // если данные внесены не человеком, то оставляем их неизменными
+                    returnData[_data.struct] = _data.data
+                }else if(Number.isInteger(parseInt(_data.data)) && _data.data.length > 16){ // если строка может стать числом и его длина больше 16, то оставляем все как есть
+                    returnData[_data.struct] = _data.data
                 }else{ // иначе, если данные внесены человеком, мы превращаем их в код, запихивая его в array, а затем доставая, чтобы исключить ошибки eval
-                    returnData[structure[i]] = eval(`[${data[i]}]`)[0]
+                    returnData[_data.struct] = eval(`[${_data.data}]`)[0]
                 }
-                if(typeof(returnData[structure[i]]) == 'object'){ // если по итогу мы получаем object, тогда мы переделываем его в JSON, чтобы исключить кучу пробелов
-                    returnData[structure[i]] = JSON.stringify(returnData[structure[i]])
+                if(typeof(returnData[_data.struct]) == 'object'){ // если по итогу мы получаем object, тогда мы переделываем его в JSON, чтобы исключить кучу пробелов
+                    returnData[_data.struct] = JSON.stringify(returnData[_data.struct])
                 }
             }catch{
-                returnData[structure[i]] = data[i]
+                returnData[_data.struct] = _data.data
             }
         }
         var unit = new BDunit(id+1, returnData)
@@ -456,6 +468,8 @@ async function AStats(chl, structure, data){
         }else{
             console.log('> Ошибка при создании ячейки')
         }
+
+        return unit
     }catch(error){
         console.log(error)
         guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, значения]**`).then(msg => {
@@ -486,19 +500,22 @@ async function EStats(chl, id, par, data){
         if(typeof(data[0]) == 'object'){
             eval(`unit.data${par} = ${JSON.stringify(data[0])}`)
         }
-        
-        for(let key in unit.data){
+
+        for(let value in unit.data){
+            let data = {
+                value: value
+            }
             try{
-                if(typeof(unit.data[key]) != 'string'){
-                    unit.data[key] = unit.data[key]
-                }else if(Number.isInteger(parseInt(unit.data[key])) && unit.data[key].length > 16){
-                    unit.data[key] = unit.data[key]
+                if(typeof(unit.data[data.value]) != 'string'){
+                    unit.data[data.value] = unit.data[data.value]
+                }else if(Number.isInteger(parseInt(unit.data[data.value])) && unit.data[data.value].length > 16){
+                    unit.data[data.value] = unit.data[data.value]
                 }else{
-                    unit.data[key] = eval(`[${unit.data[key]}]`)[0]
+                    unit.data[data.value] = eval(`[${unit.data[data.value]}]`)[0]
                 }
                 
-                if(typeof(unit.data[key]) == 'object'){
-                    unit.data[key] = JSON.stringify(unit.data[key])
+                if(typeof(unit.data[data.value]) == 'object'){
+                    unit.data[data.value] = JSON.stringify(unit.data[data.value])
                 }
             }catch{}
         }
@@ -573,7 +590,11 @@ const RPF = {
             }
         }
     },
-    objectsSelectMenuOptions: (object, objects, radius, inside = true) => {
+    objectsSelectMenuOptions: (object, objects, radius, inside = true, defaultOption, data = '') => {
+        if(data){
+            data = `-${data}`
+        }
+
         var returnOptions = []
         
         for(let fObject of objects){
@@ -596,28 +617,41 @@ const RPF = {
 
                 returnOptions[position] = {
                     label: `${fObject.data.name}`,
-                    value: `${fObject.id}`,
+                    value: `${fObject.id}${data}`,
                     emoji: {
                         id: null,
                         name: emoji
-                    }
+                    },
+                    default: (() => {
+                        if(fObject.id == defaultOption){
+                            return true
+                        }else{
+                            return false
+                        }
+                    })()
                 }
             }
         }
         return returnOptions.filter(unit => unit)
     },
-    itemsSelectMenuOptions: (items, inventory) => {
-        let returnItems = []
-        if(items != undefined && inventory != undefined){
-            for (let lItem of inventory){
-                let convar = lItem.convar
+    itemsSelectMenuOptions: (items, inventory, all) => {
+        let returnOptions = []
 
+        if(items && inventory && !all){
+            for (let lItem of inventory){
                 let gItem = items.find(fItem => fItem.id == lItem.id)
-                if(gItem != undefined){
-                    returnItems.push({
-                        label: `[${inventory.indexOf(lItem)+1}] ${gItem.data.name} (x${lItem.count})`,
-                        description: gItem.data.description,
-                        value: `${lItem.id}-`+(convar ?? ''),
+                if(gItem){
+                    let convar = lItem.convar
+                    if(convar){
+                        convar = `-${convar}`
+                    }else{
+                        convar = ''
+                    }
+
+                    returnOptions.push({
+                        label: `[${inventory.indexOf(lItem)+1}] ${gItem.data.name} (x${lItem.count.toLocaleString('en')})`,
+                        description: gItem.data.desc,
+                        value: `${lItem.id}${convar}`,
                         emoji: {
                             id: null,
                             name: `${gItem.data.emoji}`
@@ -625,11 +659,52 @@ const RPF = {
                     })
                 }
             }
+        }else if(items && all){
+            for (let lItem of items){
+                let gItem = items.find(fItem => fItem.id == lItem.id)
+                if(gItem){
+                    returnOptions.push({
+                        label: `[${items.indexOf(lItem)+1}] ${gItem.data.name}`,
+                        description: gItem.data.desc,
+                        value: `${lItem.id}`,
+                        emoji: {
+                            id: null,
+                            name: `${gItem.data.emoji}`
+                        },
+                    })
+                }
+            }
         }
-        return returnItems
+        return returnOptions
     },
-    pageButtonsSelectMenu: (customId, placeholder, options, act, page = 0, data = "") => {
-        let returnComponents = [{
+    charsSelectMenuOptions: (chars, sChar, gChars, defaultOption) => {
+        let returnOptions = []
+        
+        for(let char of chars){
+            char = gChars?.find(fChar => fChar.id == char) ?? char
+            if(char && char.id && char.data.name && char.data.desc){
+                returnOptions.push({
+                    label: `${char.id == sChar ? "✅" : ""} [${returnOptions.length+1}] ${betterLimitText(char.data.name, 100)}`,
+                    description: `${betterLimitText(char.data.desc, 100)}`,
+                    value: `${char.id}`,
+                    emoji: {
+                        id: null,
+                        name: char.data.emoji ?? '👤'
+                    },
+                    default: (() => {
+                        if(char.id == defaultOption){
+                            return true
+                        }else{
+                            return false
+                        }
+                    })()
+                })
+            }
+        }
+        return returnOptions
+    },
+    pageButtonsSelectMenu: (customId, placeholder, options, act, page = 0, data = '') => {
+        let returnOptions = [{
             type: 'ACTION_ROW', 
             components: [
                 {
@@ -652,7 +727,7 @@ const RPF = {
                 act_row.components.push({
                     type: 'BUTTON',
                     label: `${i+1}`,
-                    customId: `switchPage_${act}_${data}_${i}`,
+                    customId: `page_${act}_${data}_${i}`,
                     style: (() => {
                         if(i == page){
                             return 'SUCCESS'
@@ -664,19 +739,20 @@ const RPF = {
                 })
             }
         }
-        if(act_row.components.length != 0) returnComponents.push(act_row)
-
-        return returnComponents
+        if(act_row.components.length != 0) returnOptions.push(act_row)
+        return returnOptions
     },
-    ItemManager: (get, path, par, id, origin, sourceItem, count) => {
+    ItemManager: (get, options, sourceItem, count) => {
         try{
-            let lItem = origin?.find(fItem => (!sourceItem.convar && fItem.id == sourceItem.id) || (sourceItem.convar && fItem.id == sourceItem.id && fItem.convar == sourceItem.convar))
-            let itemId = origin?.indexOf(lItem)
+            let {path, par, id, origin} = options
 
-            if(!get){
+            let lItem = origin?.find(fItem => (!sourceItem.convar && fItem.id == sourceItem.id) || (sourceItem.convar && fItem.id == sourceItem.id && fItem.convar == sourceItem.convar))
+            let itemId = origin?.indexOf(lItem) // находим предмет, среди исходника по id или, если есть, по convar
+
+            if(!get){ // если отбираем, тогда предмет должен быть. Если предмет есть и количество, которые хотим отобрать, больше, то удаляем, иначе просто отнимаем
                 if(!lItem) throw new Error(`Предмет не удалось найти`)
 
-                if(!origin.length){
+                if(!origin?.length){
                     throw new Error(`Контейнер пуст`)
                 }else if(lItem){
                     if(lItem.count <= count){
@@ -686,11 +762,11 @@ const RPF = {
                     }
                 }
 
-                if(!origin.length) origin = undefined
+                if(!origin?.length) origin = undefined
                 EStats(`${path}`, id, par, [origin])
                 return true
-            }else if(get){
-                if(!origin.length){
+            }else if(get){ // если получаем, то, если нет инвентаря - создаем, используя исходник, если нет предмета - добавляем, если предмет есть изменяем
+                if(!origin?.length){
                     origin = [{id: sourceItem.id, convar: sourceItem.convar, count: count}]
                 }else if(!lItem){
                     origin.push({id: sourceItem.id, convar: sourceItem.convar, count: count})
@@ -698,9 +774,9 @@ const RPF = {
                     lItem.count += count
                 }
 
-                if(origin.length <= 25){
+                if(origin?.length <= 25){
                     try{
-                        if(!origin.length) origin = undefined
+                        if(!origin?.length) origin = undefined
                         EStats(`${path}`, id, par, [origin])
                         return true
                     }catch(error){
@@ -716,19 +792,19 @@ const RPF = {
             return new Error(`${error.message}`)
         }
     },
-    step: (interaction, char, objects, targetObject, channelTargetObject, text = "") => {
-        ReplyInteraction(interaction, {content: text, embeds: [], components: []})
+    step: (interaction, userId, char, objects, targetObject, channelTargetObject, text) => {
+        if(text) ReplyInteraction(interaction, {content: text, embeds: [], components: []})
 
         for(let [id, channel] of interaction.guild.channels.cache){
             let overwrites = channel.permissionOverwrites
-            overwrites?.delete(interaction.user.id)
+            overwrites?.delete(userId)
         }
-        channelTargetObject.permissionOverwrites.create(interaction.user.id, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true}).then(() => {
+        channelTargetObject.permissionOverwrites.create(userId, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true}).then(() => {
             for(let [id, children] of channelTargetObject.children){
-                children.permissionOverwrites.create(interaction.user.id, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true})
+                children.permissionOverwrites.create(userId, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true})
             }
         })
-        EStats('ages/chars', char.id, 'pos', [targetObject.id])
+        if(char) EStats('ages/chars', char.id, 'pos', [targetObject.id])
 
         for(let targetObjectRadius of targetObject.data.radius ?? []){
             let lObject = objects.find(object => object.id == targetObjectRadius.id)
@@ -738,7 +814,7 @@ const RPF = {
                 for(room of addRooms){
                     let channelRooms = interaction.guild.channels.cache.filter(channel => channel.name == toChannelName(room) && channel.parentId == lObject.data.cid)
                     for(let [id, channel] of channelRooms){
-                        channel.permissionOverwrites.create(interaction.user.id, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true})
+                        channel.permissionOverwrites.create(userId, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true})
                     }
                 }
             }
@@ -761,7 +837,7 @@ client.on('ready', () => {
         client, REST, Routes,
         Config, prefix, timeOfDelete,
         guildBase:guild, guildAges, guildBD, 
-        rpGuilds, cmdParametrs, getMessages, toChannelName, random,
+        rpGuilds, cmdParametrs, getMessages, toChannelName, betterLimitText, random,
         getRoleId, haveRole, giveRole, removeRole,
         sendLog, createLore, createEx,
         createCom, SlashCom, ReplyInteraction, ErrorInteraction, BDunit,
