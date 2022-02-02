@@ -1,13 +1,13 @@
 const {
-    client, REST, Routes,
+    Discord, client, REST, Routes,
     Config, prefix, timeOfDelete,
     guildBase, guildAges, guildBD, 
-    rpGuilds, cmdParametrs, getMessages, toChannelName, betterLimitText, random,
+    rpGuilds, cmdParametrs, getMessages, emojiURL, toChannelName, editFirstChar, betterLimitText, random,
     getRoleId, haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
-    createCom, SlashCom, ReplyInteraction, ErrorInteraction, BDunit,
+    createCom, SlashCom, IAL, BDunit,
     GStats, AStats, EStats,
-    DStats} = require('../bot.js')
+    DStats, RPF} = require('../bot.js')
 
 const guild = guildBD
 
@@ -135,9 +135,9 @@ SlashCom('wait', 'del', {
 }, guild.id, [{id: getRoleId(guild, '[A]'), type: 'ROLE', permission: true}])
 
 client.on('messageCreate', message => { if(message.guild?.id == guild.id){
-    var cA = haveRole(message.member, "[A]"),
-        cB = haveRole(message.member, "[B]"),
-        cC = haveRole(message.member, "[C]")
+    var cA = haveRole(guild, message.author.id, "[A]"),
+        cB = haveRole(guild, message.author.id, "[B]"),
+        cC = haveRole(guild, message.author.id, "[C]")
     let mb = message.author.bot
     let dm = message.channel.type == "DM"
     let command = cmdParametrs(message.content)

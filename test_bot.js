@@ -130,6 +130,41 @@ client.on('ready', () => {
             },
         ]
     }, '840180165665619998')
+
+    SlashCom('wait', 'auto', {
+        name: 'auto',
+        description: 'auto',
+        type: 'CHAT_INPUT',
+        options: [
+            {
+                type: 'STRING',
+                name: 'test',
+                autocomplete: true,
+                description: 'test',
+                required: true
+            },
+        ]
+    }, '840180165665619998')
+
+    SlashCom('edit', 'действия', {
+        name: 'действия',
+        description: 'Ролевые действия через чат',
+        type: 'CHAR_INPUT',
+        options: [
+            {
+                type: 'SUB_COMMAND',
+                name: 'do',
+                description: 'Действие от первого лица',
+                //required: false,
+            },
+            {
+                type: 'SUB_COMMAND',
+                name: 'todo',
+                description: 'Действие от первого лица',
+                //required: false,
+            },
+        ],
+    }, '840180165665619998')
 })
 
 function comps(count, rows, user){
@@ -262,8 +297,33 @@ client.on('ready', () => {
 
 client.on('interactionCreate', async interaction => {
     var ping = client.ws.ping
-    console.log(ping + ": пинг")
 
+    if(interaction.isAutocomplete()){
+        let t = [
+            {
+                name: 'Владик',
+                value: 'vlad'
+            },
+            {
+                name: 'Брофсс',
+                value: 'kostya'
+            },
+            {
+                name: 'Петри',
+                value: 'ilia'
+            },
+        ]
+
+        if(interaction.member.nickname == 'admin'){
+            t.push({
+                name: 'админская-функция',
+                value: 'admin'
+            })
+        }
+
+        interaction.respond(t)
+        
+    }
 
     if(interaction.isContextMenu()){
         interaction.reply({

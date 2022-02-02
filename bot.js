@@ -28,6 +28,8 @@ const { REST } = require('@discordjs/rest')
 const { Routes } = require('discord-api-types/v9')
 const Config = require('./config')
 
+const getUnicode = require('emoji-unicode')
+
 // Системные переменные
 const prefix = '!'
 const timeOfDelete = 350
@@ -102,8 +104,20 @@ async function getMessages(chnanel, limit){
     return allMessages.slice(0, limit)
 }
 
+function emojiURL(emoji){
+    return `https://twemoji.maxcdn.com/v/13.1.0/72x72/${getUnicode(emoji).split(' ').join('-')}.png`
+}
+
 function toChannelName(text){
     return text.toLowerCase().split(' ').join('-')
+}
+
+function editFirstChar(text, upper){
+    if(upper){
+        return text[0].toUpperCase() + text.slice(1)
+    }else{
+        return text[0].toLowerCase() + text.slice(1)
+    }
 }
 
 function betterLimitText(text, limit){
@@ -119,28 +133,31 @@ function random(min, max) {
 }
 
 function getRoleId(guild, roleName){
-    var role = guild.roles.cache.find(role => role.name == roleName)
-    if(role != undefined){
+    let role = guild.roles.cache.find(role => role.name == roleName)
+    if(role){
         return role.id
     }
 }
 
-function haveRole(member, role){
-    if(member == undefined){return false}
-    if(member.roles.cache.get(role) != null){
+function haveRole(guild, userId, role){
+    let member = guild?.members.cache.find(fMember => fMember.user.id == userId)
+    role = guild?.roles.cache.find(fRole => fRole.name == role)?.id ?? role
+
+    if(member?.roles.cache.get(role)){
         return true
-    }else if(member.roles.cache.find(roleF => roleF.name.toLowerCase() == role.toLowerCase()) != null){
-        return true
+    }else{
+        return false
     }
-    return false
 }
 
-function giveRole(member, roleId){
-    member.roles.add(roleId, `Добавил роль под ID: ${roleId}.`).catch(console.error)
+function giveRole(member, role){
+    role = guild?.roles.cache.find(fRole => fRole.name == role)?.id ?? role
+    member?.roles.add(role, `Добавил роль под ID: ${role}.`).catch(console.error)
 }
 
-function removeRole(member, roleId){
-    member.roles.remove(roleId, `Удалил роль под ID: ${roleId}.`).catch(console.error)
+function removeRole(member, role){
+    role = guild?.roles.cache.find(fRole => fRole.name == role)?.id ?? role
+    member?.roles.remove(role, `Удалил роль под ID: ${role}.`).catch(console.error)
 }
 
 //
@@ -223,7 +240,7 @@ async function createEx(rule,num,pat,add,message){
     return
 }
 
-async function createCom(embd, message){
+async function createCom(embd){
     var CChannel = guild.channels.cache.get(Config.channelsID.dev_process)
     var webhooks = await CChannel.fetchWebhooks()
     var webhook = webhooks.get(Config.webhooks.commits)
@@ -293,76 +310,88 @@ async function SlashCom(type, name, data, cguildId, permissions){
     if(type == 'wait'){return}
 
     var commands
-    if(cguildId != undefined){
+    if(cguildId){
         commands = await client.application.commands.fetch({guildId: cguildId})
-    }else{commands = await client.application.commands.fetch()}
+    }else{
+        commands = await client.application.commands.fetch()
+    }
     
     var command = commands.find(command => command.name == name)
+    
     if(type == 'get'){
         return commands
-    }else if(type == 'create' && command == undefined){
-        if(permissions != undefined){
+    }else if(type == 'add' && !command){
+        if(permissions){
             client.application.commands.create(data, cguildId).then((cmd) => {
                 client.application.commands.permissions.add({ guild: cguildId, command: cmd.id, permissions: permissions})
             })
         }else{
             client.application.commands.create(data, cguildId)
         }
-    }else if(type == 'del' && command != undefined){
+    }else if(type == 'del' && command){
         command.delete()
-    }else if(type == 'edit' && command != undefined){
-        if(permissions != undefined){
+    }else if(type == 'edit' && command){
+        if(permissions){
             client.application.commands.edit(command.id, data, cguildId).then((cmd) => {
                 client.application.commands.permissions.add({ guild: cguildId, command: cmd.id, permissions: permissions})
             })
         }else{
             client.application.commands.edit(command.id, data, cguildId)
         }
-    }else if(type == 'perm' && command != undefined){
+    }else if(type == 'perm' && command){
         client.application.commands.permissions.add({ guild: cguildId, command: command.id, permissions: permissions})
     }else{return}
 }
 
-async function ReplyInteraction(interaction, parametrs){
-    try{
-        await interaction.update(parametrs)
-    }catch(error){
-        if(interaction.replied){
-            interaction.editReply(parametrs)
-        }else{
-            interaction.reply(parametrs)
+const IAL = {
+    ReplyInteraction: async (interaction, parametrs) => {
+        try{
+            await interaction?.update(parametrs)
+        }catch(error){
+            if(interaction?.replied){
+                await interaction?.editReply(parametrs)
+            }else{
+                await interaction?.reply(parametrs)
+            }
+        }
+    },
+    ErrorInteraction: (interaction, error, ephemeral) => {
+        console.log(error)
+        if(error.message == undefined) error.message = ''
+        IAL.ReplyInteraction(interaction, {content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: [], ephemeral: ephemeral})
+        guild.channels.cache.get(Config.channelsID.errors).send({
+            embeds: [
+                {
+                    title: `Ошибка "${error.message}"`,
+                    description: `${error.stack}`,
+                    timestamp: new Date(),
+                    color: "#DD2C2C",
+                    thumbnail: {url: 'https://i.imgur.com/YTXH8fJ.png'}
+                }
+            ],
+            components: [
+                {
+                    type: 'ACTION_ROW',
+                    components: [
+                        {
+                            type: 'BUTTON',
+                            label: 'Канал',
+                            style: 'LINK',
+                            url: `discord:///channels/${interaction.guildId}/${interaction.channelId}`
+                        }
+                    ]
+                }
+            ]
+        })
+    },
+    EmptyReply: async (interaction) => {
+        try{
+            await interaction?.deferReply()
+            await interaction?.deleteReply()
+        }catch(error){
+            console.log(error)
         }
     }
-}
-
-function ErrorInteraction(interaction, error, ephemeral){
-    console.log(error)
-    if(error.message == undefined) error.message = ''
-    ReplyInteraction(interaction, {content: `> Ошибка. ${error.message} ⛔`, embeds: [], components: [], ephemeral: ephemeral})
-    guild.channels.cache.get(Config.channelsID.errors).send({
-        embeds: [
-            {
-                title: `Ошибка "${error.message}"`,
-                description: `${error.stack}`,
-                timestamp: new Date(),
-                color: "#DD2C2C",
-                thumbnail: {url: 'https://i.imgur.com/YTXH8fJ.png'}
-            }
-        ],
-        components: [
-            {
-                type: 'ACTION_ROW',
-                components: [
-                    {
-                        type: 'BUTTON',
-                        label: 'Канал',
-                        style: 'LINK',
-                        url: `discord:///channels/${interaction.guildId}/${interaction.channelId}`
-                    }
-                ]
-            }
-        ]
-    })
 }
 
 //
@@ -415,123 +444,125 @@ async function GStats(chl, id, par){
         }
     }catch(error){
         console.log(error)
-        guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь]**`).then(msg => {
-            setTimeout(() => {msg.delete()}, 10000)
-        })
+        guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь]**`)
     }
 }
 
 async function AStats(chl, structure, data){
     try{
-        if(chl.id == undefined){
-            let path = chl.split('/')
-            let cat = guildBD.channels.cache.find(cat => cat.name.toLowerCase() == path[0].toLowerCase() && cat.type == "GUILD_CATEGORY")
-            chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
-            structure = Config.BDs[`${cat.name}_${chl.name}`]
-        }
-        var messages = await chl.messages.fetch()
-        var units = await GStats(chl)
-        var id
-        if (!units.length){
-            id = messages.size
-        }else{
-            id = units[units.length-1].id
-        }
-        
-        var returnData = {}
-        for (let i = 0; i < structure.length; i++){
-            let _data = {
-                struct: structure[i],
-                data: data[i]
+        setTimeout(async () => {
+            if(chl.id == undefined){
+                let path = chl.split('/')
+                let cat = guildBD.channels.cache.find(cat => cat.name.toLowerCase() == path[0].toLowerCase() && cat.type == "GUILD_CATEGORY")
+                chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
+                structure = Config.BDs[`${cat.name}_${chl.name}`]
+            }
+            var messages = await chl.messages.fetch()
+            var units = await GStats(chl)
+            var id
+            if (!units.length){
+                id = messages.size
+            }else{
+                id = units[units.length-1].id
+            }
+            
+            var returnData = {}
+            for (let i = 0; i < structure.length; i++){
+                let _data = {
+                    struct: structure[i],
+                    data: data[i]
+                }
+
+                try{
+                    if(typeof(_data.data) != 'string'){ // если данные внесены не человеком, то оставляем их неизменными
+                        returnData[_data.struct] = _data.data
+                    }else if(Number.isInteger(parseInt(_data.data)) && _data.data.length > 16){ // если строка может стать числом и его длина больше 16, то оставляем все как есть
+                        returnData[_data.struct] = _data.data
+                    }else{ // иначе, если данные внесены человеком, мы превращаем их в код, запихивая его в array, а затем доставая, чтобы исключить ошибки eval
+                        returnData[_data.struct] = eval(`[${_data.data}]`)[0]
+                    }
+                    if(typeof(returnData[_data.struct]) == 'object'){ // если по итогу мы получаем object, тогда мы переделываем его в JSON, чтобы исключить кучу пробелов
+                        returnData[_data.struct] = JSON.stringify(returnData[_data.struct])
+                    }
+                }catch{
+                    returnData[_data.struct] = _data.data
+                }
+            }
+            var unit = new BDunit(id+1, returnData)
+            var message = JSON.stringify(unit, null, 2)
+
+            if(message.length <= 2000){
+                chl.send(message)
+            }else{
+                console.log('> Ошибка при создании ячейки')
             }
 
-            try{
-                if(typeof(_data.data) != 'string'){ // если данные внесены не человеком, то оставляем их неизменными
-                    returnData[_data.struct] = _data.data
-                }else if(Number.isInteger(parseInt(_data.data)) && _data.data.length > 16){ // если строка может стать числом и его длина больше 16, то оставляем все как есть
-                    returnData[_data.struct] = _data.data
-                }else{ // иначе, если данные внесены человеком, мы превращаем их в код, запихивая его в array, а затем доставая, чтобы исключить ошибки eval
-                    returnData[_data.struct] = eval(`[${_data.data}]`)[0]
-                }
-                if(typeof(returnData[_data.struct]) == 'object'){ // если по итогу мы получаем object, тогда мы переделываем его в JSON, чтобы исключить кучу пробелов
-                    returnData[_data.struct] = JSON.stringify(returnData[_data.struct])
-                }
-            }catch{
-                returnData[_data.struct] = _data.data
-            }
-        }
-        var unit = new BDunit(id+1, returnData)
-        var message = JSON.stringify(unit, null, 2)
-
-        if(message.length <= 2000){
-            chl.send(message)
-        }else{
-            console.log('> Ошибка при создании ячейки')
-        }
-
-        return unit
+            return unit
+        }, 10)
     }catch(error){
         console.log(error)
-        guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, значения]**`).then(msg => {
-            setTimeout(() => {msg.delete()}, 10000)
-        })
+        guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, значения]**`)
     }
 }
 
 async function EStats(chl, id, par, data){
     try{
-        if(chl.id == undefined){
-            let path = chl.split('/')
-            let cat = guildBD.channels.cache.find(cat => cat.name.toLowerCase() == path[0].toLowerCase() && cat.type == "GUILD_CATEGORY")
-            chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
-        }
-        par = `['${par.split('.').join(`']['`)}']`
-        var units = await GStats(chl)
-        var unit = units.find(unit => unit.id == id)
-        var msg = await chl.messages.fetch(unit.mid)
-        delete unit.mid
-
-        try{
-            eval(`unit.data${par} = ${data[0]}`)
-        }catch{
-            eval(`unit.data${par} = \`${data[0]}\``)
-        }
-
-        if(typeof(data[0]) == 'object'){
-            eval(`unit.data${par} = ${JSON.stringify(data[0])}`)
-        }
-
-        for(let value in unit.data){
-            let data = {
-                value: value
+        setTimeout(async () => {
+            data = data[0]
+            if(chl.id == undefined){
+                let path = chl.split('/')
+                let cat = guildBD.channels.cache.find(cat => cat.name.toLowerCase() == path[0].toLowerCase() && cat.type == "GUILD_CATEGORY")
+                chl = cat.children.find(channel => channel.name.toLowerCase() == path[1].toLowerCase())
             }
-            try{
-                if(typeof(unit.data[data.value]) != 'string'){
-                    unit.data[data.value] = unit.data[data.value]
-                }else if(Number.isInteger(parseInt(unit.data[data.value])) && unit.data[data.value].length > 16){
-                    unit.data[data.value] = unit.data[data.value]
-                }else{
-                    unit.data[data.value] = eval(`[${unit.data[data.value]}]`)[0]
-                }
-                
-                if(typeof(unit.data[data.value]) == 'object'){
-                    unit.data[data.value] = JSON.stringify(unit.data[data.value])
-                }
-            }catch{}
-        }
+            par = `['${par.split('.').join(`']['`)}']`
+            var units = await GStats(chl)
+            var unit = units.find(unit => unit.id == id)
+            var msg = await chl.messages.fetch(unit.mid)
+            delete unit.mid
 
-        var message = JSON.stringify(unit, null, 2)
-        
-        if(message.length <= 2000){
-            msg.edit(message)
-        }else{
-            console.log('> Ошибка при редактировании ячейки')
-        }
+            try{
+                if(Number.isInteger(parseInt(data)) && data.length > 16){
+                    throw new Error
+                }
+                eval(`unit.data${par} = ${data}`)
+            }catch{
+                eval(`unit.data${par} = \`${data}\``)
+            }
+
+            if(typeof(data) == 'object'){
+                eval(`unit.data${par} = ${JSON.stringify(data)}`)
+            }
+
+            for(let value in unit.data){
+                let data = {
+                    value: value
+                }
+                try{
+                    if(typeof(unit.data[data.value]) != 'string'){
+                        unit.data[data.value] = unit.data[data.value]
+                    }else if(Number.isInteger(parseInt(unit.data[data.value])) && unit.data[data.value].length > 16){
+                        unit.data[data.value] = unit.data[data.value]
+                    }else{
+                        unit.data[data.value] = eval(`[${unit.data[data.value]}]`)[0]
+                    }
+                    
+                    if(typeof(unit.data[data.value]) == 'object'){
+                        unit.data[data.value] = JSON.stringify(unit.data[data.value])
+                    }
+                }catch{}
+            }
+
+            var message = JSON.stringify(unit, null, 2)
+            
+            if(message.length <= 2000){
+                msg.edit(message)
+            }else{
+                console.log('> Ошибка при редактировании ячейки')
+            }
+        }, 10)
     }catch(error){
         console.log(error)
-        guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, id-ячейки, параметр, замену]**`).then(msg => {
-            setTimeout(() => {msg.delete()}, 10000)
-        })
+        guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, id-ячейки, параметр, замену]**`)
     }
 }
 
@@ -548,9 +579,7 @@ async function DStats(chl, id){
         setTimeout(() => msg.delete(), timeOfDelete)
     }catch(error){
         console.log(error)
-        guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, id-ячейки]**`).then(msg => {
-            setTimeout(() => {msg.delete()}, 10000)
-        })
+        guildBD.channels.cache.get('920291811614916609').send(`Ошибка.\n> Убедитесь, что вы правильно указали **[путь, id-ячейки]**`)
     }
 }
 
@@ -560,26 +589,33 @@ async function DStats(chl, id){
 
 const RPF = {
     randomHomeEmoji: () => {
-        return ['🏠','🏢','🏛','🏡','🏭','🏘'][random(0,5)]
+        return ['🏠', '🏡', '🏡', '⛪', '🕋', '🕌', '🛕', '🕍', '🏢', '🏫', '🏬', '🏯', '🏰', '💒', '🗼', '⛺', '🌁', '🌃', '🌆', '🌇', '🌄'][random(0,20)]
     },
     createObjects: async (path, guild) => {
         let objects = await GStats(path)
         for (let object of objects){
             let cat = guild.channels.cache.find(cat => cat.type == 'GUILD_CATEGORY' && cat.name == object.data.name && object.data.cid == cat.id)
-            if(cat == undefined){
-                cat = await guild.channels.create(object.data.name, {
+            if(!cat){
+                cat = await guild.channels.create(`${object.data.emoji ?? RPF.randomHomeEmoji()} ${object.data.name}`, {
                     type: 'GUILD_CATEGORY',
-                    permissionOverwrites: [{
-                        id: guild.roles.everyone,
-                        deny: ['VIEW_CHANNEL','READ_MESSAGE_HISTORY', 'SEND_MESSAGES']
-                    }]
+                    permissionOverwrites: [
+                        {
+                            id: guild.roles.everyone,
+                            deny: ['VIEW_CHANNEL','READ_MESSAGE_HISTORY', 'SEND_MESSAGES'],
+                        },
+                        {
+                            id: getRoleId(guild, 'Admin-Mode'),
+                            allow: ['VIEW_CHANNEL','READ_MESSAGE_HISTORY', 'SEND_MESSAGES'],
+                        }
+                    ]
                 })
-                EStats(path, object.id, "cid", [cat.id])
+                cat.setPosition(object.data.pos + 1 ?? object.id)
+                EStats(path, object.id, "cid", [`${cat.id}`])
             }
             
             for(let room of object.data.rooms){
                 let chnl = cat.children.toJSON().find(chnl => chnl.name == toChannelName(room.name))
-                if(chnl == undefined){
+                if(!chnl){
                     let chnl = await guild.channels.create(room.name, {
                         type: 'GUILD_TEXT',
                         parent: cat,
@@ -590,11 +626,7 @@ const RPF = {
             }
         }
     },
-    objectsSelectMenuOptions: (object, objects, radius, inside = true, defaultOption, data = '') => {
-        if(data){
-            data = `-${data}`
-        }
-
+    objectsSelectMenuOptions: (object, objects, radius, inside = true, defaultOption) => {
         var returnOptions = []
         
         for(let fObject of objects){
@@ -603,7 +635,7 @@ const RPF = {
                     fObject.data.cid = `${fObject.id}_undefined`
                 }
 
-                let emoji = RPF.randomHomeEmoji()
+                let emoji = fObject.data.emoji ?? RPF.randomHomeEmoji()
                 if(fObject.data.status && radius){
                     if(!fObject.data.status?.open && fObject.data.status?.ex?.find(ex => ex == object.id)){
                         emoji = '🔓'
@@ -616,8 +648,8 @@ const RPF = {
                 let position = category?.position ?? returnOptions.length
 
                 returnOptions[position] = {
-                    label: `${fObject.data.name}`,
-                    value: `${fObject.id}${data}`,
+                    label: `[${fObject.id}] ${fObject.data.name}`,
+                    value: `${fObject.id}`,
                     emoji: {
                         id: null,
                         name: emoji
@@ -634,62 +666,47 @@ const RPF = {
         }
         return returnOptions.filter(unit => unit)
     },
-    itemsSelectMenuOptions: (items, inventory, all) => {
+    itemsSelectMenuOptions: (inventory = [], items) => {
         let returnOptions = []
 
-        if(items && inventory && !all){
-            for (let lItem of inventory){
-                let gItem = items.find(fItem => fItem.id == lItem.id)
-                if(gItem){
-                    let convar = lItem.convar
-                    if(convar){
-                        convar = `-${convar}`
-                    }else{
-                        convar = ''
-                    }
+        for (let lItem of inventory){
+            let gItem = items.find(fItem => fItem.id == lItem.id) ?? lItem
+            if(gItem){
+                let convar = lItem.convar
+                if(convar){
+                    convar = `-${convar}`
+                }else{
+                    convar = ''
+                }
 
-                    returnOptions.push({
-                        label: `[${inventory.indexOf(lItem)+1}] ${gItem.data.name} (x${lItem.count.toLocaleString('en')})`,
-                        description: gItem.data.desc,
-                        value: `${lItem.id}${convar}`,
-                        emoji: {
-                            id: null,
-                            name: `${gItem.data.emoji}`
-                        }
-                    })
-                }
-            }
-        }else if(items && all){
-            for (let lItem of items){
-                let gItem = items.find(fItem => fItem.id == lItem.id)
-                if(gItem){
-                    returnOptions.push({
-                        label: `[${items.indexOf(lItem)+1}] ${gItem.data.name}`,
-                        description: gItem.data.desc,
-                        value: `${lItem.id}`,
-                        emoji: {
-                            id: null,
-                            name: `${gItem.data.emoji}`
-                        },
-                    })
-                }
+                returnOptions.push({
+                    label: `[${lItem.id}] ${gItem.data.name} ${`(x${lItem.count?.toLocaleString('en')})` ?? ""}`,
+                    description: gItem.data.desc,
+                    value: `${lItem.id}${convar}`,
+                    emoji: {
+                        id: null,
+                        name: `${gItem.data.emoji}`
+                    }
+                })
             }
         }
+
         return returnOptions
     },
-    charsSelectMenuOptions: (chars, sChar, gChars, defaultOption) => {
+    charsSelectMenuOptions: (chars = [], sChar, gChars, defaultOption) => {
         let returnOptions = []
-        
+       
         for(let char of chars){
             char = gChars?.find(fChar => fChar.id == char) ?? char
+
             if(char && char.id && char.data.name && char.data.desc){
                 returnOptions.push({
-                    label: `${char.id == sChar ? "✅" : ""} [${returnOptions.length+1}] ${betterLimitText(char.data.name, 100)}`,
+                    label: `[${char.id}] ${betterLimitText(char.data.name, 100)}`,
                     description: `${betterLimitText(char.data.desc, 100)}`,
                     value: `${char.id}`,
                     emoji: {
                         id: null,
-                        name: char.data.emoji ?? '👤'
+                        name: char.id == sChar ? "☑️" : char.data.emoji ?? '👤'
                     },
                     default: (() => {
                         if(char.id == defaultOption){
@@ -703,7 +720,7 @@ const RPF = {
         }
         return returnOptions
     },
-    pageButtonsSelectMenu: (customId, placeholder, options, act, page = 0, data = '') => {
+    pageButtonsSelectMenu: (customId, placeholder, options, act, sPage = 0, data = '') => {
         let returnOptions = [{
             type: 'ACTION_ROW', 
             components: [
@@ -711,7 +728,7 @@ const RPF = {
                     type: 'SELECT_MENU',
                     customId: customId,
                     placeholder: placeholder,
-                    options: options.slice(0+(page*25), 25*(page+1))
+                    options: options.slice(0+(sPage*25), 25*(sPage+1))
                 }
             ],
         }]
@@ -722,23 +739,45 @@ const RPF = {
         }
         
         if(options.length > 25){
-            let stage = Math.floor(returnOptions.length/25)
+            let pages = Math.floor(options.length/25)
+            let start = sPage - 2 < 0 ? 0 : sPage - 2
+
+            for(let page = start; page <= start+2; page++){
+                if(page <= pages){
+                    act_row.components.push({
+                        type: 'BUTTON',
+                        label: `${page+1}`,
+                        customId: `page_${act}_${data}_${page}`,
+                        style: (() => {
+                            if(page == sPage){
+                                return 'SUCCESS'
+                            }else{
+                                return 'PRIMARY'
+                            }
+                        })(),
+                        disabled: (() => {if(page == sPage) return true})()
+                    })
+                }
+            }
+        }
+        /* if(options.length > 25){
+            let stage = Math.floor(options.length/25)
             for(let i = 0; i <= stage; i++){
                 act_row.components.push({
                     type: 'BUTTON',
                     label: `${i+1}`,
                     customId: `page_${act}_${data}_${i}`,
                     style: (() => {
-                        if(i == page){
+                        if(i == sPage){
                             return 'SUCCESS'
                         }else{
                             return 'PRIMARY'
                         }
                     })(),
-                    disabled: (() => {if(i == page) return true})()
+                    disabled: (() => {if(i == sPage) return true})()
                 })
             }
-        }
+        } */
         if(act_row.components.length != 0) returnOptions.push(act_row)
         return returnOptions
     },
@@ -792,10 +831,10 @@ const RPF = {
             return new Error(`${error.message}`)
         }
     },
-    step: (interaction, userId, char, objects, targetObject, channelTargetObject, text) => {
-        if(text) ReplyInteraction(interaction, {content: text, embeds: [], components: []})
+    step: (guild, userId, charId, objects, targetObject, channelTargetObject, interaction, text) => {
+        if(text) IAL.ReplyInteraction(interaction, {content: text, embeds: [], components: []})
 
-        for(let [id, channel] of interaction.guild.channels.cache){
+        for(let [id, channel] of guild.channels.cache){
             let overwrites = channel.permissionOverwrites
             overwrites?.delete(userId)
         }
@@ -804,7 +843,7 @@ const RPF = {
                 children.permissionOverwrites.create(userId, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true})
             }
         })
-        if(char) EStats('ages/chars', char.id, 'pos', [targetObject.id])
+        if(charId) EStats('ages/chars', charId, 'pos', [targetObject.id])
 
         for(let targetObjectRadius of targetObject.data.radius ?? []){
             let lObject = objects.find(object => object.id == targetObjectRadius.id)
@@ -812,7 +851,7 @@ const RPF = {
 
             if(addRooms){
                 for(room of addRooms){
-                    let channelRooms = interaction.guild.channels.cache.filter(channel => channel.name == toChannelName(room) && channel.parentId == lObject.data.cid)
+                    let channelRooms = guild.channels.cache.filter(channel => channel.name == toChannelName(room) && channel.parentId == lObject.data.cid)
                     for(let [id, channel] of channelRooms){
                         channel.permissionOverwrites.create(userId, {'VIEW_CHANNEL': true, 'SEND_MESSAGES': true})
                     }
@@ -834,13 +873,13 @@ client.on('ready', () => {
     guildBD = client.guilds.cache.get(Config.guilds.BD)
 
     module.exports = {
-        client, REST, Routes,
+        Discord, client, REST, Routes,
         Config, prefix, timeOfDelete,
         guildBase:guild, guildAges, guildBD, 
-        rpGuilds, cmdParametrs, getMessages, toChannelName, betterLimitText, random,
+        rpGuilds, cmdParametrs, getMessages, emojiURL, toChannelName, editFirstChar, betterLimitText, random,
         getRoleId, haveRole, giveRole, removeRole,
         sendLog, createLore, createEx,
-        createCom, SlashCom, ReplyInteraction, ErrorInteraction, BDunit,
+        createCom, SlashCom, IAL, BDunit,
         GStats, AStats, EStats,
         DStats, RPF}
     require('./projects/pushpin.js')
@@ -858,7 +897,11 @@ client.on('ready', () => {
         let onlinemember = member - offlinemember
 
         let endword
-        if(onlinemember.toString().slice(-1) == '1'){endword = 'а'}else{endword = 'ов'}
+        if(onlinemember.toString().slice(-1) == '1'){
+            endword = 'а'
+        }else{
+            endword = 'ов'
+        }
 
         if (onlinemember > 0){
             client.user.setPresence({
@@ -868,7 +911,7 @@ client.on('ready', () => {
                   type: "WATCHING",
               }]
             })
-        }else if (onlinemember == 0){
+        }else if (!onlinemember){
             client.user.setPresence({
                 status: "idle",
                 activities: [{
@@ -906,9 +949,9 @@ client.on('messageUpdate', (messageOld, messageNew) =>{
 })
 
 client.on('messageCreate', message => {
-    var cA = haveRole(message.member, "[A]"),
-        cB = haveRole(message.member, "[B]"),
-        cC = haveRole(message.member, "[C]")
+    var cA = haveRole(guild, message.author.id, "[A]"),
+        cB = haveRole(guild, message.author.id, "[B]"),
+        cC = haveRole(guild, message.author.id, "[C]")
     let mb = message.author.bot
     let dm = message.channel.type == "DM"
     let command = cmdParametrs(message.content)

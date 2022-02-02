@@ -1,16 +1,15 @@
 const {
-    client, REST, Routes,
+    Discord, client, REST, Routes,
     Config, prefix, timeOfDelete,
     guildBase, guildAges, guildBD, 
-    rpGuilds, cmdParametrs, getMessages, toChannelName, betterLimitText, random,
+    rpGuilds, cmdParametrs, getMessages, emojiURL, toChannelName, editFirstChar, betterLimitText, random,
     getRoleId, haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
-    createCom, SlashCom, ReplyInteraction, ErrorInteraction, BDunit,
+    createCom, SlashCom, IAL, BDunit,
     GStats, AStats, EStats,
     DStats, RPF} = require('../bot.js')
 
 const guild = guildAges
-const getUnicode = require('emoji-unicode')
 
 console.log(`[bot-ages ready]`)
 
@@ -40,30 +39,106 @@ SlashCom('wait', 'идти', {
     type: 'CHAT_INPUT',
 }, guild.id)
 
-SlashCom('wait', 'персонажи', {
-    name: 'персонажи',
-    description: 'Система управления вашими персонажами',
-    type: 'CHAT_INPUT',
+SlashCom('wait', 'меню', {
+    name: 'меню',
+    description: 'Меню панели управления',
+    type: 'CHAT_INPUT'
 }, guild.id)
 
-SlashCom('wait', 'телепорт', {
-    name: 'телепорт',
-    description: 'Телепортирует в выбранную локацию',
-    type: 'CHAT_INPUT',
+SlashCom('wait', 'self', {
+    name: 'self',
+    description: 'Действие от первого лица',
+    type: 'CHAR_INPUT',
     options: [
         {
-            type: 'USER',
-            name: 'человек',
-            description: 'Цель, которую нужно телепортировать (по умолчанию: вы)',
+            type: 'STRING',
+            name: 'действие',
+            description: 'Опишите действие от первого лица',
+            required: true,
+        }
+    ],
+}, guild.id)
+
+SlashCom('wait', 'do', {
+    name: 'do',
+    description: 'Действие от третьего лица, описание ситуации вокруг',
+    type: 'CHAR_INPUT',
+    options: [
+        {
+            type: 'STRING',
+            name: 'описание',
+            description: 'Опишите ситуацию вокруг',
+            required: true,
+        }
+    ],
+}, guild.id)
+
+SlashCom('wait', 'todo', {
+    name: 'todo',
+    description: 'Действие совместно с фразой',
+    type: 'CHAR_INPUT',
+    options: [
+        {
+            type: 'STRING',
+            name: 'действие',
+            description: 'Опишите действие от первого лица',
+            required: true,
+        },
+        {
+            type: 'STRING',
+            name: 'сообщение',
+            description: 'Фраза, с которой происходит действие',
+            required: true,
+        },
+    ],
+}, guild.id)
+
+SlashCom('wait', 'try', {
+    name: 'try',
+    description: 'Действие с вероятностью удачи',
+    type: 'CHAR_INPUT',
+    options: [
+        {
+            type: 'STRING',
+            name: 'действие',
+            description: 'Опишите действие от первого лица',
+            required: true,
+        }
+    ],
+}, guild.id)
+
+SlashCom('wait', 'roll', {
+    name: 'roll',
+    description: 'Случайное число в выбранном диапазоне',
+    type: 'CHAR_INPUT',
+    options: [
+        {
+            type: 'NUMBER',
+            name: 'максимально',
+            description: 'Максимальное число, по стандарту 100',
             required: false,
         }
     ],
 }, guild.id)
 
+SlashCom('edit', 'looc', {
+    name: 'looc',
+    description: 'Отправить локальное неролевое сообщение',
+    type: 'CHAR_INPUT',
+    options: [
+        {
+            type: 'STRING',
+            name: 'сообщение',
+            description: 'Текст неролевого сообщения',
+            required: true,
+        }
+    ],
+}, guild.id)
+
 client.on('messageCreate', message => { if(message.guild?.id == guild.id){
-    var cA = haveRole(message.member, "[A]"),
-        cB = haveRole(message.member, "[B]"),
-        cC = haveRole(message.member, "[C]")
+    var cA = haveRole(guildBase, message.author.id, "[A]"),
+        cB = haveRole(guildBase, message.author.id, "[B]"),
+        cC = haveRole(guildBase, message.author.id, "[C]")
     let mb = message.author.bot
     let dm = message.channel.type == "DM"
     let command = cmdParametrs(message.content)
@@ -75,50 +150,46 @@ client.on('messageCreate', message => { if(message.guild?.id == guild.id){
     if(!mb && !dm) sendLog(message.member, message.channel, 'rp', 'Отправил сообщение', true, message.content)
 }})
 
+var LAST_INTERACTION = {
+    interaction: undefined,
+    user: undefined,
+    timestamp: undefined
+}
+
+var PGF = {}
+
 client.on('interactionCreate', async interaction => {
     if(interaction.guildId == guild.id) try{
-        let type = interaction.customId?.split('_')[0]
-        let act = interaction.customId?.split('_')[1]
-        let data = interaction.customId?.split('_')[2]
-        let add = interaction.customId?.split('_')[3]
+        LAST_INTERACTION.interaction = interaction
+        LAST_INTERACTION_spam = LAST_INTERACTION.user == interaction.user.id && (LAST_INTERACTION.timestamp == interaction.createdTimestamp || LAST_INTERACTION.timestamp + 1000 > interaction.createdTimestamp)
 
-        let values = interaction.values
-        let value = values?.[0]
+        if(LAST_INTERACTION_spam){
+            let channel = interaction.channel
+            await channel.permissionOverwrites.edit(interaction.user.id, {
+                'SEND_MESSAGES': false,
+            })
+            setTimeout(() => {
+                channel.permissionOverwrites.edit(interaction.user.id, {
+                    'SEND_MESSAGES': true,
+                })
+            }, 10000)
 
-        let charPass = (type == 'char' || interaction.commandName == 'персонажи') && !interaction.channel.parent.position
-        
-        var objects = await GStats("ages/objects")
-        if(!objects) throw new Error("Объекты отсутствуют")
+            throw new Error("Успокойся...")
+        }else{
+            LAST_INTERACTION.user = interaction.user.id,
+            LAST_INTERACTION.timestamp = interaction.createdTimestamp
+        }
 
-        let object = objects.find(object => object.data.cid == interaction.channel.parentId)
-        if(!object && !charPass) throw new Error("Функция используется вне ролевого поля")
-
-        let roomId = parseInt(interaction.channel.topic)
-        let room = object?.data.rooms[roomId]
-        if(!room && !charPass) throw new Error("Функция используется вне ролевого поля")
-
-        var items = await GStats("ages/items")
-        if(!items) throw new Error("Предметы отсутствуют")
-
-        var players = await GStats("ages/players")
-        if(!players) throw new Error("Игроки отсутствуют")
-
-        var player = players.find(player => player.data.user == interaction.user.id)
-        if(!player) throw new Error("Игрок отсутствует")
-
-        var chars = await GStats("ages/chars")
-        if(!chars) throw new Error("Персонажи отсутствуют")
-
-        var char = chars.find(char => char.id == player.data.char && player.data.chars?.find(fChar => fChar == char.id))
-        if(!char && !charPass) throw new Error("Персонаж отсутствует")
-
-        if(interaction.isCommand()){
-            if(interaction.commandName == 'инвентарь'){
-                let options = RPF.itemsSelectMenuOptions(items, char.data.items)
+        //#7B2832
+        var CGF = {
+            invent: () => {
+                console.log(interaction.id)
+                let options = RPF.itemsSelectMenuOptions(char.data.items, items)
                 if(!options.length) throw new Error("Ваш инвентарь пуст")
 
-                interaction.reply({
+                IAL.ReplyInteraction(interaction, {
                     content: '> Ваш инвентарь 💼',
+                    embeds: [],
                     components: [
                         {
                             type: 'ACTION_ROW', 
@@ -142,79 +213,123 @@ client.on('interactionCreate', async interaction => {
                     ],
                     ephemeral: true
                 })
-            }
+            },
+            inspect: () => {
+                let options = RPF.itemsSelectMenuOptions(room.items, items)
 
-            if(interaction.commandName == 'осмотреть'){
-                let options = RPF.itemsSelectMenuOptions(items, room.items)
+                if(interaction.options?.get('человек')?.value){
+                    let targetPlayer = players.find(fPlayer => fPlayer.data.user == interaction.options.get('человек')?.value)
+                    if(!targetPlayer) throw new Error('Игрок не найден')
 
-                interaction.reply({
-                    content: '> Результат осмотра 👀',
-                    embeds: [
-                        {
-                            description: `> **Радиус** 🔘\n${
-                                (() => {
-                                    let returnRadius = ''
-                                    for(let i = 0; i < object.data.radius.length; i++){
-                                        let radiusObject = objects.find(fObject => fObject.id == object.data.radius[i].id)
-                                        if(returnRadius == ''){
-                                            returnRadius = radiusObject.data.name
-                                        }else if(i % 3 == 0){
-                                            returnRadius += `,\n${radiusObject.data.name}`
-                                        }else{
-                                            returnRadius += `, ${radiusObject.data.name}`
-                                        }
-                                    }
-                                    return returnRadius
-                                })()
-                            }`,
-                            color: '#ED7642'
-                        }
-                    ],
-                    components: (() => {
-                        if(options.length != 0){
-                            return [{
-                                type: 'ACTION_ROW', 
-                                components: [
-                                    {
-                                        type: 'SELECT_MENU',
-                                        customId: `invent_pick`,
-                                        placeholder: 'Предметы...',
-                                        minValues: 1,
-                                        maxValues: (() =>{
-                                            if(options.length < 5){
-                                                return options.length
+                    let targetChar = chars.find(fChar => fChar.id == targetPlayer.data.char)
+                    if(!targetChar) throw new Error('Персонаж не найден')
+
+                    if(targetChar.data.pos != char.data.pos && !object.data.radius?.find(fObject => fObject.id == targetChar.data.pos)?.rooms && !ADMIN) throw new Error('Персонаж находится на другой локации')
+
+                    IAL.ReplyInteraction(interaction, {
+                        content: '> Результат осмотра 👀',
+                        embeds: [{
+                            author: {name: `[${targetChar.id}] ${betterLimitText(targetChar.data.name, 100)}`},
+                            description: targetChar.data.desc,
+                            thumbnail: {url: emojiURL(targetChar.data.emoji ?? '👤')},
+                            color: 'RANDOM',
+                        }],
+                        ephemeral: true
+                    })
+                }else{
+                    IAL.ReplyInteraction(interaction, {
+                        content: '> Результат осмотра 👀',
+                        embeds: [
+                            {
+                                description: `> **Радиус** 🔘\n${
+                                    (() => {
+                                        let returnRadius = ''
+                                        for(let i = 0; i < object.data.radius.length; i++){
+                                            let radiusObject = objects.find(fObject => fObject.id == object.data.radius[i].id)
+                                            if(returnRadius == ''){
+                                                returnRadius = radiusObject.data.name
+                                            }else if(i % 3 == 0){
+                                                returnRadius += `,\n${radiusObject.data.name}`
                                             }else{
-                                                return 5
+                                                returnRadius += `, ${radiusObject.data.name}`
                                             }
-                                        })(),
-                                        options: options
-                                    }
-                                ]
-                            }]
-                        }
-                    })(),
-                    ephemeral: true
-                })
-            }
-
-            if(interaction.commandName == 'идти'){
+                                        }
+                                        return returnRadius
+                                    })()
+                                }`,
+                                color: '#ED7642'
+                            }
+                        ],
+                        components: (() => {
+                            if(options.length != 0){
+                                return [{
+                                    type: 'ACTION_ROW', 
+                                    components: [
+                                        {
+                                            type: 'SELECT_MENU',
+                                            customId: `invent_pick`,
+                                            placeholder: 'Предметы...',
+                                            minValues: 1,
+                                            maxValues: (() =>{
+                                                if(options.length < 5){
+                                                    return options.length
+                                                }else{
+                                                    return 5
+                                                }
+                                            })(),
+                                            options: options
+                                        }
+                                    ]
+                                }]
+                            }
+                        })(),
+                        ephemeral: true
+                    })
+                }
+            },
+            walk: (page = 0) => {
                 if(char.data.pos != object.id && char.data.pos) throw new Error(`Вы находитесь вне объекта, в котором находитесь (**${objects.find(object => object.id == char.data.pos)?.data.name ?? "Неизвестно"}**). Вы очень похожи на кота Шрёдингера 🐈‍⬛`)
                 
                 let options = RPF.objectsSelectMenuOptions(object, objects, true, false)
-                if(options.length == 0) throw new Error("Объектов поблизости нет")
+                if(!options.length) throw new Error("Объектов поблизости нет")
 
-                let components = RPF.pageButtonsSelectMenu('walk_select', 'Объекты...', options, 'walk')
+                let components = RPF.pageButtonsSelectMenu('walk_select', 'Объекты...', options, 'walk', page)
                 
-                interaction.reply({
+                IAL.ReplyInteraction(interaction, {
                     content: '> Выберите направление 🚶',
+                    embeds: [],
                     components: components,
                     ephemeral: true
                 })
-            }
+            },
+            tpUser: (page = 0) => {
+                let options = RPF.charsSelectMenuOptions(chars, player.data.char)
+                if(!options.length) throw new Error("Персонажей нет")
 
-            if(interaction.commandName == 'персонажи'){
-                let options = RPF.charsSelectMenuOptions(player.data.chars, player.data.char, chars)
+                let components = RPF.pageButtonsSelectMenu(`tp_user`, 'Персонажи...', options, 'tpUser', page)
+
+                components.push({
+                    type: 'ACTION_ROW',
+                    components: [
+                        {
+                            type: 'BUTTON',
+                            label: 'Выбрать себя',
+                            customId: `tp_user_self_global`,
+                            style: 'PRIMARY'
+                        }
+                    ]
+                })
                 
+                IAL.ReplyInteraction(interaction, {
+                    content: '> Выберите человека 🛸',
+                    embeds: [],
+                    components: components,
+                    ephemeral: true
+                })
+            },
+            char: (page = 0) => {
+                let options = RPF.charsSelectMenuOptions(player.data.chars, player.data.char, chars)
+                    
                 let createButton = {
                     type: 'ACTION_ROW',
                     components: [
@@ -234,43 +349,243 @@ client.on('interactionCreate', async interaction => {
                     if(!options.length){
                         throw new Error('Персонажи отсутствуют')
                     }else if((player.data.limit ?? 1) > (player.data.chars?.length ?? 0)){
-                        components = RPF.pageButtonsSelectMenu('char_select', 'Персонажи...', options, 'char')
+                        components = RPF.pageButtonsSelectMenu('char_select', 'Персонажи...', options, 'char', page)
                         components.splice(1, 0, createButton)
                     }else{
-                        components = RPF.pageButtonsSelectMenu('char_select', 'Персонажи...', options, 'char')
+                        components = RPF.pageButtonsSelectMenu('char_select', 'Персонажи...', options, 'char', page)
                     }
                 }
 
-                interaction.reply({
+                IAL.ReplyInteraction(interaction, {
                     content: '> Ваши персонажи 👥',
+                    embeds: [],
                     components: components,
                     ephemeral: true
                 })
-            }
-
-            if(interaction.commandName == 'телепорт'){
-                let selectUserId = interaction.options?.get('человек')?.value ?? interaction.user.id
-
-                let options = RPF.objectsSelectMenuOptions(object, objects, false, selectUserId != interaction.user.id)
-                if(options.length == 0) throw new Error("Объектов нет")
-
-                let components = RPF.pageButtonsSelectMenu(`tp_select_${selectUserId}`, 'Объекты...', options, 'tp', 0, selectUserId)
+            },
+            admin: () => {
+                let pass = cA || cB || cC
+                console.log(ADMIN)
                 
+                if(ADMIN){
+                    removeRole(interaction.member, getRoleId(guild, 'Admin-Mode'))
+                    IAL.ReplyInteraction(interaction, {content: '> Вы **отключили** Админ-мод ⚒', embeds: [], components: []})
+                    if(object) RPF.step(guild, interaction.user.id, char.id, objects, object, interaction.channel.parent)
+                }else if(!ADMIN && pass){
+                    giveRole(interaction.member, getRoleId(guild, 'Admin-Mode'))
+                    IAL.ReplyInteraction(interaction, {content: '> Вы **включили** Админ-мод ⚒', embeds: [], components: []})
+                }else{
+                    throw new Error("Интересно... Правда?")
+                }
+            },
+            sendEmote: (text, color) => {
+                IAL.ReplyInteraction(interaction, {embeds: [
+                    {   
+                        description: text,
+                        color: color,
+                    }
+                ]})
+            },
+            keyUse: (page = 0) => {
+                let options = RPF.charsSelectMenuOptions(chars)
+                if(!options.length) throw new Error("Объектов поблизости нет")
+
+                let components = RPF.pageButtonsSelectMenu(`invent_key_${data}`, 'Объекты...', options, 'keyUse', page, data)
+                
+                IAL.ReplyInteraction(LAST_INTERACTION.interaction, {
+                    content: `> Выберите объект ${LAST_INTERACTION.interaction.id} 🏘`,
+                    embeds: [],
+                    components: components
+                })
+            }
+        }
+        Object.assign(CGF, PGF)
+
+        //#C6DE55
+        var cA = haveRole(guildBase, interaction.user.id, "[A]"),
+            cB = haveRole(guildBase, interaction.user.id, "[B]"),
+            cC = haveRole(guildBase, interaction.user.id, "[C]")
+
+        var ADMIN = haveRole(guild, interaction.user.id, 'Admin-Mode')
+
+        var type = interaction.customId?.split('_')[0]
+        var act = interaction.customId?.split('_')[1]
+        var data = interaction.customId?.split('_')[2]
+        var add = interaction.customId?.split('_')[3]
+        var COMMAND = interaction.commandName
+
+        console.log(`${type}: ${act} - ${COMMAND}\n`)
+
+        var values = interaction.values
+        var value = values?.[0]
+
+        var pass = ((type == 'char' || COMMAND == 'персонажи') || (type == 'gmenu' && act == 'char' || COMMAND == 'меню') || type == 'page') && !interaction.channel.parent.position
+        
+        var objects = await GStats("ages/objects")
+        if(!objects) throw new Error("Объекты отсутствуют")
+
+        var object = objects.find(object => object.data.cid == interaction.channel.parentId)
+        if(!object && !pass) throw new Error("Функция используется вне ролевого поля")
+
+        var roomId = parseInt(interaction.channel.topic)
+        var room = object?.data.rooms[roomId]
+        if(!room && !pass) throw new Error("Функция используется вне ролевого поля")
+
+        var items = await GStats("ages/items")
+        if(!items) throw new Error("Предметы отсутствуют")
+
+        var players = await GStats("ages/players")
+        if(!players) throw new Error("Игроки отсутствуют")
+
+        var player = players.find(player => player.data.user == interaction.user.id)
+        if(!player) throw new Error("Игрок отсутствует")
+
+        var chars = await GStats("ages/chars")
+        if(!chars) throw new Error("Персонажи отсутствуют")
+
+        var char = chars.find(char => char.id == player.data.char && player.data.chars?.find(fChar => fChar == char.id))
+        if(!char && !pass) throw new Error("Персонаж отсутствует")
+
+        //#55DEC9
+        if(interaction.isCommand()){
+            if(COMMAND == 'инвентарь'){
+                CGF.invent()
+            }else if(COMMAND == 'осмотреть'){
+                CGF.inspect()
+            }else if(COMMAND == 'идти'){
+                CGF.walk()
+            }else if(['self', 'do', 'todo', 'try', 'roll', 'looc'].find(fCommand => fCommand == COMMAND)){
+                let act = interaction.options.get('действие')?.value
+                let desc = interaction.options.get('описание')?.value
+                let message = interaction.options.get('сообщение')?.value
+                let count = interaction.options.get('максимально')?.value ?? 100
+                
+                if(COMMAND == 'self'){
+                    CGF.sendEmote(`*${interaction.member.nickname} ${editFirstChar(act, false)}.*`, '#4AE85D')
+                }else if(COMMAND == 'do'){
+                    CGF.sendEmote(`*${editFirstChar(desc, true)}* (**${interaction.member.nickname}**)`, '#4ABDE8')
+                }else if(COMMAND == 'try'){
+                    CGF.sendEmote(`*${interaction.member.nickname} ${editFirstChar(act, false)}* (**${['удачно','неудачно'][random(0,1)]}**)`, '#EAF449')
+                }else if(COMMAND == 'roll'){
+                    CGF.sendEmote(`*${interaction.member.nickname} получает **${random(0, count)} из ${count}***`, '#DF3B3B')
+                }else if(COMMAND == 'todo'){
+                    CGF.sendEmote(`*${interaction.member.nickname} ${editFirstChar(act, false)}* – сказав, ${message}`, '#B05299')
+                }else if(COMMAND == 'looc'){
+                    CGF.sendEmote(`||\`${message}\`||`, '#4D4747')
+                }
+            }else if(COMMAND == 'меню'){
+                let list_Buttons = [
+                    {
+                        type: 'BUTTON',
+                        label: 'Персонажи',
+                        customId: 'gmenu_char',
+                        style: 'PRIMARY',
+                        emoji: {
+                            id: null,
+                            name: "👥"
+                        }
+                    },
+                ]
+
+                let list_CA_Buttons = [
+                    
+                ]
+
+                let list_CB_Buttons = [
+                    
+                ]
+
+                let list_CC_Buttons = [
+                    {
+                        type: 'BUTTON',
+                        label: 'Админ-мод',
+                        customId: 'gmenu_admin',
+                        style: 'DANGER',
+                        emoji: {
+                            id: null,
+                            name: "⚒"
+                        }
+                    }
+                ]
+
+                let list_Admin_Buttons = [
+                    {
+                        type: 'BUTTON',
+                        label: 'Телепорт',
+                        customId: 'gmenu_tpUser',
+                        style: 'SUCCESS',
+                        emoji: {
+                            id: null,
+                            name: "🛸"
+                        }
+                    }
+                ]
+
+                if(haveRole(guildBase, interaction.user.id, '[A]')){
+                    list_Buttons = list_Buttons.concat(list_CA_Buttons)
+                    list_Buttons = list_Buttons.concat(list_CB_Buttons)
+                    list_Buttons = list_Buttons.concat(list_CC_Buttons)
+                }
+
+                if(haveRole(guildBase, interaction.user.id, '[B]')){
+                    list_Buttons = list_Buttons.concat(list_CC_Buttons)
+                    list_Buttons = list_Buttons.concat(list_CC_Buttons)
+                }
+
+                if(haveRole(guildBase, interaction.user.id, '[C]')){
+                    list_Buttons = list_Buttons.concat(list_CC_Buttons)
+                }
+
+                if(haveRole(guild, interaction.user.id, 'Admin-Mode')){
+                    list_Buttons = list_Buttons.concat(list_Admin_Buttons)
+                }
+
+                list_Buttons = Array.from(new Set(list_Buttons))
+
+                let rows = Math.floor(list_Buttons.length/5)
+                let components = []
+
+                for(let row = 0; row <= rows; row++){
+                    let actionRow = {
+                        type: 'ACTION_ROW',
+                        components: []
+                    }
+
+                    for(let button = row * 5; button <= ((row + 1) * 5) - 1; button++){
+                        if(list_Buttons.length > button) actionRow.components.push(list_Buttons[button])
+                    }
+                    components.push(actionRow)
+                }
+
                 interaction.reply({
-                    content: '> Выберите направление 🛸',
+                    content: '> Меню панели управления 📟',
+                    embeds: [
+                        {
+                            title: `Что такое панель управления?`,
+                            description: `Панель управления это специальная функция Pushpin, которая позволяет быстро работать со всеми второстепенными возможностями игрового процесса.`,
+                            color: 'RANDOM',
+                            thumbnail: {url: emojiURL('📟')}
+                        }
+                    ],
                     components: components,
                     ephemeral: true
                 })
             }
         }
 
-        if(interaction.isSelectMenu()){
+        //#556FDE
+        if(interaction.isUserContextMenu()){
+            
+        }
+
+        //#DE6255
+        if(interaction.isSelectMenu() || add == 'global'){
             if(type == 'invent' && act == 'open'){
                 let gItems = []
                 let charItems = []
                 let embeds = []
 
-                let options = RPF.itemsSelectMenuOptions(items, char.data.items)
+                let options = RPF.itemsSelectMenuOptions(char.data.items, items)
                 if(options.length == 0) throw new Error("Ваш инвентарь пуст")
 
                 for(let value of values){
@@ -284,11 +599,10 @@ client.on('interactionCreate', async interaction => {
                     if(!charItem) throw new Error("Предмет не удалось найти среди вашего инвентаря")
                     charItems.push(charItem)
 
-                    let emoji = getUnicode(gItem.data.emoji ?? '📦').split(' ').join('-')
                     embeds.push({
-                        author: {name: `[${char.data.items.indexOf(charItem)+1}] ${gItem.data.name} (x${charItem.count.toLocaleString('en')})` },
+                        author: {name: `[${gItem.id}] ${gItem.data.name} ${`(x${charItem.count?.toLocaleString('en')})` ?? ""}`},
                         description: gItem.data.desc,
-                        thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji}.png`},
+                        thumbnail: {url: emojiURL(gItem.data.emoji ?? '📦')},
                         color: gItem.data.color ?? Config.itemTypes[gItem.data.type]?.color ?? 'RANDOM'
                     })
                 }
@@ -350,7 +664,7 @@ client.on('interactionCreate', async interaction => {
                 let roomItems = []
                 let embeds = []
 
-                let options = RPF.itemsSelectMenuOptions(items, room.items)
+                let options = RPF.itemsSelectMenuOptions(room.items, items)
                 if(options.length == 0) throw new Error("Комната пуста")
                 
                 for(let value of values){
@@ -364,11 +678,10 @@ client.on('interactionCreate', async interaction => {
                     if(!roomItem) throw new Error("Предмет не удалось найти среди комнаты")
                     roomItems.push(roomItem)
 
-                    let emoji = getUnicode(gItem.data.emoji ?? '📦').split(' ').join('-')
                     embeds.push({
-                        author: {name: `[${room.items.indexOf(roomItem)+1}] ${gItem.data.name} (x${roomItem.count.toLocaleString('en')})` },
+                        author: {name: `[${gItem.id}] ${gItem.data.name} ${`(x${roomItem.count?.toLocaleString('en')})` ?? ""}`},
                         description: gItem.data.desc,
-                        thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji}.png`},
+                        thumbnail: {url: emojiURL(gItem.data.emoji ?? '📦')},
                         color: gItem.data.color ?? Config.itemTypes[gItem.data.type]?.color ?? 'RANDOM'
                     })
                 }
@@ -432,7 +745,7 @@ client.on('interactionCreate', async interaction => {
                                     EStats("ages/objects", object.id, "status.open", [true])
                                 }
                             }catch(error){
-                                ErrorInteraction(interaction, error, true)
+                                IAL.ErrorInteraction(interaction, error, true)
                             }
                         }, 2500)
                     }else{
@@ -452,7 +765,7 @@ client.on('interactionCreate', async interaction => {
                 setTimeout(() => {
                     try{
                         function walk(){
-                            RPF.step(interaction, interaction.user.id, char, objects, targetObject, channelTargetObject, `> Вы успешно перешли в **${channelTargetObject.name}** 🚶`)
+                            RPF.step(guild, interaction.user.id, char.id, objects, targetObject, channelTargetObject, interaction, `> Вы успешно перешли в **${channelTargetObject.name}** 🚶`)
                         }
 
                         if(!object.data.status){
@@ -469,15 +782,33 @@ client.on('interactionCreate', async interaction => {
                             throw new Error("Объект закрыт")
                         }
                     }catch(error){
-                        ErrorInteraction(interaction, error, true)
+                        IAL.ErrorInteraction(interaction, error, true)
                     }
                 }, 2500)
-            }else if(type == 'tp' && act == 'select'){
-                let player = players.find(player => player.data.user == data)
-                if(!player) throw new Error("Игрок не найден")
+            }else if(type == 'tp' && act == 'user'){
+                if(!PGF.tpSelect) PGF.tpSelect = (page = 0) => {
+                    let selectUserId = value ?? interaction.user.id
 
-                let char = chars.find(char => char.id == player.data.char)
+                    let options = RPF.objectsSelectMenuOptions(object, objects, false, selectUserId != interaction.user.id)
+                    if(options.length == 0) throw new Error("Объектов")
+
+                    let components = RPF.pageButtonsSelectMenu(`tp_select_${selectUserId}`, 'Объекты...', options, 'tpSelect', page, selectUserId)
+                    
+                    IAL.ReplyInteraction(interaction, {
+                        content: '> Выберите направление 🛸',
+                        embeds: [],
+                        components: components,
+                        ephemeral: true
+                    })
+                }
+                Object.assign(CGF, PGF)
+                CGF.tpSelect()
+            }else if(type == 'tp' && act == 'select'){
+                let char = chars.find(char => char.id == data)
                 if(!char) throw new Error("Персонаж не найден")
+
+                let targetPlayer = players.find(player => player.data.char == char.id)
+                if(!targetPlayer) throw new Error("Игрок не найден")
 
                 let targetObject = objects.find(object => object.id == value)
                 if(!targetObject) throw new Error("Объект не найден")
@@ -485,7 +816,7 @@ client.on('interactionCreate', async interaction => {
                 let channelTargetObject = guild.channels.cache.get(targetObject.data.cid)
                 if(!channelTargetObject) throw new Error("Объект не найден")
 
-                RPF.step(interaction, player.data.user, char, objects, targetObject, channelTargetObject, `> Вы успешно перелетели в **${channelTargetObject.name}** 🛸`)
+                RPF.step(guild, targetPlayer.data.user, char.id, objects, targetObject, channelTargetObject, interaction, `> ${player.data.user == data ? `Вы успешно перелетели в` : `Вы успешно подбросили человека в`} **${channelTargetObject.name}** 🛸`)
             }else if(type == 'char' && act == 'select'){
                 let options = RPF.charsSelectMenuOptions(player.data.chars, player.data.char, chars)
                 if(!options) throw new Error('Персонажи отсутствуют')
@@ -495,7 +826,7 @@ client.on('interactionCreate', async interaction => {
 
                 if(!player.data.chars?.find(fChar => fChar == char.id)) throw new Error("Персонаж не найден")
 
-                let components = RPF.pageButtonsSelectMenu('char_select', 'Персонажи...', options, 'char')
+                let components = RPF.pageButtonsSelectMenu('char_select', 'Персонажи...', options, 'char', 0)
                 components.splice(1, 0, {
                     type: 'ACTION_ROW',
                     components: [
@@ -518,22 +849,21 @@ client.on('interactionCreate', async interaction => {
                     components[1].components[0].disabled = true
                 }
 
-                let emoji = getUnicode(char.data.emoji ?? '👤').split(' ').join('-')
                 interaction.update({
                     content: '> Ваши персонажи 👥',
                     embeds: [{
-                        author: {name: `[${player.data.chars.indexOf(char.id)+1}] ${betterLimitText(char.data.name, 100)} ${char.id == player.data.char ? "✅" : ""}`},
+                        author: {name: `[${char.id}] ${betterLimitText(char.data.name, 100)}`},
                         description: char.data.desc,
-                        thumbnail: {url: `https://twemoji.maxcdn.com/v/13.1.0/72x72/${emoji}.png`},
+                        thumbnail: {url: emojiURL(char.data.emoji ?? '👤')},
                         color: 'RANDOM',
                     }],
                     components: components
                 })
-                
             }
         }
 
-        if(interaction.isButton() || add == 'ex'){
+        //#DE55C9
+        if(interaction.isButton() || add == 'global'){
             if(type == 'invent'){
                 let gItems = []
                 let charItems = []
@@ -561,9 +891,9 @@ client.on('interactionCreate', async interaction => {
                     try{
                         let count = 1
                         if(item.count > 1){
-                            let reply = `> Введите количество **${gItem.data.emoji} ${gItem.data.name} (Всего: ${item.count.toLocaleString('en')})** ${emoji}`
+                            let reply = `> Введите количество **[${gItem.id}] ${gItem.data.emoji} ${gItem.data.name} (Всего: ${item.count.toLocaleString('en')})** ${emoji}`
 
-                            ReplyInteraction(interaction, {content: reply, embeds: [], components: []})
+                            IAL.ReplyInteraction(interaction, {content: reply, embeds: [], components: []})
                             
                             let filter = message => message.author.id == interaction.user.id
                             let message = await interaction.channel.awaitMessages({filter, max: 1, time: 15000, errors: ['time']})
@@ -573,7 +903,7 @@ client.on('interactionCreate', async interaction => {
                                 try{
                                     message.first().delete()
                                 }catch(error){
-                                    ErrorInteraction(interaction, error, true)
+                                    IAL.ErrorInteraction(interaction, error, true)
                                 }
                             }, timeOfDelete)
                         }
@@ -586,29 +916,25 @@ client.on('interactionCreate', async interaction => {
                 if(act == 'use'){
                     if(!charItems.length) throw new Error("Предмет не удалось найти среди вашего инвентаря")
                     if(gItems[0].data.type == 'key'){
-                        let options = RPF.objectsSelectMenuOptions(object, objects, true, true)
-                        if(!options.length) throw new Error("Объектов поблизости нет")
+                        CGF.keyUse()
+                    }
+                }else if(act == 'trade'){
+                    if(!PGF.trade) PGF.trade = (page = 0) => {
+                        let filterChars = chars.filter(fChar => players?.find(fPlayer => fPlayer.data.char == fChar.id) && fChar.data.pos == object.id)
+                        console.log(filterChars)
+                        let options = RPF.charsSelectMenuOptions(filterChars)
+                        if(!options.length) throw new Error("Людей поблизости нет")
 
-                        let components = RPF.pageButtonsSelectMenu(`invent_key_${data}`, 'Объекты...', options, 'keyuse', 0, data)
+                        let components = RPF.pageButtonsSelectMenu(`invent_give_${data}_global`, 'Люди...', options, 'trade', page, data)
                         
-                        interaction.update({
-                            content: '> Выберите объект 🏘',
+                        IAL.ReplyInteraction(interaction, {
+                            content: '> Выберите получателя 👥',
                             embeds: [],
                             components: components
                         })
                     }
-                }else if(act == 'trade'){
-                    let filterChars = chars.filter(fChar => players?.find(fPlayer => fPlayer.data.char == fChar.id) && !player.data.chars?.find(fpChar => fpChar == fChar.id) && fChar.data.pos == char.data.pos)
-                    let options = RPF.charsSelectMenuOptions(filterChars)
-                    if(!options.length) throw new Error("Людей поблизости нет")
-
-                    let components = RPF.pageButtonsSelectMenu(`invent_give_${data}_ex`, 'Люди...', options, 'trade', 0, data)
-                    
-                    interaction.update({
-                        content: '> Выберите получателя 👥',
-                        embeds: [],
-                        components: components
-                    })
+                    Object.assign(CGF, PGF)
+                    CGF.trade()
                 }else if(act == 'drop' || act == 'take' || act == 'give'){
                     let dropInfo = []
                     let fArray, lAct, get, main, second
@@ -629,13 +955,15 @@ client.on('interactionCreate', async interaction => {
 
                         second = {path: 'ages/objects', par: `rooms.${roomId}.items`, id: object.id, origin: room.items} 
                     }else if(act == 'give'){
-                        console.log('test')
-                        /* if(!charItems.length) throw new Error("Предмет не удалось найти среди вашего инвентаря")
+                        if(!charItems.length) throw new Error("Предмет не удалось найти среди вашего инвентаря")
                         fArray = charItems
                         lAct = `> Вы передали 📦`
                         get = false
 
-                        second = {path: 'ages/chars', par: `items`, id: object.id, origin: room.items} */
+                        let targetChar = chars.find(fChar => fChar.id == value)
+                        if(!targetChar) throw new Error("Получатель не найден")
+
+                        second = {path: 'ages/chars', par: `items`, id: targetChar.id, origin: targetChar.data.items}
                     }
                     for(let lItem of fArray){
                         let gItem = gItems.find(fItem => fItem.id == lItem.id)
@@ -644,7 +972,7 @@ client.on('interactionCreate', async interaction => {
                         let count = await getCount(gItem, lItem, lAct.slice(-1))
 
                         if(count != NaN && lItem.count >= count && count > 0){
-                            ReplyInteraction(interaction, {content: `> Процесс... 📦`, embeds: [], components: []})
+                            IAL.ReplyInteraction(interaction, {content: `> Процесс... 📦`, embeds: [], components: []})
                             
                             let action = [
                                 RPF.ItemManager(get, main, lItem, count),
@@ -657,7 +985,7 @@ client.on('interactionCreate', async interaction => {
                                 }
                             }
 
-                            dropInfo.push(`**${gItem.data.emoji}** ${gItem.data.name} (x${count.toLocaleString('en')})`)
+                            dropInfo.push(`[${gItem.id}] ${gItem.data.emoji} ${gItem.data.name} (x${count.toLocaleString('en')})`)
                             
                             setTimeout(() => {
                                 try{
@@ -665,7 +993,7 @@ client.on('interactionCreate', async interaction => {
                                         interaction.editReply(`${lAct}\n${dropInfo.join('\n')}`)
                                     }
                                 }catch(error){
-                                    ErrorInteraction(interaction, error, true)
+                                    IAL.ErrorInteraction(interaction, error, true)
                                 }
                             }, 2500)
                         }else{
@@ -687,9 +1015,10 @@ client.on('interactionCreate', async interaction => {
                     if(!channelPosObject) throw new Error("Позиция персонажа не найдена")
 
                     EStats('ages/players', player.id, 'char', [char.id])
-                    RPF.step(interaction, player.data.user, char, objects, posObject, channelPosObject)
+                    RPF.step(guild, player.data.user, char.id, objects, posObject, channelPosObject)
 
-                    interaction.update({content: `> Вы сменили персонажа на **${char.data.name}** 👤`, embeds: [], components: []})
+                    IAL.ReplyInteraction(interaction, {content: `> Вы сменили персонажа на **${char.data.name}** 👤`, embeds: [], components: []})
+                    interaction.member.setNickname(betterLimitText(`[${player.id}-${char.id}] ${char.data.name}`, 32))
                 }else if(act == 'edit'){
                     let char = chars.find(char => char.id == data)
                     if(!char) throw new Error("Персонаж не найден")
@@ -711,7 +1040,7 @@ client.on('interactionCreate', async interaction => {
                                 components: [
                                     {
                                         type: 'BUTTON',
-                                        label: 'Завершить редактирование',
+                                        label: 'Сбросить редактирование',
                                         customId: 'char_editStop',
                                         style: 'DANGER'
                                     }
@@ -721,8 +1050,6 @@ client.on('interactionCreate', async interaction => {
                     })
                     
                     let filterMessage = (msg) => msg.author.id == interaction.user.id
-                    let stop = false
-
                     let filterInteraction = (interaction) => interaction.message.id == messageEdit.id
 
                     let reply = interaction.user.dmChannel.createMessageCollector({filterMessage, max: 1, time: (5*60)*1000, dispose: true})
@@ -730,26 +1057,24 @@ client.on('interactionCreate', async interaction => {
 
                     button.on('collect', (interaction) => {
                         if(interaction.customId == 'char_editStop'){
-                            interaction.update({content: `> Вы остановили редактирование 👤`, embeds: [], components: []})
-                            stop = true
+                            messageEdit.edit({content: `> Вы остановили создание 👤`, embeds: [], components: []})
 
-                            reply.stop()
                             button.stop()
+                            reply.stop()
                         }
                     })
 
                     reply.on('collect', (message) => {
                         messageEdit.edit({content: `> Вы успешно изменили персонажа 👤`, embeds: [], components: []})
                         EStats('ages/chars', char.id, 'desc', [betterLimitText(message.content, 100)])
-                        stop = true
 
-                        reply.stop()
                         button.stop()
+                        reply.stop()
                     })
 
                     reply.on('end', () => {
-                        if(!stop){
-                            messageEdit.edit({content: `> Вышло время записи 👤`, embeds: [], components: []})
+                        if(!button.ended){
+                            messageEdit.edit({content: `> Вышло время записи или закончились попытки 👤`, embeds: [], components: []})
 
                             reply.stop()
                             button.stop()
@@ -792,7 +1117,7 @@ client.on('interactionCreate', async interaction => {
                                     },
                                     {
                                         type: 'BUTTON',
-                                        label: 'Завершить создание',
+                                        label: 'Сбросить создание',
                                         customId: 'char_createStop',
                                         style: 'DANGER'
                                     }
@@ -807,32 +1132,50 @@ client.on('interactionCreate', async interaction => {
                     let filterMessage = (msg) => msg.author.id == interaction.user.id
                     let reply = interaction.user.dmChannel.createMessageCollector({filterMessage, max: 3, time: (5*60)*1000, dispose: true})
 
-                    let stop = false
-
                     button.on('collect', async (interaction) => {
                         if(interaction.customId == 'char_createStop'){
-                            interaction.update({content: `> Вы остановили создание 👤`, embeds: [], components: []})
-                            stop = true
-
-                            reply.stop()
                             button.stop()
-                        }else if(interaction.customId == 'char_createDone'){
-                            interaction.update({content: `> Вы успешно создали персонажа **${char.name}** 👤`, embeds: [], components: []})
+                            reply.stop()
 
-                            char = await AStats('ages/chars', undefined, [char.name, char.race, char.desc, undefined, 1])
+                            messageEdit.edit({content: `> Вы остановили создание 👤`, embeds: [], components: []})
+                        }else if(interaction.customId == 'char_createDone'){
+                            char = await AStats('ages/chars', undefined, [char.name, char.race, char.desc, undefined, undefined, 1])
+                            
+                            let targetObject = objects.find(fObject => fObject.id == char.data.pos)
+                            if(!targetObject){
+                                IAL.ErrorInteraction(interaction, new Error('Объект не найден'))
+                                button.stop()
+                                reply.stop()
+                            }
+
+                            let channelTargetObject = guild.channels.cache.get(targetObject.data.cid)
+                            if(!channelTargetObject){
+                                IAL.ErrorInteraction(interaction, new Error('Объект не найден'))
+                                button.stop()
+                                reply.stop()
+                            }
+
                             player.data.chars?.push(char.id)
                             let chars = player.data.chars ?? [char.id]
+                            
+                            console.log(chars)
+                            
+                            if(!player.data.char){
+                                EStats('ages/players', player.id, 'char', [char.id])
+                                RPF.step(guild, player.data.user, undefined, objects, targetObject, channelTargetObject)
+                                interaction.member.setNickname(betterLimitText(`[${player.id}-${char.id}] ${char.data.name}`, 32))
+                            }
                             if(!player.data.chars?.find(fChar => fChar.id == char.id)){
                                 EStats('ages/players', player.id, 'chars', [chars])
                             }
 
-                            stop = true
+                            IAL.ReplyInteraction(interaction, {content: `> Вы успешно создали персонажа **${char.data.name}** 👤`, embeds: [], components: []})
 
-                            reply.stop()
                             button.stop()
+                            reply.stop()
                         }else{
                             char.race = interaction.customId.split('_')[1]
-                            interaction.update({
+                            IAL.ReplyInteraction(interaction, {
                                 embeds: [
                                     {
                                         description: `Напишите имя персонажа`,
@@ -845,7 +1188,7 @@ client.on('interactionCreate', async interaction => {
                                         components: [
                                             {
                                                 type: 'BUTTON',
-                                                label: 'Завершить создание',
+                                                label: 'Сбросить создание',
                                                 customId: 'char_createStop',
                                                 style: 'DANGER'
                                             }
@@ -891,7 +1234,7 @@ client.on('interactionCreate', async interaction => {
                                                 },
                                                 {
                                                     type: 'BUTTON',
-                                                    label: 'Завершить создание',
+                                                    label: 'Сбросить создание',
                                                     customId: 'char_createStop',
                                                     style: 'DANGER'
                                                 },
@@ -904,64 +1247,25 @@ client.on('interactionCreate', async interaction => {
                     })
 
                     reply.on('end', () => {
-                        if(!stop){
-                            messageEdit.edit({content: `> Вышло время записи или закончились попытки 👤`, embeds: [], components: []})
-
+                        if(!button.ended){
                             reply.stop()
                             button.stop()
+                            
+                            messageEdit.edit({content: `> Вышло время записи или закончились попытки 👤`, embeds: [], components: []})
                         }
                     })
                 }
             }
 
             if(type == 'page'){
-                if(act == 'walk'){
-                    let options = RPF.objectsSelectMenuOptions(object, objects, true, false)
-                    if(options.length == 0) throw new Error("Объектов поблизости нет")
+                CGF[act](parseInt(add))
+            }
 
-                    let components = RPF.pageButtonsSelectMenu('walk_select', 'Объекты...', options, 'walk', parseInt(add))
-                    
-                    ReplyInteraction(interaction, {
-                        content: '> Выберите направление 🚶',
-                        components: components,
-                    })
-                }else if(act == 'key'){
-                    let options = RPF.objectsSelectMenuOptions(object, objects, true, true)
-                    if(options.length == 0) throw new Error("Объектов поблизости нет")
-
-                    let components = RPF.pageButtonsSelectMenu(`invent_key_${data}`, 'Объекты...', options, 'key', parseInt(add), data)
-
-                    ReplyInteraction(interaction, {
-                        content: '> Выберите объект 🏘',
-                        embeds: [],
-                        components: components
-                    })
-                }else if(act == 'tp'){
-                    let options = RPF.objectsSelectMenuOptions(object, objects, false, data != interaction.user.id)
-                    if(options.length == 0) throw new Error("Объектов нет")
-
-                    let components = RPF.pageButtonsSelectMenu(`tp_select_${data}`, 'Объекты...', options, 'tp', parseInt(add), data)
-                    
-                    ReplyInteraction(interaction, {
-                        content: '> Выберите направление 🛸',
-                        components: components,
-                        ephemeral: true
-                    })
-                }else if(act == 'char'){
-                    let options = RPF.charsSelectMenuOptions(player.data.chars, player.data.char, chars)
-                    if(!options) throw new Error('Персонажи отсутствуют')
-
-                    let components = RPF.pageButtonsSelectMenu('char_select', 'Персонажи...', options, 'char', parseInt(add))
-                    
-                    ReplyInteraction(interaction, {
-                        content: '> Ваши персонажи 👥',
-                        components: components,
-                        ephemeral: true
-                    })
-                }
+            if(type == 'gmenu'){
+                CGF[act]()
             }
         }
     }catch(error){
-        ErrorInteraction(interaction, error, true)
+        IAL.ErrorInteraction(interaction, error, true)
     }
 })

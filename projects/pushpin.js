@@ -1,13 +1,13 @@
 const {
-    client, REST, Routes,
+    Discord, client, REST, Routes,
     Config, prefix, timeOfDelete,
     guildBase, guildAges, guildBD, 
-    rpGuilds, cmdParametrs, getMessages, toChannelName, betterLimitText, random,
+    rpGuilds, cmdParametrs, getMessages, emojiURL, toChannelName, editFirstChar, betterLimitText, random,
     getRoleId, haveRole, giveRole, removeRole,
     sendLog, createLore, createEx,
-    createCom, SlashCom, ReplyInteraction, ErrorInteraction, BDunit,
+    createCom, SlashCom, IAL, BDunit,
     GStats, AStats, EStats,
-    DStats} = require('../bot.js')
+    DStats, RPF} = require('../bot.js')
 
 const guild = guildBase
 
@@ -21,9 +21,9 @@ client.on('guildMemberAdd', (member) => {
 })
 
 client.on('messageCreate', message => { if(message.guild?.id == guild.id){
-    var cA = haveRole(message.member, "[A]"),
+    /* var cA = haveRole(message.member, "[A]"),
         cB = haveRole(message.member, "[B]"),
-        cC = haveRole(message.member, "[C]")
+        cC = haveRole(message.member, "[C]") */
     let mb = message.author.bot
     let dm = message.channel.type == "DM"
     let command = cmdParametrs(message.content)
@@ -31,7 +31,7 @@ client.on('messageCreate', message => { if(message.guild?.id == guild.id){
     if(!mb && !dm) sendLog(message.member, message.channel, 'other', 'Отправил сообщение', '0', message.content)
 
     if(message.channel.id == Config.channelsID.dev_process && message.webhookId == Config.webhooks.github && !dm && mb){
-        createCom(message.embeds[0],message)
+        createCom(message.embeds[0])
         setTimeout(() =>{message.delete()}, timeOfDelete)
     }
 }})
