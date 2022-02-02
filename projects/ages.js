@@ -385,18 +385,6 @@ client.on('interactionCreate', async interaction => {
                         color: color,
                     }
                 ]})
-            },
-            keyUse: (page = 0) => {
-                let options = RPF.charsSelectMenuOptions(chars)
-                if(!options.length) throw new Error("Объектов поблизости нет")
-
-                let components = RPF.pageButtonsSelectMenu(`invent_key_${data}`, 'Объекты...', options, 'keyUse', page, data)
-                
-                IAL.ReplyInteraction(LAST_INTERACTION.interaction, {
-                    content: `> Выберите объект ${LAST_INTERACTION.interaction.id} 🏘`,
-                    embeds: [],
-                    components: components
-                })
             }
         }
         Object.assign(CGF, PGF)
@@ -916,6 +904,19 @@ client.on('interactionCreate', async interaction => {
                 if(act == 'use'){
                     if(!charItems.length) throw new Error("Предмет не удалось найти среди вашего инвентаря")
                     if(gItems[0].data.type == 'key'){
+                        if(!PGF.keyUse) PGF.keyUse = (page = 0) => {
+                            let options = RPF.charsSelectMenuOptions(chars)
+                            if(!options.length) throw new Error("Объектов поблизости нет")
+            
+                            let components = RPF.pageButtonsSelectMenu(`invent_key_${data}`, 'Объекты...', options, 'keyUse', page, data)
+                            
+                            IAL.ReplyInteraction(LAST_INTERACTION.interaction, {
+                                content: `> Выберите объект ${LAST_INTERACTION.interaction.id} 🏘`,
+                                embeds: [],
+                                components: components
+                            })
+                        }
+                        Object.assign(CGF, PGF)
                         CGF.keyUse()
                     }
                 }else if(act == 'trade'){
