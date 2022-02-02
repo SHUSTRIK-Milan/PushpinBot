@@ -414,7 +414,7 @@ async function GStats(chl, id, par){
         var units = []
 
         for (let msg of msgs){
-            let unit = eval(`[${msg.content}]`)[0]
+            let unit = eval(`[${msg.embeds[0].description}]`)[0]
             for (let dat in unit.data){
                 try{
                     if(Number.isInteger(parseInt(unit.data[dat])) && parseInt(unit.data[dat]) > 16){
@@ -460,7 +460,7 @@ async function AStats(chl, structure, data){
             var messages = await chl.messages.fetch()
             var units = await GStats(chl)
             var id
-            if (!units.length){
+            if (!units?.length){
                 id = messages.size
             }else{
                 id = units[units.length-1].id
@@ -491,8 +491,12 @@ async function AStats(chl, structure, data){
             var unit = new BDunit(id+1, returnData)
             var message = JSON.stringify(unit, null, 2)
 
-            if(message.length <= 2000){
-                chl.send(message)
+            if(message.length <= 4096){
+                chl.send({
+                    embeds: [{
+                        description: message
+                    }]
+                })
             }else{
                 console.log('> Ошибка при создании ячейки')
             }
@@ -554,8 +558,12 @@ async function EStats(chl, id, par, data){
 
             var message = JSON.stringify(unit, null, 2)
             
-            if(message.length <= 2000){
-                msg.edit(message)
+            if(message.length <= 4096){
+                msg.edit({
+                    embeds: [{
+                        description: message
+                    }]
+                })
             }else{
                 console.log('> Ошибка при редактировании ячейки')
             }

@@ -121,7 +121,7 @@ SlashCom('wait', 'roll', {
     ],
 }, guild.id)
 
-SlashCom('edit', 'looc', {
+SlashCom('wait', 'looc', {
     name: 'looc',
     description: 'Отправить локальное неролевое сообщение',
     type: 'CHAR_INPUT',
@@ -151,16 +151,12 @@ client.on('messageCreate', message => { if(message.guild?.id == guild.id){
 }})
 
 var LAST_INTERACTION = {
-    interaction: undefined,
     user: undefined,
     timestamp: undefined
 }
 
-var PGF = {}
-
 client.on('interactionCreate', async interaction => {
     if(interaction.guildId == guild.id) try{
-        LAST_INTERACTION.interaction = interaction
         LAST_INTERACTION_spam = LAST_INTERACTION.user == interaction.user.id && (LAST_INTERACTION.timestamp == interaction.createdTimestamp || LAST_INTERACTION.timestamp + 1000 > interaction.createdTimestamp)
 
         if(LAST_INTERACTION_spam){
@@ -183,7 +179,6 @@ client.on('interactionCreate', async interaction => {
         //#7B2832
         var CGF = {
             invent: () => {
-                console.log(interaction.id)
                 let options = RPF.itemsSelectMenuOptions(char.data.items, items)
                 if(!options.length) throw new Error("Ваш инвентарь пуст")
 
@@ -327,6 +322,21 @@ client.on('interactionCreate', async interaction => {
                     ephemeral: true
                 })
             },
+            tpSelect: (page = 0) => {
+                let selectUserId = value ?? interaction.user.id
+
+                let options = RPF.objectsSelectMenuOptions(object, objects, false, selectUserId != interaction.user.id)
+                if(options.length == 0) throw new Error("Объектов")
+
+                let components = RPF.pageButtonsSelectMenu(`tp_select_${selectUserId}`, 'Объекты...', options, 'tpSelect', page, selectUserId)
+                
+                IAL.ReplyInteraction(interaction, {
+                    content: '> Выберите направление 🛸',
+                    embeds: [],
+                    components: components,
+                    ephemeral: true
+                })
+            },
             char: (page = 0) => {
                 let options = RPF.charsSelectMenuOptions(player.data.chars, player.data.char, chars)
                     
@@ -365,7 +375,6 @@ client.on('interactionCreate', async interaction => {
             },
             admin: () => {
                 let pass = cA || cB || cC
-                console.log(ADMIN)
                 
                 if(ADMIN){
                     removeRole(interaction.member, getRoleId(guild, 'Admin-Mode'))
@@ -387,19 +396,32 @@ client.on('interactionCreate', async interaction => {
                 ]})
             },
             keyUse: (page = 0) => {
-                let options = RPF.charsSelectMenuOptions(chars)
+                let options = RPF.objectsSelectMenuOptions(object, objects, true, true)
                 if(!options.length) throw new Error("Объектов поблизости нет")
-
+            
                 let components = RPF.pageButtonsSelectMenu(`invent_key_${data}`, 'Объекты...', options, 'keyUse', page, data)
                 
                 IAL.ReplyInteraction(interaction, {
-                    content: `> Выберите объект ${interaction.user.username} 🏘`,
+                    content: `> Выберите объект 🏘`,
                     embeds: [],
                     components: components
                 })
-            }
+            },
+            trade: (page = 0) => {
+                let filterChars = chars.filter(fChar => players?.find(fPlayer => fPlayer.data.char == fChar.id) && fChar.data.pos == object.id)
+                let options = RPF.charsSelectMenuOptions(filterChars)
+                if(!options.length) throw new Error("Людей поблизости нет")
+
+                let components = RPF.pageButtonsSelectMenu(`invent_give_${data}_global`, 'Люди...', options, 'trade', page, data)
+                
+                IAL.ReplyInteraction(interaction, {
+                    content: '> Выберите получателя 👥',
+                    embeds: [],
+                    components: components
+                })
+            },
         }
-        Object.assign(CGF, PGF)
+
 
         //#C6DE55
         var cA = haveRole(guildBase, interaction.user.id, "[A]"),
@@ -413,8 +435,6 @@ client.on('interactionCreate', async interaction => {
         var data = interaction.customId?.split('_')[2]
         var add = interaction.customId?.split('_')[3]
         var COMMAND = interaction.commandName
-
-        console.log(`${type}: ${act} - ${COMMAND}\n`)
 
         var values = interaction.values
         var value = values?.[0]
@@ -471,7 +491,7 @@ client.on('interactionCreate', async interaction => {
                 }else if(COMMAND == 'todo'){
                     CGF.sendEmote(`*${interaction.member.nickname} ${editFirstChar(act, false)}* – сказав, ${message}`, '#B05299')
                 }else if(COMMAND == 'looc'){
-                    CGF.sendEmote(`||\`${message}\`||`, '#4D4747')
+                    CGF.sendEmote(`||${message}||`, '#4D4747')
                 }
             }else if(COMMAND == 'меню'){
                 let list_Buttons = [
@@ -483,6 +503,16 @@ client.on('interactionCreate', async interaction => {
                         emoji: {
                             id: null,
                             name: "👥"
+                        }
+                    },
+                    {
+                        type: 'BUTTON',
+                        label: 'Инвентарь',
+                        customId: 'gmenu_invent',
+                        style: 'SUCCESS',
+                        emoji: {
+                            id: null,
+                            name: "📦"
                         }
                     },
                 ]
@@ -786,22 +816,6 @@ client.on('interactionCreate', async interaction => {
                     }
                 }, 2500)
             }else if(type == 'tp' && act == 'user'){
-                if(!PGF.tpSelect) PGF.tpSelect = (page = 0) => {
-                    let selectUserId = value ?? interaction.user.id
-
-                    let options = RPF.objectsSelectMenuOptions(object, objects, false, selectUserId != interaction.user.id)
-                    if(options.length == 0) throw new Error("Объектов")
-
-                    let components = RPF.pageButtonsSelectMenu(`tp_select_${selectUserId}`, 'Объекты...', options, 'tpSelect', page, selectUserId)
-                    
-                    IAL.ReplyInteraction(interaction, {
-                        content: '> Выберите направление 🛸',
-                        embeds: [],
-                        components: components,
-                        ephemeral: true
-                    })
-                }
-                Object.assign(CGF, PGF)
                 CGF.tpSelect()
             }else if(type == 'tp' && act == 'select'){
                 let char = chars.find(char => char.id == data)
@@ -919,21 +933,6 @@ client.on('interactionCreate', async interaction => {
                         CGF.keyUse()
                     }
                 }else if(act == 'trade'){
-                    if(!PGF.trade) PGF.trade = (page = 0) => {
-                        let filterChars = chars.filter(fChar => players?.find(fPlayer => fPlayer.data.char == fChar.id) && fChar.data.pos == object.id)
-                        console.log(filterChars)
-                        let options = RPF.charsSelectMenuOptions(filterChars)
-                        if(!options.length) throw new Error("Людей поблизости нет")
-
-                        let components = RPF.pageButtonsSelectMenu(`invent_give_${data}_global`, 'Люди...', options, 'trade', page, data)
-                        
-                        IAL.ReplyInteraction(interaction, {
-                            content: '> Выберите получателя 👥',
-                            embeds: [],
-                            components: components
-                        })
-                    }
-                    Object.assign(CGF, PGF)
                     CGF.trade()
                 }else if(act == 'drop' || act == 'take' || act == 'give'){
                     let dropInfo = []
@@ -1157,8 +1156,6 @@ client.on('interactionCreate', async interaction => {
 
                             player.data.chars?.push(char.id)
                             let chars = player.data.chars ?? [char.id]
-                            
-                            console.log(chars)
                             
                             if(!player.data.char){
                                 EStats('ages/players', player.id, 'char', [char.id])
