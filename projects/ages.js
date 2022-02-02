@@ -393,7 +393,7 @@ client.on('interactionCreate', async interaction => {
                 let components = RPF.pageButtonsSelectMenu(`invent_key_${data}`, 'Объекты...', options, 'keyUse', page, data)
                 
                 IAL.ReplyInteraction(interaction, {
-                    content: `> Выберите объект ${interaction.user.name} 🏘`,
+                    content: `> Выберите объект ${interaction.user.username} 🏘`,
                     embeds: [],
                     components: components
                 })
